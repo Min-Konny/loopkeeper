@@ -1,3 +1,4 @@
+import { icon } from "./icons.js?v=0.2.6";
 let audio;
 let preferences = { soundVolume: 0.3, effectsEnabled: true };
 let previous;
@@ -28,6 +29,22 @@ function cue(kind) {
 }
 export function previewSound(settings) { unlockAudio(settings); cue('craft'); }
 export function battleSound(kind) { cue(kind); }
+function productionFeedback(element, id, amount) {
+  if (!element || document.querySelectorAll('.production-pop').length >= 6) return;
+  const rect = element.getBoundingClientRect();
+  if (rect.right <= 0 || rect.left >= innerWidth) return;
+  const pop = document.createElement('span');
+  pop.className = 'production-pop';
+  pop.innerHTML = icon(id);
+  const text = document.createElement('b');
+  text.textContent = `+${Number(amount.toFixed(1))}`;
+  pop.append(text);
+  pop.style.left = `${Math.min(innerWidth - 65, Math.max(5, rect.left + rect.width / 2 - 24))}px`;
+  pop.style.top = `${rect.top + 8}px`;
+  document.body.append(pop);
+  const animation = pop.animate([{ opacity: 0, transform: 'translateY(8px) scale(.8)' }, { opacity: 1, transform: 'translateY(-10px) scale(1)', offset: .2 }, { opacity: 0, transform: 'translateY(-42px) scale(1)' }], { duration: 1100, easing: 'ease-out' });
+  animation.finished.catch(() => {}).finally(() => pop.remove());
+}
 export function updatePresentation(state) {
   preferences = state.settings;
   const next = { state, generation: state.meta.generation, logSeq: state.run.logSeq, resources: { ...state.run.resources } };
@@ -39,6 +56,7 @@ export function updatePresentation(state) {
       for (const [id, amount] of Object.entries(next.resources)) {
         if (amount <= previous.resources[id]) continue;
         const element = document.querySelector(`.resource-bar .resource[data-resource="${id}"]`) || [...document.querySelectorAll('.resource-bar .resource')].find(el => el.title === id);
+        productionFeedback(element, id, amount - previous.resources[id]);
         element?.animate?.([{ boxShadow: 'inset 0 0 0 1px #d1b56b', backgroundColor: '#4b5030' }, { boxShadow: 'inset 0 0 0 1px transparent' }], { duration: 550 });
       }
       if (important === 'craft' || important === 'victory') document.querySelector('#active-work')?.animate?.([{ opacity: .65 }, { opacity: 1 }], { duration: 400 });

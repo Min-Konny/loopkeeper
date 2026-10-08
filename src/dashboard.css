@@ -208,3 +208,29 @@ html, body { height: 100%; overflow: hidden; }
   .setup-upgrade > span { font-size: 14px; }
   #content { padding-right: 12px; }
 }
+
+/* The work scene animates in place without rebuilding the live progress gauge. */
+.work-vignette { width: 136px; height: 78px; flex: 0 0 136px; position: relative; overflow: hidden; border-radius: 10px; background: radial-gradient(ellipse at 65% 70%, #46664a55, transparent 70%); }
+.work-vignette > svg { width: 100%; height: 100%; }
+.work-tool { position: absolute; left: 37%; top: 29%; color: #dcc598; transform-origin: 10% 90%; animation: work-swing 1.2s ease-in-out infinite; }
+.work-tool > svg { width: 28px; height: 28px; }
+.work-target { transform-box: fill-box; transform-origin: center bottom; animation: work-impact 1.2s ease-in-out infinite; }
+.work-person { animation: work-breathe 2.4s ease-in-out infinite alternate; }
+.work-particles { animation: work-chips 1.2s ease-out infinite; }
+.work-flame { transform-box: fill-box; transform-origin: center bottom; animation: work-fire .65s ease-in-out infinite alternate; }
+.work-foraging .work-tool { animation-duration: 2s; }
+.work-foraging .work-particles { fill: #a7c19b; animation-duration: 2s; }
+.work-resting .work-vignette * { animation-play-state: paused !important; }
+.production-pop { position: fixed; display: inline-flex; align-items: center; gap: 4px; padding: 5px 9px; border-radius: 20px; color: #f1dab0; background: #243b32ed; box-shadow: 0 3px 16px #0005; border: 1px solid #8d986466; z-index: 20; pointer-events: none; font-size: 14px; }
+.production-pop .icon { width: 18px; height: 18px; }
+@keyframes work-swing { 0%, 100% { transform: rotate(-35deg); } 45% { transform: rotate(35deg); } 58% { transform: rotate(-12deg); } }
+@keyframes work-impact { 0%, 50%, 100% { transform: rotate(0); } 58% { transform: rotate(3deg); } 68% { transform: rotate(-2deg); } }
+@keyframes work-breathe { from { transform: translateY(0); } to { transform: translateY(2px); } }
+@keyframes work-chips { 0%, 49% { opacity: 0; transform: translate(0, 10px); } 55% { opacity: 1; } 100% { opacity: 0; transform: translate(-14px, -9px); } }
+@keyframes work-fire { from { transform: scale(.9, .85); opacity: .7; } to { transform: scale(1.1, 1.1); opacity: 1; } }
+@media (max-width: 690px) {
+  .work-vignette { width: 56px; height: 42px; flex-basis: 56px; }
+  .work-tool > svg { width: 15px; height: 15px; }
+  .production-pop { font-size: 12px; padding: 3px 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .work-vignette * { animation: none !important; } }
