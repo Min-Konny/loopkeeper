@@ -1,10 +1,10 @@
-import { CONTENT as C } from "./content.js?v=0.2.9";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.2.9";
+import { CONTENT as C } from "./content.js?v=0.2.10";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.2.10";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.2.9";
+} from "./legacy-engine.js?v=0.2.10";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -710,15 +710,15 @@ export function enqueueAction(
 ) {
   if (!on(s, "action_queue")) return fail("行動予約を解放してください。");
   if (!isKnown(s, id)) return fail("未発見です。");
-  if (
-    !Number.isInteger(count) ||
-    count < 1 ||
-    count > 99 ||
-    s.run.queue.length >= 8
-  )
-    return fail("予約8件、回数1〜99。");
+  if (!Number.isInteger(count) || count < 1 || count > 99)
+    return fail("回数は1〜99の整数で指定してください。");
+  if (s.run.queue.length >= 8)
+    return fail("行動予約が8件でいっぱいです。不要な予約を削除してください。");
   if (s.run.status !== "preparing") return fail("準備中に予約してください。");
-  if (defs.get(id)?.equipment || defs.get(id)?.facility) count = 1;
+  if (defs.get(id)?.equipment || defs.get(id)?.facility) {
+    if (s.run.queue.some(q => q.id === id)) return fail("既に予約しています。");
+    count = 1;
+  }
   s.run.queue.push({ id, count, kind, goalId: ++s.run.queueSeq });
   if (s.run.queue.length === 1 && s.run.activeAction?.kind !== "craft") {
     const check = kind === "goal" ? resolveGoal(s, id) : canStartAction(s, id, true);
@@ -1027,15 +1027,18 @@ export function saveTemplate(s, name) {
 }
 export function loadTemplate(s, i) {
   const t = s.meta.templates[i];
-  if (
-    !on(s, "queue_templates") ||
-    !on(s, "action_queue") ||
-    !t ||
-    s.run.queue.length + t.goals.length > 8 ||
-    t.goals.some((g) => !isKnown(s, g.id))
-  )
+  if (!on(s, "queue_templates") || !on(s, "action_queue") || !t || s.run.status !== "preparing" || t.goals.some(g => !isKnown(s, g.id)))
     return fail("この手順を使えません。");
-  for (const g of t.goals) {
+  const seen = new Set(s.run.queue.filter(q => defs.get(q.id)?.equipment || defs.get(q.id)?.facility).map(q => q.id));
+  const additions = t.goals.filter(g => {
+    const d = defs.get(g.id);
+    if (!d?.equipment && !d?.facility) return true;
+    if (seen.has(g.id)) return false;
+    seen.add(g.id);
+    return true;
+  });
+  if (s.run.queue.length + additions.length > 8) return fail("行動予約が8件でいっぱいです。不要な予約を削除してください。");
+  for (const g of additions) {
     const d = defs.get(g.id);
     s.run.queue.push({ ...g, count: d?.equipment || d?.facility ? 1 : g.count, goalId: ++s.run.queueSeq });
   }

@@ -1,8 +1,8 @@
-import * as legacy from "./legacy-engine.js?v=0.2.9";
-import * as mvp from "./mvp-engine.js?v=0.2.9";
-import { validateSave } from "./save-validation.js?v=0.2.9";
-export { getProductionSources } from "./mvp-engine.js?v=0.2.9";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.2.9";
+import * as legacy from "./legacy-engine.js?v=0.2.10";
+import * as mvp from "./mvp-engine.js?v=0.2.10";
+import { validateSave } from "./save-validation.js?v=0.2.10";
+export { getProductionSources } from "./mvp-engine.js?v=0.2.10";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.2.10";
 export {
   SKILLS,
   getSkillProgress,
@@ -19,14 +19,30 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.2.9";
+} from "./mvp-engine.js?v=0.2.10";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
   const recipes = (isLegacy(s) ? legacy : mvp).RECIPES;
-  for (const entry of [...s.run.queue, ...(s.meta.templates || []).flatMap(t => t.goals)]) {
-    const d = recipes.find(r => r.id === entry.id);
-    if (d?.equipment || d?.facility) entry.count = 1;
+  const single = id => { const d = recipes.find(r => r.id === id); return d?.equipment || d?.facility; };
+  const replacements = new Map();
+  function uniqueSingles(entries, recordLinks = false) {
+    const seen = new Map();
+    return entries.filter(entry => {
+      if (!single(entry.id)) return true;
+      entry.count = 1;
+      if (seen.has(entry.id)) {
+        if (recordLinks) replacements.set(entry.goalId, seen.get(entry.id).goalId);
+        return false;
+      }
+      seen.set(entry.id, entry);
+      return true;
+    });
+  }
+  s.run.queue = uniqueSingles(s.run.queue, !isLegacy(s));
+  for (const t of s.meta.templates || []) t.goals = uniqueSingles(t.goals);
+  for (const batch of [s.run.activeAction, ...Object.values(s.run.suspendedActions || {})]) {
+    if (batch && replacements.has(batch.goalId)) batch.goalId = replacements.get(batch.goalId);
   }
   return s;
 }

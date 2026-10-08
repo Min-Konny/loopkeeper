@@ -337,3 +337,38 @@ html, body { height: 100%; overflow: hidden; }
   .camp-threat {top:1px;left:76%;width:56px;}
 }
 @media(max-height:650px){.camp-banner .camp-buildings,.camp-threat{display:none;}}
+
+.craft-quantity {display:flex;align-items:center;justify-content:flex-end;gap:8px;font-size:12px;color:var(--muted);margin-bottom:6px;}
+.craft-quantity input {width:64px;min-height:36px;font:inherit;padding:5px 7px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--text);}
+.craft-total {display:block;text-align:right;color:var(--gold);margin-bottom:8px;font-size:11px;}
+@media(min-width:1000px){.craft-quantity,.craft-total{font-size:13px;}}
+
+.craft-command:has(.craft-quantity) {max-width:none;min-width:148px;flex-direction:column;align-items:flex-end;}
+.craft-quantity {white-space:nowrap;flex-shrink:0;}
+.craft-quantity input {flex-shrink:0;}
+@media(max-width:690px){
+  .craft-card:has(.craft-quantity) {flex-wrap:wrap;}
+  .craft-command:has(.craft-quantity) {flex-basis:100%;min-width:0;align-items:flex-end;gap:5px;}
+  .craft-command:has(.craft-quantity) .craft-buttons {display:flex;flex-direction:row;}
+}
+
+.queue-preview {display:none;}
+@media(min-width:1000px){
+  .play-layout {gap:16px;}
+  .queue-preview:not([hidden]) {display:flex;flex-direction:column;flex:0 0 250px;min-height:0;overflow:auto;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:8px;scrollbar-gutter:stable;}
+  .queue-preview-heading {display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .queue-preview-heading h3 {display:flex;align-items:center;gap:6px;margin:0;font-size:16px;white-space:nowrap;}
+  .queue-preview-heading h3 .icon {width:18px;height:18px;}
+  .queue-preview-heading small {font-size:12px;color:var(--muted);}
+  .queue-preview-heading button {font-size:13px;color:var(--gold);}
+  .queue-preview-status {font-size:12px;color:var(--muted);margin:12px 0;}
+  .queue-preview-status.needs-attention {color:var(--gold);}
+  .queue-preview ol {list-style:none;padding:0;margin:0 0 14px;}
+  .queue-preview li {display:grid;grid-template-columns:22px 1fr;gap:5px 8px;align-items:center;padding:12px 6px;border-bottom:1px solid var(--line);font-size:14px;}
+  .queue-preview li.current {background:var(--surface-raised);border-left:2px solid var(--gold);}
+  .queue-preview li small {grid-column:2;font-size:12px;color:var(--muted);}
+  .queue-preview-name {overflow-wrap:anywhere;}
+  .queue-preview .button {font-size:13px;min-height:36px;flex-shrink:0;}
+  .queue-preview-empty {font-size:13px;line-height:1.8;color:var(--muted);}
+  .play-layout:has(.queue-preview:not([hidden])) .action-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+}

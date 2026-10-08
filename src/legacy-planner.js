@@ -1,4 +1,4 @@
-import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.2.9';
+import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.2.10';
 
 const MAX_STEPS = 8;
 const MAX_COUNT = 99;
@@ -7,12 +7,14 @@ const resourceName = id => RESOURCES[id]?.name || id;
 class PlanningError extends Error {}
 
 /** Build an inventory-aware crafting plan without changing the game state. */
-export function planCraft(state, recipeId) {
+export function planCraft(state, recipeId, count = 1) {
   const target = RECIPES.find(recipe => recipe.id === recipeId);
   if (!target) return failure('その製作は存在しません。');
+  if (!Number.isInteger(count) || count < 1 || count > MAX_COUNT) return failure('回数は1〜99の整数で指定してください。');
+  if (target.equipment || target.facility) count = 1;
   if (!state.meta.upgrades.includes('action_queue')) return failure('継承ポイントで「行動予約・おまかせ製作」を解放してください。');
   if (state.run.status === 'dead') return failure('次の世代で製作を予約してください。');
-  if (state.run.queue.length > 0 || state.run.activeAction?.kind === 'craft') return planAfterPending(state, recipeId);
+  if (state.run.queue.length > 0 || state.run.activeAction?.kind === 'craft') return planAfterPending(state, recipeId, count);
 
   // Validate skill and equipment rules through the engine, ignoring only material
   // shortages and work that will be interrupted after the current raid.
@@ -83,7 +85,7 @@ export function planCraft(state, recipeId) {
 
   try {
     const context = { inventory: { ...state.run.resources }, steps: [], seconds: 0, resumed: new Set() };
-    schedule(context, target, 1, new Set());
+    schedule(context, target, count, new Set());
     const definitions = new Map([...ACTIONS, ...RECIPES].map(definition => [definition.id, definition]));
     const summary = context.steps.map(step => `${definitions.get(step.id).name} ×${step.count}`).join(' → ');
     return { ok: true, reason: '', steps: context.steps, summary, seconds: context.seconds };
@@ -93,7 +95,7 @@ export function planCraft(state, recipeId) {
   }
 }
 
-function planAfterPending(state, recipeId) {
+function planAfterPending(state, recipeId, count) {
   const preview = structuredClone(state);
   const definitions = new Map([...ACTIONS, ...RECIPES].map(item => [item.id, item]));
   const pending = [...state.run.queue];
@@ -127,14 +129,14 @@ function planAfterPending(state, recipeId) {
   preview.run.queue = [];
   preview.run.activeAction = null;
   preview.run.queueManaged = false;
-  const plan = planCraft(preview, recipeId);
+  const plan = planCraft(preview, recipeId, count);
   if (plan.ok && state.run.queue.length + plan.steps.length > MAX_STEPS) return failure('予約は最大8件です。完了後に追加してください。');
   return plan;
 }
 
 /** Commit the complete plan atomically; recipes still pay only when tick starts them. */
-export function queueCraft(state, recipeId) {
-  const plan = planCraft(state, recipeId);
+export function queueCraft(state, recipeId, count = 1) {
+  const plan = planCraft(state, recipeId, count);
   if (!plan.ok) return plan;
   const staged = structuredClone(state);
   for (const step of plan.steps) {

@@ -1,6 +1,7 @@
-import * as old from "./legacy-planner.js?v=0.2.9";
+import * as old from "./legacy-planner.js?v=0.2.10";
 import {
   isLegacy,
+  getCatalog,
   ACTIONS,
   RECIPES,
   RESOURCES,
@@ -8,14 +9,16 @@ import {
   getActionDuration,
   getRecipeCost,
   getSkillProgress,
-  enqueueGoal,
   enqueueAction,
   moveQueuedAction,
+  startAction,
+  stopAction,
   getProductionSources,
-} from "./engine.js?v=0.2.9";
+} from "./engine.js?v=0.2.10";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
-export function planCraft(s, id) {
-  if (isLegacy(s)) return old.planCraft(s, id);
+export function planCraft(s, id, count = 1) {
+  if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
+  if (isLegacy(s)) return old.planCraft(s, id, count);
   if (!s.meta.upgrades.includes("action_queue"))
     return fail("行動予約を解放してください。");
   const d = RECIPES.find((x) => x.id === id);
@@ -93,7 +96,7 @@ export function planCraft(s, id) {
       inventory[r] = (inventory[r] || 0) + v * n;
   }
   try {
-    craft(d, 1);
+    craft(d, d.equipment || d.facility ? 1 : count);
     return {
       ok: true,
       reason: "",
@@ -123,15 +126,24 @@ export function prioritizeAddedReservations(s, previousLength) {
   if (paidGoalId !== undefined) s.run.activeAction.goalId = paidGoalId;
 }
 export function queueAction(s, id, count, position = "end") {
+  const d = getCatalog(s).RECIPES.find(r => r.id === id);
+  const existing = (d?.equipment || d?.facility) ? s.run.queue.findIndex(q => q.id === id) : -1;
+  if (position === "front" && existing >= 0) {
+    if (!s.meta.upgrades.includes("action_queue") || s.run.status !== "preparing") return fail("準備中に予約してください。");
+    const paidGoalId = !isLegacy(s) && s.run.activeAction?.kind === "craft" ? s.run.activeAction.goalId : undefined;
+    for (let index = existing; index > 0; index--) moveQueuedAction(s, index, -1);
+    if (paidGoalId !== undefined) s.run.activeAction.goalId = paidGoalId;
+    return {ok:true,reason:"",moved:true};
+  }
   const previousLength = s.run.queue.length;
   const result = enqueueAction(s, id, count);
   if (result.ok && position === "front") prioritizeAddedReservations(s, previousLength);
   return result;
 }
-export function queueCraft(s, id, position = "end") {
+export function queueCraft(s, id, position = "end", count = 1) {
   const previousLength = s.run.queue.length;
   if (isLegacy(s)) {
-    const result = old.queueCraft(s, id);
+    const result = old.queueCraft(s, id, count);
     if (result.ok && position === "front") prioritizeAddedReservations(s, previousLength);
     return result;
   }
@@ -141,11 +153,22 @@ export function queueCraft(s, id, position = "end") {
   s.settings.disabledUpgrades = s.settings.disabledUpgrades.filter(
     (x) => x !== "action_queue",
   );
-  const result = enqueueGoal(s, id);
+  const result = queueAction(s, id, d.equipment || d.facility ? 1 : count, position);
   if (!result.ok) {
     s.settings.disabledUpgrades = previousDisabled;
     return fail(result.reason);
   }
-  if (position === "front") prioritizeAddedReservations(s, previousLength);
-  return { ok: true, reason: "", steps: [{ id, count: 1 }] };
+  return { ok: true, reason: "", moved: result.moved, steps: [{ id, count: d.equipment || d.facility ? 1 : count }] };
+}
+
+
+// Explicitly selecting work takes it back from a blocked reservation, even when
+// the same manual batch is still selected. Suspending preserves paid materials.
+export function selectManualAction(s, id) {
+  if (s.run.status !== "preparing") return startAction(s, id);
+  if (s.run.activeAction?.id === id && s.run.queue.length && !s.settings.disabledUpgrades.includes("action_queue")) {
+    const stopped = stopAction(s);
+    if (!stopped.ok) return stopped;
+  }
+  return s.run.activeAction?.id === id ? {ok:true,reason:""} : startAction(s, id);
 }

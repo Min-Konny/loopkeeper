@@ -440,7 +440,10 @@ export function enqueueAction(state, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return { ok: false, reason: '実行回数は1〜99回で指定してください。' };
   if (state.run.queue.length >= 8) return { ok: false, reason: '予約は最大8件です。' };
   const d = DEFINITIONS.get(id);
-  if (d.equipment || d.facility) count = 1;
+  if (d.equipment || d.facility) {
+    if (state.run.queue.some(q => q.id === id)) return {ok:false,reason:'既に予約しています。'};
+    count = 1;
+  }
   state.run.queue.push({ id, count });
   return { ok: true, reason: '' };
 }
