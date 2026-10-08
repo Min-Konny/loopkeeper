@@ -7,12 +7,12 @@
     <meta name="description" content="採り、鍛え、襲撃に備える。失った命の経験を次へつなぐ、資源管理ローグライト。" />
     <title>LoopKeeper: Idle Defense</title>
     <link rel="icon" href="./assets/mark.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./src/styles.css?v=0.2.8" />
+    <link rel="stylesheet" href="./src/styles.css?v=0.2.9" />
     <link rel="stylesheet" href="./src/augments.css" />
     <link rel="stylesheet" href="./src/battle.css" />
     <link rel="stylesheet" href="./src/motion.css" />
     <link rel="stylesheet" href="./src/legacy.css" />
-    <link rel="stylesheet" href="./src/dashboard.css?v=0.2.8" />
+    <link rel="stylesheet" href="./src/dashboard.css?v=0.2.9" />
   </head>
   <body>
     <div id="app"></div>
@@ -23,7 +23,7 @@
     <dialog id="death-dialog" aria-labelledby="death-title"></dialog>
     <input id="import-input" type="file" accept="application/json,.json" hidden />
     <script type="module">
-      const entry = "./src/main.js?v=0.2.8";
+      const entry = "./src/main.js?v=0.2.9";
       const version = new URL(entry, location.href).searchParams.get("v");
       const url = new URL(location.href);
       if (url.searchParams.has("v") && url.searchParams.get("v") !== version) {

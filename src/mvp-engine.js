@@ -1,10 +1,10 @@
-import { CONTENT as C } from "./content.js?v=0.2.8";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.2.8";
+import { CONTENT as C } from "./content.js?v=0.2.9";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.2.9";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.2.8";
+} from "./legacy-engine.js?v=0.2.9";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -674,9 +674,7 @@ export function resolveGoal(s, id, visiting = new Set()) {
   if (d.equipment && s.run.equipment[d.slot]?.id === id)
     return { ...ok(), done: true };
   if (lv(s, d.skill) < d.unlockLevel)
-    return fail(
-      `${SKILLS.find((x) => x.id === d.skill).name} Lv.${d.unlockLevel}が必要。`,
-    );
+    return { ...fail(`${SKILLS.find((x) => x.id === d.skill).name} Lv.${d.unlockLevel}が必要。`), skill: d.skill };
   const seen = new Set([...visiting, id]);
   if (d.facility && (s.run.facilities[d.facility.id] || 0) < d.level - 1)
     return resolveGoal(s, d.requires[0], seen);
@@ -695,6 +693,8 @@ export function resolveGoal(s, id, visiting = new Set()) {
       if (result.ok) return result;
       reason = result.reason;
     }
+    const locked = ACTIONS.filter(p => p.yields?.[r] && isKnown(s, p) && lv(s, p.skill) < p.unlockLevel).sort((a, b) => a.unlockLevel - b.unlockLevel)[0];
+    if (locked) return { ...fail(`${RESOURCES[r].name}を集めるには${SKILLS.find(x => x.id === locked.skill).name} Lv.${locked.unlockLevel}が必要。`), skill: locked.skill };
     return fail(
       reason ||
         `${RESOURCES[r].name}不足。${r === "hide" ? "撃退または市場で入手。" : r === "gold" ? "市場で木材を納入。" : "技能を上げてください。"}`,
@@ -720,6 +720,13 @@ export function enqueueAction(
   if (s.run.status !== "preparing") return fail("準備中に予約してください。");
   if (defs.get(id)?.equipment || defs.get(id)?.facility) count = 1;
   s.run.queue.push({ id, count, kind, goalId: ++s.run.queueSeq });
+  if (s.run.queue.length === 1 && s.run.activeAction?.kind !== "craft") {
+    const check = kind === "goal" ? resolveGoal(s, id) : canStartAction(s, id, true);
+    if (!check.ok) {
+      s.run.blockedReason = check.reason;
+      s.settings.paused = true;
+    }
+  }
   return ok();
 }
 export const enqueueGoal = (s, id, count = 1) =>
@@ -800,6 +807,7 @@ function driveQueue(s) {
       continue;
     }
     if (!r.ok) {
+      s.settings.paused = true;
       if (s.run.blockedReason !== r.reason) {
         s.run.blockedReason = r.reason;
         s.settings.paused = true;
@@ -1529,6 +1537,10 @@ function battleRound(s) {
   }
 }
 function step(s, dt) {
+  if (s.run.status === "preparing") {
+    driveQueue(s);
+    if (s.settings.paused) return;
+  }
   s.run.elapsed = round(s.run.elapsed + dt);
   if (s.run.status === "combat") {
     s.run.combatTimer = round(s.run.combatTimer + dt);

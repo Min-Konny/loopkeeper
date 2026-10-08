@@ -1,4 +1,4 @@
-import * as old from "./legacy-planner.js?v=0.2.8";
+import * as old from "./legacy-planner.js?v=0.2.9";
 import {
   isLegacy,
   ACTIONS,
@@ -9,8 +9,10 @@ import {
   getRecipeCost,
   getSkillProgress,
   enqueueGoal,
+  enqueueAction,
+  moveQueuedAction,
   getProductionSources,
-} from "./engine.js?v=0.2.8";
+} from "./engine.js?v=0.2.9";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id) {
   if (isLegacy(s)) return old.planCraft(s, id);
@@ -110,14 +112,38 @@ export function planCraft(s, id) {
     return { ...fail(e.message), known: true };
   }
 }
-export function queueCraft(s, id) {
-  if (isLegacy(s)) return old.queueCraft(s, id);
+// Move the whole newly added plan, preserving the order of legacy material steps.
+export function prioritizeAddedReservations(s, previousLength) {
+  const added = s.run.queue.length - previousLength;
+  for (let offset = 0; offset < added; offset++) {
+    for (let index = previousLength + offset; index > offset; index--)
+      moveQueuedAction(s, index, -1);
+  }
+}
+export function queueAction(s, id, count, position = "end") {
+  const previousLength = s.run.queue.length;
+  const result = enqueueAction(s, id, count);
+  if (result.ok && position === "front") prioritizeAddedReservations(s, previousLength);
+  return result;
+}
+export function queueCraft(s, id, position = "end") {
+  const previousLength = s.run.queue.length;
+  if (isLegacy(s)) {
+    const result = old.queueCraft(s, id);
+    if (result.ok && position === "front") prioritizeAddedReservations(s, previousLength);
+    return result;
+  }
   const d = RECIPES.find((x) => x.id === id);
   if (!d || !isKnown(s, d)) return fail("未発見です。");
+  const previousDisabled = s.settings.disabledUpgrades;
   s.settings.disabledUpgrades = s.settings.disabledUpgrades.filter(
     (x) => x !== "action_queue",
   );
   const result = enqueueGoal(s, id);
-  if (!result.ok) return fail(result.reason);
+  if (!result.ok) {
+    s.settings.disabledUpgrades = previousDisabled;
+    return fail(result.reason);
+  }
+  if (position === "front") prioritizeAddedReservations(s, previousLength);
   return { ok: true, reason: "", steps: [{ id, count: 1 }] };
 }

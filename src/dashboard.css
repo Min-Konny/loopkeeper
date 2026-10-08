@@ -234,3 +234,106 @@ html, body { height: 100%; overflow: hidden; }
   .production-pop { font-size: 12px; padding: 3px 6px; }
 }
 @media (prefers-reduced-motion: reduce) { .work-vignette * { animation: none !important; } }
+
+.generation-compact { display: none; }
+@media (max-width: 820px) {
+  .generation .generation-symbol { display: none; }
+  .generation-compact { display: block; text-align: center; font-size: 9px; color: var(--muted); line-height: 1.5; }
+  .generation-compact b { display: block; font-size: 14px; font-weight: 600; color: #bac5b7; }
+  .generation { padding: 10px 0; }
+}
+@media (max-width: 690px) {
+  .legacy-upgrades .upgrade-card { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 8px 10px; min-width: 0; align-items: start; }
+  .legacy-upgrades .upgrade-details { width: auto; min-width: 0; overflow-wrap: anywhere; }
+  .legacy-upgrades .legacy-upgrade-command { grid-column: 1 / -1; width: 100%; min-width: 0; margin: 0; align-items: stretch; }
+  .legacy-upgrades .legacy-upgrade-command button { display: flex; justify-content: center; align-items: center; width: 100%; min-height: 44px; margin: 0; font-size: 13px; white-space: normal; }
+  .legacy-upgrades .upgrade-unlock-hint { text-align: left; }
+}
+
+#queue-warning:empty { display: none; }
+.queue-warning { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px; border: 1px solid var(--gold-dim); border-radius: 8px; font-size: 12px; background: #393628; }
+.queue-warning > span { flex: 1 1 180px; }
+
+/* A compact illustrated settlement, kept clear of the raid timer and controls. */
+.camp-banner .camp-buildings {display:flex;left:16px;right:auto;bottom:0;gap:0;max-width:42%;height:76px;align-items:flex-end;z-index:2;}
+.camp-banner .camp-buildings span {flex:0 1 68px;width:68px;height:70px;border:0;background:none;padding:0;border-radius:0;filter:drop-shadow(0 3px 2px #0b161c);box-shadow:none;}
+.camp-banner .camp-buildings svg {width:100%;height:100%;overflow:visible;}
+.camp-buildings [data-level="2"] {--roof:#7f855e;}
+.camp-buildings [data-level="3"] {--roof:#a89057;}
+.village-window {animation:village-light 4s ease-in-out infinite alternate;}
+.village-flame {transform-box:fill-box;transform-origin:center bottom;animation:village-fire .7s infinite alternate;}
+.village-smoke {animation:village-smoke 3s infinite;}
+.village-flag {transform-box:fill-box;transform-origin:left;animation:village-flag 2s infinite alternate;}
+.settlement-paused *,.threat-paused * {animation-play-state:paused!important;}
+.camp-threat {position:absolute;left:37%;bottom:40%;width:125px;pointer-events:none;z-index:1;filter:blur(.4px);}
+.camp-threat[hidden] {display:none;}
+.approaching-enemy {animation:enemy-march .9s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center;}
+.build-economy .work-vignette {filter:drop-shadow(0 0 7px #d5b45566);--work-aura:#dbb760;}
+.build-martial .work-tool {color:#f4ac8c;filter:drop-shadow(0 0 5px #df8765);}
+.build-fortress .work-vignette {border-color:#8eb9be;box-shadow:inset 0 0 18px #67a7b344;}
+.build-economy .village-window {fill:#ffe096;}
+.build-martial .battle-player .battle-sigil {color:#f1a182;box-shadow:0 0 20px #dc775955;}
+.build-fortress .battle-player .battle-avatar {box-shadow:inset 0 0 30px #72b5ca33,0 0 20px #72b5ca22;}
+.completion-pop {position:fixed;left:50%;top:20%;transform:translateX(-50%);z-index:40;pointer-events:none;display:flex;align-items:center;gap:13px;padding:15px 22px;border:1px solid #c6ad6a88;border-radius:14px;background:linear-gradient(135deg,#37483ef2,#182a26f2);box-shadow:0 8px 40px #0005,0 0 30px #d6b57522;color:#ede6c8;max-width:calc(100vw - 32px);}
+.completion-pop .icon {width:34px;height:34px;color:#efd38e;filter:drop-shadow(0 0 6px #eac37688);}
+.completion-pop small {display:block;color:#bfcbaf;font-size:11px;margin-bottom:3px;}
+.completion-pop strong {font-size:16px;}
+#battle-dialog .battle-guard-ring {position:absolute;left:15%;top:15%;width:70%;height:70%;border:3px solid #a7d1d5;border-radius:45% 45% 55% 55%;opacity:0;box-shadow:0 0 18px #a7d1d599,inset 0 0 20px #a7d1d555;}
+#battle-dialog .battle-projectile {position:absolute;left:5%;top:40%;width:52px;height:3px;opacity:0;background:linear-gradient(90deg,transparent,#f7d69b);box-shadow:0 0 9px #f2c36b;}
+@keyframes village-light {from{opacity:.55}to{opacity:1}}
+@keyframes village-fire {from{transform:scale(.9,.8)}to{transform:scale(1.05,1.2)}}
+@keyframes village-smoke {from{transform:translate(0,5px);opacity:.4}to{transform:translate(-7px,-12px);opacity:0}}
+@keyframes village-flag {from{transform:skewY(-5deg) scaleX(.85)}to{transform:skewY(7deg) scaleX(1)}}
+@keyframes enemy-march {from{translate:0 0}to{translate:0 -2px}}
+@media(max-width:690px) {.camp-banner .camp-buildings{display:flex;top:126px;bottom:auto;left:8px;max-width:58%;height:48px;}.camp-banner .camp-buildings span{width:44px;height:46px;flex-basis:44px;}.camp-threat{top:90px;bottom:auto;left:52%;width:85px;}.completion-pop{top:16%;padding:12px 16px;}.completion-pop strong{font-size:14px;}}
+@media(prefers-reduced-motion:reduce) {.camp-buildings *,.camp-threat *{animation:none!important;}.village-smoke{display:none;}}
+
+.camp-banner .camp-buildings [hidden] {display:none;}
+
+@media(min-width:691px){.camp-banner .camp-buildings {height:56px;}.camp-banner .camp-buildings span {width:56px;height:56px;flex-basis:56px;}.camp-threat {left:45%;bottom:22%;width:100px;}}
+
+.craft-buttons {flex-wrap:wrap;justify-content:flex-end;}
+/* Use the actual component selectors across every desktop tab, not only gathering. */
+@media(min-width:1000px) {
+  #content, #info-dialog, #save-dialog, #help-dialog {font-size:15px;}
+  #content h3, #info-dialog h3 {font-size:19px;line-height:1.5;}
+  #content h4 {font-size:17px;}
+  #content p, #info-dialog p, #save-dialog p, #help-dialog p {font-size:14px;line-height:1.75;}
+  #content .button, #content button, #info-dialog .button, #info-dialog button,
+  #save-dialog button, #help-dialog button {font-size:14px;}
+  #content .button, #info-dialog .button {min-height:38px;}
+  #content small, #info-dialog small, #save-dialog small,
+  .craft-benefits, .craft-growth, .plan-preview, .permanent-text, .context-hint,
+  .legacy-group-heading p, .legacy-upgrades .workers-info, .upgrade-unlock-hint,
+  .legacy-skills .skill-progress, .template-row, .queue-footer, .queue-help,
+  .country-message, .diplomacy-result, .diplomacy-status {font-size:13px;line-height:1.65;}
+  .craft-info h3, .legacy-upgrades .upgrade-details h3 {font-size:19px;}
+  .craft-info p, .legacy-upgrades .upgrade-details p, .market-item p {font-size:14px;}
+  .craft-card {padding:18px;gap:16px;}
+  .craft-command:has(.craft-hide) {max-width:190px;min-width:135px;}
+  .recipe-cost {font-size:15px;gap:10px;}
+  .legacy-upgrades .upgrade-card {padding:18px;gap:16px;}
+  .legacy-upgrades .upgrade-symbol {width:38px;height:38px;}
+  .legacy-upgrades .legacy-upgrade-command button {font-size:14px;min-height:38px;}
+  .worker-control, .stock-setting, .queue-controls label, .queue-list li,
+  .equipment-slot, .facility-row, .journal-entry {font-size:14px;}
+  .worker-control select, .stock-setting input, .queue-controls select, .queue-controls input,
+  .queue-entry-count input {font-size:14px;min-height:36px;}
+  .diplomacy-card {padding:22px;}
+  .diplomacy-card h3, .market-heading h3 {font-size:20px;}
+  .market-item {padding:16px;}
+  .market-item h4 {font-size:18px;}
+  .setup-upgrade > span {font-size:16px;}
+  .setup-upgrade small {font-size:13px;line-height:1.65;}
+  .setup-tabs button, .setup-upgrade .button {font-size:14px;}
+  .chosen-augment span, .chosen-augment small, .augment-summary-label {font-size:13px;}
+  .queue-warning {font-size:14px;}
+}
+
+@media(max-width:690px) and (min-height:651px) {
+  .camp-banner.has-settlement, .camp-banner.threat-visible {height:114px;min-height:114px;align-items:flex-end;}
+  .camp-banner .camp-buildings {top:0;left:7px;height:42px;max-width:74%;}
+  .camp-banner .camp-buildings span {width:39px;height:40px;flex-basis:39px;}
+  .camp-threat {top:1px;left:76%;width:56px;}
+}
+@media(max-height:650px){.camp-banner .camp-buildings,.camp-threat{display:none;}}

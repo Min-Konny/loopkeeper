@@ -1,4 +1,5 @@
-import { icon } from "./icons.js?v=0.2.8";
+import { getCatalog } from "./engine.js?v=0.2.9";
+import { icon } from "./icons.js?v=0.2.9";
 let audio;
 let preferences = { soundVolume: 0.3, effectsEnabled: true };
 let previous;
@@ -45,14 +46,40 @@ function productionFeedback(element, id, amount) {
   const animation = pop.animate([{ opacity: 0, transform: 'translateY(8px) scale(.8)' }, { opacity: 1, transform: 'translateY(-10px) scale(1)', offset: .2 }, { opacity: 0, transform: 'translateY(-42px) scale(1)' }], { duration: 1100, easing: 'ease-out' });
   animation.finished.catch(() => {}).finally(() => pop.remove());
 }
+function completionFeedback(state, previous) {
+  const { RECIPES } = getCatalog(state);
+  const equipment = Object.entries(state.run.equipment).find(([slot, item]) => item?.id && item.id !== previous.equipment[slot]);
+  const facility = Object.entries(state.run.facilities).find(([id, level]) => level > (previous.facilities[id] || 0));
+  const recipe = equipment ? RECIPES.find(r => r.id === equipment[1].id) : facility ? RECIPES.find(r => r.facility?.id === facility[0] && (r.level || 1) === facility[1]) : null;
+  if (!recipe) return;
+  document.querySelector('.completion-pop')?.remove();
+  const pop = document.createElement('div');
+  pop.className = 'completion-pop';
+  pop.setAttribute('role', 'status');
+  pop.innerHTML = icon(facility ? 'camp' : {weapon:'sword',armor:'shield',shield:'shield',tool:'hammer'}[equipment[0]] || 'spark');
+  const text = document.createElement('div');
+  const label = document.createElement('small');
+  label.textContent = facility ? '村が育ちました' : '装備が完成';
+  const name = document.createElement('strong');
+  name.textContent = recipe.name;
+  text.append(label, name); pop.append(text); document.body.append(pop);
+  const animation = pop.animate([
+    {opacity:0,transform:'translate(-50%,14px) scale(.9)'},
+    {opacity:1,transform:'translate(-50%,0) scale(1)',offset:.12},
+    {opacity:1,transform:'translate(-50%,0) scale(1)',offset:.8},
+    {opacity:0,transform:'translate(-50%,-12px) scale(1)'},
+  ], {duration:2300,easing:'ease-out'});
+  animation.finished.catch(()=>{}).finally(()=>pop.remove());
+}
 export function updatePresentation(state) {
   preferences = state.settings;
-  const next = { state, generation: state.meta.generation, logSeq: state.run.logSeq, resources: { ...state.run.resources } };
+  const next = { state, generation: state.meta.generation, logSeq: state.run.logSeq, resources: { ...state.run.resources }, equipment: Object.fromEntries(Object.entries(state.run.equipment).map(([slot,item]) => [slot,item?.id])), facilities: { ...state.run.facilities } };
   if (previous?.state === state && previous.generation === next.generation && !document.hidden) {
     const events = state.run.log.filter(entry => entry.id > previous.logSeq);
     const important = ['death', 'raid', 'victory', 'craft'].find(kind => events.some(entry => entry.type === kind));
     if (important) cue(important);
     if (state.settings.effectsEnabled && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      completionFeedback(state, previous);
       for (const [id, amount] of Object.entries(next.resources)) {
         if (amount <= previous.resources[id]) continue;
         const element = document.querySelector(`.resource-bar .resource[data-resource="${id}"]`) || [...document.querySelectorAll('.resource-bar .resource')].find(el => el.title === id);

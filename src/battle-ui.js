@@ -1,6 +1,6 @@
-import { battleSound } from "./presentation.js?v=0.2.8";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.2.8";
-import { icon } from "./icons.js?v=0.2.8";
+import { battleSound } from "./presentation.js?v=0.2.9";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.2.9";
+import { icon } from "./icons.js?v=0.2.9";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -10,7 +10,7 @@ const ratio = (value, maximum) => Math.max(0, Math.min(1, value / maximum));
 function portrait(side, symbol, sigil = "") {
   return `<div class="battle-portrait" aria-hidden="true">
     <div class="battle-breath"><div class="battle-strike" data-battle="${side}-strike"><div class="battle-recoil" data-battle="${side}-recoil"><div class="battle-avatar">${side === "player" ? '<img class="fighter-illustration" src="./assets/guardian.svg" alt="">' : '<img class="fighter-illustration" data-battle="enemy-illustration" src="./assets/wolf.svg" alt="">'}${sigil}</div></div></div></div>
-    <div class="battle-effects"><i class="battle-impact" data-battle="${side}-impact"></i><i class="battle-slash" data-battle="${side}-slash"></i><i class="battle-heal-ring" data-battle="${side}-heal-ring"></i>${Array.from({ length: 6 }, (_, index) => `<i class="battle-heal-particle" data-battle="${side}-particle-${index}"></i>`).join("")}</div>
+    <div class="battle-effects"><i class="battle-guard-ring" data-battle="${side}-guard-ring"></i><i class="battle-projectile" data-battle="${side}-projectile"></i><i class="battle-impact" data-battle="${side}-impact"></i><i class="battle-slash" data-battle="${side}-slash"></i><i class="battle-heal-ring" data-battle="${side}-heal-ring"></i>${Array.from({ length: 6 }, (_, index) => `<i class="battle-heal-particle" data-battle="${side}-particle-${index}"></i>`).join("")}</div>
   </div>`;
 }
 
@@ -258,6 +258,20 @@ function strike(view, attacker, target) {
   );
 }
 
+function guard(view) {
+  animate(view, 'player-guard-ring', [
+    {opacity:0,transform:'scale(.85)'},
+    {opacity:.85,transform:'scale(1)',offset:.25},
+    {opacity:0,transform:'scale(1.12)'},
+  ], 550, 160);
+}
+function supportShot(view) {
+  animate(view, 'enemy-projectile', [
+    {opacity:0,transform:'translateX(-110px)'},
+    {opacity:1,transform:'translateX(-45px)',offset:.3},
+    {opacity:0,transform:'translateX(20px)'},
+  ], 450);
+}
 function heal(view) {
   animate(
     view,
@@ -407,11 +421,15 @@ export function renderBattle(dialog, state) {
       clearFeedback(view);
       if (enemyLoss > 0) {
         strike(view, "player", "enemy");
+        if (stats.support > 0) supportShot(view);
         battleSound("hit");
         feedback(view, "enemy", "damage", `−${number(enemyLoss)} HP`);
       }
       // An enemy still present after a combat exchange has retaliated, even when food offsets its damage.
-      if (enemyLoss > 0 || hpChange < 0) strike(view, "enemy", "player");
+      if (enemyLoss > 0 || hpChange < 0) {
+        strike(view, "enemy", "player");
+        if (stats.defense > 0) guard(view);
+      }
       if (hpChange < 0)
         feedback(view, "player", "damage", `−${number(-hpChange)} HP`);
       if (hpChange > 0)
