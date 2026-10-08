@@ -271,7 +271,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2</b></div>
+    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2.1</b></div>
   </aside>
   <div class="workspace">
     <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
