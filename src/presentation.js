@@ -1,4 +1,4 @@
-import { icon } from "./icons.js?v=0.2.6";
+import { icon } from "./icons.js?v=0.2.7";
 let audio;
 let preferences = { soundVolume: 0.3, effectsEnabled: true };
 let previous;

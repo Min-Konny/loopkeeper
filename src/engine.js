@@ -1,8 +1,8 @@
-import * as legacy from "./legacy-engine.js?v=0.2.6";
-import * as mvp from "./mvp-engine.js?v=0.2.6";
-import { validateSave } from "./save-validation.js?v=0.2.6";
-export { getProductionSources } from "./mvp-engine.js?v=0.2.6";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.2.6";
+import * as legacy from "./legacy-engine.js?v=0.2.7";
+import * as mvp from "./mvp-engine.js?v=0.2.7";
+import { validateSave } from "./save-validation.js?v=0.2.7";
+export { getProductionSources } from "./mvp-engine.js?v=0.2.7";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.2.7";
 export {
   SKILLS,
   getSkillProgress,
@@ -19,7 +19,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.2.6";
+} from "./mvp-engine.js?v=0.2.7";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
