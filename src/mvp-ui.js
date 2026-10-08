@@ -1,5 +1,5 @@
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.2.4";
-import { CONTENT as C } from "./content.js?v=0.2.4";
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.2.5";
+import { CONTENT as C } from "./content.js?v=0.2.5";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -10,7 +10,7 @@ import {
   resourceKnown,
   canPurchaseUpgrade,
   canConfigureWorker,
-} from "./engine.js?v=0.2.4";
+} from "./engine.js?v=0.2.5";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -23,7 +23,13 @@ const label = (id) =>
   RESOURCES[id]?.name || RECIPES.find((x) => x.id === id)?.name || id;
 const button = (text, attr, disabled = false) =>
   `<button class="button small gold-outline" ${attr} ${disabled ? "disabled" : ""}>${text}</button>`;
-export function setupMarkup(s) {
+const setupCategories = [
+  { id: "combat", name: "戦闘", kinds: ["combat"] },
+  { id: "automation", name: "自動化・人員", kinds: ["automation", "worker"] },
+  { id: "augment", name: "オーグメント", kinds: ["augment_pack"] },
+  { id: "time", name: "周回復帰", kinds: ["time"] },
+];
+export function setupMarkup(s, category = "combat") {
   const d = s.run.legacyDraft,
     preview = {
       ...s,
@@ -34,7 +40,8 @@ export function setupMarkup(s) {
         paidCosts: d.paidCosts,
       },
     };
-  return `<div class="eyebrow">A NEW BEGINNING</div><h2 id="death-title">次の命への継承</h2><p class="dialog-lead">この構成で、次はどこまで進む？</p><div class="points-banner"><span>配分できるポイント</span><strong>${d.points} pt</strong></div><div class="setup-upgrades">${LEGACY_UPGRADES.map(
+  const selected = setupCategories.find(c => c.id === category) || setupCategories[0];
+  return `<div class="setup-header"><h2 id="death-title">次の命への継承</h2><div class="setup-points">残り <strong>${d.points} pt</strong></div></div><div class="setup-tabs" role="tablist" aria-label="継承の分類">${setupCategories.map(c => `<button role="tab" id="setup-tab-${c.id}" aria-selected="${c.id === selected.id}" aria-controls="setup-upgrades" data-setup-category="${c.id}">${c.name}</button>`).join("")}</div><div class="setup-upgrades" id="setup-upgrades" role="tabpanel" aria-labelledby="setup-tab-${selected.id}">${LEGACY_UPGRADES.filter(u => selected.kinds.includes(u.kind)).map(
     (u) => {
       const owned = d.upgrades.includes(u.id),
         allowed = canPurchaseUpgrade(preview, u.id);
@@ -45,7 +52,7 @@ export function setupMarkup(s) {
     },
   ).join(
     "",
-  )}</div>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button gold full-width" data-command="confirm-run">この構成で開始</button>`;
+  )}</div><div class="setup-footer">${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
 }
 export function diplomacyMarkup(s) {
   return (

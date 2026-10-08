@@ -1,4 +1,4 @@
-import * as old from "./legacy-planner.js?v=0.2.4";
+import * as old from "./legacy-planner.js?v=0.2.5";
 import {
   isLegacy,
   ACTIONS,
@@ -10,7 +10,7 @@ import {
   getSkillProgress,
   enqueueGoal,
   getProductionSources,
-} from "./engine.js?v=0.2.4";
+} from "./engine.js?v=0.2.5";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id) {
   if (isLegacy(s)) return old.planCraft(s, id);
