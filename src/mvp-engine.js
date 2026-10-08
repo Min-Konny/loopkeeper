@@ -1,10 +1,11 @@
-import { CONTENT as C } from "./content.js?v=0.2.16";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.2.16";
+import { CONTENT as C } from "./content.js?v=0.3.0";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.0";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.0";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.2.16";
+} from "./legacy-engine.js?v=0.3.0";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -30,8 +31,8 @@ export const ACTIONS = C.actions.map((a) => ({
   ...a,
   description:
     a.id === "train_combat"
-      ? "攻撃力と最大HPを鍛える。"
-      : Object.entries(a.yields)
+      ? "攻撃力を鍛える。"
+      : a.trainingStat === "defense" ? "防御力を鍛える。" : a.trainingStat === "vitality" ? "最大HPを鍛える。" : Object.entries(a.yields)
           .map(([r, n]) => `${RESOURCES[r].name} +${n}`)
           .join(" / "),
 }));
@@ -51,6 +52,7 @@ const effectText = (f) =>
     workshop: `製作速度 +${Math.round(f.effect.craftSpeed * 100)}%`,
     market: `木材10 → 金貨${f.effect.woodSaleAmount}`,
     guardhouse: `支援攻撃 ${f.effect.supportAttack}`,
+    archery_tower: `弓支援 ${f.effect.rangedAttack} / 飛行に2.5倍`,
   })[f.facilityId];
 export const RECIPES = [
   ...C.equipment.map((e) => ({
@@ -66,7 +68,7 @@ export const RECIPES = [
   })),
   ...C.facilities.map((f) => ({
     ...f,
-    name: f.name + [" I", " II", " III"][f.level - 1],
+    name: f.name + [" I", " II", " III", " IV", " V"][f.level - 1],
     facility: { id: f.facilityId, level: f.level, name: f.name },
     description: effectText(f),
   })),
@@ -202,6 +204,7 @@ function freshRun(meta, settings) {
     hp: 100,
     resources: Object.fromEntries(C.resources.map((r) => [r.id, 0])),
     skills: skills(),
+    training: {defense:0, vitality:0},
     equipment: {},
     facilities: {},
     activeAction: null,
@@ -330,7 +333,7 @@ export function getSkillEffects(s, id) {
     permanentSpeedPercent: (lv(s, id, true) - 1) * 8,
     runXpPercent: Math.min(100, (lv(s, id, true) - 1) * 4),
     runAttack: id === "combat" ? (lv(s, id) - 1) * 2 : 0,
-    runMaxHp: id === "combat" ? (lv(s, id) - 1) * 10 : 0,
+    runMaxHp: id === "combat" ? (getSkillProgress(s.run.training?.vitality ?? s.run.skills.combat.xp).level - 1) * 18 : 0,
   };
 }
 export function getSynergies(s) {
@@ -352,8 +355,8 @@ export function getStats(s) {
   const r = lv(s, "combat") - 1,
     p = lv(s, "combat", true) - 1;
   let attack = 6 + r * 2 + p * 0.7 + s.run.runAttack,
-    defense = p * 0.2,
-    maxHp = 100 + r * 10 + p * 4;
+    defense = p * 0.2 + (getSkillProgress(s.run.training?.defense || 0).level - 1) * 1.5,
+    maxHp = 100 + (s.contentVersion === "A2.1" ? (getSkillProgress(s.run.training?.vitality || 0).level - 1) * 18 : r * 10) + p * 4;
   for (const e of Object.values(s.run.equipment)) {
     attack += e.attack || 0;
     defense += e.defense || 0;
@@ -381,6 +384,7 @@ export function getStats(s) {
     maxHp: round(maxHp),
     speed: s.run.equipment.tool?.speed || 0,
     support: effect(s, "guardhouse").supportAttack || 0,
+    ranged: effect(s, "archery_tower").rangedAttack || 0,
   };
 }
 export function getFoodHealing(s) {
@@ -396,7 +400,7 @@ export function getActionDuration(s, d) {
   let multiplier = 1;
   if (aug(s, "forestry") && ["logging", "mining"].includes(d.skill))
     multiplier *= 0.8;
-  if (aug(s, "drill") && d.id === "train_combat") multiplier *= 0.7;
+  if (aug(s, "drill") && d.trainingStat) multiplier *= 0.7;
   const speed =
     (1 + 0.1 * (lv(s, d.skill) - 1)) *
     (1 + 0.08 * (lv(s, d.skill, true) - 1)) *
@@ -487,6 +491,8 @@ export function canStartAction(s, id, ignoreActive = false) {
   }
   if (d.equipment && s.run.equipment[d.slot]?.id === id)
     return fail("装備済みです。");
+  if (d.previousEquipmentId && (s.run.equipment[d.slot]?.tier || 0) != d.tier - 1)
+    return fail(`${defs.get(d.previousEquipmentId).name}から強化してください。`);
   for (const [r, n] of Object.entries(getRecipeCost(s, d)))
     if (s.run.resources[r] < n)
       return fail(
@@ -507,7 +513,7 @@ function batch(s, id, channel = "main", durationMultiplier = 1) {
   for (const [r, n] of Object.entries(getRecipeCost(s, d)))
     s.run.resources[r] = round(s.run.resources[r] - n);
   if (d.equipment && s.run.reinvestment) s.run.reinvestment = 0;
-  const xpBonus = aug(s, "field_training") && id === "train_combat" ? 1.25 : 1;
+  const xpBonus = aug(s, "field_training") && d.trainingStat ? 1.25 : 1;
   return {
     id,
     instanceId: ++s.run.workSeq,
@@ -551,9 +557,15 @@ export function stopAction(s) {
   s.settings.paused = true;
   return ok();
 }
-function gain(s, skill, run, perm) {
+function gain(s, skill, run, perm, focus) {
   const before = getStats(s).maxHp,
     old = lv(s, skill);
+  if (skill === "combat") {
+    s.run.training ||= {defense:0,vitality:s.run.skills.combat.xp * .5};
+    if (focus === "defense" || focus === "vitality") {
+      s.run.training[focus] = round(Math.min(1e9,s.run.training[focus]+run));run=0;
+    } else if (!focus) s.run.training.vitality=round(Math.min(1e9,s.run.training.vitality+run*.5));
+  }
   s.run.skills[skill].xp = round(Math.min(1e9, s.run.skills[skill].xp + run));
   s.meta.skills[skill].xp = round(
     Math.min(1e9, s.meta.skills[skill].xp + perm),
@@ -591,7 +603,7 @@ function complete(s, a) {
   }
   event(s, "craft", d);
   if (getSynergies(s).length) event(s, "synergy");
-  gain(s, d.skill, a.runXp, a.permanentXp);
+  gain(s, d.skill, a.runXp, a.permanentXp, d.trainingStat);
 }
 
 // Resolve only the next required batch. Re-evaluate after every completion or helper delivery.
@@ -676,6 +688,10 @@ export function resolveGoal(s, id, visiting = new Set()) {
   if (lv(s, d.skill) < d.unlockLevel)
     return { ...fail(`${SKILLS.find((x) => x.id === d.skill).name} Lv.${d.unlockLevel}が必要。`), skill: d.skill };
   const seen = new Set([...visiting, id]);
+  if (d.previousEquipmentId && (s.run.equipment[d.slot]?.tier || 0) != d.tier - 1) {
+    if ((s.run.equipment[d.slot]?.tier || 0) >= d.tier) return { ...ok(), done: true };
+    return resolveGoal(s, d.previousEquipmentId, seen);
+  }
   if (d.facility && (s.run.facilities[d.facility.id] || 0) < d.level - 1)
     return resolveGoal(s, d.requires[0], seen);
   for (const [r, n] of Object.entries(getRecipeCost(s, d))) {
@@ -1025,24 +1041,38 @@ export function saveTemplate(s, name) {
   });
   return ok();
 }
-export function loadTemplate(s, i) {
+export function getTemplatePreview(s, i) {
   const t = s.meta.templates[i];
-  if (!on(s, "queue_templates") || !on(s, "action_queue") || !t || s.run.status !== "preparing" || t.goals.some(g => !isKnown(s, g.id)))
-    return fail("この手順を使えません。");
   const seen = new Set(s.run.queue.filter(q => defs.get(q.id)?.equipment || defs.get(q.id)?.facility).map(q => q.id));
-  const additions = t.goals.filter(g => {
+  const items = (t?.goals || []).map(g => {
     const d = defs.get(g.id);
-    if (!d?.equipment && !d?.facility) return true;
-    if (seen.has(g.id)) return false;
-    seen.add(g.id);
-    return true;
+    const item = { ...g, name: d?.name || g.id, status: "ready", reason: "追加" };
+    const paid = s.run.activeAction?.id === g.id || s.run.suspendedActions[g.id];
+    const equipped = d?.equipment && s.run.equipment[d.slot];
+    const completed = !paid && (d?.facility ? (s.run.facilities[d.facility.id] || 0) >= d.level : equipped && ["attack", "defense", "maxHp", "speed"].every(stat => (equipped[stat] || 0) >= (d.equipment[stat] || 0)));
+    if (completed) return { ...item, status: "skip", reason: d.facility ? "建設済み" : "装備済み・上位装備あり" };
+    if ((d?.equipment || d?.facility) && seen.has(g.id)) return { ...item, status: "skip", reason: "予約済み" };
+    if (!isKnown(s, g.id)) return { ...item, status: "blocked", reason: "未解放" };
+    const check = g.kind === "goal" ? resolveGoal(s, g.id) : canStartAction(s, g.id, true);
+    if (!check.ok) return { ...item, status: "blocked", reason: check.reason };
+    if (d.equipment || d.facility) seen.add(g.id);
+    return item;
   });
+  const additions = items.filter(g => g.status === "ready");
+  const enabled = on(s, "queue_templates") && on(s, "action_queue") && t && s.run.status === "preparing";
+  const reason = !enabled ? "この手順を使えません。" : !additions.length ? "追加できる予約がありません。" : s.run.queue.length + additions.length > 8 ? "行動予約が8件でいっぱいです。不要な予約を削除してください。" : "";
+  return { ok: !reason, reason, items, additions };
+}
+export function loadTemplate(s, i) {
+  const preview = getTemplatePreview(s, i);
+  if (!preview.ok) return fail(preview.reason);
+  const additions = preview.additions;
   if (s.run.queue.length + additions.length > 8) return fail("行動予約が8件でいっぱいです。不要な予約を削除してください。");
   for (const g of additions) {
     const d = defs.get(g.id);
-    s.run.queue.push({ ...g, count: d?.equipment || d?.facility ? 1 : g.count, goalId: ++s.run.queueSeq });
+    s.run.queue.push({ id: g.id, kind: g.kind, count: d?.equipment || d?.facility ? 1 : g.count, goalId: ++s.run.queueSeq });
   }
-  return ok();
+  return { ...ok(), added: additions.length };
 }
 export function deleteTemplate(s, i) {
   if (!s.meta.templates[i]) return fail("手順がありません。");
@@ -1352,7 +1382,7 @@ export function stopAcceleration(s) {
   return ok();
 }
 export function getNextEnemy(s) {
-  const e = (s.contentVersion === "A1" ? A1_ENCOUNTERS : C.encounters)[
+  const e = (s.contentVersion === "A1" ? A1_ENCOUNTERS : s.contentVersion === "A2" ? A2_ENCOUNTERS : C.encounters)[
     s.run.wave
   ];
   if (!e)
@@ -1492,9 +1522,11 @@ function battleRound(s) {
   if (e.hp <= 0) return victory(s, e);
   const support = getStats(s).support;
   if (support) {
-    damage(support);
+    damage(support * (e.trait === "flying" ? .5 : 1));
     if (e.hp <= 0) return victory(s, e);
   }
+  const ranged = getStats(s).ranged;
+  if (ranged) {damage(ranged*(e.trait==="flying"?2.5:1));if(e.hp<=0)return victory(s,e);}
   const stats = getStats(s),
     hits = (
       e.trait === "combo"
@@ -1717,4 +1749,9 @@ export function migrateLegacy(old) {
   };
   s.legacyMigration = true;
   return s;
+}
+
+export function getVitalityMigrationXp(combatXp) {
+  const target = Math.ceil((getSkillProgress(combatXp).level-1)*10/18)+1;
+  return Array.from({length:target-1},(_,i)=>Math.round(50*(i+1)**1.3)).reduce((a,b)=>a+b,0);
 }

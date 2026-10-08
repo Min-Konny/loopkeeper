@@ -31,3 +31,6 @@
 @media(max-width:690px) and (min-width:441px){.camp-banner .camp-art{right:0;height:170px;mask-image:linear-gradient(#000 78%,transparent)}}
 @media(max-width:440px){.camp-banner.has-camp-art{height:auto;gap:116px}.camp-banner .camp-art{right:0;height:230px;mask-image:linear-gradient(#000 75%,transparent)}.camp-banner.has-camp-art .raid-forecast{position:relative}.camp-caption{position:relative}}
 @media(prefers-reduced-motion:reduce){.camp-art *{animation:none!important;will-change:auto!important}.camp-ember,.camp-mote{opacity:0}.camp-flame{opacity:.7}}
+
+.work-foraging .fishing-float{animation:float-bob 2.5s ease-in-out infinite}.work-foraging .fishing-water{animation:water-glow 3s ease-in-out infinite}@keyframes float-bob{50%{transform:translateY(3px)}}@keyframes water-glow{50%{opacity:.65}}
+body.work-resting .fishing-float,body.work-resting .fishing-water{animation-play-state:paused}body.effects-off .fishing-float,body.effects-off .fishing-water{animation:none}@media(prefers-reduced-motion:reduce){.fishing-float,.fishing-water{animation:none!important}}

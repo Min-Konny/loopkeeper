@@ -8,5 +8,6 @@ export function getRecipeVisibility(state, recipe) {
   const obsolete = equipped || Boolean(current && ['attack', 'defense', 'maxHp', 'speed'].every(stat => (current[stat] || 0) >= (recipe.equipment[stat] || 0)));
   const manuallyHidden = state.settings.hiddenRecipes.includes(recipe.id);
   const inProgress = state.run.activeAction?.id === recipe.id || Boolean(state.run.suspendedActions[recipe.id]);
-  return { hidden: !inProgress && (manuallyHidden || obsolete), manuallyHidden, equipped, inferior: obsolete && !equipped, inProgress };
+  const chainHidden = Boolean(recipe.previousEquipmentId && (current?.tier || 0) + 1 < recipe.tier || recipe.facility && (state.run.facilities[recipe.facility.id] || 0) + 1 < recipe.level);
+  return { chainHidden, hidden: !inProgress && (manuallyHidden || obsolete || chainHidden), manuallyHidden, equipped, inferior: obsolete && !equipped, inProgress };
 }

@@ -1,8 +1,9 @@
-import * as legacy from "./legacy-engine.js?v=0.2.16";
-import * as mvp from "./mvp-engine.js?v=0.2.16";
-import { validateSave } from "./save-validation.js?v=0.2.16";
-export { getProductionSources } from "./mvp-engine.js?v=0.2.16";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.2.16";
+import * as legacy from "./legacy-engine.js?v=0.3.0";
+import * as mvp from "./mvp-engine.js?v=0.3.0";
+import { validateSave } from "./save-validation.js?v=0.3.0";
+export { getProductionSources } from "./mvp-engine.js?v=0.3.0";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.3.0";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.3.0";
 export {
   SKILLS,
   getSkillProgress,
@@ -19,7 +20,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.2.16";
+} from "./mvp-engine.js?v=0.3.0";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
@@ -52,6 +53,8 @@ export function parseSave(text) {
     const raw = JSON.parse(text);
     if (raw.version === 1) return normalizeSingleReservations(legacy.parseSave(text));
     if (!validateSave(raw)) return null;
+    raw.run.training ||= {defense:0, vitality:mvp.getVitalityMigrationXp(raw.run.skills.combat.xp)};
+    for (const id of Object.keys(mvp.RESOURCES)) raw.run.resources[id] ??= 0;
     raw.settings.paused = true;
     raw.run.acceleration.active = false;
     return normalizeSingleReservations(raw);
@@ -274,8 +277,8 @@ export function getCombatPreview(s) {
   return {
     hits,
     packet: hits.reduce((a, b) => a + b, 0),
-    support: stats.support || 0,
+    support: (stats.support || 0) * (e.trait === "flying" ? .5 : 1) + (stats.ranged || 0)*(e.trait==="flying"?2.5:1),
     charges: e.charges || 0,
-    trait: { combo: "連撃", heavy: "強打", armor: "装甲" }[e.trait] || "通常",
+    trait: { combo: "連撃", heavy: "強打", armor: "装甲", flying: "飛行" }[e.trait] || "通常",
   };
 }

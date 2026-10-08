@@ -72,6 +72,7 @@ export function mountCampScene(host, { variant = "camp", focusY = 0.55 } = {}) {
   const shared = '<ellipse cx="48" cy="82" rx="45" ry="7" fill="#14281e"/><path d="M13 78h69" stroke="#718265" stroke-width="3"/>';
   const house = '<path d="M21 76V43h54v33Z" fill="#80755f"/><path d="M15 45 47 20 81 45Z" fill="var(--roof,#586e66)"/><path d="M21 45h54" stroke="#c2ad7e" stroke-width="3"/><path d="M43 76V58h13v18" fill="#293b34"/><path class="village-window" d="M28 52h9v10h-9M62 52h8v10h-8" fill="#e5ba69"/>';
   const symbols = {
+    archery_tower: '<path d="M32 78V31h34v47Z" fill="#877b60"/><path d="M24 32h50L49 10Z" fill="#72927e"/><path d="M38 44q25 10 0 24V44m0 12h29m-5-5 5 5-5 5" fill="none" stroke="#ddbf80" stroke-width="3"/>',
     watchtower: '<path d="M35 80V29h27v51Z" fill="#80755f"/><path d="M29 30h39L48 10Z" fill="#57746d"/><path d="M39 40h19v13H39" fill="#273e35"/><path d="M34 63h29M34 72h29" stroke="#c0a576" stroke-width="3"/><path d="M60 13V2" stroke="#b6ac87"/><path class="village-flag" d="M61 2h16l-5 5 5 5H61" fill="#d7b470"/>',
     barricade: '<g fill="#8d7350" stroke="#b99a67" stroke-width="1">'+[9,25,41,57,73].map(x=>`<path d="M${x} 79V46l6-10 6 10v33Z"/>`).join('')+'</g><path d="M5 57h84M5 70h84" stroke="#584632" stroke-width="5"/>',
     infirmary: house+'<path d="M45 32v14M38 39h14" stroke="#d6ddd0" stroke-width="5"/>',

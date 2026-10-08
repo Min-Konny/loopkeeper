@@ -1,5 +1,5 @@
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.2.16";
-import { CONTENT as C } from "./content.js?v=0.2.16";
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.0";
+import { CONTENT as C } from "./content.js?v=0.3.0";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -10,7 +10,8 @@ import {
   resourceKnown,
   canPurchaseUpgrade,
   canConfigureWorker,
-} from "./engine.js?v=0.2.16";
+  getTemplatePreview,
+} from "./engine.js?v=0.3.0";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -125,7 +126,10 @@ export function automationMarkup(s) {
 }
 export function templatesMarkup(s) {
   if (!s.meta.upgrades.includes("queue_templates")) return "";
-  return `<details class="template-controls"><summary>保存した手順 (${s.meta.templates.length}/8)</summary><div class="queue-controls"><input id="template-name" maxlength="40" placeholder="手順の名前" aria-label="手順の名前">${button("予約を保存", 'data-command="template-save"', !s.run.queue.length || s.meta.templates.length >= 8)}</div>${s.meta.templates.map((t, i) => `<div class="template-row"><span>${esc(t.name)}</span>${button("追加", `data-template="${i}"`)}${button("削除", `data-template-delete="${i}"`)}</div>`).join("")}</details>`;
+  return `<details class="template-controls"><summary>保存した手順 (${s.meta.templates.length}/8)</summary><div class="queue-controls"><input id="template-name" maxlength="40" placeholder="手順の名前" aria-label="手順の名前">${button("予約を保存", 'data-command="template-save"', !s.run.queue.length || s.meta.templates.length >= 8)}</div>${s.meta.templates.map((t, i) => {
+    const p = getTemplatePreview(s, i);
+    return `<details class="template-preview"><summary>${esc(t.name)}<small>追加 ${p.additions.length} · 省略 ${p.items.filter(g => g.status === "skip").length} · 要確認 ${p.items.filter(g => g.status === "blocked").length}</small></summary><ul>${p.items.map(g => `<li class="${g.status}"><span>${g.status === "ready" ? "＋" : g.status === "skip" ? "✓" : "!"} ${esc(g.name)}${g.count > 1 ? ` ×${g.count}` : ""}</span><small>${esc(g.reason)}</small></li>`).join("")}</ul><div class="template-preview-actions">${button(`${p.additions.length}件を追加`, `data-template="${i}"`, !p.ok)}${button("手順を削除", `data-template-delete="${i}"`)}${p.reason ? `<small>${esc(p.reason)}</small>` : ""}</div></details>`;
+  }).join("")}</details>`;
 }
 export function milestoneMarkup(s) {
   return `<details class="milestone-list"><summary>初達成 ${s.meta.completedMilestones.length}/${MILESTONES.length}</summary>${MILESTONES.map((q) => `<div>${s.meta.completedMilestones.includes(q.id) ? "✓" : "○"} ${esc(q.name)} <small>1 pt</small></div>`).join("")}</details>`;

@@ -1,7 +1,7 @@
-import { equipmentMaterial } from './visual-design.js?v=0.2.16';
-import { battleSound } from "./presentation.js?v=0.2.16";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.2.16";
-import { icon } from "./icons.js?v=0.2.16";
+import { equipmentMaterial } from './visual-design.js?v=0.3.0';
+import { battleSound } from "./presentation.js?v=0.3.0";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.3.0";
+import { icon } from "./icons.js?v=0.3.0";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -45,6 +45,7 @@ function createView(dialog) {
         </article>
       </div>
       <div class="battle-rhythm"><div><span>次の攻防</span><b data-battle="round-time"></b></div><div class="battle-round-track"><i data-battle="round-bar"></i></div></div>
+      <div class="battle-facilities" aria-label="村の戦闘支援"><div class="battle-facility guardhouse" data-battle="guardhouse-sign" hidden><svg viewBox="0 0 60 48" aria-hidden="true"><path d="M12 43V12H18V7H26V12H34V7H42V12H48V43Z" fill="#69816a"/><path d="M24 43V26Q30 17 36 26V43" fill="#22382e"/><path d="M10 14H50M9 43H51" stroke="#c2c790" stroke-width="3"/><path d="M17 22H23M37 22H43" stroke="#e8d99b" stroke-width="4"/></svg><span>衛兵詰所<small data-battle="support-value"></small></span></div><div class="battle-facility archery" data-battle="archery-sign" hidden><svg viewBox="0 0 60 48" aria-hidden="true"><path d="M14 43V18h32v25Z" fill="#7f9275"/><path d="M8 19 30 4 52 19Z" fill="#5b8275"/><path d="M21 23q20 7 0 17V23m0 8h27m-5-5 5 5-5 5" fill="none" stroke="#e1c483" stroke-width="2"/></svg><span>弓塔<small data-battle="ranged-value"></small></span></div><div class="battle-facility infirmary" data-battle="infirmary-sign" hidden><svg viewBox="0 0 60 48" aria-hidden="true"><path d="M12 23H48V43H12Z" fill="#819d86"/><path d="M6 24 30 5 54 24Z" fill="#567e76"/><path d="M26 24H34V29H39V37H34V42H26V37H21V29H26Z" fill="#e1dfbd"/></svg><span>救護所<small data-battle="treatment-value"></small></span></div></div>
     </section>
     <section class="battle-supplies" aria-label="戦闘中の回復">
       <span class="battle-food-icon" data-battle="food-icon">${icon("food")}</span>
@@ -267,7 +268,8 @@ function guard(view, hasShield) {
     {opacity:0,transform:'scale(1.12)'},
   ], 550, 160);
 }
-function supportShot(view) {
+function supportShot(view, source = "guardhouse-sign") {
+  animate(view, source, [{filter:'brightness(1)'},{filter:'brightness(1.7)',offset:.3},{filter:'brightness(1)'}], 550);
   animate(view, 'enemy-projectile', [
     {opacity:0,transform:'translateX(-110px)'},
     {opacity:1,transform:'translateX(-45px)',offset:.3},
@@ -372,7 +374,7 @@ export function renderBattle(dialog, state) {
     el["enemy-name"],
     enemy.name + (enemy.trait ? " · " + getCombatPreview(state).trait : ""),
   );
-  const portraitId = enemy.isBoss
+  const portraitId = enemy.trait === "flying" ? "winged" : enemy.isBoss
     ? "boss"
     : ["wolf", "raider", "boss", "knight", "giant"][
         Math.min(enemy.wave - 1, 4)
@@ -395,6 +397,12 @@ export function renderBattle(dialog, state) {
         : ""),
   );
   const preview = getCombatPreview(state);
+  el['guardhouse-sign'].hidden = stats.support <= 0;
+  el['archery-sign'].hidden = (stats.ranged || 0) <= 0;
+  setText(el['ranged-value'], `${number((stats.ranged || 0)*(enemy.trait==='flying'?2.5:1))}${enemy.trait==='flying'?' · 対空':''}`);
+  el['infirmary-sign'].hidden = !state.run.facilities.infirmary;
+  setText(el['support-value'], `支援 ${number(stats.support)}`);
+  setText(el['treatment-value'], `処置 残り${preview.charges}回`);
   setText(el.incoming, number(preview.packet));
   el["outgoing-formula"].title =
     `攻撃 ${number(stats.attack)} − 敵の防御 ${number(enemy.defense)}（最低1ダメージ）`;
@@ -431,11 +439,13 @@ export function renderBattle(dialog, state) {
     const enemyLoss = previous.enemyHp - enemy.hp;
     const hpChange = run.hp - previous.hp;
     const foodUsed = previous.food - run.resources.food;
-    if (enemyLoss > 0 || hpChange !== 0 || foodUsed > 0) {
+    const treatmentUsed = Math.max(0, (previous.charges ?? preview.charges) - preview.charges);
+    if (enemyLoss > 0 || hpChange !== 0 || foodUsed > 0 || treatmentUsed > 0) {
       clearFeedback(view);
       if (enemyLoss > 0) {
         strike(view, "player", "enemy");
         if (stats.support > 0) supportShot(view);
+        if (stats.ranged > 0) supportShot(view, "archery-sign");
         battleSound("hit");
         feedback(view, "enemy", "damage", `−${number(enemyLoss)} HP`);
       }
@@ -454,6 +464,12 @@ export function renderBattle(dialog, state) {
         if (hpChange <= 0)
           feedback(view, "player", "heal", `食料 −${number(foodUsed)}`);
       }
+      if (treatmentUsed > 0) {
+        heal(view);
+        animate(view,'infirmary-sign',[{boxShadow:'0 0 0 transparent',filter:'brightness(1)'},{boxShadow:'0 0 24px #9de4c5',filter:'brightness(1.6)',offset:.3},{boxShadow:'0 0 0 transparent',filter:'brightness(1)'}],800);
+        feedback(view,'player','heal','救護所の処置');
+        battleSound('heal');
+      }
     }
   }
   view.previous = {
@@ -463,5 +479,6 @@ export function renderBattle(dialog, state) {
     hp: run.hp,
     enemyHp: enemy.hp,
     food: run.resources.food,
+    charges: preview.charges,
   };
 }

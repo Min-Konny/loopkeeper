@@ -1,4 +1,4 @@
-import * as old from "./legacy-planner.js?v=0.2.16";
+import * as old from "./legacy-planner.js?v=0.3.0";
 import {
   isLegacy,
   getCatalog,
@@ -17,7 +17,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.2.16";
+} from "./engine.js?v=0.3.0";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -29,6 +29,7 @@ export function planCraft(s, id, count = 1) {
   if (s.run.status !== "preparing") return fail("準備中に予約してください。");
   const inventory = { ...s.run.resources },
     steps = [];
+  const equipment = { ...s.run.equipment };
   let seconds = 0;
   const paid = new Set();
   function append(x, n) {
@@ -67,6 +68,10 @@ export function planCraft(s, id, count = 1) {
       (s.run.activeAction?.id === x.id
         ? s.run.activeAction
         : s.run.suspendedActions[x.id]);
+    if (x.previousEquipmentId && !saved) {
+      if ((equipment[x.slot]?.tier || 0) >= x.tier) return;
+      if ((equipment[x.slot]?.tier || 0) < x.tier - 1) craft(RECIPES.find(r => r.id === x.previousEquipmentId), 1, next);
+    }
     for (const [r, cost] of Object.entries(getRecipeCost(s, x))) {
       const needed = cost * (n - (saved?.kind === "craft" ? 1 : 0)),
         short = needed - (inventory[r] || 0);
@@ -95,6 +100,7 @@ export function planCraft(s, id, count = 1) {
       inventory[r] = (inventory[r] || 0) - needed;
     }
     append(x, n);
+    if (x.equipment) equipment[x.slot] = { id:x.id, ...x.equipment };
     for (const [r, v] of Object.entries(x.yields || {}))
       inventory[r] = (inventory[r] || 0) + v * n;
   }

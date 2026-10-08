@@ -1,4 +1,4 @@
-import { CONTENT as C } from "./content.js?v=0.2.16";
+import { CONTENT as C } from "./content.js?v=0.3.0";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -58,13 +58,14 @@ export function validateSave(s) {
       !object(s) ||
       s.version !== 2 ||
       s.schemaVersion !== 2 ||
-      !["A1", "A2"].includes(s.contentVersion) ||
+      !["A1", "A2", "A2.1"].includes(s.contentVersion) ||
       !object(s.meta) ||
       !object(s.run) ||
       !object(s.settings)
     )
       return false;
     const { meta: m, run: r, settings: t } = s;
+    if (m.discovered !== undefined && !validList(m.discovered, new Set([...defs.keys(), 'feature_village', 'feature_diplomacy', 'feature_augments']), 100)) return false;
     if (
       !integer(m.generation, 1) ||
       !integer(m.bestWave) ||
@@ -117,7 +118,7 @@ export function validateSave(s) {
       ) ||
       !validSkills(r.skills) ||
       !object(r.resources) ||
-      !C.resources.every((x) => number(r.resources[x.id]))
+      !C.resources.every((x) => number(r.resources[x.id]) || x.id === "fish" && r.resources.fish === undefined && ["A1","A2"].includes(s.contentVersion))
     )
       return false;
     if (
@@ -132,6 +133,7 @@ export function validateSave(s) {
       !number(r.simRemainder, 0, 60)
     )
       return false;
+    if (r.training !== undefined && (!object(r.training) || !number(r.training.defense) || !number(r.training.vitality))) return false;
     if (r.status === "legacy_setup" && !ledger(r.legacyDraft, m.totalPoints))
       return false;
     if (r.status === "cleared" && r.wave !== 21) return false;
@@ -164,7 +166,7 @@ export function validateSave(s) {
       !object(r.facilities) ||
       Object.entries(r.facilities).some(
         ([id, n]) =>
-          !C.facilities.some((f) => f.facilityId === id) || !integer(n, 1, 3),
+          !C.facilities.some((f) => f.facilityId === id) || !C.facilities.some(f => f.facilityId === id && f.level === n),
       )
     )
       return false;
@@ -272,7 +274,7 @@ export function validateSave(s) {
         !integer(e.round) ||
         !number(e.xpBudget) ||
         !number(e.xpAwarded, 0, e.xpBudget) ||
-        !integer(e.charges, 0, 3)
+        !integer(e.charges, 0, 5)
       )
         return false;
     } else if (r.enemy !== null) return false;
