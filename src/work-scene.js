@@ -1,7 +1,13 @@
-import { icon } from './icons.js?v=0.2.11';
+import { equipmentMaterial } from './visual-design.js?v=0.2.12';
+import { icon } from './icons.js?v=0.2.12';
 
 // Decorative work scenes follow the actual selected skill; no separate timer or game state.
-export function workScene(skill, actionId) {
+export function workScene(skill, actionId, equipment = {}) {
+  const toolMaterial = equipmentMaterial(skill === 'combat' ? equipment.weapon : equipment.tool);
+  const armorMaterial = equipmentMaterial(equipment.armor);
+  const shieldMaterial = equipmentMaterial(equipment.shield);
+  const shield = equipment.shield ? `<path d="M26 51l14 4v14L26 79 15 69V55Z" fill="${shieldMaterial.metal}" stroke="${shieldMaterial.cloth}" stroke-width="2"/>` : '';
+  const armor = equipment.armor ? `<path d="M38 50h21l4 19H35Z" fill="${armorMaterial.metal}"/><path d="M40 32q8-12 17 0v8H40Z" fill="${armorMaterial.metal}"/>` : '';
   const cooking = actionId?.includes('meal') || actionId?.includes('cook');
   const tool = cooking ? 'food' : { logging: 'axe', mining: 'pickaxe', foraging: 'leaf', smithing: 'hammer', combat: 'sword' }[skill];
   const objects = {
@@ -13,5 +19,5 @@ export function workScene(skill, actionId) {
   };
   const object = cooking ? '<path d="M79 48h49q0 26-25 26T79 48Z" fill="#758780"/><path d="M77 47h53" stroke="#b9bdaa" stroke-width="4"/><path class="work-flame" d="M90 81q-4-11 6-18l4 9 7-11q12 12 7 20Z" fill="#e9af64"/>' : objects[skill];
   if (!object) return '';
-  return `<div class="work-vignette work-${skill}" aria-hidden="true"><svg viewBox="0 0 170 90"><ellipse cx="92" cy="76" rx="72" ry="11" fill="#10201f"/><path d="M5 69Q38 45 80 66T167 66V90H5Z" fill="#2a4037"/><g class="work-person"><path d="M35 75l4-24h19l6 24" fill="#73877e"/><path d="M41 51l-8 15m22-15 18 4" stroke="#a0a997" stroke-width="6" stroke-linecap="round"/><circle cx="48" cy="38" r="10" fill="#c5b091"/><path d="M37 35q3-17 17-8l7 10H37Z" fill="#91a28b"/></g>${object}<g class="work-particles" fill="#ddc393"><circle cx="87" cy="42" r="2"/><circle cx="77" cy="35" r="1.5"/><circle cx="95" cy="29" r="2"/></g></svg><span class="work-tool">${icon(tool)}</span></div>`;
+  return `<div class="work-vignette work-${skill} material-${toolMaterial.tier}" style="--tool-metal:${toolMaterial.metal};--tool-glow:${toolMaterial.glow};--work-cloth:${armorMaterial.cloth}" aria-hidden="true"><svg viewBox="0 0 170 90"><ellipse cx="92" cy="76" rx="72" ry="11" fill="#10201f"/><path d="M5 69Q38 45 80 66T167 66V90H5Z" fill="#2a4037"/><g class="work-person"><path d="M35 75l4-24h19l6 24" fill="var(--work-cloth)"/><path d="M41 51l-8 15m22-15 18 4" stroke="#a0a997" stroke-width="6" stroke-linecap="round"/><circle cx="48" cy="38" r="10" fill="#c5b091"/><path d="M37 35q3-17 17-8l7 10H37Z" fill="#91a28b"/>${armor}${shield}</g>${object}<g class="work-particles" fill="#ddc393"><circle cx="87" cy="42" r="2"/><circle cx="77" cy="35" r="1.5"/><circle cx="95" cy="29" r="2"/></g></svg><span class="work-tool">${icon(tool)}</span></div>`;
 }

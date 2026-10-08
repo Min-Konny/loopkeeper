@@ -1,5 +1,5 @@
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.2.11";
-import { CONTENT as C } from "./content.js?v=0.2.11";
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.2.12";
+import { CONTENT as C } from "./content.js?v=0.2.12";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -10,7 +10,7 @@ import {
   resourceKnown,
   canPurchaseUpgrade,
   canConfigureWorker,
-} from "./engine.js?v=0.2.11";
+} from "./engine.js?v=0.2.12";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,

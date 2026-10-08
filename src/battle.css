@@ -97,3 +97,18 @@
 #battle-dialog .battle-portrait{--portrait-size:132px}
 #battle-dialog .battle-field{background:radial-gradient(ellipse at 50% 100%,#68704533,transparent 70%),linear-gradient(180deg,#17282c,#22342d);border-radius:12px}
 @media(max-width:650px), (max-height:760px){#battle-dialog .battle-portrait{--portrait-size:100px}}
+
+#battle-dialog .battle-shield-spark {position:absolute;left:50%;top:47%;width:80%;height:85%;color:var(--shield-glow,#cde6ee);filter:drop-shadow(0 0 8px var(--shield-glow));opacity:0;transform:translate(-50%,-50%);}
+#battle-dialog .battle-enemy .battle-slash {background:linear-gradient(90deg,transparent,var(--weapon-glow,#e0bc78) 18%,#fffbe8 48%,var(--weapon-glow,#e0bc78) 70%,transparent);}
+#battle-dialog .boss-arrival {position:absolute;inset:20% 10% auto;z-index:5;pointer-events:none;text-align:center;border-top:1px solid var(--boss-tone,#d7a379);border-bottom:1px solid var(--boss-tone,#d7a379);padding:18px;background:linear-gradient(90deg,transparent,#201e20ee 20%,#201e20ee 80%,transparent);opacity:0;}
+#battle-dialog .boss-arrival small {display:block;letter-spacing:.3em;color:var(--boss-tone,#d7a379);font-size:14px;}
+#battle-dialog .boss-arrival strong {display:block;font-size:25px;color:#f0dbc0;margin-top:8px;}
+#battle-dialog.battle-is-boss .battle-enemy .battle-avatar {box-shadow:0 0 45px color-mix(in srgb,var(--boss-tone,#d7a379) 35%,transparent);}
+#battle-dialog[data-chapter="1"] {--boss-tone:#c5a879;}
+#battle-dialog[data-chapter="2"] {--boss-tone:#cb877d;}
+#battle-dialog[data-chapter="3"] {--boss-tone:#bc9ddd;}
+#battle-dialog[data-chapter="4"] {--boss-tone:#e5bd76;}
+#battle-dialog[data-chapter="5"] {--boss-tone:#7fc3c5;}
+#battle-dialog[data-chapter="6"] {--boss-tone:#abc0ed;}
+#battle-dialog[data-chapter="7"] {--boss-tone:#f2d38b;}
+@media(max-width:690px){#battle-dialog .boss-arrival strong {font-size:20px;}#battle-dialog .boss-arrival small {font-size:12px;}}

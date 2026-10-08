@@ -1,6 +1,7 @@
-import { resolveGoal } from "./engine.js?v=0.2.11";
-import { getCatalog } from "./engine.js?v=0.2.11";
-import { CONTENT } from "./content.js?v=0.2.11";
+import { compareRun } from './visual-design.js?v=0.2.12';
+import { resolveGoal } from "./engine.js?v=0.2.12";
+import { getCatalog } from "./engine.js?v=0.2.12";
+import { CONTENT } from "./content.js?v=0.2.12";
 import {
   isLegacy,
   isKnown,
@@ -13,7 +14,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.2.11";
+} from "./engine.js?v=0.2.12";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -21,21 +22,22 @@ import {
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.2.11";
-import { createSessionOwner } from "./session-owner.js?v=0.2.11";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.2.11";
+} from "./mvp-ui.js?v=0.2.12";
+import { createSessionOwner } from "./session-owner.js?v=0.2.12";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.2.12";
 import {
   loadStoredGame,
   writeStoredGame,
   readBackups,
   decodeRecord,
   unreadableRecord,
-} from "./save-storage.js?v=0.2.11";
+} from "./save-storage.js?v=0.2.12";
 import {
   updatePresentation,
+  markQueueEdited,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.2.11";
+} from "./presentation.js?v=0.2.12";
 import {
   getRaidInterval,
   aidCountry,
@@ -57,9 +59,9 @@ import {
   restartRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.2.11";
-import { icon } from "./icons.js?v=0.2.11";
-import { planCraft, queueCraft, queueAction, queueWork, selectManualAction } from "./planner.js?v=0.2.11";
+} from "./engine.js?v=0.2.12";
+import { icon } from "./icons.js?v=0.2.12";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction } from "./planner.js?v=0.2.12";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -68,20 +70,20 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.2.11";
-import { renderAugments } from "./augments-ui.js?v=0.2.11";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.2.11";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.2.11";
-import { mountCampScene } from "./camp-scene.js?v=0.2.11";
-import { workScene } from "./work-scene.js?v=0.2.11";
-import { getRecipeVisibility } from "./workshop.js?v=0.2.11";
-import { getMilestoneStatus } from "./engine.js?v=0.2.11";
+} from "./engine.js?v=0.2.12";
+import { renderAugments } from "./augments-ui.js?v=0.2.12";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.2.12";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.2.12";
+import { mountCampScene } from "./camp-scene.js?v=0.2.12";
+import { workScene } from "./work-scene.js?v=0.2.12";
+import { getRecipeVisibility } from "./workshop.js?v=0.2.12";
+import { getMilestoneStatus } from "./engine.js?v=0.2.12";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.2.11";
+} from "./engine.js?v=0.2.12";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -282,7 +284,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2.11</b></div>
+    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2.12</b></div>
   </aside>
   <div class="workspace">
     <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
@@ -380,7 +382,10 @@ function renderControls() {
 }
 
 function renderWorld() {
-  campScene.setSettlement(state.run.facilities);
+  campScene.setActive(state.settings.effectsEnabled && !state.settings.paused && state.run.status === "preparing");
+  campScene.setSettlement(state.run.facilities, state.meta.generation);
+  const construction = RECIPES.find(d => d.id === state.run.activeAction?.id && d.facility);
+  campScene.setConstruction(construction?.facility?.id, state.run.activeAction ? state.run.activeAction.progress / state.run.activeAction.duration : 0);
   campScene.setThreat(state.run.status === "preparing" ? Math.max(0, 1 - (state.run.nextWaveAt - state.run.elapsed) / 45) : 0, state.settings.paused);
   const families = getCatalog(state).AUGMENTS.filter(a => getAugmentStatus(state).selected.includes(a.id)).map(a => a.family);
   document.body.classList.toggle("build-economy", families.includes("economy"));
@@ -464,7 +469,7 @@ function renderWork() {
   const combat = state.run.status === "combat";
   setHTML(
     "#active-work",
-    `<div class="active-work ${working ? "working" : ""} ${combat ? "battle" : ""}">${working && !combat ? workScene(activeDefinition.skill, activeDefinition.id) : `<div class="active-icon">${icon(combat ? "shield" : "clock")}</div>`}<div class="active-detail"><div><strong>${combat ? "野営地を防衛中" : working ? escape(activeDefinition.name) : "次の行動を選びましょう"}</strong><span>${combat ? "作業は戦闘後に再開" : working ? `<span data-work-time></span>` : state.settings.paused ? "時間は止まっています" : "襲撃までの時間は進みます"}</span></div><div class="work-track"><i data-live-work style="width:0%"></i></div></div>${working ? `<button class="stop-button" data-command="stop" data-focus="stop" title="作業を中断" aria-label="作業を中断">${icon("close")}</button>` : ""}</div>`,
+    `<div class="active-work ${working ? "working" : ""} ${combat ? "battle" : ""}">${working && !combat ? workScene(activeDefinition.skill, activeDefinition.id, state.run.equipment) : `<div class="active-icon">${icon(combat ? "shield" : "clock")}</div>`}<div class="active-detail"><div><strong>${combat ? "野営地を防衛中" : working ? escape(activeDefinition.name) : "次の行動を選びましょう"}</strong><span>${combat ? "作業は戦闘後に再開" : working ? `<span data-work-time></span>` : state.settings.paused ? "時間は止まっています" : "襲撃までの時間は進みます"}</span></div><div class="work-track"><i data-live-work style="width:0%"></i></div></div>${working ? `<button class="stop-button" data-command="stop" data-focus="stop" title="作業を中断" aria-label="作業を中断">${icon("close")}</button>` : ""}</div>`,
   );
   if (tab === "gather") renderGather();
   if (tab === "craft" || tab === "village") renderCraft();
@@ -515,7 +520,7 @@ function renderQueuePreview() {
   const enabled = !state.settings.disabledUpgrades.includes("action_queue");
   const issue = queueIssue();
   const status = issue ? "要確認" : !enabled ? "保留中" : state.settings.paused ? "時間停止中" : "実行中";
-  setHTML("#queue-preview", `<div class="queue-preview-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length}/8</small></h3><button data-info="queue">編集</button></div><div class="queue-preview-status ${issue ? "needs-attention" : ""}">${status}</div>${state.run.queue.length ? `<ol>${state.run.queue.map((entry,index) => `<li class="${index === 0 && state.run.queueManaged && enabled ? "current" : ""}"><span class="queue-number">${index+1}</span><span class="queue-preview-name">${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}</span><small>${singleUse(entry.id) ? "1回" : `残り${entry.count}回`}</small></li>`).join("")}</ol><button class="button small" data-toggle-upgrade="action_queue">${enabled ? "予約を保留" : "予約を有効にする"}</button>` : '<p class="queue-preview-empty">予約した行動がここに並びます。</p>'}`);
+  setHTML("#queue-preview", `<div class="queue-preview-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length}/8</small></h3><button data-info="queue">編集</button></div><div class="queue-preview-status ${issue ? "needs-attention" : ""}">${status}</div>${state.run.queue.length ? `<ol>${state.run.queue.map((entry,index) => `<li data-preview-goal="${entry.goalId ?? index}" class="${index === 0 && state.run.queueManaged && enabled ? "current" : ""}"><span class="queue-number">${index+1}</span><span class="queue-preview-name">${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}</span><small>${singleUse(entry.id) ? "1回" : `残り${entry.count}回`}</small></li>`).join("")}</ol><button class="button small" data-toggle-upgrade="action_queue">${enabled ? "予約を保留" : "予約を有効にする"}</button>` : '<p class="queue-preview-empty">予約した行動がここに並びます。</p>'}`);
 }
 function renderQueue() {
   renderQueuePreview();
@@ -812,7 +817,7 @@ function syncBattleDialog() {
     mountCampScene(dialog.querySelector(".battle-scene"), {
       variant: "battle",
       focusY: 0.45,
-    }).setActive(!state.settings.paused);
+    }).setActive(state.settings.effectsEnabled && !state.settings.paused);
     if (!dialog.open && !document.querySelector("dialog[open]"))
       dialog.showModal();
     campScene.setActive(false);
@@ -820,7 +825,7 @@ function syncBattleDialog() {
   }
   suspendBattle(dialog);
   if (dialog.open) dialog.close();
-  campScene.setActive(state.settings.effectsEnabled);
+  campScene.setActive(state.settings.effectsEnabled && !state.settings.paused);
   if (
     activeBattle &&
     state.run.status === "preparing" &&
@@ -943,7 +948,7 @@ function render() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.2.11</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />別の画面に移ったときも自動停止し、閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.2.12</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />別の画面に移ったときも自動停止し、閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
@@ -987,13 +992,16 @@ function showDeath() {
   saveGame();
   const record = state.meta.history[0];
   const gains = record?.skillGains || {};
+  const comparison = compareRun(state);
+  const signed = (value, formatter = format) => `${value >= 0 ? "+" : "−"}${formatter(Math.abs(value))}`;
+  const comparisonMarkup = comparison ? `<div class="run-comparison"><span>前回の命と比べて</span><b>${signed(comparison.wave)}波</b><b>生存時間 ${signed(comparison.seconds,time)}</b></div>` : '<div class="run-comparison"><span>この命の経験が、次の出発点になります。</span></div>';
   const retainedUnlocks = state.meta.upgrades
     .map((id) => LEGACY_UPGRADES.find((item) => item.id === id)?.name)
     .filter(Boolean);
   for (const dialog of document.querySelectorAll("dialog[open]"))
     dialog.close();
   document.querySelector("#death-dialog").innerHTML =
-    `<div class="death-emblem">${icon("flame")}</div><div class="eyebrow">THE EMBER REMAINS</div><h2 id="death-title">火は消えても、記憶は残る。</h2><p class="dialog-lead">第 ${state.meta.generation} 世代の旅が終わりました。<br />積み重ねた経験が、次の命を少し強くする。</p><div class="death-stats"><div><small>この命の時間</small><strong>${time(state.run.elapsed)}</strong></div><div><small>撃退した襲撃</small><strong>${state.run.wave}<span> 波</span></strong></div><div><small>最高記録</small><strong>${state.meta.bestWave}<span> 波</span></strong></div></div><div class="inheritance-heading">${icon("memory")}次の命へ引き継ぐ経験</div><div class="inheritance-list">${SKILLS.map((skill) => `<div><span>${icon(skillIcons[skill.id])}${escape(skill.name)}</span><b>永続 Lv.${skillLevel(skill.id, true).level}</b><small>+${format(gains[skill.id] || 0)} XP</small></div>`).join("")}</div><p class="death-tip">${state.run.equipment.weapon ? "鍛えた技能で準備を速め、次は装備と食料をひとつ多く。" : "次の命では、伐採から武器を作る順番を試してみよう。"}</p><button class="button gold full-width" data-command="rebirth">次の命を灯す${icon("arrow")}</button><p class="fine-print">資源・装備・進行レベル・オーグメントの効果はリセットされます。</p>`;
+    `<div class="death-emblem">${icon("flame")}</div><div class="eyebrow">THE EMBER REMAINS</div><h2 id="death-title">火は消えても、記憶は残る。</h2><p class="dialog-lead">第 ${state.meta.generation} 世代の旅が終わりました。<br />積み重ねた経験が、次の命を少し強くする。</p><div class="death-stats"><div><small>この命の時間</small><strong>${time(state.run.elapsed)}</strong></div><div><small>撃退した襲撃</small><strong>${state.run.wave}<span> 波</span></strong></div><div><small>最高記録</small><strong>${state.meta.bestWave}<span> 波</span></strong></div></div>${comparisonMarkup}<div class="inheritance-heading">${icon("memory")}次の命へ引き継ぐ経験</div><div class="inheritance-list">${SKILLS.map((skill) => `<div><span>${icon(skillIcons[skill.id])}${escape(skill.name)}</span><b>永続 Lv.${getSkillProgress(state.run.startPermanentXp?.[skill.id] ?? Math.max(0,state.meta.skills[skill.id].xp-(gains[skill.id] || 0)),true).level} → ${skillLevel(skill.id, true).level}</b><small>+${format(gains[skill.id] || 0)} XP</small></div>`).join("")}</div><p class="death-tip">${state.run.equipment.weapon ? "鍛えた技能で準備を速め、次は装備と食料をひとつ多く。" : "次の命では、伐採から武器を作る順番を試してみよう。"}</p><button class="button gold full-width" data-command="rebirth">次の命を灯す${icon("arrow")}</button><p class="fine-print">資源・装備・進行レベル・オーグメントの効果はリセットされます。</p>`;
   const report = state.run.deathReport;
   if (report) {
     const tip = document.querySelector("#death-dialog .death-tip");
@@ -1019,6 +1027,7 @@ function showDeath() {
       "この命で村を守り抜きました。次は別の構成で挑戦できます。";
   }
   document.querySelector("#death-dialog").showModal();
+  document.querySelector("#death-dialog").scrollTop = 0;
 }
 
 document.addEventListener("click", (event) => {
@@ -1126,6 +1135,7 @@ document.addEventListener("click", (event) => {
     saveGame();
   }
   if (button.dataset.queueRemove !== undefined) {
+    markQueueEdited();
     removeQueuedAction(state, Number(button.dataset.queueRemove));
     saveGame();
   }
@@ -1323,6 +1333,7 @@ document.addEventListener("click", (event) => {
       break;
     }
     case "queue-clear":
+      markQueueEdited();
       clearQueue(state);
       saveGame();
       break;
@@ -1625,8 +1636,8 @@ function frame(now) {
   )
     advanceTime(state, elapsed);
   if (now - lastRender > 150) {
-    updatePresentation(state);
     render();
+    updatePresentation(state);
     lastRender = now;
   }
   updateLiveWork();

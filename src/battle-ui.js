@@ -1,6 +1,7 @@
-import { battleSound } from "./presentation.js?v=0.2.11";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.2.11";
-import { icon } from "./icons.js?v=0.2.11";
+import { equipmentMaterial } from './visual-design.js?v=0.2.12';
+import { battleSound } from "./presentation.js?v=0.2.12";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.2.12";
+import { icon } from "./icons.js?v=0.2.12";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -10,7 +11,7 @@ const ratio = (value, maximum) => Math.max(0, Math.min(1, value / maximum));
 function portrait(side, symbol, sigil = "") {
   return `<div class="battle-portrait" aria-hidden="true">
     <div class="battle-breath"><div class="battle-strike" data-battle="${side}-strike"><div class="battle-recoil" data-battle="${side}-recoil"><div class="battle-avatar">${side === "player" ? '<img class="fighter-illustration" src="./assets/guardian.svg" alt="">' : '<img class="fighter-illustration" data-battle="enemy-illustration" src="./assets/wolf.svg" alt="">'}${sigil}</div></div></div></div>
-    <div class="battle-effects"><i class="battle-guard-ring" data-battle="${side}-guard-ring"></i><i class="battle-projectile" data-battle="${side}-projectile"></i><i class="battle-impact" data-battle="${side}-impact"></i><i class="battle-slash" data-battle="${side}-slash"></i><i class="battle-heal-ring" data-battle="${side}-heal-ring"></i>${Array.from({ length: 6 }, (_, index) => `<i class="battle-heal-particle" data-battle="${side}-particle-${index}"></i>`).join("")}</div>
+    <div class="battle-effects"><svg class="battle-shield-spark" data-battle="${side}-shield-spark" viewBox="0 0 80 90"><path d="M40 4 72 16v34Q68 72 40 85 12 72 8 50V16Z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M40 17v51M18 35h44" stroke="currentColor" stroke-width="2"/></svg><i class="battle-guard-ring" data-battle="${side}-guard-ring"></i><i class="battle-projectile" data-battle="${side}-projectile"></i><i class="battle-impact" data-battle="${side}-impact"></i><i class="battle-slash" data-battle="${side}-slash"></i><i class="battle-heal-ring" data-battle="${side}-heal-ring"></i>${Array.from({ length: 6 }, (_, index) => `<i class="battle-heal-particle" data-battle="${side}-particle-${index}"></i>`).join("")}</div>
   </div>`;
 }
 
@@ -22,7 +23,7 @@ function createView(dialog) {
         <div><span class="battle-wave" data-battle="wave"></span><h2 id="battle-title">野営地を防衛中</h2></div>
         <span class="battle-state" data-battle="state"></span>
       </header>
-      <div class="battle-field">
+      <div class="battle-field"><div class="boss-arrival" data-battle="boss-arrival" aria-hidden="true"><small>強敵襲来</small><strong data-battle="boss-arrival-name"></strong></div>
         <article class="battle-fighter battle-player" data-battle="player-card">
           ${portrait("player", "shield", `<span class="battle-sigil">${icon("flame")}</span>`)}
           <h3>灯守</h3>
@@ -258,7 +259,8 @@ function strike(view, attacker, target) {
   );
 }
 
-function guard(view) {
+function guard(view, hasShield) {
+  if (hasShield) animate(view,'player-shield-spark',[{opacity:0,transform:'translate(-50%,-50%) scale(.7)'},{opacity:.9,transform:'translate(-50%,-50%) scale(1)',offset:.3},{opacity:0,transform:'translate(-50%,-50%) scale(1.16)'}],550,150);
   animate(view, 'player-guard-ring', [
     {opacity:0,transform:'scale(.85)'},
     {opacity:.85,transform:'scale(1)',offset:.25},
@@ -328,6 +330,10 @@ export function renderBattle(dialog, state) {
   const { run, settings } = state;
   const enemy = run.enemy;
   const stats = getStats(state);
+  const weaponMaterial = equipmentMaterial(run.equipment.weapon);
+  const shieldMaterial = equipmentMaterial(run.equipment.shield);
+  dialog.style.setProperty('--weapon-glow',weaponMaterial.glow);
+  dialog.style.setProperty('--shield-glow',shieldMaterial.glow);
   const paused = settings.paused;
   const outgoing = Math.max(1, stats.attack - enemy.defense);
 
@@ -341,6 +347,7 @@ export function renderBattle(dialog, state) {
   if (!continuing) {
     cancelAnimations(view);
     clearFeedback(view);
+    view.arrivalPending = enemy.isBoss;
   }
   dialog.dataset.chapter = String(Math.ceil(enemy.wave / 3));
   view.effectsEnabled = state.settings.effectsEnabled;
@@ -349,6 +356,13 @@ export function renderBattle(dialog, state) {
   listenForMotionChanges(view);
   syncMotion(view);
   dialog.classList.toggle("battle-is-paused", paused);
+  dialog.classList.toggle("battle-is-boss",!!enemy.isBoss);
+  setText(el['boss-arrival-name'],enemy.name);
+  if (view.arrivalPending && !view.motionPaused) {
+    view.arrivalPending=false;
+    animate(view,'boss-arrival',[{opacity:0,transform:'translateY(14px) scale(.92)'},{opacity:1,transform:'translateY(0) scale(1)',offset:.2},{opacity:1,transform:'translateY(0) scale(1)',offset:.65},{opacity:0,transform:'translateY(-12px) scale(1.03)'}],1600);
+    animate(view,'enemy-card',[{filter:'brightness(.6)',transform:'translateX(18px)'},{filter:'brightness(1.35)',offset:.4},{filter:'brightness(1)',transform:'translateX(0)'}],1000);
+  }
   setText(
     el.wave,
     `第 ${enemy.wave} 波${enemy.isBoss ? " · BOSS" : ""}${enemy.invasion ? " · 国家軍が加勢" : ""}`,
@@ -428,7 +442,7 @@ export function renderBattle(dialog, state) {
       // An enemy still present after a combat exchange has retaliated, even when food offsets its damage.
       if (enemyLoss > 0 || hpChange < 0) {
         strike(view, "enemy", "player");
-        if (stats.defense > 0) guard(view);
+        if (stats.defense > 0) guard(view,!!run.equipment.shield);
       }
       if (hpChange < 0)
         feedback(view, "player", "damage", `−${number(-hpChange)} HP`);

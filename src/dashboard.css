@@ -381,3 +381,64 @@ html, body { height: 100%; overflow: hidden; }
 .gather-reservation button {padding:8px 9px;min-height:34px;border:1px solid var(--gold-dim);border-radius:5px;color:var(--gold);font-size:inherit;}
 .gather-reservation button:disabled {opacity:.45;cursor:default;}
 @media(min-width:1000px){.gather-reservation {font-size:14px;}}
+
+/* Shared visual progression: equipment, settlement, raids, and completed orders. */
+.work-tool {color:var(--tool-metal,#d2bc8a);filter:drop-shadow(0 0 3px var(--tool-glow,#c6ac76));}
+.material-mithril .work-tool,.material-crystal .work-tool,.material-orichalcum .work-tool {filter:drop-shadow(0 0 5px var(--tool-glow));}
+.village-scaffold {display:none;}
+.under-construction .village-scaffold {display:block;}
+.under-construction > svg > path,.under-construction > svg > g:not(.village-scaffold) {opacity:var(--construction-progress,.4);}
+.construction-hammer {transform-origin:33px 25px;animation:construction-tap 1.2s ease-in-out infinite;}
+.camp-villagers {position:absolute;left:32%;bottom:3px;display:flex;gap:11px;pointer-events:none;z-index:1;}
+.village-resident {width:19px;height:28px;animation:resident-walk 9s var(--resident-delay) ease-in-out infinite alternate;}
+.village-resident[hidden] {display:none;}
+.camp-warning-bell {position:absolute;left:48%;top:12px;width:22px;pointer-events:none;z-index:1;animation:warning-bell 1.8s ease-in-out infinite;transform-origin:50% 0;}
+.camp-warning-bell[hidden] {display:none;}
+.camp-banner.threat-visible {box-shadow:inset 0 0 30px rgba(143,69,45,var(--raid-pressure));}
+.settlement-paused *,.settlement-paused {animation-play-state:paused!important;}
+.queue-completion {position:fixed;z-index:22;pointer-events:none;padding:12px;border:1px solid var(--gold-dim);border-radius:6px;color:var(--gold);background:#203c31ed;font-size:14px;box-shadow:0 8px 24px #0005;}
+.queue-preview li.current .queue-number {color:var(--gold);box-shadow:0 0 10px #d6b57533;}
+.run-comparison {display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 18px;margin:0 0 18px;padding:12px;border:1px solid var(--gold-dim);border-radius:7px;background:#39493533;font-size:14px;}
+.run-comparison span {color:var(--muted);}
+.run-comparison b {color:var(--gold);font-variant-numeric:tabular-nums;}
+@keyframes resident-walk {0% {transform:translateX(-6px) translateY(0);}25% {transform:translateX(0) translateY(-2px);}50% {transform:translateX(8px) translateY(0);}75% {transform:translateX(14px) translateY(-2px);}100% {transform:translateX(22px) translateY(0);}}
+@keyframes warning-bell {0%,50%,100% {transform:rotate(0);}10%,30% {transform:rotate(12deg);}20%,40% {transform:rotate(-12deg);}}
+@keyframes construction-tap {0%,100% {transform:rotate(-20deg);}50% {transform:rotate(25deg);}}
+@media(max-width:690px){.camp-villagers {left:35%;bottom:1px;gap:7px;}.village-resident {width:12px;height:19px;}.camp-warning-bell {left:8px;top:8px;width:16px;}.run-comparison {font-size:12px;gap:6px 12px;}}
+@media(max-height:650px){.camp-villagers,.camp-warning-bell {display:none;}}
+.effects-disabled .camp-villagers,.effects-disabled .camp-warning-bell {display:none;}
+.effects-disabled .village-scaffold * {animation:none!important;}
+@media(prefers-reduced-motion:reduce){.village-resident,.camp-warning-bell,.construction-hammer {animation:none!important;}}
+
+/* Same semantic roles use the same scale across every work tab. */
+:root {--ui-card-title:19px;--ui-body:14px;--ui-note:13px;--ui-control:14px;--ui-card-padding:18px;}
+#content h3,#content h4 {font-size:var(--ui-card-title);line-height:1.5;}
+#content p {font-size:var(--ui-body);line-height:1.7;}
+#content p.fine-print,#content .craft-benefits,#content .craft-growth,#content .legacy-growth,#content .card-levels,#content .run-growth,#content .craft-total,#content .craft-eta {font-size:var(--ui-note);line-height:1.6;}
+#content button:not(.action-card),#content input:not([type="checkbox"]):not([type="range"]),#content select {font-size:var(--ui-control);min-height:40px;}
+#content .craft-hide {width:36px;min-height:36px;height:36px;padding:6px;}
+#content .gather-reservation,#content .craft-quantity,#content .craft-filter {font-size:var(--ui-control);}
+#content .action-card,#content .craft-card,#content .market-item,#content .diplomacy-card,#content .upgrade-card {padding:var(--ui-card-padding);}
+#info-dialog input:not([type="checkbox"]),#info-dialog select {font-size:var(--ui-control);min-height:40px;}
+#info-dialog .queue-single,#info-dialog .queue-footer,#info-dialog .template-row {font-size:var(--ui-note);}
+@media(max-width:999px){:root {--ui-card-title:17px;--ui-body:13px;--ui-note:12px;--ui-control:13px;--ui-card-padding:14px;}}
+@media(max-width:690px){:root {--ui-card-title:15px;--ui-body:12px;--ui-note:11px;--ui-control:12px;--ui-card-padding:12px;}}
+
+.camp-villagers[hidden] {display:none;}
+
+#death-dialog:not(.legacy-setup) {width:min(700px,calc(100vw - 24px));scrollbar-gutter:stable;padding:28px;}
+#death-dialog:not(.legacy-setup) .dialog-lead,#death-dialog:not(.legacy-setup) .death-tip {font-size:var(--ui-body);line-height:1.7;}
+#death-dialog:not(.legacy-setup) .inheritance-list div {padding:12px 0;font-size:var(--ui-body);}
+#death-dialog:not(.legacy-setup) .inheritance-list b {font-size:var(--ui-body);}
+#death-dialog:not(.legacy-setup) .inheritance-list small,#death-dialog:not(.legacy-setup) .fine-print,#death-dialog:not(.legacy-setup) .death-legacy,#death-dialog:not(.legacy-setup) .death-legacy small,#death-dialog:not(.legacy-setup) .death-stats small {font-size:var(--ui-note);line-height:1.7;}
+#death-dialog:not(.legacy-setup) .button {font-size:var(--ui-control);min-height:44px;}
+@media(max-width:690px){#death-dialog:not(.legacy-setup) {padding:20px;}#death-dialog:not(.legacy-setup) .inheritance-list div {flex-wrap:wrap;gap:6px;}}
+
+@media(max-width:690px) and (min-height:651px){
+  .camp-banner .camp-buildings {top:64px;bottom:auto;height:42px;}
+  .camp-villagers {left:auto;right:8px;bottom:2px;gap:6px;}
+  .village-resident:nth-child(n+4) {display:none;}
+  .camp-threat {top:65px;height:40px;}
+  .camp-warning-bell {top:66px;left:8px;}
+  .threat-visible .camp-villagers {display:none;}
+}

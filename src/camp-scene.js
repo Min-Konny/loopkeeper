@@ -83,10 +83,22 @@ export function mountCampScene(host, { variant = "camp", focusY = 0.55 } = {}) {
     const b = document.createElement("span");
     b.dataset.building = id;
     b.hidden = true;
-    b.innerHTML = `<svg viewBox="0 0 96 90" aria-hidden="true">${shared}${paths}</svg>`;
+    b.innerHTML = `<svg viewBox="0 0 96 90" aria-hidden="true">${shared}${paths}<g class="village-scaffold" fill="none" stroke="#c4a57b" stroke-width="3"><path d="M6 82V17M88 82V17M6 24h82M6 48h82M6 70h82M6 24l82 46M6 70l82-46"/><path class="construction-hammer" d="M26 9h15v7H26m7 0v12" stroke="#dbcb9f"/></g></svg>`;
     buildings.append(b);
   }
   host.append(buildings);
+  const villagers = document.createElement('div');
+  villagers.className = 'camp-villagers';
+  villagers.hidden = variant !== 'camp';
+  villagers.setAttribute('aria-hidden','true');
+  villagers.innerHTML = Array.from({length:6},(_,i)=>`<svg class="village-resident" viewBox="0 0 24 36" style="--resident-delay:${-i*1.3}s;--resident-color:${['#b2a273','#749c92','#a68776'][i%3]}"><ellipse cx="12" cy="33" rx="9" ry="2" fill="#122820"/><path d="M7 31l2-15h7l3 15" fill="var(--resident-color)"/><circle cx="12" cy="10" r="5" fill="#c7b898"/><path d="M7 9q4-8 10 0" fill="#6b8078"/><path d="M8 20l-3 5m12-5 3 5" stroke="#b7b393" stroke-width="2"/></svg>`).join('');
+  host.append(villagers);
+  const bell = document.createElement('div');
+  bell.className='camp-warning-bell';bell.hidden=true;bell.setAttribute('aria-hidden','true');
+  bell.innerHTML='<svg viewBox="0 0 32 36"><path d="M8 24V15q0-12 8-12t8 12v9l4 4H4Z" fill="#d4b274"/><circle cx="16" cy="31" r="3" fill="#f0ce8f"/><path d="M2 10 0 18m30-8 2 8" stroke="#d4b274" stroke-width="2"/></svg>';
+  host.append(bell);
+  let settlementGeneration;
+
   const threat = document.createElement('div');
   threat.className = 'camp-threat';
   threat.hidden = true;
@@ -99,23 +111,40 @@ export function mountCampScene(host, { variant = "camp", focusY = 0.55 } = {}) {
       active = value;
       update();
       buildings.classList.toggle('settlement-paused', !active);
+      villagers.classList.toggle('settlement-paused', !active);
+      bell.classList.toggle('settlement-paused', !active);
       threat.classList.toggle('threat-paused', !active || threatPaused);
     },
     setThreat(progress, paused) {
       threatPaused = paused;
+      bell.hidden = progress <= 0;
+      host.style.setProperty('--raid-pressure',String(Math.max(0,Math.min(1,progress))));
+      bell.classList.toggle('settlement-paused',paused || !active);
       threat.hidden = progress <= 0;
       host.classList.toggle("threat-visible", progress > 0);
       threat.style.opacity = String(Math.min(.8, progress));
       threat.style.transform = `translateX(${(1-progress)*34}px)`;
       threat.classList.toggle('threat-paused', paused || !active);
     },
-    setSettlement(facilities) {
+    setConstruction(id, progress) {
+      for (const b of buildings.children) {
+        const constructing = b.dataset.building === id;
+        b.classList.toggle('under-construction',constructing);
+        if (constructing) {b.hidden=false;b.style.setProperty('--construction-progress',String(Math.max(.25,Math.min(1,progress))));}
+      }
+    },
+    setSettlement(facilities, generation) {
       host.classList.toggle("has-settlement", Object.values(facilities).some(n => n > 0));
       for (const b of buildings.children) {
         const n = Number(facilities[b.dataset.building] || 0);
+        const last = Number(b.dataset.level || 0);
         b.hidden = !n;
         b.dataset.level = n;
+        if (settlementGeneration === generation && n > last && active && !document.hidden && !matchMedia('(prefers-reduced-motion: reduce)').matches) b.animate?.([{filter:'brightness(2)',transform:'translateY(8px) scale(.8)'},{filter:'brightness(1)',transform:'translateY(0) scale(1)'}],{duration:1000,easing:'ease-out'});
       }
+      const residents = Math.min(6,Object.values(facilities).reduce((total,n)=>total+Number(n),0));
+      [...villagers.children].forEach((person,i)=>person.hidden=i>=residents);
+      settlementGeneration = generation;
     },
   };
   scenes.set(host, scene);
