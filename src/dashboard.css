@@ -138,7 +138,6 @@ html, body { height: 100%; overflow: hidden; }
   .camp-banner .camp-buildings { display: none; }
   .camp-banner { height: 60px; min-height: 60px; }
   .camp-caption { display: none; }
-  .raid-forecast { width: min(300px, 100%); }
   #active-work .active-icon { display: none; }
   .active-work { min-height: 40px; padding: 6px 10px; }
 }
