@@ -1,5 +1,5 @@
-import { getCatalog } from "./engine.js?v=0.2.10";
-import { icon } from "./icons.js?v=0.2.10";
+import { getCatalog } from "./engine.js?v=0.2.11";
+import { icon } from "./icons.js?v=0.2.11";
 let audio;
 let preferences = { soundVolume: 0.3, effectsEnabled: true };
 let previous;

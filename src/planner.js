@@ -1,4 +1,4 @@
-import * as old from "./legacy-planner.js?v=0.2.10";
+import * as old from "./legacy-planner.js?v=0.2.11";
 import {
   isLegacy,
   getCatalog,
@@ -14,7 +14,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.2.10";
+} from "./engine.js?v=0.2.11";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -171,4 +171,14 @@ export function selectManualAction(s, id) {
     if (!stopped.ok) return stopped;
   }
   return s.run.activeAction?.id === id ? {ok:true,reason:""} : startAction(s, id);
+}
+
+
+export function queueWork(s, id, count = 1, position = "end") {
+  if (!getCatalog(s).ACTIONS.some(action => action.id === id)) return fail("その作業は存在しません。");
+  const previousDisabled = s.settings.disabledUpgrades;
+  s.settings.disabledUpgrades = previousDisabled.filter(x => x !== "action_queue");
+  const result = queueAction(s, id, count, position);
+  if (!result.ok) s.settings.disabledUpgrades = previousDisabled;
+  return result;
 }

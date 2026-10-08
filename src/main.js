@@ -1,6 +1,6 @@
-import { resolveGoal } from "./engine.js?v=0.2.10";
-import { getCatalog } from "./engine.js?v=0.2.10";
-import { CONTENT } from "./content.js?v=0.2.10";
+import { resolveGoal } from "./engine.js?v=0.2.11";
+import { getCatalog } from "./engine.js?v=0.2.11";
+import { CONTENT } from "./content.js?v=0.2.11";
 import {
   isLegacy,
   isKnown,
@@ -13,7 +13,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.2.10";
+} from "./engine.js?v=0.2.11";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -21,21 +21,21 @@ import {
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.2.10";
-import { createSessionOwner } from "./session-owner.js?v=0.2.10";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.2.10";
+} from "./mvp-ui.js?v=0.2.11";
+import { createSessionOwner } from "./session-owner.js?v=0.2.11";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.2.11";
 import {
   loadStoredGame,
   writeStoredGame,
   readBackups,
   decodeRecord,
   unreadableRecord,
-} from "./save-storage.js?v=0.2.10";
+} from "./save-storage.js?v=0.2.11";
 import {
   updatePresentation,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.2.10";
+} from "./presentation.js?v=0.2.11";
 import {
   getRaidInterval,
   aidCountry,
@@ -57,9 +57,9 @@ import {
   restartRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.2.10";
-import { icon } from "./icons.js?v=0.2.10";
-import { planCraft, queueCraft, queueAction, selectManualAction } from "./planner.js?v=0.2.10";
+} from "./engine.js?v=0.2.11";
+import { icon } from "./icons.js?v=0.2.11";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction } from "./planner.js?v=0.2.11";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -68,20 +68,20 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.2.10";
-import { renderAugments } from "./augments-ui.js?v=0.2.10";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.2.10";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.2.10";
-import { mountCampScene } from "./camp-scene.js?v=0.2.10";
-import { workScene } from "./work-scene.js?v=0.2.10";
-import { getRecipeVisibility } from "./workshop.js?v=0.2.10";
-import { getMilestoneStatus } from "./engine.js?v=0.2.10";
+} from "./engine.js?v=0.2.11";
+import { renderAugments } from "./augments-ui.js?v=0.2.11";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.2.11";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.2.11";
+import { mountCampScene } from "./camp-scene.js?v=0.2.11";
+import { workScene } from "./work-scene.js?v=0.2.11";
+import { getRecipeVisibility } from "./workshop.js?v=0.2.11";
+import { getMilestoneStatus } from "./engine.js?v=0.2.11";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.2.10";
+} from "./engine.js?v=0.2.11";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -282,7 +282,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2.10</b></div>
+    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2.11</b></div>
   </aside>
   <div class="workspace">
     <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
@@ -491,7 +491,7 @@ function renderGather() {
         const locked = !check.ok && !active;
         const levelLocked = current.level < (action.unlockLevel || 1);
         const yields = Object.entries(action.yields || {});
-        return `<button class="action-card ${active ? "active" : ""} ${locked ? "locked" : ""}" data-action="${action.id}" data-focus="action-${action.id}" ${locked ? "disabled" : ""} aria-pressed="${active}"><div class="card-top"><span class="action-icon ${action.skill}">${icon(skillIcons[action.skill])}</span><span class="action-time">${icon(locked ? "lock" : "clock")}${levelLocked ? `進行 Lv.${action.unlockLevel}` : state.run.status === "combat" ? "襲撃中" : `${getActionDuration(state, action).toFixed(1)}秒`}</span></div><div class="action-name"><h3>${escape(action.name)}</h3>${active ? '<span class="active-pill">選択中</span>' : ""}</div>${action.id === "gather_food" || !yields.length ? `<p>${escape(action.id === "gather_food" ? `戦闘中、体力が55%以下になると自動で食べて${getFoodHealing(state)}回復。` : action.description)}</p>` : ""}<div class="action-yield">${yields.length ? yields.map(([id, amount]) => `<span>${icon(id)}${escape(resourceName(id))}<b>+${amount}</b></span>`).join("") : `<span>${icon("sword")}戦闘経験を積む</span>`}${icon("arrow", "card-arrow")}</div><div class="card-levels"><span>進行 <b>Lv.${current.level}</b></span><span class="permanent-text">${icon("memory")}永続 <b>Lv.${permanent.level}</b></span></div>${current.level > 1 ? `<div class="run-growth"><b>${runGrowth(action.skill)}</b></div>` : ""}${savedWorkNote(suspended)}<div class="card-skill-track"><i style="width:${progress(current.progress)}%"></i></div>${levelLocked ? `<div class="lock-reason">${escape(check.reason)}</div>` : ""}</button>`;
+        return `<article class="gather-card"><button class="action-card ${active ? "active" : ""} ${locked ? "locked" : ""}" data-action="${action.id}" data-focus="action-${action.id}" ${locked ? "disabled" : ""} aria-pressed="${active}"><div class="card-top"><span class="action-icon ${action.skill}">${icon(skillIcons[action.skill])}</span><span class="action-time">${icon(locked ? "lock" : "clock")}${levelLocked ? `進行 Lv.${action.unlockLevel}` : state.run.status === "combat" ? "襲撃中" : `${getActionDuration(state, action).toFixed(1)}秒`}</span></div><div class="action-name"><h3>${escape(action.name)}</h3>${active ? '<span class="active-pill">選択中</span>' : ""}</div>${action.id === "gather_food" || !yields.length ? `<p>${escape(action.id === "gather_food" ? `戦闘中、体力が55%以下になると自動で食べて${getFoodHealing(state)}回復。` : action.description)}</p>` : ""}<div class="action-yield">${yields.length ? yields.map(([id, amount]) => `<span>${icon(id)}${escape(resourceName(id))}<b>+${amount}</b></span>`).join("") : `<span>${icon("sword")}戦闘経験を積む</span>`}${icon("arrow", "card-arrow")}</div><div class="card-levels"><span>進行 <b>Lv.${current.level}</b></span><span class="permanent-text">${icon("memory")}永続 <b>Lv.${permanent.level}</b></span></div>${current.level > 1 ? `<div class="run-growth"><b>${runGrowth(action.skill)}</b></div>` : ""}${savedWorkNote(suspended)}<div class="card-skill-track"><i style="width:${progress(current.progress)}%"></i></div>${levelLocked ? `<div class="lock-reason">${escape(check.reason)}</div>` : ""}</button>${state.meta.upgrades.includes("action_queue") ? `<div class="gather-reservation"><label>回数<input type="number" min="1" max="99" step="1" inputmode="numeric" data-craft-count="${action.id}" data-focus="work-count-${action.id}" aria-label="${escape(action.name)}の予約回数" value="${craftQuantities[action.id] || 1}"></label><button data-queue-work="${action.id}" data-focus="queue-work-${action.id}" ${locked ? "disabled" : ""}>${state.run.queue.length ? "末尾に予約" : "行動予約"}</button>${state.run.queue.length ? `<button data-queue-work="${action.id}" data-queue-position="front" data-focus="queue-work-front-${action.id}" ${locked ? "disabled" : ""}>先頭に予約</button>` : ""}</div>` : ""}</article>`;
       })
       .join(
         "",
@@ -943,7 +943,7 @@ function render() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.2.10</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />別の画面に移ったときも自動停止し、閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.2.11</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />別の画面に移ったときも自動停止し、閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
@@ -1144,6 +1144,12 @@ document.addEventListener("click", (event) => {
         : [...state.settings.hiddenRecipes, recipe.id];
       saveGame();
     }
+  }
+  if (button.dataset.queueWork) {
+    const result = queueWork(state, button.dataset.queueWork, craftQuantities[button.dataset.queueWork] || 1, button.dataset.queuePosition || "end");
+    if (!result.ok) toast(result.reason);
+    else { resumeSelectedWork(); toast("行動を予約しました。"); }
+    saveGame();
   }
   if (button.dataset.smartCraft) {
     const result = queueCraft(state, button.dataset.smartCraft, button.dataset.queuePosition || "end", craftQuantities[button.dataset.smartCraft] || 1);
