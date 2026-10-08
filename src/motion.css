@@ -1,0 +1,33 @@
+.camp-art{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:-2;contain:paint}
+.camp-art-stage{position:absolute;display:block;max-width:none}
+.camp-banner.has-camp-art{background:#182522}
+.camp-banner .camp-art{right:190px;mask-image:linear-gradient(90deg,#000 85%,transparent)}
+.camp-banner.has-camp-art:after{background:linear-gradient(90deg,#07141655,transparent 50%),linear-gradient(0deg,#07101191,transparent 80%)}
+.camp-tree{transform-box:view-box;will-change:transform}
+.camp-tree-left{transform-origin:360px 610px;animation:camp-pine-wind 7s ease-in-out infinite alternate}
+.camp-tree-right{transform-origin:1165px 458px;animation:camp-pine-wind 9s -3s ease-in-out infinite alternate-reverse}
+.camp-canopy{transform-origin:42px 280px;animation:camp-canopy-wind 10s -4s ease-in-out infinite alternate}
+.camp-fire-glow{transform-origin:1034px 589px;animation:camp-firelight 2.6s ease-in-out infinite alternate;mix-blend-mode:screen}
+.camp-torch-glow{animation:camp-torchlight 3.7s -1s ease-in-out infinite alternate;mix-blend-mode:screen}
+.camp-flame{transform-box:fill-box;transform-origin:50% 100%;mix-blend-mode:screen}
+.camp-flame-outer{animation:camp-flame-dance 1.4s ease-in-out infinite alternate}
+.camp-flame-inner{animation:camp-flame-dance .87s -.3s ease-in-out infinite alternate-reverse}
+.camp-ember{opacity:0;animation:camp-ember-rise var(--ember-duration) var(--ember-delay) linear infinite}
+.camp-mist{animation:camp-mist-drift 23s ease-in-out infinite alternate;opacity:.8}
+.camp-mote{opacity:0;animation:camp-mote-drift 15s var(--mote-delay) ease-in-out infinite}
+.camp-art-resting *{animation-play-state:paused!important}
+.acceleration-button small{font-size:10px;display:block;margin-top:3px;color:inherit;opacity:.8;font-variant-numeric:tabular-nums}
+#battle-dialog .battle-scene.has-camp-art{position:relative;isolation:isolate;background:transparent;overflow:hidden}
+#battle-dialog .battle-scene.has-camp-art:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#101c1bb5,#18221ee6 58%,#17221f);pointer-events:none}
+@keyframes camp-pine-wind{0%{transform:skewX(-.32deg) rotate(-.22deg)}100%{transform:skewX(.48deg) rotate(.32deg)}}
+@keyframes camp-canopy-wind{0%{transform:rotate(-.3deg) translateY(-1px)}100%{transform:rotate(.45deg) translateY(2px)}}
+@keyframes camp-firelight{0%{opacity:.45;transform:scale(.86)}30%{opacity:.75}60%{opacity:.54}100%{opacity:.93;transform:scale(1.15)}}
+@keyframes camp-torchlight{0%,100%{opacity:.4}35%{opacity:.9}70%{opacity:.6}}
+@keyframes camp-flame-dance{0%{transform:scaleX(.85) scaleY(.84) skewX(-8deg);opacity:.58}45%{transform:scaleX(1.05) scaleY(1.12) skewX(5deg);opacity:.95}100%{transform:scaleX(.9) scaleY(.98) skewX(-3deg);opacity:.75}}
+@keyframes camp-ember-rise{0%{opacity:0;transform:translate(0,0)}15%{opacity:.85}65%{opacity:.5}100%{opacity:0;transform:translate(var(--ember-drift),-96px)}}
+@keyframes camp-mist-drift{from{transform:translateX(-22px);opacity:.3}to{transform:translateX(28px);opacity:.9}}
+@keyframes camp-mote-drift{0%,100%{opacity:0;transform:translate(0,0)}25%,60%{opacity:.48}90%{opacity:0;transform:translate(40px,-25px)}}
+@media(max-width:1000px) and (min-width:691px){.camp-banner .camp-art{right:150px}.camp-caption{align-self:flex-start}.camp-caption h2{max-width:230px;line-height:1.7}}
+@media(max-width:690px) and (min-width:441px){.camp-banner .camp-art{right:0;height:170px;mask-image:linear-gradient(#000 78%,transparent)}}
+@media(max-width:440px){.camp-banner.has-camp-art{height:auto;gap:116px}.camp-banner .camp-art{right:0;height:230px;mask-image:linear-gradient(#000 75%,transparent)}.camp-banner.has-camp-art .raid-forecast{position:relative}.camp-caption{position:relative}}
+@media(prefers-reduced-motion:reduce){.camp-art *{animation:none!important;will-change:auto!important}.camp-ember,.camp-mote{opacity:0}.camp-flame{opacity:.7}}
