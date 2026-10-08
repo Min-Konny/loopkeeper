@@ -1,5 +1,12 @@
 /* Keep navigation and live preparation visible; scroll only the selected pane. */
 html, body { height: 100%; overflow: hidden; }
+/* Native controls and scrolling surfaces belong to the same dark palette. */
+:root { color-scheme: dark; }
+* { scrollbar-width: thin; scrollbar-color: #65735d #15221e; }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: #15221e; }
+*::-webkit-scrollbar-thumb { background: #65735d; border: 2px solid #15221e; border-radius: 8px; }
+*::-webkit-scrollbar-thumb:hover { background: #a59c70; }
 #app { height: 100dvh; }
 .workspace { height: 100%; display: flex; flex-direction: column; min-width: 0; }
 .topbar { height: 48px; min-height: 48px; padding: 0 20px; }
@@ -355,15 +362,15 @@ html, body { height: 100%; overflow: hidden; }
 .queue-preview {display:none;}
 @media(min-width:1000px){
   .play-layout {gap:16px;}
-  .queue-preview:not([hidden]) {display:flex;flex-direction:column;flex:0 0 250px;min-height:0;overflow:auto;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:8px;scrollbar-gutter:stable;}
-  .queue-preview-heading {display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .queue-preview:not([hidden]) {display:flex;flex-direction:column;flex:0 0 250px;min-height:0;overflow:hidden;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;}
+  .queue-preview-heading {display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0;}
   .queue-preview-heading h3 {display:flex;align-items:center;gap:6px;margin:0;font-size:16px;white-space:nowrap;}
   .queue-preview-heading h3 .icon {width:18px;height:18px;}
   .queue-preview-heading small {font-size:12px;color:var(--muted);}
   .queue-preview-heading button {font-size:13px;color:var(--gold);}
-  .queue-preview-status {font-size:12px;color:var(--muted);margin:12px 0;}
+  .queue-preview-status {font-size:12px;color:var(--muted);margin:10px 0;flex-shrink:0;}
   .queue-preview-status.needs-attention {color:var(--gold);}
-  .queue-preview ol {list-style:none;padding:0;margin:0 0 14px;}
+  .queue-preview ol {list-style:none;padding:0 5px 0 0;margin:0 0 12px;min-height:0;flex:1;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;}
   .queue-preview li {display:grid;grid-template-columns:22px 1fr;gap:5px 8px;align-items:center;padding:12px 6px;border-bottom:1px solid var(--line);font-size:14px;}
   .queue-preview li.current {background:var(--surface-raised);border-left:2px solid var(--gold);}
   .queue-preview li small {grid-column:2;font-size:12px;color:var(--muted);}

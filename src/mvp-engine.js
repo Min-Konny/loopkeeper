@@ -1,10 +1,10 @@
-import { CONTENT as C } from "./content.js?v=0.2.13";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.2.13";
+import { CONTENT as C } from "./content.js?v=0.2.14";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.2.14";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.2.13";
+} from "./legacy-engine.js?v=0.2.14";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,

@@ -1,8 +1,8 @@
-import { compareRun } from './visual-design.js?v=0.2.13';
-import { createRenderGuard } from './render-guard.js?v=0.2.13';
-import { runFrameTasks } from './frame-loop.js?v=0.2.13';
-import { getCatalog } from "./engine.js?v=0.2.13";
-import { CONTENT } from "./content.js?v=0.2.13";
+import { compareRun } from './visual-design.js?v=0.2.14';
+import { createRenderGuard } from './render-guard.js?v=0.2.14';
+import { runFrameTasks } from './frame-loop.js?v=0.2.14';
+import { getCatalog } from "./engine.js?v=0.2.14";
+import { CONTENT } from "./content.js?v=0.2.14";
 import {
   isLegacy,
   isKnown,
@@ -15,7 +15,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.2.13";
+} from "./engine.js?v=0.2.14";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -23,22 +23,22 @@ import {
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.2.13";
-import { createSessionOwner } from "./session-owner.js?v=0.2.13";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.2.13";
+} from "./mvp-ui.js?v=0.2.14";
+import { createSessionOwner } from "./session-owner.js?v=0.2.14";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.2.14";
 import {
   loadStoredGame,
   writeStoredGame,
   readBackups,
   decodeRecord,
   unreadableRecord,
-} from "./save-storage.js?v=0.2.13";
+} from "./save-storage.js?v=0.2.14";
 import {
   updatePresentation,
   markQueueEdited,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.2.13";
+} from "./presentation.js?v=0.2.14";
 import {
   getRaidInterval,
   aidCountry,
@@ -60,9 +60,9 @@ import {
   restartRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.2.13";
-import { icon } from "./icons.js?v=0.2.13";
-import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.2.13";
+} from "./engine.js?v=0.2.14";
+import { icon } from "./icons.js?v=0.2.14";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.2.14";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -71,20 +71,20 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.2.13";
-import { renderAugments } from "./augments-ui.js?v=0.2.13";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.2.13";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.2.13";
-import { mountCampScene } from "./camp-scene.js?v=0.2.13";
-import { workScene } from "./work-scene.js?v=0.2.13";
-import { getRecipeVisibility } from "./workshop.js?v=0.2.13";
-import { getMilestoneStatus } from "./engine.js?v=0.2.13";
+} from "./engine.js?v=0.2.14";
+import { renderAugments } from "./augments-ui.js?v=0.2.14";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.2.14";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.2.14";
+import { mountCampScene } from "./camp-scene.js?v=0.2.14";
+import { workScene } from "./work-scene.js?v=0.2.14";
+import { getRecipeVisibility } from "./workshop.js?v=0.2.14";
+import { getMilestoneStatus } from "./engine.js?v=0.2.14";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.2.13";
+} from "./engine.js?v=0.2.14";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -260,17 +260,30 @@ function resumeSelectedWork() {
 }
 
 const renderGuard = createRenderGuard({ document, window, onReady: () => render() });
+let committedSelect = null;
+
+function editingWithin(element) {
+  const active = document.activeElement;
+  return element?.contains(active) && active.matches('input, textarea, select') && active !== committedSelect;
+}
 
 function setHTML(selector, html) {
   const el = document.querySelector(selector);
   if (el.dataset.lastHtml === html) return;
   // Keep selection and partially typed values intact until the editor loses focus.
-  if (el.contains(document.activeElement) && document.activeElement.matches('input, textarea, select')) return;
+  if (editingWithin(el)) return;
   const focusKey = el.contains(document.activeElement)
     ? document.activeElement.dataset.focus
     : null;
+  const scrollPositions = [...el.querySelectorAll('[data-scroll-key]')].map(node => ({
+    key: node.dataset.scrollKey, top: node.scrollTop,
+  }));
   el.innerHTML = html;
   el.dataset.lastHtml = html;
+  for (const position of scrollPositions) {
+    const scroller = el.querySelector(`[data-scroll-key="${CSS.escape(position.key)}"]`);
+    if (scroller) scroller.scrollTop = position.top;
+  }
   if (focusKey)
     el.querySelector(`[data-focus="${CSS.escape(focusKey)}"]`)?.focus({
       preventScroll: true,
@@ -286,7 +299,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2.13</b></div>
+    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2.14</b></div>
   </aside>
   <div class="workspace">
     <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
@@ -522,7 +535,7 @@ function renderQueuePreview() {
   const enabled = !state.settings.disabledUpgrades.includes("action_queue");
   const issue = queueIssue();
   const status = issue ? "要確認" : !enabled ? "保留中" : state.settings.paused ? "時間停止中" : "実行中";
-  setHTML("#queue-preview", `<div class="queue-preview-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length}/8</small></h3><button data-info="queue">編集</button></div><div class="queue-preview-status ${issue ? "needs-attention" : ""}">${status}</div>${state.run.queue.length ? `<ol>${state.run.queue.map((entry,index) => `<li data-preview-goal="${entry.goalId ?? index}" class="${index === 0 && state.run.queueManaged && enabled ? "current" : ""}"><span class="queue-number">${index+1}</span><span class="queue-preview-name">${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}</span><small>${singleUse(entry.id) ? "1回" : `残り${entry.count}回`}</small><button class="queue-preview-remove icon-button" data-queue-remove="${index}" ${entry.goalId !== undefined ? `data-queue-goal="${entry.goalId}"` : ""} aria-label="${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}の予約を削除">${icon("close")}</button></li>`).join("")}</ol><button class="button small" data-toggle-upgrade="action_queue">${enabled ? "予約を保留" : "予約を有効にする"}</button>` : '<p class="queue-preview-empty">予約した行動がここに並びます。</p>'}`);
+  setHTML("#queue-preview", `<div class="queue-preview-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length}/8</small></h3><button data-info="queue">編集</button></div><div class="queue-preview-status ${issue ? "needs-attention" : ""}">${status}</div>${state.run.queue.length ? `<ol data-scroll-key="queue-preview">${state.run.queue.map((entry,index) => `<li data-preview-goal="${entry.goalId ?? index}" class="${index === 0 && state.run.queueManaged && enabled ? "current" : ""}"><span class="queue-number">${index+1}</span><span class="queue-preview-name">${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}</span><small>${singleUse(entry.id) ? "1回" : `残り${entry.count}回`}</small><button class="queue-preview-remove icon-button" data-queue-remove="${index}" ${entry.goalId !== undefined ? `data-queue-goal="${entry.goalId}"` : ""} aria-label="${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}の予約を削除">${icon("close")}</button></li>`).join("")}</ol><button class="button small" data-toggle-upgrade="action_queue">${enabled ? "予約を保留" : "予約を有効にする"}</button>` : '<p class="queue-preview-empty">予約した行動がここに並びます。</p>'}`);
 }
 function renderQueue() {
   renderQueuePreview();
@@ -545,7 +558,7 @@ function renderQueue() {
   const draftQueued = draftSingle ? state.run.queue.findIndex(q => q.id === queueDraftId) : -1;
   setHTML(
     "#queue-panel",
-    `<section class="queue-box" aria-label="行動予約"><div class="queue-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length} / 8</small></h3><button data-command="queue-expand" data-focus="queue-expand" aria-expanded="${queueExpanded}">${queueExpanded ? "閉じる" : "編集"}</button><button class="button small ${enabled ? "gold-outline" : "muted"}" data-toggle-upgrade="action_queue" data-focus="queue-toggle" aria-pressed="${enabled}">${enabled ? "予約を保留" : "予約を有効にする"}</button></div>${queueExpanded ? `<div class="queue-controls"><label>予約する作業<select id="queue-action" aria-label="予約する作業">${definitions.map((item) => `<option value="${item.id}" ${queueDraftId === item.id ? "selected" : ""}>${escape(item.name)}</option>`).join("")}</select></label>${draftSingle ? '<span class="queue-single">1回</span>' : `<label>回数<input id="queue-count" data-focus="queue-count" type="number" min="1" max="99" step="1" inputmode="numeric" aria-label="予約回数" value="${Number.isFinite(queueDraftCount) ? queueDraftCount : ""}"></label>`}<button class="button small gold-outline" data-command="queue-add" data-focus="queue-add" ${draftQueued >= 0 || state.run.queue.length >= 8 || state.run.status === "dead" ? "disabled" : ""}>末尾に追加</button><button class="button small gold-outline" data-command="queue-add-front" data-focus="queue-add-front" ${draftQueued === 0 || (draftQueued < 0 && state.run.queue.length >= 8) || state.run.status === "dead" ? "disabled" : ""}>${draftQueued >= 0 ? "先頭へ移す" : "先頭に追加"}</button></div>` : ""}${state.run.queue.length ? `<ol class="queue-list">${state.run.queue.map((entry, index) => `<li class="${index === 0 && state.run.queueManaged ? "current" : ""}"><span class="queue-number">${index + 1}</span><span>${escape(definitions.find((item) => item.id === entry.id)?.name)}</span>${singleUse(entry.id) ? '<span class="queue-single">1回</span>' : `<label class="queue-entry-count">残り <input type="number" min="1" max="99" step="1" value="${entry.count}" data-queue-count="${index}" data-focus="queue-count-${index}" aria-label="予約${index + 1}の残り回数"> 回</label>`}<button class="icon-button" data-queue-move="${index}" data-direction="-1" aria-label="予約${index + 1}を上へ" ${index === 0 ? "disabled" : ""}>↑</button><button class="icon-button" data-queue-move="${index}" data-direction="1" aria-label="予約${index + 1}を下へ" ${index === state.run.queue.length - 1 ? "disabled" : ""}>↓</button><button class="icon-button" data-queue-remove="${index}" data-focus="queue-remove-${index}" aria-label="予約${index + 1}を削除">${icon("close")}</button></li>`).join("")}</ol><div class="queue-footer"><span>${state.settings.paused ? "時間停止中" : escape(queueStatus.reason || (enabled ? "順番に実行します" : "手動作業中・予約は保留"))}</span><button data-command="queue-clear" data-focus="queue-clear">予約を全消去</button></div>` : ""}${queueExpanded ? '<p class="queue-help">素材不足では待機。手動作業を選ぶと予約を保留します。</p>' : ""}</section>`,
+    `<section class="queue-box" aria-label="行動予約"><div class="queue-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length} / 8</small></h3><button data-command="queue-expand" data-focus="queue-expand" aria-expanded="${queueExpanded}">${queueExpanded ? "追加欄を閉じる" : "作業を追加"}</button><button class="button small ${enabled ? "gold-outline" : "muted"}" data-toggle-upgrade="action_queue" data-focus="queue-toggle" aria-pressed="${enabled}">${enabled ? "予約を保留" : "予約を有効にする"}</button></div>${queueExpanded ? `<div class="queue-controls"><label>予約する作業<select id="queue-action" data-focus="queue-action" aria-label="予約する作業">${definitions.map((item) => `<option value="${item.id}" ${queueDraftId === item.id ? "selected" : ""}>${escape(item.name)}</option>`).join("")}</select></label>${draftSingle ? '<span class="queue-single">1回</span>' : `<label>回数<input id="queue-count" data-focus="queue-count" type="number" min="1" max="99" step="1" inputmode="numeric" aria-label="予約回数" value="${Number.isFinite(queueDraftCount) ? queueDraftCount : ""}"></label>`}<button class="button small gold-outline" data-command="queue-add" data-focus="queue-add" ${draftQueued >= 0 || state.run.queue.length >= 8 || state.run.status === "dead" ? "disabled" : ""}>末尾に追加</button><button class="button small gold-outline" data-command="queue-add-front" data-focus="queue-add-front" ${draftQueued === 0 || (draftQueued < 0 && state.run.queue.length >= 8) || state.run.status === "dead" ? "disabled" : ""}>${draftQueued >= 0 ? "先頭へ移す" : "先頭に追加"}</button></div>` : ""}${state.run.queue.length ? `<ol class="queue-list">${state.run.queue.map((entry, index) => `<li class="${index === 0 && state.run.queueManaged ? "current" : ""}"><span class="queue-number">${index + 1}</span><span>${escape(definitions.find((item) => item.id === entry.id)?.name)}</span>${singleUse(entry.id) ? '<span class="queue-single">1回</span>' : `<label class="queue-entry-count">残り <input type="number" min="1" max="99" step="1" value="${entry.count}" data-queue-count="${index}" data-focus="queue-count-${index}" aria-label="予約${index + 1}の残り回数"> 回</label>`}<button class="icon-button" data-queue-move="${index}" data-direction="-1" aria-label="予約${index + 1}を上へ" ${index === 0 ? "disabled" : ""}>↑</button><button class="icon-button" data-queue-move="${index}" data-direction="1" aria-label="予約${index + 1}を下へ" ${index === state.run.queue.length - 1 ? "disabled" : ""}>↓</button><button class="icon-button" data-queue-remove="${index}" data-focus="queue-remove-${index}" aria-label="予約${index + 1}を削除">${icon("close")}</button></li>`).join("")}</ol><div class="queue-footer"><span>${state.settings.paused ? "時間停止中" : escape(queueStatus.reason || (enabled ? "順番に実行します" : "手動作業中・予約は保留"))}</span><button data-command="queue-clear" data-focus="queue-clear">予約を全消去</button></div>` : ""}${queueExpanded ? '<p class="queue-help">素材不足では待機。手動作業を選ぶと予約を保留します。</p>' : ""}</section>`,
   );
 }
 
@@ -667,7 +680,7 @@ function renderCraft() {
       })
       .join(
         "",
-      )}</div><div class="context-hint">${icon("hammer")}<span>${smartUnlocked ? (village ? "「建設する」で足りない材料の採集から予約します。" : "「製作する」で足りない材料の採集・加工から予約します。獣皮や技能条件は別途必要です。") : village ? "完成すると施設の効果が働きます。" : "完成すると自動で装備します。"}</span></div>`,
+      )}</div><div class="context-hint">${icon("hammer")}<span>${smartUnlocked ? (village ? "「建設する」で足りない材料の採集から予約します。" : "予約すると、足りない材料の採集・加工も行います。獣皮や技能条件は別途必要です。") : village ? "完成すると施設の効果が働きます。" : "完成すると自動で装備します。"}</span></div>`,
   );
 }
 
@@ -842,7 +855,7 @@ function syncBattleDialog() {
 function renderExtra(selector, html) {
   const host = document.querySelector(selector);
   let extra = host.querySelector(":scope > .mvp-extra");
-  if (extra?.contains(document.activeElement) && document.activeElement.matches('input, textarea, select')) return;
+  if (editingWithin(extra)) return;
   if (!html) {
     extra?.remove();
     return;
@@ -865,7 +878,10 @@ function renderExtra(selector, html) {
   }
 }
 function render() {
-  renderGuard.run(renderScreen);
+  renderGuard.run(() => {
+    try { renderScreen(); }
+    finally { committedSelect = null; }
+  });
 }
 function renderScreen() {
   if (!session.owned) state.settings.paused = true;
@@ -954,7 +970,7 @@ function renderScreen() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.2.13</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />別の画面に移ったときも自動停止し、閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.2.14</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />別の画面に移ったときも自動停止し、閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
@@ -1439,6 +1455,7 @@ document.addEventListener("input", (event) => {
 
 document.addEventListener("change", (event) => {
   if (!session.owned) return;
+  if (event.target.matches('select')) committedSelect = event.target;
   if (event.target.dataset.craftCount !== undefined) {
     if (!Number.isInteger(event.target.valueAsNumber) || event.target.valueAsNumber < 1 || event.target.valueAsNumber > 99) {
       event.target.value = craftQuantities[event.target.dataset.craftCount] || 1;

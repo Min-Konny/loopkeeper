@@ -143,7 +143,8 @@ export function mountCampScene(host, { variant = "camp", focusY = 0.55 } = {}) {
         if (settlementGeneration === generation && n > last && active && !document.hidden && !matchMedia('(prefers-reduced-motion: reduce)').matches) b.animate?.([{filter:'brightness(2)',transform:'translateY(8px) scale(.8)'},{filter:'brightness(1)',transform:'translateY(0) scale(1)'}],{duration:1000,easing:'ease-out'});
       }
       const residents = Math.min(6,Object.values(facilities).reduce((total,n)=>total+Number(n),0));
-      [...villagers.children].forEach((person,i)=>person.hidden=i>=residents);
+      // SVGElement.hidden is not a reflected HTML property; use the attribute.
+      [...villagers.children].forEach((person,i)=>person.toggleAttribute('hidden',i>=residents));
       settlementGeneration = generation;
     },
   };
