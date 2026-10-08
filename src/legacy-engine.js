@@ -357,12 +357,12 @@ export function canPurchaseUpgrade(state, id) {
   const upgrade = LEGACY_UPGRADES.find((entry) => entry.id === id);
   if (!upgrade) return { ok: false, reason: 'その継承は存在しません。' };
   if (state.meta.upgrades.includes(id)) return { ok: false, reason: 'すでに解放済みです。' };
-  if (id === 'action_queue' && state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2) return { ok: false, reason: '初達成の課題を2つ終えると解放できます。' };
+  if (id === 'action_queue' && state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2) return { ok: false, reason: '初達成のクエストを2つ終えると解放できます。' };
   if (id === 'cycle_acceleration') {
     const reason = accelerationGate(state);
     if (reason) return { ok: false, reason };
   }
-  if (state.meta.points < upgrade.cost) return { ok: false, reason: '継承ポイントが不足しています。初達成の課題やボスの初撃破で獲得できます。' };
+  if (state.meta.points < upgrade.cost) return { ok: false, reason: '継承ポイントが不足しています。初達成のクエストやボスの初撃破で獲得できます。' };
   return { ok: true, reason: '' };
 }
 

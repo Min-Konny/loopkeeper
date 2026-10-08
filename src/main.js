@@ -1,5 +1,5 @@
-import { getCatalog } from "./engine.js?v=0.2.3";
-import { CONTENT } from "./content.js?v=0.2.3";
+import { getCatalog } from "./engine.js?v=0.2.4";
+import { CONTENT } from "./content.js?v=0.2.4";
 import {
   isLegacy,
   isKnown,
@@ -12,7 +12,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.2.3";
+} from "./engine.js?v=0.2.4";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -20,21 +20,21 @@ import {
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.2.3";
-import { createSessionOwner } from "./session-owner.js?v=0.2.3";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.2.3";
+} from "./mvp-ui.js?v=0.2.4";
+import { createSessionOwner } from "./session-owner.js?v=0.2.4";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.2.4";
 import {
   loadStoredGame,
   writeStoredGame,
   readBackups,
   decodeRecord,
   unreadableRecord,
-} from "./save-storage.js?v=0.2.3";
+} from "./save-storage.js?v=0.2.4";
 import {
   updatePresentation,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.2.3";
+} from "./presentation.js?v=0.2.4";
 import {
   getRaidInterval,
   aidCountry,
@@ -57,9 +57,9 @@ import {
   restartRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.2.3";
-import { icon } from "./icons.js?v=0.2.3";
-import { planCraft, queueCraft } from "./planner.js?v=0.2.3";
+} from "./engine.js?v=0.2.4";
+import { icon } from "./icons.js?v=0.2.4";
+import { planCraft, queueCraft } from "./planner.js?v=0.2.4";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -68,19 +68,19 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.2.3";
-import { renderAugments } from "./augments-ui.js?v=0.2.3";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.2.3";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.2.3";
-import { mountCampScene } from "./camp-scene.js?v=0.2.3";
-import { getRecipeVisibility } from "./workshop.js?v=0.2.3";
-import { getMilestoneStatus } from "./engine.js?v=0.2.3";
+} from "./engine.js?v=0.2.4";
+import { renderAugments } from "./augments-ui.js?v=0.2.4";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.2.4";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.2.4";
+import { mountCampScene } from "./camp-scene.js?v=0.2.4";
+import { getRecipeVisibility } from "./workshop.js?v=0.2.4";
+import { getMilestoneStatus } from "./engine.js?v=0.2.4";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.2.3";
+} from "./engine.js?v=0.2.4";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -271,10 +271,10 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2.3</b></div>
+    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2.4</b></div>
   </aside>
   <div class="workspace">
-    <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">課題</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
+    <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
     <main>
       <section class="page-heading"><div><div class="eyebrow">A LIFE TO REMEMBER</div><h1>辺境の野営地</h1><p>備え、抗い、次の命へつなぐ。</p></div><div id="time-controls" class="time-controls"></div></section>
       <div id="milestone"></div>
@@ -447,14 +447,14 @@ function renderWork() {
   const combat = state.run.status === "combat";
   setHTML(
     "#active-work",
-    `<div class="active-work ${working ? "working" : ""} ${combat ? "battle" : ""}"><div class="active-icon">${icon(combat ? "shield" : working ? skillIcons[activeDefinition.skill] : "clock")}</div><div class="active-detail"><div><strong>${combat ? "野営地を防衛中" : working ? escape(activeDefinition.name) : "次の行動を選びましょう"}</strong><span>${combat ? "作業は戦闘後に再開" : working ? `${Math.min(action.progress, action.duration).toFixed(1)} / ${action.duration.toFixed(1)} 秒` : state.settings.paused ? "時間は止まっています" : "襲撃までの時間は進みます"}</span></div><div class="work-track"><i style="width:${working ? progress(action.progress / action.duration) : 0}%"></i></div></div>${working ? `<button class="stop-button" data-command="stop" data-focus="stop" title="作業を中断" aria-label="作業を中断">${icon("close")}</button>` : ""}</div>`,
+    `<div class="active-work ${working ? "working" : ""} ${combat ? "battle" : ""}"><div class="active-icon">${icon(combat ? "shield" : working ? skillIcons[activeDefinition.skill] : "clock")}</div><div class="active-detail"><div><strong>${combat ? "野営地を防衛中" : working ? escape(activeDefinition.name) : "次の行動を選びましょう"}</strong><span>${combat ? "作業は戦闘後に再開" : working ? `<span data-work-time></span>` : state.settings.paused ? "時間は止まっています" : "襲撃までの時間は進みます"}</span></div><div class="work-track"><i data-live-work style="width:0%"></i></div></div>${working ? `<button class="stop-button" data-command="stop" data-focus="stop" title="作業を中断" aria-label="作業を中断">${icon("close")}</button>` : ""}</div>`,
   );
   if (tab === "gather") renderGather();
   if (tab === "craft" || tab === "village") renderCraft();
   if (tab === "legacy") renderLegacy();
   if (tab === "diplomacy") renderDiplomacy();
   renderQueue();
-  document.querySelector('[data-info="queue"]').textContent = state.run.queue.length ? `予約 ${state.run.queue.length}` : "予約";
+  document.querySelector('[data-info="queue"]').textContent = state.run.queue.length ? `行動予約 ${state.run.queue.length}` : "行動予約";
 }
 
 function renderGather() {
@@ -491,19 +491,11 @@ function renderSkillOverview() {
 }
 
 function renderQueue() {
-  if (tab === "legacy" || tab === "diplomacy") {
-    setHTML("#queue-panel", "");
-    return;
-  }
-  if (!hasLegacyOptions()) {
-    setHTML("#queue-panel", "");
-    return;
-  }
   const unlocked = state.meta.upgrades.includes("action_queue");
   if (!unlocked) {
     setHTML(
       "#queue-panel",
-      `<div class="queue-locked">${icon("book")}<span>おまかせ製作で、材料集めから自動化</span><button data-tab="legacy" data-focus="queue-unlock">${state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2 ? "2課題で解放" : "1 pt で解放"} ${icon("chevron")}</button></div>`,
+      `<section class="queue-unlock-card"><h3>${icon("book")}作業を順番に予約</h3><p>製作を予約すると、不足する材料も自動で集めます。</p><div class="queue-unlock-condition">${state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2 ? `クエストを2件達成して解放（${state.meta.completedMilestones.length}/2） · 継承1 pt` : "継承1 ptで購入できます"}</div><button class="button gold" ${state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2 ? 'data-info="quests"' : 'data-tab="legacy"'} data-focus="queue-unlock">${state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2 ? "クエストを見る" : "継承と人員で解放"}${icon("chevron")}</button></section>`,
     );
     return;
   }
@@ -852,7 +844,7 @@ function render() {
   setHTML(
     "#milestone",
     next && tab !== "legacy" && tab !== "diplomacy"
-      ? `<div class="milestone-card" aria-label="初達成の課題">${icon("book")}<div><small>初達成の課題 · ${milestone.completed}/${milestone.total}</small><strong>${escape(next.name)}</strong></div><span>+${next.reward} 継承 pt</span><button data-tab="${milestone.available ? next.tab : "gather"}" data-focus="milestone">${milestone.available ? "開く" : "第1波を撃退"}${icon("chevron")}</button></div>`
+      ? `<div class="milestone-card" aria-label="初達成のクエスト">${icon("book")}<div><small>初達成のクエスト · ${milestone.completed}/${milestone.total}</small><strong>${escape(next.name)}</strong></div><span>+${next.reward} 継承 pt</span><button data-tab="${milestone.available ? next.tab : "gather"}" data-focus="milestone">${milestone.available ? "開く" : "第1波を撃退"}${icon("chevron")}</button></div>`
       : "",
   );
   syncBattleDialog();
@@ -895,7 +887,7 @@ function render() {
   if (tab === "legacy" && !isLegacy(state)) {
     renderExtra("#content", automationMarkup(state) + milestoneMarkup(state));
   }
-  if (!isLegacy(state) && tab !== "legacy" && tab !== "diplomacy")
+  if (!isLegacy(state) && state.meta.upgrades.includes("action_queue"))
     renderExtra("#queue-panel", templatesMarkup(state));
   setHTML(
     "#session-notice",
@@ -917,7 +909,7 @@ function render() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.2.3</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成の課題で継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />別の画面に移ったときも自動停止し、閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.2.4</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />別の画面に移ったときも自動停止し、閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
@@ -985,7 +977,7 @@ function showDeath() {
     .querySelector("#death-dialog .death-tip")
     .insertAdjacentHTML(
       "beforebegin",
-      `<div class="death-legacy">${icon("trophy")}<span>継承ポイント <b>${state.meta.points} pt</b> ・ 初撃破 ${state.meta.defeatedBosses.length} 体 ・ 課題 ${state.meta.completedMilestones.length}/${MILESTONES.length}<br /><small>${retainedUnlocks.length ? `引き継ぐ解放：${retainedUnlocks.map(escape).join("、")}` : "初達成の課題と、ボスの初撃破で継承ポイントを獲得。"}</small></span></div>`,
+      `<div class="death-legacy">${icon("trophy")}<span>継承ポイント <b>${state.meta.points} pt</b> ・ 初撃破 ${state.meta.defeatedBosses.length} 体 ・ クエスト ${state.meta.completedMilestones.length}/${MILESTONES.length}<br /><small>${retainedUnlocks.length ? `引き継ぐ解放：${retainedUnlocks.map(escape).join("、")}` : "初達成のクエストと、ボスの初撃破で継承ポイントを獲得。"}</small></span></div>`,
     );
   if (state.run.status === "cleared") {
     document.querySelector("#death-title").textContent = "最終襲撃を撃退。";
@@ -1148,7 +1140,7 @@ document.addEventListener("click", (event) => {
   if (button.dataset.info) {
     state.settings.paused = true;
     const name = button.dataset.info;
-    document.querySelector("#info-title").textContent = {queue: "行動予約", status: "状態・装備", quests: "初達成の課題", journal: "焚き火の記録"}[name];
+    document.querySelector("#info-title").textContent = {queue: "行動予約", status: "状態・装備", quests: "初達成のクエスト", journal: "焚き火の記録"}[name];
     for (const panel of infoDialog.querySelectorAll("[data-info-panel]")) panel.hidden = panel.dataset.infoPanel !== name;
     setHTML("#quest-list", milestoneMarkup(state));
     const list = infoDialog.querySelector(".milestone-list");
@@ -1531,6 +1523,15 @@ window.addEventListener("pagehide", () => {
   saveGame();
 });
 
+function updateLiveWork() {
+  const action = state.run.activeAction;
+  const bar = document.querySelector("[data-live-work]");
+  const label = document.querySelector("[data-work-time]");
+  if (!bar) return;
+  bar.style.width = `${action && state.run.status !== "dead" ? progress(action.progress / action.duration) : 0}%`;
+  if (label && action) label.textContent = `${Math.min(action.progress, action.duration).toFixed(1)} / ${action.duration.toFixed(1)} 秒`;
+}
+
 function frame(now) {
   const elapsed = Math.min(0.25, Math.max(0, (now - lastTick) / 1000));
   lastTick = now;
@@ -1546,6 +1547,7 @@ function frame(now) {
     render();
     lastRender = now;
   }
+  updateLiveWork();
   if (now - lastSave > 2000) {
     saveGame();
     lastSave = now;

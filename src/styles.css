@@ -1,5 +1,7 @@
+@font-face { font-family: "Zen Maru Gothic"; src: url("../assets/fonts/ZenMaruGothic-Regular.ttf") format("truetype"); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: "Zen Maru Gothic"; src: url("../assets/fonts/ZenMaruGothic-Bold.ttf") format("truetype"); font-weight: 600 900; font-display: swap; }
 :root {
-  font-family: "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+  font-family: "Zen Maru Gothic", "Meiryo", "Hiragino Maru Gothic ProN", "Yu Gothic UI", system-ui, sans-serif;
   color: #dbe0d7;
   background: #151d1e;
   font-synthesis: none;
@@ -11,7 +13,7 @@
   --muted: #8d9b92;
   --green: #9fb19a;
   --red: #c88070;
-  --serif: "Yu Mincho", "Hiragino Mincho ProN", Georgia, serif;
+  --serif: "Zen Maru Gothic", "Meiryo", "Hiragino Maru Gothic ProN", system-ui, sans-serif;
 }
 * {
   box-sizing: border-box;
@@ -209,7 +211,7 @@ button .icon {
   color: #b7c2b6;
 }
 .skill-numbers {
-  font-family: Georgia, serif;
+  font-family: inherit;
   font-size: 13px;
   letter-spacing: 0.04em;
 }

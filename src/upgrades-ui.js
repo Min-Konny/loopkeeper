@@ -4,8 +4,8 @@ import {
   canPurchaseUpgrade,
   getAccelerationStatus,
   getCatalog,
-} from "./engine.js?v=0.2.3";
-import { icon } from "./icons.js?v=0.2.3";
+} from "./engine.js?v=0.2.4";
+import { icon } from "./icons.js?v=0.2.4";
 
 const escape = (value) =>
   String(value ?? "").replace(
@@ -85,7 +85,7 @@ export function renderUpgradeSections(state) {
     const unlockHint = gate.bestWave && state.meta.bestWave < gate.bestWave
       ? `第${gate.bestWave}波の撃退で解放`
       : gate.completedQuests && state.meta.completedMilestones.length < gate.completedQuests && state.meta.bestWave < 3
-        ? `課題${gate.completedQuests}件で解放`
+        ? `クエスト${gate.completedQuests}件で解放`
         : gate.requires?.some((id) => !state.meta.upgrades.includes(id))
           ? "前提の技能を解放"
           : gate.generation && state.meta.generation < gate.generation
@@ -109,5 +109,5 @@ export function renderUpgradeSections(state) {
     return `<section class="legacy-upgrade-group legacy-${id}" aria-labelledby="legacy-${id}-title"><div class="legacy-group-heading">${icon(symbol)}<div><h3 id="legacy-${id}-title">${name}</h3>${description ? `<p>${description}</p>` : ""}</div></div><div class="upgrade-grid">${upgrades.map(card).join("")}</div>${note ? `<p class="workers-info">${note}</p>` : ""}</section>`;
   }
 
-  return `<section class="upgrade-section legacy-upgrades" aria-label="継承ポイントと技能"><div class="points-banner"><div><h3>次の命を支える力</h3><p>課題の初達成・ボスの初撃破で獲得</p></div><strong>${state.meta.points}<small>継承 pt</small></strong></div>${group("combat", "戦闘の備え", "shield", ["combat"], "序盤の防衛を支え、内政へ時間を回す。")}${group("automation", "作業を任せる", "tool", ["automation", "worker"])}${group("augment", "周回の選択肢", "spark", ["augment_pack"], "選んだ効果はその周回だけ。", "基本6種類は無料。抽選の切り替えは、次の3択から反映。")}${group("time", "周回の復帰", "clock", ["time"], "突破した区間の準備を速める。")}<p class="workers-info">解放した技能・人員・種類は、次の命にも残ります。</p></section>`;
+  return `<section class="upgrade-section legacy-upgrades" aria-label="継承ポイントと技能"><div class="points-banner"><div><h3>次の命を支える力</h3><p>クエストの初達成・ボスの初撃破で獲得</p></div><strong>${state.meta.points}<small>継承 pt</small></strong></div>${group("combat", "戦闘の備え", "shield", ["combat"], "序盤の防衛を支え、内政へ時間を回す。")}${group("automation", "作業を任せる", "tool", ["automation", "worker"])}${group("augment", "周回の選択肢", "spark", ["augment_pack"], "選んだ効果はその周回だけ。", "基本6種類は無料。抽選の切り替えは、次の3択から反映。")}${group("time", "周回の復帰", "clock", ["time"], "突破した区間の準備を速める。")}<p class="workers-info">解放した技能・人員・種類は、次の命にも残ります。</p></section>`;
 }

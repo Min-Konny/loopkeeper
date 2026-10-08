@@ -135,3 +135,47 @@ html, body { height: 100%; overflow: hidden; }
   #active-work .active-icon { display: none; }
   .active-work { min-height: 40px; padding: 6px 10px; }
 }
+
+/* Keep the live gauge attached while the simulation advances each frame. */
+[data-live-work] { transition: none; }
+.queue-unlock-card { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-raised); }
+.queue-unlock-card h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-size: 16px; }
+.queue-unlock-card p { color: #c3cec1; line-height: 1.7; }
+.queue-unlock-condition { margin: 14px 0; font-size: 12px; color: var(--gold); }
+
+/* Desktop has room for readable labels and larger interaction targets. */
+@media (min-width: 1000px) and (min-height: 680px) {
+  .workspace main { padding: 16px 26px; gap: 10px; }
+  .topbar { min-height: 58px; height: 58px; padding: 0 26px; }
+  .dashboard-button { font-size: 15px; padding: 9px 14px; }
+  .breadcrumb { font-size: 14px; }
+  .camp-banner { height: 112px; min-height: 112px; }
+  .camp-caption h2 { font-size: 25px; }
+  .raid-forecast { width: 360px; padding: 10px 16px; }
+  .forecast-top { font-size: 12px; }
+  .forecast-main strong { font-size: 18px; }
+  .forecast-main small { font-size: 12px; }
+  .countdown { font-size: 32px; }
+  .resource-bar { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); }
+  .resource small { font-size: 12px; }
+  .resource strong { font-size: 20px; font-family: inherit; }
+  .milestone-card { font-size: 14px; }
+  .milestone-card small { font-size: 12px; }
+  .prep-status { font-size: 15px; }
+  .section-heading h2 { font-size: 22px; }
+  .active-work { padding: 13px 16px; min-height: 66px; }
+  .active-detail strong { font-size: 17px; }
+  .active-detail span { font-size: 13px; }
+  .action-grid { gap: 14px; }
+  .action-card { padding: 18px; }
+  .action-name h3 { font-size: 21px; }
+  .action-card p { font-size: 14px; line-height: 1.6; }
+  .action-time, .action-yield > span { font-size: 14px; }
+  .card-levels, .run-growth { font-size: 13px; }
+  .sidebar .nav-button { font-size: 15px; }
+  .sidebar .skill-row { font-size: 14px; }
+  .skill-numbers { font-size: 15px; }
+  .recipe-name h3, .upgrade-info h3 { font-size: 18px; }
+  .recipe-cost, .recipe-stats { font-size: 14px; }
+  .upgrade-card { font-size: 14px; }
+}
