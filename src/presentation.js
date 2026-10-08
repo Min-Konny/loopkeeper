@@ -1,6 +1,6 @@
-import { completedQueueEntries } from './visual-design.js?v=0.2.14';
-import { getCatalog } from "./engine.js?v=0.2.14";
-import { icon } from "./icons.js?v=0.2.14";
+import { completedQueueEntries } from './visual-design.js?v=0.2.15';
+import { getCatalog } from "./engine.js?v=0.2.15";
+import { icon } from "./icons.js?v=0.2.15";
 let audio;
 let preferences = { soundVolume: 0.3, effectsEnabled: true };
 let previous;

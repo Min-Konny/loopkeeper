@@ -45,3 +45,43 @@
 @media(max-width:690px){.augment-offer-heading{display:block}.choice-paused{display:inline-flex;margin-top:10px}.augment-offer-heading h2{font-size:21px}.augment-choices{grid-template-columns:1fr}.augment-choice{padding:16px}.augment-card-top{margin-bottom:9px}.augment-choice h3{font-size:19px}.augment-effect{font-size:12px;margin-bottom:10px}.augment-hint{font-size:10px;margin-bottom:13px}.augment-choice .button{font-size:12px}.augment-summary{padding:13px}.chosen-augments{grid-template-columns:1fr}.augment-summary-label>span{font-size:8px}.augment-catalog-heading h3{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.augment-choice{transition:none}.augment-choice:hover{transform:none}}
 @media(prefers-reduced-motion:no-preference){.augment-offer,.augment-summary{animation:augment-reveal .24s ease-out}@keyframes augment-reveal{from{opacity:.55;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}}
+
+/* A run-defining choice gets room to compare all three paths. */
+#augment-dialog{width:min(1080px,calc(100vw - 40px));padding:28px;overflow:auto;scrollbar-gutter:stable;background:radial-gradient(ellipse at top,#344637,#1b2b25 70%)}
+#augment-dialog::backdrop{background:#071211e0;backdrop-filter:blur(7px)}
+#augment-dialog .dialog-heading{margin-bottom:12px}
+#augment-dialog .augment-offer{margin:0;padding:0;border:0;background:none;animation:none}
+#augment-dialog .augment-offer-heading h2{font-size:30px}
+#augment-dialog .augment-offer-heading p{font-size:15px}
+#augment-dialog .choice-paused{font-size:13px}
+#augment-dialog .augment-choices{gap:20px}
+#augment-dialog .augment-choice{padding:24px;min-height:310px;border-radius:10px}
+#augment-dialog .augment-symbol{width:64px;height:64px;border-radius:14px;background:radial-gradient(circle,#ffffff12,#ffffff03);box-shadow:0 0 28px #0002}
+#augment-dialog .augment-symbol .icon{width:36px;height:36px}
+#augment-dialog .augment-family{font-size:14px}
+#augment-dialog .augment-choice h3{font-size:23px}
+#augment-dialog .augment-effect{font-size:16px;line-height:1.8}
+#augment-dialog .augment-hint{font-size:14px;line-height:1.7}
+#augment-dialog .augment-choice .button{font-size:15px;min-height:48px}
+#augment-dialog .augment-offer-footer{font-size:13px}
+.augment-pending{width:100%;margin:0;padding:10px 16px;justify-content:center}
+.augment-summary-label>.button{margin-left:auto}
+@media(max-width:690px){
+  #augment-dialog{width:calc(100vw - 24px);max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);padding:16px}
+  #augment-dialog .dialog-heading{position:sticky;top:-16px;z-index:2;background:#26392e;padding:8px 0}
+  #augment-dialog .dialog-heading .eyebrow{font-size:9px}
+  #augment-dialog .augment-offer-heading{margin-bottom:14px}
+  #augment-dialog .augment-offer-heading h2{font-size:23px}
+  #augment-dialog .augment-offer-heading p{font-size:13px}
+  #augment-dialog .choice-paused{font-size:12px;margin-top:4px}
+  #augment-dialog .augment-choices{gap:12px}
+  #augment-dialog .augment-choice{min-height:0;padding:16px}
+  #augment-dialog .augment-card-top{margin-bottom:8px}
+  #augment-dialog .augment-symbol{width:40px;height:40px;border-radius:10px}
+  #augment-dialog .augment-symbol .icon{width:25px;height:25px}
+  #augment-dialog .augment-choice h3{font-size:20px;margin-bottom:8px}
+  #augment-dialog .augment-effect{font-size:14px;margin-bottom:8px}
+  #augment-dialog .augment-hint{font-size:12px;padding-top:8px;margin-bottom:12px}
+  #augment-dialog .augment-choice .button{font-size:14px;min-height:44px}
+  #augment-dialog .augment-offer-footer{font-size:12px}
+}
