@@ -1,10 +1,10 @@
-import { CONTENT as C } from "./content.js";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js";
+import { CONTENT as C } from "./content.js?v=0.2.2";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.2.2";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js";
+} from "./legacy-engine.js?v=0.2.2";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -718,6 +718,7 @@ export function enqueueAction(
   )
     return fail("予約8件、回数1〜99。");
   if (s.run.status !== "preparing") return fail("準備中に予約してください。");
+  if (defs.get(id)?.equipment || defs.get(id)?.facility) count = 1;
   s.run.queue.push({ id, count, kind, goalId: ++s.run.queueSeq });
   return ok();
 }
@@ -736,7 +737,8 @@ export function editQueuedAction(s, i, n) {
     return fail("回数1〜99。");
   s.settings.paused = true;
   detach(s);
-  s.run.queue[i].count = n;
+  const d = defs.get(s.run.queue[i].id);
+  s.run.queue[i].count = d?.equipment || d?.facility ? 1 : n;
   return ok();
 }
 export function moveQueuedAction(s, i, dir) {
@@ -1018,7 +1020,10 @@ export function loadTemplate(s, i) {
     t.goals.some((g) => !isKnown(s, g.id))
   )
     return fail("この手順を使えません。");
-  for (const g of t.goals) s.run.queue.push({ ...g, goalId: ++s.run.queueSeq });
+  for (const g of t.goals) {
+    const d = defs.get(g.id);
+    s.run.queue.push({ ...g, count: d?.equipment || d?.facility ? 1 : g.count, goalId: ++s.run.queueSeq });
+  }
   return ok();
 }
 export function deleteTemplate(s, i) {

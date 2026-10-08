@@ -1,6 +1,6 @@
-import { battleSound } from "./presentation.js";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js";
-import { icon } from "./icons.js";
+import { battleSound } from "./presentation.js?v=0.2.2";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.2.2";
+import { icon } from "./icons.js?v=0.2.2";
 
 const views = new WeakMap();
 const number = (value) =>

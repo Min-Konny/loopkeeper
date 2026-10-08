@@ -1,5 +1,5 @@
-import { getCatalog, getAugmentStatus } from "./engine.js";
-import { icon } from "./icons.js";
+import { getCatalog, getAugmentStatus } from "./engine.js?v=0.2.2";
+import { icon } from "./icons.js?v=0.2.2";
 
 const families = {
   economy: { name: "生産・投資", icon: "gold" },

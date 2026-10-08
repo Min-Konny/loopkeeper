@@ -439,6 +439,8 @@ export function enqueueAction(state, id, count = 1) {
   if (!DEFINITIONS.has(id)) return { ok: false, reason: 'その作業は存在しません。' };
   if (!Number.isInteger(count) || count < 1 || count > 99) return { ok: false, reason: '実行回数は1〜99回で指定してください。' };
   if (state.run.queue.length >= 8) return { ok: false, reason: '予約は最大8件です。' };
+  const d = DEFINITIONS.get(id);
+  if (d.equipment || d.facility) count = 1;
   state.run.queue.push({ id, count });
   return { ok: true, reason: '' };
 }
@@ -446,7 +448,8 @@ export function enqueueAction(state, id, count = 1) {
 export function editQueuedAction(state, index, count) {
   if (!Number.isInteger(index) || !state.run.queue[index]) return { ok: false, reason: 'その予約は存在しません。' };
   if (!Number.isInteger(count) || count < 1 || count > 99) return { ok: false, reason: '実行回数は1〜99回で指定してください。' };
-  state.run.queue[index].count = count;
+  const d = DEFINITIONS.get(state.run.queue[index].id);
+  state.run.queue[index].count = d.equipment || d.facility ? 1 : count;
   return { ok: true, reason: '' };
 }
 

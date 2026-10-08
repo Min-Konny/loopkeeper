@@ -1,8 +1,8 @@
-import * as legacy from "./legacy-engine.js";
-import * as mvp from "./mvp-engine.js";
-import { validateSave } from "./save-validation.js";
-export { getProductionSources } from "./mvp-engine.js";
-export { canConfigureWorker } from "./mvp-engine.js";
+import * as legacy from "./legacy-engine.js?v=0.2.2";
+import * as mvp from "./mvp-engine.js?v=0.2.2";
+import { validateSave } from "./save-validation.js?v=0.2.2";
+export { getProductionSources } from "./mvp-engine.js?v=0.2.2";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.2.2";
 export {
   SKILLS,
   getSkillProgress,
@@ -19,17 +19,26 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js";
+} from "./mvp-engine.js?v=0.2.2";
 export const isLegacy = (s) => s.version === 1;
+function normalizeSingleReservations(s) {
+  if (!s) return null;
+  const recipes = (isLegacy(s) ? legacy : mvp).RECIPES;
+  for (const entry of [...s.run.queue, ...(s.meta.templates || []).flatMap(t => t.goals)]) {
+    const d = recipes.find(r => r.id === entry.id);
+    if (d?.equipment || d?.facility) entry.count = 1;
+  }
+  return s;
+}
 export function parseSave(text) {
   if (typeof text !== "string" || text.length > 100000) return null;
   try {
     const raw = JSON.parse(text);
-    if (raw.version === 1) return legacy.parseSave(text);
+    if (raw.version === 1) return normalizeSingleReservations(legacy.parseSave(text));
     if (!validateSave(raw)) return null;
     raw.settings.paused = true;
     raw.run.acceleration.active = false;
-    return raw;
+    return normalizeSingleReservations(raw);
   } catch {
     return null;
   }
