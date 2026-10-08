@@ -4,8 +4,8 @@ import {
   canPurchaseUpgrade,
   getAccelerationStatus,
   getCatalog,
-} from "./engine.js?v=0.2.15";
-import { icon } from "./icons.js?v=0.2.15";
+} from "./engine.js?v=0.2.16";
+import { icon } from "./icons.js?v=0.2.16";
 
 const escape = (value) =>
   String(value ?? "").replace(
