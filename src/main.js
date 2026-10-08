@@ -264,7 +264,7 @@ function setHTML(selector, html) {
 
 document.querySelector("#app").innerHTML = `
   <aside class="sidebar">
-    <a class="brand" href="#" aria-label="灯守の輪廻 ホーム"><img src="./assets/mark.svg" alt="" /><span><strong>灯守の輪廻</strong><small>TOMORI · REBIRTH</small></span></a>
+    <a class="brand" href="#" aria-label="LoopKeeper ホーム"><img src="./assets/mark.svg" alt="" /><span><strong>LoopKeeper</strong><small>IDLE DEFENSE</small></span></a>
     <div class="sidebar-label">野営地</div>
     <nav id="navigation" aria-label="メインメニュー"></nav>
     <div class="skills-heading"><span class="sidebar-label">この命の技能</span><span class="skill-legend">進行 <b>/</b> 永続</span></div>
@@ -1225,7 +1225,7 @@ document.addEventListener("click", (event) => {
       break;
     case "export-original": {
       const raw = unreadableRecord(localStorage);
-      if (raw) downloadText(raw, "tomori-unreadable.json");
+      if (raw) downloadText(raw, "loopkeeper-unreadable.json");
       break;
     }
     case "save-now":
@@ -1413,7 +1413,7 @@ function downloadText(text, filename) {
 function exportSave() {
   downloadText(
     serializeGame(state),
-    `tomori-generation-${state.meta.generation}-${new Date().toISOString().replace(/[:.]/g, "-")}.json`,
+    `loopkeeper-generation-${state.meta.generation}-${new Date().toISOString().replace(/[:.]/g, "-")}.json`,
   );
   toast("旅の記録を書き出しました。");
 }

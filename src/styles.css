@@ -96,8 +96,8 @@ button .icon {
   height: 46px;
 }
 .brand strong {
-  font: 600 21px var(--serif);
-  letter-spacing: 0.09em;
+  font: 600 19px var(--serif);
+  letter-spacing: 0.02em;
   display: block;
   color: #e6e6d9;
 }
