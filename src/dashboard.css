@@ -10,6 +10,10 @@ html, body { height: 100%; overflow: hidden; }
 .page-heading, main > footer { display: none; }
 .camp-banner { min-height: 92px; height: 92px; flex-shrink: 0; margin: 0; padding: 6px 18px; align-items: center; }
 .camp-caption h2 { font-size: 20px; }
+.camp-caption { align-self: flex-start; margin-top: 6px; }
+.camp-banner .camp-buildings { left: 12px; right: auto; bottom: 5px; gap: 4px; }
+.camp-banner .camp-buildings span { width: 24px; height: 24px; }
+.camp-banner .camp-buildings svg { width: 20px; height: 20px; }
 .camp-caption p, .location-tag { display: none; }
 .raid-forecast { width: 300px; padding: 8px 12px; margin: 0; }
 .forecast-main { margin: 4px 0; }
@@ -84,6 +88,7 @@ html, body { height: 100%; overflow: hidden; }
   .raid-forecast { width: 260px; }
 }
 @media (max-width: 690px) {
+  .camp-banner .camp-buildings { display: none; }
   .workspace main { padding: 8px; gap: 6px; }
   .topbar { height: 44px; min-height: 44px; padding: 0 8px; }
   .breadcrumb, #save-status { display: none; }
@@ -123,6 +128,7 @@ html, body { height: 100%; overflow: hidden; }
   #queue-panel { max-height: 38%; }
 }
 @media (max-height: 650px) {
+  .camp-banner .camp-buildings { display: none; }
   .camp-banner { height: 60px; min-height: 60px; }
   .camp-caption { display: none; }
   .raid-forecast { width: 100%; }
