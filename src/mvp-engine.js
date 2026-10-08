@@ -1,10 +1,10 @@
-import { CONTENT as C } from "./content.js?v=0.2.7";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.2.7";
+import { CONTENT as C } from "./content.js?v=0.2.8";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.2.8";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.2.7";
+} from "./legacy-engine.js?v=0.2.8";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -782,7 +782,13 @@ export function getQueueStatus(s) {
   };
 }
 function driveQueue(s) {
-  if (s.run.activeAction || !on(s, "action_queue")) return;
+  if (!on(s, "action_queue") || !s.run.queue.length) return;
+  if (s.run.activeAction) {
+    if (s.run.queueManaged || s.run.activeAction.kind === "craft") return;
+    // A manual gathering loop must yield to an explicitly enabled reservation.
+    // Keep its partial work so returning to it never wastes progress.
+    suspend(s);
+  }
   while (s.run.queue.length) {
     const q = s.run.queue[0],
       r =

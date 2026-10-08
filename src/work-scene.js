@@ -1,4 +1,4 @@
-import { icon } from './icons.js?v=0.2.7';
+import { icon } from './icons.js?v=0.2.8';
 
 // Decorative work scenes follow the actual selected skill; no separate timer or game state.
 export function workScene(skill, actionId) {
