@@ -736,6 +736,7 @@ function detach(s) {
     if (s.run.activeAction?.kind === "gather") suspend(s);
     else if (s.run.activeAction) delete s.run.activeAction.goalId;
   }
+  if (s.run.activeAction?.kind === "craft") delete s.run.activeAction.goalId;
   for (const a of Object.values(s.run.suspendedActions)) delete a.goalId;
   s.run.queueManaged = false;
 }
@@ -1581,14 +1582,15 @@ function step(s, dt) {
     if (a.progress + 1e-8 >= a.duration) {
       complete(s, a);
       s.run.activeAction = null;
-      const q = s.run.queue[0];
+      const queueIndex = s.run.queue.findIndex(q => q.goalId === a.goalId);
+      const q = s.run.queue[queueIndex];
       if (
         q &&
         a.goalId === q.goalId &&
         (q.kind === "action" || a.id === q.id)
       ) {
         if (--q.count <= 0) {
-          s.run.queue.shift();
+          s.run.queue.splice(queueIndex, 1);
           event(s, "queue_complete");
         }
       }

@@ -114,11 +114,13 @@ export function planCraft(s, id) {
 }
 // Move the whole newly added plan, preserving the order of legacy material steps.
 export function prioritizeAddedReservations(s, previousLength) {
+  const paidGoalId = !isLegacy(s) && s.run.activeAction?.kind === "craft" ? s.run.activeAction.goalId : undefined;
   const added = s.run.queue.length - previousLength;
   for (let offset = 0; offset < added; offset++) {
     for (let index = previousLength + offset; index > offset; index--)
       moveQueuedAction(s, index, -1);
   }
+  if (paidGoalId !== undefined) s.run.activeAction.goalId = paidGoalId;
 }
 export function queueAction(s, id, count, position = "end") {
   const previousLength = s.run.queue.length;
