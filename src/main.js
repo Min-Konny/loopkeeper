@@ -1,7 +1,8 @@
-import { compareRun } from './visual-design.js?v=0.2.12';
-import { resolveGoal } from "./engine.js?v=0.2.12";
-import { getCatalog } from "./engine.js?v=0.2.12";
-import { CONTENT } from "./content.js?v=0.2.12";
+import { compareRun } from './visual-design.js?v=0.2.13';
+import { createRenderGuard } from './render-guard.js?v=0.2.13';
+import { runFrameTasks } from './frame-loop.js?v=0.2.13';
+import { getCatalog } from "./engine.js?v=0.2.13";
+import { CONTENT } from "./content.js?v=0.2.13";
 import {
   isLegacy,
   isKnown,
@@ -14,7 +15,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.2.12";
+} from "./engine.js?v=0.2.13";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -22,22 +23,22 @@ import {
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.2.12";
-import { createSessionOwner } from "./session-owner.js?v=0.2.12";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.2.12";
+} from "./mvp-ui.js?v=0.2.13";
+import { createSessionOwner } from "./session-owner.js?v=0.2.13";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.2.13";
 import {
   loadStoredGame,
   writeStoredGame,
   readBackups,
   decodeRecord,
   unreadableRecord,
-} from "./save-storage.js?v=0.2.12";
+} from "./save-storage.js?v=0.2.13";
 import {
   updatePresentation,
   markQueueEdited,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.2.12";
+} from "./presentation.js?v=0.2.13";
 import {
   getRaidInterval,
   aidCountry,
@@ -59,9 +60,9 @@ import {
   restartRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.2.12";
-import { icon } from "./icons.js?v=0.2.12";
-import { planCraft, queueCraft, queueAction, queueWork, selectManualAction } from "./planner.js?v=0.2.12";
+} from "./engine.js?v=0.2.13";
+import { icon } from "./icons.js?v=0.2.13";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.2.13";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -70,20 +71,20 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.2.12";
-import { renderAugments } from "./augments-ui.js?v=0.2.12";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.2.12";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.2.12";
-import { mountCampScene } from "./camp-scene.js?v=0.2.12";
-import { workScene } from "./work-scene.js?v=0.2.12";
-import { getRecipeVisibility } from "./workshop.js?v=0.2.12";
-import { getMilestoneStatus } from "./engine.js?v=0.2.12";
+} from "./engine.js?v=0.2.13";
+import { renderAugments } from "./augments-ui.js?v=0.2.13";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.2.13";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.2.13";
+import { mountCampScene } from "./camp-scene.js?v=0.2.13";
+import { workScene } from "./work-scene.js?v=0.2.13";
+import { getRecipeVisibility } from "./workshop.js?v=0.2.13";
+import { getMilestoneStatus } from "./engine.js?v=0.2.13";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.2.12";
+} from "./engine.js?v=0.2.13";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -241,10 +242,7 @@ function toast(message) {
 }
 
 function queueIssue() {
-  const first = state.run.queue[0];
-  if (isLegacy(state) || !state.meta.upgrades.includes("action_queue") || state.run.status !== "preparing" || !first || state.run.activeAction?.kind === "craft" || state.settings.disabledUpgrades.includes("action_queue")) return null;
-  const check = first.kind === "goal" ? resolveGoal(state, first.id) : canStartAction(state, first.id, true);
-  return check.ok ? null : check;
+  return blockedReservation(state);
 }
 function resumeSelectedWork() {
   if (state.run.status !== "preparing" || getAugmentStatus(state).offer.length)
@@ -261,9 +259,13 @@ function resumeSelectedWork() {
   return true;
 }
 
+const renderGuard = createRenderGuard({ document, window, onReady: () => render() });
+
 function setHTML(selector, html) {
   const el = document.querySelector(selector);
   if (el.dataset.lastHtml === html) return;
+  // Keep selection and partially typed values intact until the editor loses focus.
+  if (el.contains(document.activeElement) && document.activeElement.matches('input, textarea, select')) return;
   const focusKey = el.contains(document.activeElement)
     ? document.activeElement.dataset.focus
     : null;
@@ -284,7 +286,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2.12</b></div>
+    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.2.13</b></div>
   </aside>
   <div class="workspace">
     <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
@@ -520,7 +522,7 @@ function renderQueuePreview() {
   const enabled = !state.settings.disabledUpgrades.includes("action_queue");
   const issue = queueIssue();
   const status = issue ? "要確認" : !enabled ? "保留中" : state.settings.paused ? "時間停止中" : "実行中";
-  setHTML("#queue-preview", `<div class="queue-preview-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length}/8</small></h3><button data-info="queue">編集</button></div><div class="queue-preview-status ${issue ? "needs-attention" : ""}">${status}</div>${state.run.queue.length ? `<ol>${state.run.queue.map((entry,index) => `<li data-preview-goal="${entry.goalId ?? index}" class="${index === 0 && state.run.queueManaged && enabled ? "current" : ""}"><span class="queue-number">${index+1}</span><span class="queue-preview-name">${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}</span><small>${singleUse(entry.id) ? "1回" : `残り${entry.count}回`}</small></li>`).join("")}</ol><button class="button small" data-toggle-upgrade="action_queue">${enabled ? "予約を保留" : "予約を有効にする"}</button>` : '<p class="queue-preview-empty">予約した行動がここに並びます。</p>'}`);
+  setHTML("#queue-preview", `<div class="queue-preview-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length}/8</small></h3><button data-info="queue">編集</button></div><div class="queue-preview-status ${issue ? "needs-attention" : ""}">${status}</div>${state.run.queue.length ? `<ol>${state.run.queue.map((entry,index) => `<li data-preview-goal="${entry.goalId ?? index}" class="${index === 0 && state.run.queueManaged && enabled ? "current" : ""}"><span class="queue-number">${index+1}</span><span class="queue-preview-name">${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}</span><small>${singleUse(entry.id) ? "1回" : `残り${entry.count}回`}</small><button class="queue-preview-remove icon-button" data-queue-remove="${index}" ${entry.goalId !== undefined ? `data-queue-goal="${entry.goalId}"` : ""} aria-label="${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}の予約を削除">${icon("close")}</button></li>`).join("")}</ol><button class="button small" data-toggle-upgrade="action_queue">${enabled ? "予約を保留" : "予約を有効にする"}</button>` : '<p class="queue-preview-empty">予約した行動がここに並びます。</p>'}`);
 }
 function renderQueue() {
   renderQueuePreview();
@@ -840,6 +842,7 @@ function syncBattleDialog() {
 function renderExtra(selector, html) {
   const host = document.querySelector(selector);
   let extra = host.querySelector(":scope > .mvp-extra");
+  if (extra?.contains(document.activeElement) && document.activeElement.matches('input, textarea, select')) return;
   if (!html) {
     extra?.remove();
     return;
@@ -862,6 +865,9 @@ function renderExtra(selector, html) {
   }
 }
 function render() {
+  renderGuard.run(renderScreen);
+}
+function renderScreen() {
   if (!session.owned) state.settings.paused = true;
   const unlocks = getUnlocks(state);
   if (
@@ -890,7 +896,7 @@ function render() {
     `<span>${state.run.activeAction ? escape([...ACTIONS, ...RECIPES].find((item) => item.id === state.run.activeAction.id)?.name) : "作業なし"}</span><b>${state.run.status === "combat" ? "襲撃中" : state.run.status === "dead" ? "旅の終わり" : `襲撃まで ${time(Math.ceil(state.run.nextWaveAt - state.run.elapsed))}`}</b><button data-command="${getAugmentStatus(state).offer.length ? "show-augments" : "pause"}" aria-label="${state.settings.paused ? "時間を進める" : "一時停止"}">${icon(state.settings.paused ? "play" : "pause")}</button>`,
   );
   const issue = queueIssue();
-  setHTML("#queue-warning", issue ? `<div class="queue-warning"><span>${escape(issue.reason)}</span><button class="button small gold-outline" ${issue.skill ? `data-skill="${issue.skill}"` : 'data-tab="gather"'}>別の作業を選ぶ</button><button data-info="queue">予約を見直す</button></div>` : "");
+  setHTML("#queue-warning", issue ? `<div class="queue-warning"><span><strong>${escape([...ACTIONS,...RECIPES].find(d=>d.id===state.run.queue[0]?.id)?.name || "行動予約")}：予約を停止中</strong> · ${escape(issue.reason)}</span><button class="button small" data-queue-fix="remove">この予約を削除</button>${state.run.queue.length > 1 ? `<button class="button small" data-queue-fix="defer">最後へ回す</button>` : ""}<button class="button small gold-outline" ${issue.skill ? `data-skill="${issue.skill}"` : 'data-tab="gather"'}>別の作業を選ぶ</button><button data-info="queue">予約を見直す</button></div>` : "");
   const offer = getAugmentStatus(state);
   const offerKey = offer.offer.length
     ? `${state.meta.generation}:${offer.selected.length}:${offer.offer.join(",")}`
@@ -948,7 +954,7 @@ function render() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.2.12</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />別の画面に移ったときも自動停止し、閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.2.13</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />別の画面に移ったときも自動停止し、閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
@@ -1135,8 +1141,19 @@ document.addEventListener("click", (event) => {
     saveGame();
   }
   if (button.dataset.queueRemove !== undefined) {
+    const blocked = Boolean(queueIssue());
     markQueueEdited();
-    removeQueuedAction(state, Number(button.dataset.queueRemove));
+    const index = button.dataset.queueGoal !== undefined ? state.run.queue.findIndex(q => String(q.goalId) === button.dataset.queueGoal) : Number(button.dataset.queueRemove);
+    const result = removeQueuedAction(state, index);
+    if (!result.ok) toast(result.reason);
+    else if (blocked) resumeSelectedWork();
+    saveGame();
+  }
+  if (button.dataset.queueFix) {
+    markQueueEdited();
+    const result = recoverReservation(state, button.dataset.queueFix);
+    if (!result.ok) toast(result.reason);
+    else if (state.run.activeAction || state.run.queue.length) resumeSelectedWork();
     saveGame();
   }
   if (button.dataset.hideRecipe) {
@@ -1624,28 +1641,43 @@ function updateLiveWork() {
   if (label && action) label.textContent = `${Math.min(action.progress, action.duration).toFixed(1)} / ${action.duration.toFixed(1)} 秒`;
 }
 
+let presentationFailed = false;
+let lastFrameError = '';
+function frameError(stage, error) {
+  if (stage === 'presentation') presentationFailed = true;
+  else state.settings.paused = true;
+  const key = `${stage}:${error?.message}`;
+  if (key === lastFrameError) return;
+  lastFrameError = key;
+  console.error(`Game frame (${stage})`, error);
+  toast(stage === 'presentation' ? '演出に問題が起きたため、演出を止めて作業を続けます。' : '処理に問題が起きたため一時停止しました。再開できない場合は記録を書き出してください。');
+}
 function frame(now) {
   const elapsed = Math.min(0.25, Math.max(0, (now - lastTick) / 1000));
   lastTick = now;
-  if (
-    session.owned &&
-    !document.hidden &&
-    !temporaryDialogs.some(dialog => dialog.open) &&
-    !state.settings.paused &&
-    state.run.status !== "dead"
-  )
-    advanceTime(state, elapsed);
-  if (now - lastRender > 150) {
-    render();
-    updatePresentation(state);
-    lastRender = now;
-  }
-  updateLiveWork();
-  if (now - lastSave > 2000) {
-    saveGame();
-    lastSave = now;
-  }
-  requestAnimationFrame(frame);
+  const presentationDue = now - lastRender > 150;
+  runFrameTasks([
+    ['advance', () => {
+      if (session.owned && !document.hidden && !temporaryDialogs.some(dialog => dialog.open) && !state.settings.paused && state.run.status !== 'dead')
+        advanceTime(state, elapsed);
+    }],
+    ['render', () => {
+      if (presentationDue) {
+        render();
+        lastRender = now;
+      }
+    }],
+    ['presentation', () => {
+      if (presentationDue && !presentationFailed) updatePresentation(state);
+    }],
+    ['work', updateLiveWork],
+    ['save', () => {
+      if (now - lastSave > 2000) {
+        saveGame();
+        lastSave = now;
+      }
+    }],
+  ], frameError, () => requestAnimationFrame(frame));
 }
 const channel =
   typeof BroadcastChannel === "function"

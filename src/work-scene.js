@@ -1,5 +1,5 @@
-import { equipmentMaterial } from './visual-design.js?v=0.2.12';
-import { icon } from './icons.js?v=0.2.12';
+import { equipmentMaterial } from './visual-design.js?v=0.2.13';
+import { icon } from './icons.js?v=0.2.13';
 
 // Decorative work scenes follow the actual selected skill; no separate timer or game state.
 export function workScene(skill, actionId, equipment = {}) {

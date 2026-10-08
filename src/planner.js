@@ -1,4 +1,4 @@
-import * as old from "./legacy-planner.js?v=0.2.12";
+import * as old from "./legacy-planner.js?v=0.2.13";
 import {
   isLegacy,
   getCatalog,
@@ -11,10 +11,13 @@ import {
   getSkillProgress,
   enqueueAction,
   moveQueuedAction,
+  removeQueuedAction,
+  resolveGoal,
+  canStartAction,
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.2.12";
+} from "./engine.js?v=0.2.13";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -181,4 +184,23 @@ export function queueWork(s, id, count = 1, position = "end") {
   const result = queueAction(s, id, count, position);
   if (!result.ok) s.settings.disabledUpgrades = previousDisabled;
   return result;
+}
+
+// One shared check for warnings and recovery; already-paid crafts must finish.
+export function blockedReservation(s) {
+  const first = s.run.queue[0];
+  if (isLegacy(s) || !s.meta.upgrades.includes('action_queue') || s.run.status !== 'preparing' || !first || s.run.activeAction?.kind === 'craft' || s.settings.disabledUpgrades.includes('action_queue')) return null;
+  const check = first.kind === 'goal' ? resolveGoal(s, first.id) : canStartAction(s, first.id, true);
+  return check.ok ? null : check;
+}
+
+export function recoverReservation(s, operation) {
+  if (!blockedReservation(s)) return fail('停止している予約はありません。');
+  if (operation === 'remove') return removeQueuedAction(s, 0);
+  if (operation !== 'defer' || s.run.queue.length < 2) return fail('後ろに回せる予約がありません。');
+  for (let index = 0; index < s.run.queue.length - 1; index++) {
+    const result = moveQueuedAction(s, index, 1);
+    if (!result.ok) return result;
+  }
+  return { ok: true, reason: '' };
 }
