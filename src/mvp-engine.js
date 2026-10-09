@@ -1,11 +1,11 @@
-import { CONTENT as C } from "./content.js?v=0.3.7";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.7";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.7";
+import { CONTENT as C } from "./content.js?v=0.3.8";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.8";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.8";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.3.7";
+} from "./legacy-engine.js?v=0.3.8";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -963,6 +963,23 @@ export function getAutoCookingStatus(s) {
   const missing = materials.filter(m=>m.available < m.required);
   if (missing.length) return result("materials", missing.map(m=>`${RESOURCES[m.id].name}が${m.required-m.available}不足${m.reserved ? `（予約用${m.reserved}を確保）` : ""}`).join(" · "));
   return result(s.settings.paused ? "paused" : "ready", s.settings.paused ? "時間停止中 · 開始すると調理" : "調理を開始します");
+}
+export function getProcessingStatus(s) {
+  const worker = s.run.workers.processing_worker, recipe = defs.get(worker.target);
+  const output = Object.keys(recipe.yields)[0], reserved = reserve(s);
+  const materials = Object.entries(getRecipeCost(s, recipe)).map(([id, required]) => ({id, required, available:Math.max(0,s.run.resources[id]-(reserved[id] || 0)), reserved:reserved[id] || 0}));
+  const base = {recipe:recipe.id, output, stock:s.run.resources[output], target:s.settings.processingTarget, materials, batch:worker.batch};
+  const result = (code, text) => ({...base, code, text});
+  if (!s.meta.upgrades.includes("processing_worker")) return result("locked", "未雇用");
+  if (!on(s, "processing_worker")) return result("disabled", "OFF");
+  if (s.run.status !== "preparing") return result("inactive", "準備中のみ加工");
+  if (worker.batch) return result(s.settings.paused ? "paused" : "processing", `${defs.get(worker.batch.id).name} · ${s.settings.paused ? "一時停止中" : "加工中"}`);
+  const allowed = canConfigureWorker(s,"processing_worker",worker.target);
+  if (!allowed.ok) return result("unavailable", allowed.reason);
+  if (s.run.resources[output] >= s.settings.processingTarget) return result("target", `目標${s.settings.processingTarget}に到達 · 増やすには目標を上げる`);
+  const missing = materials.filter(m=>m.available < m.required);
+  if (missing.length) return result("materials", missing.map(m=>`${C.resources.find(r=>r.id===m.id)?.name || m.id}が${Math.ceil(m.required-m.available)}不足${m.reserved ? `（予約用${m.reserved}を確保）` : ""}`).join(" · "));
+  return result(s.settings.paused ? "paused" : "ready", s.settings.paused ? "時間停止中 · 開始すると加工" : "加工待ち");
 }
 function helpers(s, dt) {
   const reserved = reserve(s);

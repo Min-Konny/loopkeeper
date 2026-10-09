@@ -1,7 +1,8 @@
-import { icon } from './icons.js?v=0.3.7';
+import { icon } from './icons.js?v=0.3.8';
 
 // Public release notes. Add each released version here, newest first.
 export const UPDATES = [
+  { version: '0.3.8', date: '2026-10-09', title: '加工職人の操作', changes: ['加工職人を工房上部へ移動。作業先・補充目標・ON/OFF・強化・進行状況をまとめて表示。', '素材不足や目標到達など、加工が止まっている理由を表示。'] },
   { version: '0.3.7', date: '2026-10-09', title: '更新履歴', changes: ['ゲーム内からアップデート内容を確認できる画面を追加。'] },
   { version: '0.3.6', date: '2026-10-09', title: '操作と転生の修正', changes: ['人員の作業先・製作回数・補充目標の入力中も時間が進むように変更。', '同じ継承候補で転生すると、死亡画面が残る不具合を修正。'] },
   { version: '0.3.5', date: '2026-10-09', title: '自動調理と人員', changes: ['自動調理の操作を工房上部へ移動。補充目標・開始・停止理由を表示。', '人員を継承から独立したタブへ分離。', '救護所と衛兵詰所の建設・強化に薬草の消費を追加。', '保留した予約が自動調理の素材を取り置く不具合を修正。'] },

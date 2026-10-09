@@ -1,5 +1,5 @@
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.7";
-import { CONTENT as C } from "./content.js?v=0.3.7";
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.8";
+import { CONTENT as C } from "./content.js?v=0.3.8";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -12,7 +12,9 @@ import {
   canConfigureWorker,
   getTemplatePreview,
   getAutoCookingStatus,
-} from "./engine.js?v=0.3.7";
+  getProcessingStatus,
+  getRecipeCost,
+} from "./engine.js?v=0.3.8";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -112,9 +114,18 @@ export function autoCookingMarkup(s) {
   const status = getAutoCookingStatus(s), enabled = status.code !== "disabled";
   return `<section class="auto-cooking-panel"><div class="auto-cooking-heading"><h3>自動調理 <small>薬草のスープ</small></h3><button data-toggle-upgrade="auto_cook" data-focus="auto-cooking-toggle" aria-label="自動調理を${enabled ? "OFF" : "ON"}にする" aria-pressed="${enabled}">${enabled ? "ON" : "OFF"}</button></div><div class="auto-cooking-controls"><strong>食料 ${Math.floor(status.food)}</strong><label>補充目標<input type="number" min="0" max="9999" value="${status.target}" data-target="foodTarget" data-focus="cooking-food-target"></label>${s.settings.paused && enabled && s.run.status === "preparing" && (status.code === "paused") ? '<button class="button small gold-outline" data-command="auto-cook-start" data-focus="auto-cook-start">調理を開始</button>' : ""}</div><p>${esc(autoCookStatus(s))}</p><small>${esc(getUpgradeDescription(s,{id:"auto_cook"}))} 素材集めは別途必要。</small></section>`;
 }
+export function processingMarkup(s) {
+  if (!s.meta.upgrades.includes("processing_worker")) return "";
+  const status = getProcessingStatus(s), enabled = status.code !== "disabled";
+  const worker = C.workers.find(w=>w.id === "processing_worker"), rw = s.run.workers.processing_worker, next = worker.levels[rw.level + 1];
+  const recipe = RECIPES.find(r=>r.id === status.recipe);
+  const options = worker.recipeChoices.filter(id=>resourceKnown(s,id) || id === rw.target).map(id=>`<option value="${id}" ${rw.target === id ? 'selected' : ''} ${enabled && !canConfigureWorker(s,worker.id,id).ok ? 'disabled' : ''}>${esc(label(id))}${enabled && !canConfigureWorker(s,worker.id,id).ok ? '（強化が必要）' : ''}</option>`).join('');
+  const progress = status.code === "processing" ? ` ${status.batch.progress.toFixed(1)} / ${status.batch.duration.toFixed(1)}秒` : '';
+  return `<section class="auto-cooking-panel processing-panel"><div class="auto-cooking-heading"><h3>加工職人 <small>段階 ${rw.level + 1}</small></h3><button data-toggle-upgrade="processing_worker" data-focus="processing-toggle" aria-label="加工職人を${enabled ? 'OFF' : 'ON'}にする" aria-pressed="${enabled}">${enabled ? 'ON' : 'OFF'}</button></div><div class="auto-cooking-controls"><label>加工する品<select data-worker="processing_worker" data-focus="processing-recipe" aria-label="加工する品" ${enabled ? '' : 'disabled'}>${options}</select></label><strong>${esc(label(status.output))} ${Math.floor(status.stock)}</strong><label>補充目標<input type="number" min="0" max="9999" value="${status.target}" data-target="processingTarget" data-focus="processing-target" aria-label="加工品の補充目標"></label>${s.settings.paused && enabled && status.code === 'paused' ? '<button class="button small gold-outline" data-command="processing-start">加工を開始</button>' : ''}</div><p>${esc(status.text)}${progress}</p><div class="processing-footer"><small>${Object.entries(getRecipeCost(s, recipe)).map(([id,n])=>`${esc(label(id))}${n}`).join('・')} → ${Object.entries(recipe.yields).map(([id,n])=>`${esc(label(id))}${n}`).join('・')}。素材集めは別途必要。</small>${next ? button('強化 '+next.goldCost+'金貨', 'data-worker-upgrade="processing_worker"', !enabled || s.meta.bestWave < next.unlockBestWave || s.run.resources.gold < next.goldCost || s.run.status !== 'preparing') : '<small>最大段階</small>'}</div></section>`;
+}
 export function automationMarkup(s) {
   let out = "";
-  for (const w of C.workers.filter((w) => s.meta.upgrades.includes(w.id))) {
+  for (const w of C.workers.filter((w) => w.id !== "processing_worker" && s.meta.upgrades.includes(w.id))) {
     const rw = s.run.workers[w.id],
       l = w.levels[rw.level],
       next = w.levels[rw.level + 1];
@@ -134,7 +145,7 @@ export function automationMarkup(s) {
   if (s.meta.upgrades.includes("auto_cook"))
     out += '<p class="fine-print">自動調理のON/OFF・補充目標は工房で設定できます。</p><button class="button small" data-tab="craft">自動調理を開く</button>';
   if (s.meta.upgrades.includes("processing_worker"))
-    out += `<label class="stock-setting">加工品の補充目標 <input type="number" min="0" max="9999" value="${s.settings.processingTarget}" data-target="processingTarget" data-focus="processing-target"></label>`;
+    out += '<p class="fine-print">加工職人の作業先・補充目標・強化は工房で設定できます。</p><button class="button small" data-tab="craft">加工職人を開く</button>';
   if (s.meta.upgrades.includes("stock_targets"))
     out += `<details><summary>在庫の補充目標</summary>${s.settings.stockTargets.map((x) => `<label class="stock-setting">${esc(label(x.id))}<input type="number" min="0" max="9999" value="${x.count}" data-stock="${x.id}" data-focus="stock-${x.id}"></label>`).join("")}<div class="queue-controls"><select id="stock-resource">${C.resources
       .filter((x) => !["hide", "gold"].includes(x.id) && resourceKnown(s, x.id))
