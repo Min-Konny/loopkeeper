@@ -1,9 +1,9 @@
-import { createMusicPlayer, getMusicMode } from './music.js?v=0.3.16';
-import { completedWorkKind, playWorkSound, workSoundKind, workImpactKind } from './work-audio.js?v=0.3.16';
-import { completedQueueEntries } from './visual-design.js?v=0.3.16';
-import { getCatalog } from "./engine.js?v=0.3.16";
-import { icon } from "./icons.js?v=0.3.16";
-import { availableDiscoveries } from './preparation-ui.js?v=0.3.16';
+import { createMusicPlayer, getMusicMode } from './music.js?v=0.3.17';
+import { completedWorkKind, playWorkSound, workSoundKind, workImpactKind, preloadWorkSounds } from './work-audio.js?v=0.3.17';
+import { completedQueueEntries } from './visual-design.js?v=0.3.17';
+import { getCatalog } from "./engine.js?v=0.3.17";
+import { icon } from "./icons.js?v=0.3.17";
+import { availableDiscoveries } from './preparation-ui.js?v=0.3.17';
 let audio;
 let music;
 let musicMode = "camp";
@@ -27,6 +27,7 @@ export function unlockAudio(settings) {
   if (!settings.soundVolume || document.hidden) return;
   try {
     audio ||= new (window.AudioContext || window.webkitAudioContext)();
+    preloadWorkSounds(audio);
     if (audio.state === 'suspended') audio.resume().catch(() => {});
   } catch { /* Sound is optional when the platform provides no audio context. */ }
 }

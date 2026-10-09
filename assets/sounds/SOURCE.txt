@@ -1,0 +1,5 @@
+Fish SE: user-supplied fish.mp3 from G:\BGM\ケルト.
+User identifies the source as the same as previous BGM: Pixabay.
+License: https://pixabay.com/service/license-summary/ (checked 2026-10-10).
+Original title, author and individual download URL not yet recorded.
+Integrated into fishing gameplay; no standalone download or audition feature.

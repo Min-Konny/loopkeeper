@@ -1,7 +1,8 @@
-import { icon } from './icons.js?v=0.3.16';
+import { icon } from './icons.js?v=0.3.17';
 
 // Public release notes. Add each released version here, newest first.
 export const UPDATES = [
+  { version: '0.3.17', date: '2026-10-10', title: '釣りに収録SEを採用', changes: ['釣りの合成音を収録音源へ差し替え。効果音量に連動します。'] },
   { version: '0.3.16', date: '2026-10-10', title: '釣りの音を水しぶきへ', changes: ['釣りの魚が跳ねる音を除き、短い水しぶきだけの音に変更。'] },
   { version: '0.3.15', date: '2026-10-10', title: '周回を切り上げる', changes: ['状態・装備、継承、スマホメニューから現在の周回を切り上げ、継承の準備へ進めます。襲撃・オーグメント選択中にも対応。', '確認を挟み、獲得済みの永続経験・ポイント・初達成は引き継ぎます。'] },
   { version: '0.3.14', date: '2026-10-10', title: '釣りの水しぶき', changes: ['魚の跳ねる音に、軽い水しぶきと水滴の音を追加。伐採と素振りの音は維持。'] },

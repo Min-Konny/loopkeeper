@@ -27,7 +27,7 @@ const cache = new WeakMap();
 // Original procedural foley. Material sounds use damped noise, not ringing
 // oscillator chords. Three independently seeded takes avoid identical repeats.
 export function createWorkSamples(kind, rate, take = 0) {
-  const durations = {wood:.27,swing:.36,fish:.38,leaves:.38,stone:.25,ore:.28,metal:.34,shield:.26,weight:.27,cook:.48,steps:.35};
+  const durations = {wood:.27,swing:.36,leaves:.38,stone:.25,ore:.28,metal:.34,shield:.26,weight:.27,cook:.48,steps:.35};
   const duration = durations[kind] || .6;
   const data = new Float32Array(Math.ceil(rate * duration));
   let seed = (0x9e3779b9 ^ (take + 1) * 7919 ^ [...kind].reduce((n,c)=>n*31+c.charCodeAt(0),0)) >>> 0;
@@ -61,14 +61,6 @@ export function createWorkSamples(kind, rate, take = 0) {
       // Smooth acceleration and deceleration of air; nothing is struck.
       burst(0,.34,170,2200,1.25,'air');
       burst(.09,.18,1400,5500,.30,'air');
-      break;
-    case 'fish':
-      // One water splash: a soft wet onset, spreading spray, then droplets.
-      // No tail-slaps, low pitched body, or repeating three-hit rhythm.
-      burst(.008,.085,100,2900,.48);
-      burst(.016,.18,600,6800,.55,'air');
-      for (const [t,g] of [[.09,.13],[.137,.10],[.185,.075],[.24,.05]])
-        burst(t+shift,.025,850,5600,g);
       break;
     case 'leaves':
       for (const t of [0,.065,.15]) burst(t+shift,.16,1100,6000,.36,'air');
@@ -114,11 +106,29 @@ function soundBuffer(audio, kind) {
   }));
   return bank.get(kind)[Math.floor(Math.random()*3)];
 }
+const fishSamples = new WeakMap();
+export function preloadWorkSounds(audio, request = globalThis.fetch) {
+  if (!audio?.decodeAudioData || !request) return Promise.resolve(false);
+  if (fishSamples.has(audio)) return fishSamples.get(audio).ready;
+  const entry = {buffer:null};fishSamples.set(audio,entry);
+  entry.ready = (async()=>{
+    try {
+      const response = await request(new URL('../assets/sounds/fish.mp3',import.meta.url));
+      if (!response.ok) return false;
+      entry.buffer = await audio.decodeAudioData(await response.arrayBuffer());
+      return true;
+    } catch { return false; }
+  })();
+  return entry.ready;
+}
 export function playWorkSound(audio, kind, volume) {
   if (!audio || audio.state !== 'running' || volume <= 0) return false;
+  const buffer = kind === 'fish' ? fishSamples.get(audio)?.buffer : soundBuffer(audio,kind);
+  // Loading never delays a cue until after the action or plays rejected foley.
+  if (!buffer) return false;
   const source = audio.createBufferSource(), gain = audio.createGain();
-  source.buffer = soundBuffer(audio,kind);
-  if (source.playbackRate) source.playbackRate.value = .97 + Math.random() * .06;
+  source.buffer = buffer;
+  if (source.playbackRate) source.playbackRate.value = kind === "fish" ? 1 : .97 + Math.random() * .06;
   gain.gain.setValueAtTime(Math.min(1,Math.max(0,volume)) * .34,audio.currentTime);
   source.connect(gain);gain.connect(audio.destination);
   source.onended = () => {source.disconnect();gain.disconnect();};

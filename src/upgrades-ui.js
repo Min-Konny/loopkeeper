@@ -5,8 +5,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.3.16";
-import { icon } from "./icons.js?v=0.3.16";
+} from "./engine.js?v=0.3.17";
+import { icon } from "./icons.js?v=0.3.17";
 
 const escape = (value) =>
   String(value ?? "").replace(
