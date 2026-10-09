@@ -1,5 +1,5 @@
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.1";
-import { CONTENT as C } from "./content.js?v=0.3.1";
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.2";
+import { CONTENT as C } from "./content.js?v=0.3.2";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -11,7 +11,7 @@ import {
   canPurchaseUpgrade,
   canConfigureWorker,
   getTemplatePreview,
-} from "./engine.js?v=0.3.1";
+} from "./engine.js?v=0.3.2";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -102,6 +102,14 @@ export function diplomacyMarkup(s) {
     }`
   );
 }
+export function autoCookStatus(s) {
+  if (s.settings.disabledUpgrades.includes("auto_cook")) return "無効";
+  if (s.run.status !== "preparing") return "準備中のみ調理";
+  if (s.settings.paused) return "時間停止中";
+  if (s.run.autoCraft) return `調理中 ${s.run.autoCraft.progress.toFixed(1)} / ${s.run.autoCraft.duration.toFixed(1)}秒`;
+  if (s.run.resources.food >= s.settings.foodTarget) return "補充目標に到達";
+  return "素材待ち · 予約の素材を優先";
+}
 export function automationMarkup(s) {
   let out = "";
   for (const w of C.workers.filter((w) => s.meta.upgrades.includes(w.id))) {
@@ -122,7 +130,7 @@ export function automationMarkup(s) {
       )}</select></label>${next ? button("強化 " + next.goldCost + "金貨", `data-worker-upgrade="${w.id}"`, s.meta.bestWave < next.unlockBestWave || s.run.resources.gold < next.goldCost || s.run.status !== "preparing") : "<span>最大段階</span>"}</article>`;
   }
   if (s.meta.upgrades.includes("auto_cook"))
-    out += `<label class="stock-setting">食料の補充目標 <input type="number" min="0" max="9999" value="${s.settings.foodTarget}" data-target="foodTarget" data-focus="food-target"></label>`;
+    out += `<article class="auto-cook-status"><h4>自動調理 <small>${esc(autoCookStatus(s))}</small></h4><p>${esc(getUpgradeDescription(s, {id:"auto_cook"}))}</p></article><label class="stock-setting">食料の補充目標 <input type="number" min="0" max="9999" value="${s.settings.foodTarget}" data-target="foodTarget" data-focus="food-target"></label>`;
   if (s.meta.upgrades.includes("processing_worker"))
     out += `<label class="stock-setting">加工品の補充目標 <input type="number" min="0" max="9999" value="${s.settings.processingTarget}" data-target="processingTarget" data-focus="processing-target"></label>`;
   if (s.meta.upgrades.includes("stock_targets"))

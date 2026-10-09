@@ -4,8 +4,9 @@ import {
   canPurchaseUpgrade,
   getAccelerationStatus,
   getCatalog,
-} from "./engine.js?v=0.3.1";
-import { icon } from "./icons.js?v=0.3.1";
+  getRecipeCost,
+} from "./engine.js?v=0.3.2";
+import { icon } from "./icons.js?v=0.3.2";
 
 const escape = (value) =>
   String(value ?? "").replace(
@@ -43,6 +44,10 @@ const descriptions = {
 
 export function getUpgradeDescription(state, upgrade) {
   const effect = upgrade.effect;
+  if (upgrade.id === "auto_cook" && state.version !== 1) {
+    const recipe = getCatalog(state).RECIPES.find(r => r.id === "cook_meal"), cost = getRecipeCost(state, recipe);
+    return `主作業と並行して、薬草${cost.herbs}・木材${cost.wood} → 食料${recipe.yields.food}。補充目標まで自動で作る。`;
+  }
   if (upgrade.kind === "combat")
     return effect.attack
       ? "基礎攻撃力 +" + effect.attack + "。"
