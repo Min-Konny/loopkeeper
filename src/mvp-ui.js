@@ -1,5 +1,5 @@
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.0";
-import { CONTENT as C } from "./content.js?v=0.3.0";
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.1";
+import { CONTENT as C } from "./content.js?v=0.3.1";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -11,7 +11,7 @@ import {
   canPurchaseUpgrade,
   canConfigureWorker,
   getTemplatePreview,
-} from "./engine.js?v=0.3.0";
+} from "./engine.js?v=0.3.1";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -55,6 +55,18 @@ export function setupMarkup(s, category = "combat") {
     "",
   )}</div><div class="setup-footer">${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
 }
+// Keep the nearest unanswered request visible while working in another tab.
+export function diplomacyDeadlineMarkup(s) {
+  if (s.run.status !== "preparing" && s.run.status !== "combat") return "";
+  const pending = C.diplomacy
+    .map(c => ({...c, request:s.run.countries[c.id]}))
+    .filter(c => c.request?.status === "pending")
+    .sort((a,b) => a.request.deadline - b.request.deadline);
+  if (!pending.length) return "";
+  const c = pending[0], seconds = Math.max(0, Math.ceil(c.request.deadline - s.run.elapsed));
+  const clock = `${String(Math.floor(seconds/60)).padStart(2,"0")}:${String(seconds%60).padStart(2,"0")}`;
+  return `<div class="diplomacy-notice deadline-notice ${seconds <= 30 ? "deadline-urgent" : ""}"><span class="deadline-copy"><strong>${esc(c.name)}から援助要請${pending.length > 1 ? ` · 他${pending.length-1}件` : ""}</strong><small>期限を過ぎると敵対</small></span><span class="deadline-clock"><small>返答期限まで</small><strong>${clock}</strong></span><button data-tab="diplomacy" data-focus="diplomacy-deadline">返答する →</button></div>`;
+}
 export function diplomacyMarkup(s) {
   return (
     C.diplomacy
@@ -64,7 +76,7 @@ export function diplomacyMarkup(s) {
           pending = r.status === "pending";
         return `<section class="diplomacy-card ${r.status}"><h3>${esc(c.name)} <small>${{ pending: "援助要請", allied: "交易中", hostile: "敵対待ち", defeated: "撃退済み" }[r.status]}</small></h3>${
           pending
-            ? `<p>返答まで ${Math.max(0, Math.ceil(r.deadline - s.run.elapsed))}秒</p><div class="recipe-cost">${Object.entries(
+            ? `<p class="diplomacy-deadline ${r.deadline - s.run.elapsed <= 30 ? "danger-text" : ""}">返答期限まで <strong>${Math.max(0, Math.ceil(r.deadline - s.run.elapsed))}秒</strong><small>期限を過ぎると敵対</small></p><div class="recipe-cost">${Object.entries(
                 c.cost,
               )
                 .map(([id, n]) => `${esc(label(id))} ${n}`)

@@ -547,3 +547,18 @@ html, body { height: 100%; overflow: hidden; }
 .clear-achievement strong{font-size:19px}
 .clear-achievement .button{width:100%;font-size:14px;min-height:44px}
 @media(max-width:690px){.craft-preparation{flex-wrap:wrap;gap:5px}.preparation-goal{max-width:100%;font-size:11px}.preparation-materials{max-width:100%;flex-wrap:wrap}.battle-facilities{gap:8px}.battle-facility{padding:5px 8px}.battle-facility svg{width:32px;height:28px}}
+
+/* A response deadline must remain visible outside diplomacy. */
+.deadline-notice {gap:14px;color:#e0d6b2;border-color:#aa8b50;background:#30372a;}
+.deadline-copy {min-width:0;flex:1;display:grid;gap:3px;}
+.deadline-copy strong {font-size:14px;line-height:1.4;}
+.deadline-copy small,.deadline-clock small {font-size:12px;color:#bcb69b;}
+.deadline-clock {flex:none;display:grid;gap:2px;text-align:right;}
+.deadline-clock strong {font-size:22px;line-height:1.2;font-variant-numeric:tabular-nums;}
+.deadline-notice button {font-size:14px;min-height:36px;padding:4px 8px;flex:none;}
+.deadline-notice.deadline-urgent {border-color:#d18167;background:#402c27;color:#ffd4be;}
+.deadline-urgent .deadline-clock strong {color:#ffb998;}
+.diplomacy-deadline {display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;}
+.diplomacy-deadline strong {font-size:22px;font-variant-numeric:tabular-nums;}
+.diplomacy-deadline small {font-size:12px;}
+@media(max-width:690px){.deadline-notice {gap:8px;align-items:center;flex-wrap:wrap;}.deadline-copy strong {font-size:12px;}.deadline-copy small,.deadline-clock small {font-size:10px;}.deadline-clock strong {font-size:18px;}.deadline-notice button {font-size:12px;min-height:32px;}.deadline-copy {flex:1 1 130px;}.deadline-notice .deadline-clock {flex:0 0 auto;}}
