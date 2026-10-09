@@ -1,11 +1,12 @@
-import { compareRun } from './visual-design.js?v=0.3.2';
-import { createRenderGuard } from './render-guard.js?v=0.3.2';
-import { installQueueDrag } from './queue-drag.js?v=0.3.2';
-import { preparationMarkup } from './preparation-ui.js?v=0.3.2';
-import { saveClearCard } from './clear-card.js?v=0.3.2';
-import { runFrameTasks } from './frame-loop.js?v=0.3.2';
-import { getCatalog } from "./engine.js?v=0.3.2";
-import { CONTENT } from "./content.js?v=0.3.2";
+import { createBackgroundClock } from "./background-clock.js?v=0.3.3";
+import { compareRun } from './visual-design.js?v=0.3.3';
+import { createRenderGuard } from './render-guard.js?v=0.3.3';
+import { installQueueDrag } from './queue-drag.js?v=0.3.3';
+import { preparationMarkup } from './preparation-ui.js?v=0.3.3';
+import { saveClearCard } from './clear-card.js?v=0.3.3';
+import { runFrameTasks } from './frame-loop.js?v=0.3.3';
+import { getCatalog } from "./engine.js?v=0.3.3";
+import { CONTENT } from "./content.js?v=0.3.3";
 import {
   isLegacy,
   isKnown,
@@ -18,7 +19,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.3.2";
+} from "./engine.js?v=0.3.3";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -27,22 +28,22 @@ import {
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.3.2";
-import { createSessionOwner } from "./session-owner.js?v=0.3.2";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.3.2";
+} from "./mvp-ui.js?v=0.3.3";
+import { createSessionOwner } from "./session-owner.js?v=0.3.3";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.3.3";
 import {
   loadStoredGame,
   writeStoredGame,
   readBackups,
   decodeRecord,
   unreadableRecord,
-} from "./save-storage.js?v=0.3.2";
+} from "./save-storage.js?v=0.3.3";
 import {
   updatePresentation,
   markQueueEdited,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.3.2";
+} from "./presentation.js?v=0.3.3";
 import {
   getRaidInterval,
   aidCountry,
@@ -64,9 +65,9 @@ import {
   restartRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.3.2";
-import { icon } from "./icons.js?v=0.3.2";
-import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.3.2";
+} from "./engine.js?v=0.3.3";
+import { icon } from "./icons.js?v=0.3.3";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.3.3";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -75,20 +76,20 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.3.2";
-import { renderAugments } from "./augments-ui.js?v=0.3.2";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.3.2";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.3.2";
-import { mountCampScene } from "./camp-scene.js?v=0.3.2";
-import { workScene } from "./work-scene.js?v=0.3.2";
-import { getRecipeVisibility } from "./workshop.js?v=0.3.2";
-import { getMilestoneStatus } from "./engine.js?v=0.3.2";
+} from "./engine.js?v=0.3.3";
+import { renderAugments } from "./augments-ui.js?v=0.3.3";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.3.3";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.3.3";
+import { mountCampScene } from "./camp-scene.js?v=0.3.3";
+import { workScene } from "./work-scene.js?v=0.3.3";
+import { getRecipeVisibility } from "./workshop.js?v=0.3.3";
+import { getMilestoneStatus } from "./engine.js?v=0.3.3";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.3.2";
+} from "./engine.js?v=0.3.3";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -303,7 +304,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.3.2</b></div>
+    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.3.3</b></div>
   </aside>
   <div class="workspace">
     <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
@@ -973,7 +974,7 @@ function renderScreen() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.3.2</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />別の画面に移ったときも自動停止し、閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.3.3</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
@@ -998,7 +999,7 @@ function showSaveMenu() {
       })
       .join(
         "",
-      )}${unreadableRecord(localStorage) ? '<button class="button small muted" data-command="export-original">読み込めなかった元データを書き出す</button>' : ""}</details><details class="presentation-settings"><summary>音と演出</summary><label>音量 <input id="sound-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.soundVolume}"></label><label><input id="effects-enabled" type="checkbox" ${state.settings.effectsEnabled ? "checked" : ""}> 演出を表示</label></details>`,
+      )}${unreadableRecord(localStorage) ? '<button class="button small muted" data-command="export-original">読み込めなかった元データを書き出す</button>' : ""}</details><details class="presentation-settings"><summary>ゲーム設定・音と演出</summary><label><input id="pause-when-hidden" type="checkbox" ${state.settings.pauseWhenHidden ? "checked" : ""}> 別のタブ・アプリへ移ったら一時停止</label><label>音量 <input id="sound-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.soundVolume}"></label><label><input id="effects-enabled" type="checkbox" ${state.settings.effectsEnabled ? "checked" : ""}> 演出を表示</label></details>`,
   );
   if (isLegacy(state))
     document
@@ -1516,6 +1517,10 @@ document.addEventListener("change", (event) => {
     previewSound(state.settings);
     saveGame();
   }
+  if (event.target.id === "pause-when-hidden") {
+    state.settings.pauseWhenHidden = event.target.checked;
+    saveGame();
+  }
   if (event.target.id === "effects-enabled") {
     state.settings.effectsEnabled = event.target.checked;
     saveGame();
@@ -1676,11 +1681,11 @@ document.addEventListener("keydown", (event) => {
 });
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
-    state.settings.paused = true;
+    if (state.settings.pauseWhenHidden) state.settings.paused = true;
     saveGame();
   }
-  lastTick = performance.now();
-  render();
+  scheduleFrame();
+  if (!document.hidden) render();
 });
 window.addEventListener("pagehide", () => {
   state.settings.paused = true;
@@ -1707,13 +1712,27 @@ function frameError(stage, error) {
   console.error(`Game frame (${stage})`, error);
   toast(stage === 'presentation' ? '演出に問題が起きたため、演出を止めて作業を続けます。' : '処理に問題が起きたため一時停止しました。再開できない場合は記録を書き出してください。');
 }
+const backgroundClock = createBackgroundClock();
+let scheduledFrame = null;
+function scheduleFrame() {
+  if (scheduledFrame) {
+    if (scheduledFrame.hidden) clearTimeout(scheduledFrame.id);
+    else cancelAnimationFrame(scheduledFrame.id);
+  }
+  scheduledFrame = document.hidden
+    ? {hidden:true, id:setTimeout(() => frame(performance.now()), 1000)}
+    : {hidden:false, id:requestAnimationFrame(frame)};
+}
 function frame(now) {
-  const elapsed = Math.min(0.25, Math.max(0, (now - lastTick) / 1000));
+  const elapsed = backgroundClock.take((now - lastTick) / 1000, {
+    hidden:document.hidden, pauseWhenHidden:state.settings.pauseWhenHidden,
+    blocked: !session.owned || temporaryDialogs.some(dialog => dialog.open) || state.settings.paused || !["preparing","combat"].includes(state.run.status),
+  });
   lastTick = now;
-  const presentationDue = now - lastRender > 150;
+  const presentationDue = !document.hidden && now - lastRender > 150;
   runFrameTasks([
     ['advance', () => {
-      if (session.owned && !document.hidden && !temporaryDialogs.some(dialog => dialog.open) && !state.settings.paused && state.run.status !== 'dead')
+      if (session.owned && (!document.hidden || !state.settings.pauseWhenHidden) && !temporaryDialogs.some(dialog => dialog.open) && !state.settings.paused && state.run.status !== 'dead')
         advanceTime(state, elapsed);
     }],
     ['render', () => {
@@ -1725,14 +1744,14 @@ function frame(now) {
     ['presentation', () => {
       if (presentationDue && !presentationFailed) updatePresentation(state);
     }],
-    ['work', updateLiveWork],
+    ['work', () => { if (!document.hidden) updateLiveWork(); }],
     ['save', () => {
       if (now - lastSave > 2000) {
         saveGame();
         lastSave = now;
       }
     }],
-  ], frameError, () => requestAnimationFrame(frame));
+  ], frameError, scheduleFrame);
 }
 const channel =
   typeof BroadcastChannel === "function"
@@ -1760,7 +1779,7 @@ window.addEventListener("pagehide", () => session.relinquish());
 session.acquire();
 render();
 if (loadWarning) toast(loadWarning);
-requestAnimationFrame(frame);
+scheduleFrame();
 
 window.addEventListener("pageshow", (event) => {
   if (event.persisted) session.acquire();

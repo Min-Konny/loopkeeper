@@ -1,9 +1,9 @@
-import * as legacy from "./legacy-engine.js?v=0.3.2";
-import * as mvp from "./mvp-engine.js?v=0.3.2";
-import { validateSave } from "./save-validation.js?v=0.3.2";
-export { getProductionSources } from "./mvp-engine.js?v=0.3.2";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.3.2";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.3.2";
+import * as legacy from "./legacy-engine.js?v=0.3.3";
+import * as mvp from "./mvp-engine.js?v=0.3.3";
+import { validateSave } from "./save-validation.js?v=0.3.3";
+export { getProductionSources } from "./mvp-engine.js?v=0.3.3";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.3.3";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.3.3";
 export {
   SKILLS,
   getSkillProgress,
@@ -20,7 +20,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.3.2";
+} from "./mvp-engine.js?v=0.3.3";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
@@ -55,6 +55,7 @@ export function parseSave(text) {
     if (!validateSave(raw)) return null;
     raw.run.training ||= {defense:0, vitality:mvp.getVitalityMigrationXp(raw.run.skills.combat.xp)};
     for (const id of Object.keys(mvp.RESOURCES)) raw.run.resources[id] ??= 0;
+    raw.settings.pauseWhenHidden ??= false;
     raw.settings.paused = true;
     raw.run.acceleration.active = false;
     return normalizeSingleReservations(raw);
