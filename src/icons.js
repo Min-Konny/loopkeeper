@@ -1,4 +1,5 @@
 const paths = {
+  people: '<circle cx="8" cy="7" r="3"/><path d="M2 21v-4a6 6 0 0 1 12 0v4M16 4a3 3 0 0 1 0 6m1 3a5 5 0 0 1 5 5v3"/>',
   settings: '<path d="m9 3-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3h6l1-3 3-1-1-3 2-2-2-2 1-3-3-1-1-3H9Z"/><circle cx="12" cy="12" r="3"/>',
   fish: '<path d="M3 12q7-10 15 0-8 10-15 0Zm15 0 5-5v10Z"/><circle cx="7" cy="11" r="1"/>',
   bow: '<path d="M6 3q18 9 0 18V3Zm0 9h16m-4-4 4 4-4 4"/>',

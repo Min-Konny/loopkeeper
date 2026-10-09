@@ -1,12 +1,12 @@
-import { createBackgroundClock } from "./background-clock.js?v=0.3.4";
-import { compareRun } from './visual-design.js?v=0.3.4';
-import { createRenderGuard } from './render-guard.js?v=0.3.4';
-import { installQueueDrag } from './queue-drag.js?v=0.3.4';
-import { preparationMarkup } from './preparation-ui.js?v=0.3.4';
-import { saveClearCard } from './clear-card.js?v=0.3.4';
-import { runFrameTasks } from './frame-loop.js?v=0.3.4';
-import { getCatalog } from "./engine.js?v=0.3.4";
-import { CONTENT } from "./content.js?v=0.3.4";
+import { createBackgroundClock } from "./background-clock.js?v=0.3.5";
+import { compareRun } from './visual-design.js?v=0.3.5';
+import { createRenderGuard } from './render-guard.js?v=0.3.5';
+import { installQueueDrag } from './queue-drag.js?v=0.3.5';
+import { preparationMarkup } from './preparation-ui.js?v=0.3.5';
+import { saveClearCard } from './clear-card.js?v=0.3.5';
+import { runFrameTasks } from './frame-loop.js?v=0.3.5';
+import { getCatalog } from "./engine.js?v=0.3.5";
+import { CONTENT } from "./content.js?v=0.3.5";
 import {
   isLegacy,
   isKnown,
@@ -19,31 +19,32 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.3.4";
+} from "./engine.js?v=0.3.5";
 import {
   setupMarkup,
   diplomacyMarkup,
+  autoCookingMarkup,
   diplomacyDeadlineMarkup,
   automationMarkup,
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.3.4";
-import { createSessionOwner } from "./session-owner.js?v=0.3.4";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.3.4";
+} from "./mvp-ui.js?v=0.3.5";
+import { createSessionOwner } from "./session-owner.js?v=0.3.5";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.3.5";
 import {
   loadStoredGame,
   writeStoredGame,
   readBackups,
   decodeRecord,
   unreadableRecord,
-} from "./save-storage.js?v=0.3.4";
+} from "./save-storage.js?v=0.3.5";
 import {
   updatePresentation,
   markQueueEdited,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.3.4";
+} from "./presentation.js?v=0.3.5";
 import {
   getRaidInterval,
   aidCountry,
@@ -65,9 +66,9 @@ import {
   restartRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.3.4";
-import { icon } from "./icons.js?v=0.3.4";
-import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.3.4";
+} from "./engine.js?v=0.3.5";
+import { icon } from "./icons.js?v=0.3.5";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.3.5";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -76,20 +77,20 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.3.4";
-import { renderAugments } from "./augments-ui.js?v=0.3.4";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.3.4";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.3.4";
-import { mountCampScene } from "./camp-scene.js?v=0.3.4";
-import { workScene } from "./work-scene.js?v=0.3.4";
-import { getRecipeVisibility } from "./workshop.js?v=0.3.4";
-import { getMilestoneStatus } from "./engine.js?v=0.3.4";
+} from "./engine.js?v=0.3.5";
+import { renderAugments } from "./augments-ui.js?v=0.3.5";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.3.5";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.3.5";
+import { mountCampScene } from "./camp-scene.js?v=0.3.5";
+import { workScene } from "./work-scene.js?v=0.3.5";
+import { getRecipeVisibility } from "./workshop.js?v=0.3.5";
+import { getMilestoneStatus } from "./engine.js?v=0.3.5";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.3.4";
+} from "./engine.js?v=0.3.5";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -156,7 +157,8 @@ const tabNames = {
   craft: ["野営地の工房", "集めた資源を、生き延びる力に。"],
   village: ["村の施設", "備えを築き、この命をもう少し先へ。"],
   diplomacy: ["外交と交易", "食料を分かち合うか、武器を手に迎えるか。"],
-  legacy: ["継承と人員", "経験を受け継ぎ、繰り返す仕事を仲間に託す。"],
+  legacy: ["継承", "経験と解放を、次の命へ。"],
+  workers: ["人員", "仲間の作業先と強化を選ぶ。"],
 };
 const format = (number) =>
   Math.floor(Number(number) || 0).toLocaleString("ja-JP");
@@ -304,7 +306,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.3.4</b></div>
+    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.3.5</b></div>
   </aside>
   <div class="workspace">
     <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="settings-menu" title="設定" aria-label="設定">${icon("settings")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
@@ -345,10 +347,11 @@ function renderNavigation() {
       ["craft", "hammer", "工房"],
       ["village", "camp", "村の施設"],
       ["diplomacy", "flag", "外交と交易"],
-      ["legacy", "memory", hasLegacyOptions() ? "継承と人員" : "経験の継承"],
+      ["legacy", "memory", hasLegacyOptions() ? "継承" : "経験の継承"],
+      ["workers", "people", "人員"],
     ]
       .filter(([id]) =>
-        id === "village"
+        id === "workers" ? !isLegacy(state) && hasLegacyOptions() : id === "village"
           ? unlocks.facilities
           : id === "diplomacy"
             ? unlocks.diplomacy
@@ -480,7 +483,9 @@ function renderWork() {
           ? "この周回の拠点を強化"
           : tab === "diplomacy"
             ? "関係と恩恵は周回限定"
-            : "死亡しても引き継ぐ";
+            : tab === "workers"
+              ? "仲間の作業を設定"
+              : "死亡しても引き継ぐ";
   document.body.classList.toggle("work-resting", state.settings.paused || !state.settings.effectsEnabled || state.run.status === "combat");
   const action = state.run.activeAction;
   const activeDefinition =
@@ -494,6 +499,7 @@ function renderWork() {
   if (tab === "gather") renderGather();
   if (tab === "craft" || tab === "village") renderCraft();
   if (tab === "legacy") renderLegacy();
+  if (tab === "workers") setHTML("#content", automationMarkup(state) || '<div class="village-intro">継承ポイントで仲間を雇うと、ここで作業先と強化を選べます。</div><button class="button gold-outline" data-tab="legacy">継承で人員を解放</button>');
   if (tab === "diplomacy") renderDiplomacy();
   renderQueue();
   document.querySelector('[data-info="queue"]').textContent = state.run.queue.length ? `行動予約 ${state.run.queue.length}` : "行動予約";
@@ -549,7 +555,7 @@ function renderQueue() {
   if (!unlocked) {
     setHTML(
       "#queue-panel",
-      `<section class="queue-unlock-card"><h3>${icon("book")}作業を順番に予約</h3><p>製作を予約すると、不足する材料も自動で集めます。</p><div class="queue-unlock-condition">${state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2 ? `クエストを2件達成して解放（${state.meta.completedMilestones.length}/2） · 継承1 pt` : "継承1 ptで購入できます"}</div><button class="button gold" ${state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2 ? 'data-info="quests"' : 'data-tab="legacy"'} data-focus="queue-unlock">${state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2 ? "クエストを見る" : "継承と人員で解放"}${icon("chevron")}</button></section>`,
+      `<section class="queue-unlock-card"><h3>${icon("book")}作業を順番に予約</h3><p>製作を予約すると、不足する材料も自動で集めます。</p><div class="queue-unlock-condition">${state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2 ? `クエストを2件達成して解放（${state.meta.completedMilestones.length}/2） · 継承1 pt` : "継承1 ptで購入できます"}</div><button class="button gold" ${state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2 ? 'data-info="quests"' : 'data-tab="legacy"'} data-focus="queue-unlock">${state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2 ? "クエストを見る" : "継承で解放"}${icon("chevron")}</button></section>`,
     );
     return;
   }
@@ -611,7 +617,7 @@ function renderCraft() {
       : "";
   setHTML(
     "#content",
-    `${renderSkillOverview()}${village ? '<div class="village-intro">武器にするか、村の備えに使うか。施設は5段階まで強化でき、次の命では建て直します。</div>' : ""}${slotFilter}${filter}${queueNotice}<div class="craft-list">${catalog
+    `${renderSkillOverview()}${village ? '<div class="village-intro">武器にするか、村の備えに使うか。施設は5段階まで強化でき、次の命では建て直します。</div>' : ""}${!village && !isLegacy(state) ? autoCookingMarkup(state) : ""}${slotFilter}${filter}${queueNotice}<div class="craft-list">${catalog
       .filter(
         (recipe) =>
           state.settings.showHiddenRecipes ||
@@ -950,7 +956,7 @@ function renderScreen() {
     setupShown = true;
   } else setupShown = false;
   if (tab === "legacy" && !isLegacy(state)) {
-    renderExtra("#content", automationMarkup(state) + milestoneMarkup(state));
+    renderExtra("#content", milestoneMarkup(state));
   }
   if (!isLegacy(state) && state.meta.upgrades.includes("action_queue"))
     renderExtra("#queue-panel", templatesMarkup(state));
@@ -974,7 +980,7 @@ function renderScreen() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.3.4</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.3.5</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
@@ -1340,6 +1346,13 @@ document.addEventListener("click", (event) => {
     case "help":
       showHelp();
       break;
+    case "auto-cook-start":
+      if (state.run.status === "preparing" && !queueIssue() && !getAugmentStatus(state).offer.length && !temporaryDialogs.some(dialog=>dialog.open)) {
+        state.settings.paused = false;
+        if (!state.run.activeAction && !state.run.queue.length) state.run.idleWait = true;
+        lastTick = performance.now();
+      }
+      break;
     case "settings-menu":
       showSettingsMenu();
       break;
@@ -1454,6 +1467,10 @@ document.addEventListener("focusin", (event) => {
 
 document.addEventListener("input", (event) => {
   if (!session.owned) return;
+  if (event.target.dataset.target && Number.isInteger(event.target.valueAsNumber) && event.target.valueAsNumber >= 0 && event.target.valueAsNumber <= 9999) {
+    state.settings[event.target.dataset.target] = event.target.valueAsNumber;
+    saveGame();
+  }
   if (
     event.target.dataset.queueCount !== undefined &&
     Number.isInteger(event.target.valueAsNumber) &&
@@ -1498,7 +1515,7 @@ document.addEventListener("change", (event) => {
     render();
   }
   if (event.target.dataset.target) {
-    const n = Number(event.target.value);
+    const n = event.target.valueAsNumber;
     if (Number.isInteger(n) && n >= 0 && n <= 9999)
       state.settings[event.target.dataset.target] = n;
     saveGame();

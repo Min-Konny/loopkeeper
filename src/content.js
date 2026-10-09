@@ -1325,7 +1325,7 @@ export const CONTENT = {
       "cost": {
         "wood": 60,
         "stone": 30,
-        "herbs": 40,
+        "herbs": 80,
         "ingot": 6,
         "gold": 20
       },
@@ -1354,7 +1354,7 @@ export const CONTENT = {
       "cost": {
         "wood": 108,
         "stone": 72,
-        "herbs": 30,
+        "herbs": 160,
         "gold": 55,
         "silver_ingot": 8
       },
@@ -1526,7 +1526,8 @@ export const CONTENT = {
         "wood": 40,
         "stone": 30,
         "ingot": 6,
-        "gold": 12
+        "gold": 12,
+        "herbs": 20
       },
       "effect": {
         "supportAttack": 20
@@ -1548,7 +1549,8 @@ export const CONTENT = {
         "wood": 90,
         "stone": 60,
         "ingot": 14,
-        "gold": 32
+        "gold": 32,
+        "herbs": 60
       },
       "effect": {
         "supportAttack": 48
@@ -1572,7 +1574,8 @@ export const CONTENT = {
         "wood": 144,
         "stone": 120,
         "gold": 85,
-        "silver_ingot": 16
+        "silver_ingot": 16,
+        "herbs": 120
       },
       "effect": {
         "supportAttack": 125
@@ -1693,7 +1696,7 @@ export const CONTENT = {
         "stone": 117,
         "mithril_ingot": 12,
         "gold": 75,
-        "herbs": 50
+        "herbs": 280
       },
       "effect": {
         "healInterval": 4,
@@ -1722,7 +1725,7 @@ export const CONTENT = {
         "stone": 162,
         "diamond": 16,
         "gold": 95,
-        "herbs": 70
+        "herbs": 440
       },
       "effect": {
         "healInterval": 4,
@@ -1848,7 +1851,8 @@ export const CONTENT = {
         "wood": 204,
         "stone": 165,
         "mithril_ingot": 20,
-        "gold": 105
+        "gold": 105,
+        "herbs": 220
       },
       "effect": {
         "supportAttack": 165
@@ -1872,7 +1876,8 @@ export const CONTENT = {
         "wood": 264,
         "stone": 210,
         "diamond": 24,
-        "gold": 125
+        "gold": 125,
+        "herbs": 360
       },
       "effect": {
         "supportAttack": 210

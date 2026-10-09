@@ -1,4 +1,4 @@
-import { CONTENT as C } from "./content.js?v=0.3.4";
+import { CONTENT as C } from "./content.js?v=0.3.5";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;

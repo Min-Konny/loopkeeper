@@ -1,5 +1,5 @@
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.4";
-import { CONTENT as C } from "./content.js?v=0.3.4";
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.5";
+import { CONTENT as C } from "./content.js?v=0.3.5";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -11,7 +11,8 @@ import {
   canPurchaseUpgrade,
   canConfigureWorker,
   getTemplatePreview,
-} from "./engine.js?v=0.3.4";
+  getAutoCookingStatus,
+} from "./engine.js?v=0.3.5";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -103,12 +104,13 @@ export function diplomacyMarkup(s) {
   );
 }
 export function autoCookStatus(s) {
-  if (s.settings.disabledUpgrades.includes("auto_cook")) return "無効";
-  if (s.run.status !== "preparing") return "準備中のみ調理";
-  if (s.settings.paused) return "時間停止中";
-  if (s.run.autoCraft) return `調理中 ${s.run.autoCraft.progress.toFixed(1)} / ${s.run.autoCraft.duration.toFixed(1)}秒`;
-  if (s.run.resources.food >= s.settings.foodTarget) return "補充目標に到達";
-  return "素材待ち · 予約の素材を優先";
+  const status = getAutoCookingStatus(s);
+  return status.code === "cooking" ? `${status.text} ${status.batch.progress.toFixed(1)} / ${status.batch.duration.toFixed(1)}秒` : status.text;
+}
+export function autoCookingMarkup(s) {
+  if (!s.meta.upgrades.includes("auto_cook")) return "";
+  const status = getAutoCookingStatus(s), enabled = status.code !== "disabled";
+  return `<section class="auto-cooking-panel"><div class="auto-cooking-heading"><h3>自動調理 <small>薬草のスープ</small></h3><button data-toggle-upgrade="auto_cook" data-focus="auto-cooking-toggle" aria-label="自動調理を${enabled ? "OFF" : "ON"}にする" aria-pressed="${enabled}">${enabled ? "ON" : "OFF"}</button></div><div class="auto-cooking-controls"><strong>食料 ${Math.floor(status.food)}</strong><label>補充目標<input type="number" min="0" max="9999" value="${status.target}" data-target="foodTarget" data-focus="cooking-food-target"></label>${s.settings.paused && enabled && s.run.status === "preparing" && (status.code === "paused") ? '<button class="button small gold-outline" data-command="auto-cook-start" data-focus="auto-cook-start">調理を開始</button>' : ""}</div><p>${esc(autoCookStatus(s))}</p><small>${esc(getUpgradeDescription(s,{id:"auto_cook"}))} 素材集めは別途必要。</small></section>`;
 }
 export function automationMarkup(s) {
   let out = "";
@@ -130,7 +132,7 @@ export function automationMarkup(s) {
       )}</select></label>${next ? button("強化 " + next.goldCost + "金貨", `data-worker-upgrade="${w.id}"`, s.meta.bestWave < next.unlockBestWave || s.run.resources.gold < next.goldCost || s.run.status !== "preparing") : "<span>最大段階</span>"}</article>`;
   }
   if (s.meta.upgrades.includes("auto_cook"))
-    out += `<article class="auto-cook-status"><h4>自動調理 <small>${esc(autoCookStatus(s))}</small></h4><p>${esc(getUpgradeDescription(s, {id:"auto_cook"}))}</p></article><label class="stock-setting">食料の補充目標 <input type="number" min="0" max="9999" value="${s.settings.foodTarget}" data-target="foodTarget" data-focus="food-target"></label>`;
+    out += '<p class="fine-print">自動調理のON/OFF・補充目標は工房で設定できます。</p><button class="button small" data-tab="craft">自動調理を開く</button>';
   if (s.meta.upgrades.includes("processing_worker"))
     out += `<label class="stock-setting">加工品の補充目標 <input type="number" min="0" max="9999" value="${s.settings.processingTarget}" data-target="processingTarget" data-focus="processing-target"></label>`;
   if (s.meta.upgrades.includes("stock_targets"))
@@ -141,7 +143,7 @@ export function automationMarkup(s) {
         "",
       )}</select><input id="stock-quantity" type="number" min="1" max="9999" value="20" aria-label="補充数">${button("追加", 'data-command="stock-add"')}</div></details>`;
   return out
-    ? `<section class="automation-controls"><h3>仲間と自動化</h3>${out}</section>`
+    ? `<section class="automation-controls"><h3>仲間の作業と強化</h3>${out}</section>`
     : "";
 }
 export function templatesMarkup(s) {

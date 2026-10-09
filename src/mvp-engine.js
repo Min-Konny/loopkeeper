@@ -1,11 +1,11 @@
-import { CONTENT as C } from "./content.js?v=0.3.4";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.4";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.4";
+import { CONTENT as C } from "./content.js?v=0.3.5";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.5";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.5";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.3.4";
+} from "./legacy-engine.js?v=0.3.5";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -841,6 +841,7 @@ function driveQueue(s) {
   }
 }
 function reserve(s) {
+  if (!on(s, "action_queue")) return {};
   const current = s.run.queueManaged ? s.run.queue[0] : null;
   const d = defs.get(
     current?.id || (!s.run.activeAction ? s.run.queue[0]?.id : null),
@@ -948,6 +949,20 @@ export function upgradeWorker(s, id) {
   s.run.resources.gold -= next.goldCost;
   rw.level++;
   return ok();
+}
+export function getAutoCookingStatus(s) {
+  const recipe = defs.get("cook_meal"), reserved = reserve(s), cost = getRecipeCost(s, recipe);
+  const materials = Object.entries(cost).map(([id, required]) => ({id, required, stock:s.run.resources[id], reserved:reserved[id] || 0, available:Math.max(0,s.run.resources[id]-(reserved[id] || 0))}));
+  const base = {materials, food:s.run.resources.food, target:s.settings.foodTarget, batch:s.run.autoCraft};
+  const result = (code, text) => ({...base, code, text});
+  if (!s.meta.upgrades.includes("auto_cook")) return result("locked", "未解放");
+  if (!on(s,"auto_cook")) return result("disabled", "OFF");
+  if (s.run.status !== "preparing") return result("inactive", "準備中のみ調理");
+  if (s.run.autoCraft) return result(s.settings.paused ? "paused" : "cooking", s.settings.paused ? "調理を一時停止中" : "調理中");
+  if (s.run.resources.food >= s.settings.foodTarget) return result("target", `目標${s.settings.foodTarget}に到達 · 増やすには目標を上げる`);
+  const missing = materials.filter(m=>m.available < m.required);
+  if (missing.length) return result("materials", missing.map(m=>`${RESOURCES[m.id].name}が${m.required-m.available}不足${m.reserved ? `（予約用${m.reserved}を確保）` : ""}`).join(" · "));
+  return result(s.settings.paused ? "paused" : "ready", s.settings.paused ? "時間停止中 · 開始すると調理" : "調理を開始します");
 }
 function helpers(s, dt) {
   const reserved = reserve(s);

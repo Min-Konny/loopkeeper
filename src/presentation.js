@@ -1,7 +1,7 @@
-import { completedQueueEntries } from './visual-design.js?v=0.3.4';
-import { getCatalog } from "./engine.js?v=0.3.4";
-import { icon } from "./icons.js?v=0.3.4";
-import { availableDiscoveries } from './preparation-ui.js?v=0.3.4';
+import { completedQueueEntries } from './visual-design.js?v=0.3.5';
+import { getCatalog } from "./engine.js?v=0.3.5";
+import { icon } from "./icons.js?v=0.3.5";
+import { availableDiscoveries } from './preparation-ui.js?v=0.3.5';
 let audio;
 let preferences = { soundVolume: 0.3, effectsEnabled: true };
 let previous;
