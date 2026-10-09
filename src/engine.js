@@ -1,10 +1,13 @@
-import * as legacy from "./legacy-engine.js?v=0.3.17";
-import * as mvp from "./mvp-engine.js?v=0.3.17";
-import { validateSave } from "./save-validation.js?v=0.3.17";
-export { getProductionSources } from "./mvp-engine.js?v=0.3.17";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.3.17";
-export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.3.17";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.3.17";
+export const getActionYields = (s,d) => isLegacy(s) ? d.yields || {} : mvp.getActionYields(s,d);
+export const getPlayerStrike = s => isLegacy(s) ? {attack:getStats(s).attack,armor:(s.run.enemy || getNextEnemy(s)).defense,damage:Math.max(1,getStats(s).attack-(s.run.enemy || getNextEnemy(s)).defense)} : mvp.getPlayerStrike(s);
+export { enqueueConditional } from './mvp-engine.js?v=0.4.0';
+import * as legacy from "./legacy-engine.js?v=0.4.0";
+import * as mvp from "./mvp-engine.js?v=0.4.0";
+import { validateSave } from "./save-validation.js?v=0.4.0";
+export { getProductionSources } from "./mvp-engine.js?v=0.4.0";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.4.0";
+export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.4.0";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.4.0";
 export {
   SKILLS,
   getSkillProgress,
@@ -21,7 +24,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.3.17";
+} from "./mvp-engine.js?v=0.4.0";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
@@ -285,13 +288,13 @@ export function getCombatPreview(s) {
       ? 0.6
       : 1;
   const hits = multipliers.map((m) =>
-    Math.max(1, (e.attack * m - stats.defense) * first),
+    Math.max(1, (e.attack * m * (e.pressure === "rally" ? 1 + Math.min(.3, Math.floor((nextRound - 1) / 4) * .05) : 1) - stats.defense * (e.pressure === "sunder" && nextRound % 4 === 0 ? .6 : 1)) * first),
   );
   return {
     hits,
     packet: hits.reduce((a, b) => a + b, 0),
     support: (stats.support || 0) * (e.trait === "flying" ? .5 : 1) + (stats.ranged || 0)*(e.trait==="flying"?2.5:1),
     charges: e.charges || 0,
-    trait: { combo: "連撃", heavy: "強打", armor: "装甲", flying: "飛行" }[e.trait] || "通常",
+    trait: (e.pressure === "rally" ? "戦意高揚 · " : e.pressure === "sunder" ? "崩し · " : "") + ({ combo: "連撃", heavy: "強打", armor: "装甲", flying: "飛行" }[e.trait] || "通常"),
   };
 }

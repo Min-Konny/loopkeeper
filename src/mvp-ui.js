@@ -1,5 +1,6 @@
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.17";
-import { CONTENT as C } from "./content.js?v=0.3.17";
+import { challengesMarkup } from './strategy-ui.js?v=0.4.0';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.0";
+import { CONTENT as C } from "./content.js?v=0.4.0";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -15,7 +16,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.3.17";
+} from "./engine.js?v=0.4.0";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -57,7 +58,7 @@ export function setupMarkup(s, category = "combat") {
     },
   ).join(
     "",
-  )}</div><div class="setup-footer">${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
+  )}</div>${challengesMarkup(s)}<div class="setup-footer">${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
 }
 // Keep the nearest unanswered request visible while working in another tab.
 export function diplomacyDeadlineMarkup(s) {

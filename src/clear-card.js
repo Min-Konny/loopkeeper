@@ -1,8 +1,9 @@
-import { getCatalog } from './engine.js?v=0.3.17';
+import { CHALLENGES, challengeResults } from './strategy.js?v=0.4.0';
+import { getCatalog } from './engine.js?v=0.4.0';
 export function clearRecord(state) {
   if (state.run.status !== 'cleared') return null;
   const { AUGMENTS } = getCatalog(state);
-  return { generation: state.meta.generation, wave: state.run.wave, seconds: Math.floor(state.run.elapsed), augments: state.run.augments.selected.map(id => AUGMENTS.find(a => a.id === id)?.name).filter(Boolean) };
+  return { badges:challengeResults(state), generation: state.meta.generation, wave: state.run.wave, seconds: Math.floor(state.run.elapsed), augments: state.run.augments.selected.map(id => AUGMENTS.find(a => a.id === id)?.name).filter(Boolean) };
 }
 export function drawClearCard(canvas, record) {
   canvas.width = 1200; canvas.height = 800;
@@ -11,7 +12,7 @@ export function drawClearCard(canvas, record) {
   const background = ctx.createLinearGradient(0, 0, 1200, 800);
   background.addColorStop(0, '#263d35'); background.addColorStop(1, '#0d1d20');
   ctx.fillStyle = background; ctx.fillRect(0, 0, 1200, 800);
-  ctx.strokeStyle = '#9b9258';ctx.lineWidth=2;ctx.strokeRect(28,28,1144,744);
+  ctx.strokeStyle = CHALLENGES.find(c=>record.badges?.includes(c.id))?.color || '#9b9258';ctx.lineWidth=2;ctx.strokeRect(28,28,1144,744);
   const glow = ctx.createRadialGradient(1000,400,0,1000,400,260);
   glow.addColorStop(0,'#baa35e40');glow.addColorStop(1,'#baa35e00');ctx.fillStyle=glow;ctx.fillRect(740,140,460,520);
   for (let i=0;i<32;i++) { ctx.fillStyle=i%3?'#9fb4a44d':'#e9cd8c';ctx.beginPath();ctx.arc(760+(i*73)%350,110+(i*97)%370,i%3?1:2,0,Math.PI*2);ctx.fill(); }
@@ -26,7 +27,7 @@ export function drawClearCard(canvas, record) {
   const font=(size,weight=500)=>`${weight} ${size}px "Zen Maru Gothic", "Meiryo", sans-serif`;
   ctx.fillStyle='#e1d69e';ctx.font=font(34,700);ctx.fillText('LoopKeeper',80,105);
   ctx.fillStyle='#9cb2a5';ctx.font=font(16);ctx.fillText('IDLE DEFENSE',82,134);
-  ctx.fillStyle='#b8b887';ctx.font=font(20,700);ctx.fillText('CLEAR · 村を守り抜いた',82,227);
+  ctx.fillStyle='#b8b887';ctx.font=font(20,700);ctx.fillText(record.badges?.length ? record.badges.map(id=>CHALLENGES.find(c=>c.id===id)?.name).join(' / ') : 'CLEAR · 村を守り抜いた',82,227,1000);
   ctx.fillStyle='#f2ebcb';ctx.font=font(100,700);ctx.fillText(`第${record.generation}世代`,76,350,750);
   ctx.fillStyle='#c1d4b9';ctx.font=font(30);ctx.fillText('幾度の夜を越え、夜明けへ。',82,409);
   const minutes=Math.floor(record.seconds/60),seconds=String(record.seconds%60).padStart(2,'0');

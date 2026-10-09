@@ -1,15 +1,19 @@
-import { tradeResource } from "./engine.js?v=0.3.17";
-import { changelogMarkup } from "./changelog.js?v=0.3.17";
-import { createBackgroundClock } from "./background-clock.js?v=0.3.17";
-import { updateSetupDialog } from "./setup-dialog.js?v=0.3.17";
-import { compareRun } from './visual-design.js?v=0.3.17';
-import { createRenderGuard } from './render-guard.js?v=0.3.17';
-import { installQueueDrag } from './queue-drag.js?v=0.3.17';
-import { preparationMarkup } from './preparation-ui.js?v=0.3.17';
-import { saveClearCard } from './clear-card.js?v=0.3.17';
-import { runFrameTasks } from './frame-loop.js?v=0.3.17';
-import { getCatalog } from "./engine.js?v=0.3.17";
-import { CONTENT } from "./content.js?v=0.3.17";
+import { augmentStatusMarkup } from './augments-ui.js?v=0.4.0';
+import { getActionYields } from './engine.js?v=0.4.0';
+import { reportMarkup, enemyRoadmap, challengesMarkup, chapterPresentation, queueTimingMarkup, conditionalMarkup, updateConditionDraft, conditionalRequest, conditionLabel } from './strategy-ui.js?v=0.4.0';
+import { enqueueConditional } from './engine.js?v=0.4.0';
+import { tradeResource } from "./engine.js?v=0.4.0";
+import { changelogMarkup } from "./changelog.js?v=0.4.0";
+import { createBackgroundClock } from "./background-clock.js?v=0.4.0";
+import { updateSetupDialog } from "./setup-dialog.js?v=0.4.0";
+import { compareRun } from './visual-design.js?v=0.4.0';
+import { createRenderGuard } from './render-guard.js?v=0.4.0';
+import { installQueueDrag } from './queue-drag.js?v=0.4.0';
+import { preparationMarkup } from './preparation-ui.js?v=0.4.0';
+import { saveClearCard } from './clear-card.js?v=0.4.0';
+import { runFrameTasks } from './frame-loop.js?v=0.4.0';
+import { getCatalog } from "./engine.js?v=0.4.0";
+import { CONTENT } from "./content.js?v=0.4.0";
 import {
   isLegacy,
   isKnown,
@@ -22,7 +26,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.3.17";
+} from "./engine.js?v=0.4.0";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -33,22 +37,22 @@ import {
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.3.17";
-import { createSessionOwner } from "./session-owner.js?v=0.3.17";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.3.17";
+} from "./mvp-ui.js?v=0.4.0";
+import { createSessionOwner } from "./session-owner.js?v=0.4.0";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.4.0";
 import {
   loadStoredGame,
   writeStoredGame,
   readBackups,
   decodeRecord,
   unreadableRecord,
-} from "./save-storage.js?v=0.3.17";
+} from "./save-storage.js?v=0.4.0";
 import {
   updatePresentation,
   markQueueEdited,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.3.17";
+} from "./presentation.js?v=0.4.0";
 import {
   getRaidInterval,
   aidCountry,
@@ -71,9 +75,9 @@ import {
   abandonRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.3.17";
-import { icon } from "./icons.js?v=0.3.17";
-import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.3.17";
+} from "./engine.js?v=0.4.0";
+import { icon } from "./icons.js?v=0.4.0";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.4.0";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -82,20 +86,20 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.3.17";
-import { renderAugments } from "./augments-ui.js?v=0.3.17";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.3.17";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.3.17";
-import { mountCampScene } from "./camp-scene.js?v=0.3.17";
-import { workScene, syncWorkAnimation } from "./work-scene.js?v=0.3.17";
-import { getRecipeVisibility } from "./workshop.js?v=0.3.17";
-import { getMilestoneStatus } from "./engine.js?v=0.3.17";
+} from "./engine.js?v=0.4.0";
+import { renderAugments } from "./augments-ui.js?v=0.4.0";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.4.0";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.4.0";
+import { mountCampScene } from "./camp-scene.js?v=0.4.0";
+import { workScene, syncWorkAnimation } from "./work-scene.js?v=0.4.0";
+import { getRecipeVisibility } from "./workshop.js?v=0.4.0";
+import { getMilestoneStatus } from "./engine.js?v=0.4.0";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.3.17";
+} from "./engine.js?v=0.4.0";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -280,6 +284,9 @@ function editingWithin(element) {
   return element?.contains(active) && active.matches('input, textarea, select') && active !== committedSelect;
 }
 
+const detailStates = new Map();
+function rememberDetails(el) { for (const d of el.querySelectorAll('details[data-detail-key]')) detailStates.set(d.dataset.detailKey, d.open); }
+function restoreDetails(el) { for (const d of el.querySelectorAll('details[data-detail-key]')) if (detailStates.has(d.dataset.detailKey)) d.open = detailStates.get(d.dataset.detailKey); }
 function setHTML(selector, html) {
   const el = document.querySelector(selector);
   if (el.dataset.lastHtml === html) return;
@@ -291,7 +298,9 @@ function setHTML(selector, html) {
   const scrollPositions = [...el.querySelectorAll('[data-scroll-key]')].map(node => ({
     key: node.dataset.scrollKey, top: node.scrollTop,
   }));
+  rememberDetails(el);
   el.innerHTML = html;
+  restoreDetails(el);
   el.dataset.lastHtml = html;
   for (const position of scrollPositions) {
     const scroller = el.querySelector(`[data-scroll-key="${CSS.escape(position.key)}"]`);
@@ -312,7 +321,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <button class="prototype-label updates-link" data-command="updates-menu">更新履歴 <b>v0.3.17</b></button>
+    <button class="prototype-label updates-link" data-command="updates-menu">更新履歴 <b>v0.4.0</b></button>
   </aside>
   <div class="workspace">
     <header class="topbar"><span class="mobile-header-title">LoopKeeper</span><button class="mobile-menu-toggle" data-command="header-menu" aria-label="メニュー" aria-haspopup="dialog" aria-controls="header-menu-dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="updates-menu" title="更新履歴" aria-label="更新履歴">${icon("history")}</button><button class="icon-button" data-command="settings-menu" title="設定" aria-label="設定">${icon("settings")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
@@ -451,7 +460,7 @@ function renderWorld() {
   const remaining = Math.max(0, state.run.nextWaveAt - state.run.elapsed);
   setHTML(
     "#raid-forecast",
-    `<div class="forecast-top"><span class="${combat ? "danger-text" : ""}">${icon(combat ? "sword" : "eye")}${dead ? "この命は尽きた" : combat ? "襲撃中 · 自動戦闘" : "次の襲撃"}</span><b>${enemy.isBoss ? "BOSS · " : ""}WAVE ${String(state.run.wave + 1).padStart(2, "0")}</b></div><div class="forecast-main"><div><strong>${escape(enemy.name)}${enemy.trait === "flying" ? " · 飛行" : ""}</strong><small>${icon("sword")} ${enemy.attack} <span>·</span> ${icon("shield")} ${enemy.defense} <span>·</span> HP ${format(enemy.maxHp || enemy.hp)}</small></div><div class="countdown ${remaining < 15 ? "urgent" : ""}">${dead ? "—" : combat ? icon("sword") : time(Math.ceil(remaining))}<small>${combat ? "防衛中" : dead ? "輪廻へ" : state.settings.paused ? "時間停止中" : "到着まで"}</small></div></div><div class="forecast-track"><i style="width:${combat || dead ? 100 : progress(1 - remaining / (state.run.wave === 0 ? FIRST_RAID_DELAY + (state.run.facilities.watchtower ? 15 : 0) : getRaidInterval(state)))}%"></i></div><div class="forecast-bottom"><span>${enemy.isBoss ? (state.meta.defeatedBosses.includes(isLegacy(state) ? state.run.wave + 1 : enemy.id) ? "討伐済み · 報酬獲得済み" : "初撃破で継承 +1pt") : `撃退 ${state.run.wave} 回`}</span><span>${icon("trophy")}最高 ${state.meta.bestWave} 回</span></div>`,
+    `<div class="forecast-top"><span class="${combat ? "danger-text" : ""}">${icon(combat ? "sword" : "eye")}${dead ? "この命は尽きた" : combat ? "襲撃中 · 自動戦闘" : "次の襲撃"}</span><b>${enemy.isBoss ? "BOSS · " : ""}WAVE ${String(state.run.wave + 1).padStart(2, "0")}</b></div><div class="forecast-main"><div><strong>${escape(enemy.name)}${enemy.trait === "flying" ? " · 飛行" : ""}</strong><small>${icon("sword")} ${enemy.attack} <span>·</span> ${icon("shield")} ${enemy.defense} <span>·</span> HP ${format(enemy.maxHp || enemy.hp)}</small></div><div class="countdown ${remaining < 15 ? "urgent" : ""}">${dead ? "—" : combat ? icon("sword") : time(Math.ceil(remaining))}<small>${combat ? "防衛中" : dead ? "輪廻へ" : state.settings.paused ? "時間停止中" : "到着まで"}</small></div></div><div class="forecast-track"><i style="width:${combat || dead ? 100 : progress(1 - remaining / (state.run.wave === 0 ? FIRST_RAID_DELAY + (state.run.facilities.watchtower ? 15 : 0) : getRaidInterval(state)))}%"></i></div><div class="forecast-bottom"><span>${enemy.isBoss ? (state.meta.defeatedBosses.includes(isLegacy(state) ? state.run.wave + 1 : enemy.id) ? "討伐済み · 報酬獲得済み" : "初撃破で継承 +1pt") : `撃退 ${state.run.wave} 回`}</span><span>${icon("trophy")}最高 ${state.meta.bestWave} 回 ${state.meta.bestWave >= 3 ? '<button data-info="status" class="forecast-roadmap-button">先の襲撃</button>' : ""}</span></div>`,
   );
   setHTML(
     "#resource-bar",
@@ -550,7 +559,7 @@ function renderGather() {
         const check = canStartAction(state, action.id);
         const locked = !check.ok && !active;
         const levelLocked = current.level < (action.unlockLevel || 1);
-        const yields = Object.entries(action.yields || {});
+        const yields = Object.entries(getActionYields(state, action));
         return `<article class="gather-card"><button class="action-card ${active ? "active" : ""} ${locked ? "locked" : ""}" data-action="${action.id}" data-focus="action-${action.id}" ${locked ? "disabled" : ""} aria-pressed="${active}"><div class="card-top"><span class="action-icon ${action.skill}">${icon(skillIcons[action.skill])}</span><span class="action-time">${icon(locked ? "lock" : "clock")}${levelLocked ? `進行 Lv.${action.unlockLevel}` : state.run.status === "combat" ? "襲撃中" : `${getActionDuration(state, action).toFixed(1)}秒`}</span></div><div class="action-name"><h3>${escape(action.name)}</h3>${active ? '<span class="active-pill">選択中</span>' : ""}</div>${action.id === "gather_food" || !yields.length ? `<p>${escape(action.id === "gather_food" ? `戦闘中、体力が55%以下になると自動で食べて${getFoodHealing(state)}回復。` : action.description)}</p>` : ""}<div class="action-yield">${yields.length ? yields.map(([id, amount]) => `<span>${icon(id)}${escape(resourceName(id))}<b>+${amount}</b></span>`).join("") : `<span>${icon(action.trainingStat === "defense" ? "shield" : action.trainingStat === "vitality" ? "heart" : "sword")}${focusedTraining ? `${{attack:"攻撃",defense:"防御",vitality:"最大HP"}[action.trainingStat]} +${(current.level-1)*({attack:2,defense:1.5,vitality:18}[action.trainingStat])}` : "戦闘経験を積む"}</span>`}${icon("arrow", "card-arrow")}</div><div class="card-levels"><span>${focusedTraining ? "訓練" : "進行"} <b>Lv.${current.level}</b></span><span class="permanent-text">${icon("memory")}永続 <b>Lv.${permanent.level}</b></span></div>${!focusedTraining && current.level > 1 ? `<div class="run-growth"><b>${runGrowth(action.skill)}</b></div>` : ""}${savedWorkNote(suspended)}<div class="card-skill-track"><i style="width:${progress(current.progress)}%"></i></div>${levelLocked ? `<div class="lock-reason">${escape(check.reason)}</div>` : ""}</button>${state.meta.upgrades.includes("action_queue") ? `<div class="gather-reservation"><label>回数<input type="number" min="1" max="99" step="1" inputmode="numeric" data-craft-count="${action.id}" data-focus="work-count-${action.id}" aria-label="${escape(action.name)}の予約回数" value="${craftQuantities[action.id] || 1}"></label><button data-queue-work="${action.id}" data-focus="queue-work-${action.id}" ${locked ? "disabled" : ""}>${state.run.queue.length ? "末尾に予約" : "行動予約"}</button>${state.run.queue.length ? `<button data-queue-work="${action.id}" data-queue-position="front" data-focus="queue-work-front-${action.id}" ${locked ? "disabled" : ""}>先頭に予約</button>` : ""}</div>` : ""}</article>`;
       })
       .join(
@@ -575,7 +584,7 @@ function renderQueuePreview() {
   const enabled = !state.settings.disabledUpgrades.includes("action_queue");
   const issue = queueIssue();
   const status = issue ? "要確認" : !enabled ? "保留中" : state.settings.paused ? "時間停止中" : "実行中";
-  setHTML("#queue-preview", `<div class="queue-preview-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length}/8</small></h3><button data-info="queue">編集</button></div><div class="queue-preview-status ${issue ? "needs-attention" : ""}">${status}</div>${state.run.queue.length ? `<ol data-scroll-key="queue-preview">${state.run.queue.map((entry,index) => `<li data-queue-row="${index}" data-preview-goal="${entry.goalId ?? index}" class="${index === 0 && state.run.queueManaged && enabled ? "current" : ""}"><button class="queue-number queue-drag-handle" data-queue-drag="${index}" aria-label="予約${index + 1}の順番をドラッグで変更" title="ドラッグで並べ替え"><span class="queue-grip" aria-hidden="true">⋮⋮</span>${index+1}</button><span class="queue-preview-name">${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}</span><small>${singleUse(entry.id) ? "1回" : `残り${entry.count}回`}</small><button class="queue-preview-remove icon-button" data-queue-remove="${index}" ${entry.goalId !== undefined ? `data-queue-goal="${entry.goalId}"` : ""} aria-label="${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}の予約を削除">${icon("close")}</button></li>`).join("")}</ol><button class="button small" data-toggle-upgrade="action_queue">${enabled ? "予約を保留" : "予約を有効にする"}</button>` : '<p class="queue-preview-empty">予約した行動がここに並びます。</p>'}`);
+  setHTML("#queue-preview", `<div class="queue-preview-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length}/8</small></h3><button data-info="queue">編集</button></div><div class="queue-preview-status ${issue ? "needs-attention" : ""}">${status}</div>${queueTimingMarkup(state)}${state.run.queue.length ? `<ol data-scroll-key="queue-preview">${state.run.queue.map((entry,index) => `<li data-queue-row="${index}" data-preview-goal="${entry.goalId ?? index}" class="${index === 0 && state.run.queueManaged && enabled ? "current" : ""}"><button class="queue-number queue-drag-handle" data-queue-drag="${index}" aria-label="予約${index + 1}の順番をドラッグで変更" title="ドラッグで並べ替え"><span class="queue-grip" aria-hidden="true">⋮⋮</span>${index+1}</button><span class="queue-preview-name">${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}</span><small>${singleUse(entry.id) ? "1回" : escape(conditionLabel(entry))}</small><button class="queue-preview-remove icon-button" data-queue-remove="${index}" ${entry.goalId !== undefined ? `data-queue-goal="${entry.goalId}"` : ""} aria-label="${escape([...ACTIONS,...RECIPES].find(d=>d.id===entry.id)?.name || entry.id)}の予約を削除">${icon("close")}</button></li>`).join("")}</ol><button class="button small" data-toggle-upgrade="action_queue">${enabled ? "予約を保留" : "予約を有効にする"}</button>` : '<p class="queue-preview-empty">予約した行動がここに並びます。</p>'}`);
 }
 function renderQueue() {
   renderQueuePreview();
@@ -598,7 +607,7 @@ function renderQueue() {
   const draftQueued = draftSingle ? state.run.queue.findIndex(q => q.id === queueDraftId) : -1;
   setHTML(
     "#queue-panel",
-    `<section class="queue-box" aria-label="行動予約"><div class="queue-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length} / 8</small></h3><button data-command="queue-expand" data-focus="queue-expand" aria-expanded="${queueExpanded}">${queueExpanded ? "追加欄を閉じる" : "作業を追加"}</button><button class="button small ${enabled ? "gold-outline" : "muted"}" data-toggle-upgrade="action_queue" data-focus="queue-toggle" aria-pressed="${enabled}">${enabled ? "予約を保留" : "予約を有効にする"}</button></div>${queueExpanded ? `<div class="queue-controls"><label>予約する作業<select id="queue-action" data-focus="queue-action" aria-label="予約する作業">${definitions.map((item) => `<option value="${item.id}" ${queueDraftId === item.id ? "selected" : ""}>${escape(item.name)}</option>`).join("")}</select></label>${draftSingle ? '<span class="queue-single">1回</span>' : `<label>回数<input id="queue-count" data-focus="queue-count" type="number" min="1" max="99" step="1" inputmode="numeric" aria-label="予約回数" value="${Number.isFinite(queueDraftCount) ? queueDraftCount : ""}"></label>`}<button class="button small gold-outline" data-command="queue-add" data-focus="queue-add" ${draftQueued >= 0 || state.run.queue.length >= 8 || state.run.status === "dead" ? "disabled" : ""}>末尾に追加</button><button class="button small gold-outline" data-command="queue-add-front" data-focus="queue-add-front" ${draftQueued === 0 || (draftQueued < 0 && state.run.queue.length >= 8) || state.run.status === "dead" ? "disabled" : ""}>${draftQueued >= 0 ? "先頭へ移す" : "先頭に追加"}</button></div>` : ""}${state.run.queue.length ? `<ol class="queue-list">${state.run.queue.map((entry, index) => `<li data-queue-row="${index}" class="${index === 0 && state.run.queueManaged ? "current" : ""}"><button class="queue-number queue-drag-handle" data-queue-drag="${index}" aria-label="予約${index + 1}の順番をドラッグで変更" title="ドラッグで並べ替え"><span class="queue-grip" aria-hidden="true">⋮⋮</span>${index + 1}</button><span>${escape(definitions.find((item) => item.id === entry.id)?.name)}</span>${singleUse(entry.id) ? '<span class="queue-single">1回</span>' : `<label class="queue-entry-count">残り <input type="number" min="1" max="99" step="1" value="${entry.count}" data-queue-count="${index}" data-focus="queue-count-${index}" aria-label="予約${index + 1}の残り回数"> 回</label>`}<button class="icon-button" data-queue-move="${index}" data-direction="-1" aria-label="予約${index + 1}を上へ" ${index === 0 ? "disabled" : ""}>↑</button><button class="icon-button" data-queue-move="${index}" data-direction="1" aria-label="予約${index + 1}を下へ" ${index === state.run.queue.length - 1 ? "disabled" : ""}>↓</button><button class="icon-button" data-queue-remove="${index}" data-focus="queue-remove-${index}" aria-label="予約${index + 1}を削除">${icon("close")}</button></li>`).join("")}</ol><div class="queue-footer"><span>${state.settings.paused ? "時間停止中" : escape(queueStatus.reason || (enabled ? "順番に実行します" : "手動作業中・予約は保留"))}</span><button data-command="queue-clear" data-focus="queue-clear">予約を全消去</button></div>` : ""}${queueExpanded ? '<p class="queue-help">素材不足では待機。手動作業を選ぶと予約を保留します。</p>' : ""}</section>`,
+    `<section class="queue-box" aria-label="行動予約"><div class="queue-heading"><h3>${icon("book")}行動予約 <small>${state.run.queue.length} / 8</small></h3><button data-command="queue-expand" data-focus="queue-expand" aria-expanded="${queueExpanded}">${queueExpanded ? "追加欄を閉じる" : "作業を追加"}</button><button class="button small ${enabled ? "gold-outline" : "muted"}" data-toggle-upgrade="action_queue" data-focus="queue-toggle" aria-pressed="${enabled}">${enabled ? "予約を保留" : "予約を有効にする"}</button></div>${queueExpanded ? `<div class="queue-controls"><label>予約する作業<select id="queue-action" data-focus="queue-action" aria-label="予約する作業">${definitions.map((item) => `<option value="${item.id}" ${queueDraftId === item.id ? "selected" : ""}>${escape(item.name)}</option>`).join("")}</select></label>${draftSingle ? '<span class="queue-single">1回</span>' : `<label>回数<input id="queue-count" data-focus="queue-count" type="number" min="1" max="99" step="1" inputmode="numeric" aria-label="予約回数" value="${Number.isFinite(queueDraftCount) ? queueDraftCount : ""}"></label>`}<button class="button small gold-outline" data-command="queue-add" data-focus="queue-add" ${draftQueued >= 0 || state.run.queue.length >= 8 || state.run.status === "dead" ? "disabled" : ""}>末尾に追加</button><button class="button small gold-outline" data-command="queue-add-front" data-focus="queue-add-front" ${draftQueued === 0 || (draftQueued < 0 && state.run.queue.length >= 8) || state.run.status === "dead" ? "disabled" : ""}>${draftQueued >= 0 ? "先頭へ移す" : "先頭に追加"}</button></div>` : ""}${state.run.queue.length ? `<ol class="queue-list">${state.run.queue.map((entry, index) => `<li data-queue-row="${index}" class="${index === 0 && state.run.queueManaged ? "current" : ""}"><button class="queue-number queue-drag-handle" data-queue-drag="${index}" aria-label="予約${index + 1}の順番をドラッグで変更" title="ドラッグで並べ替え"><span class="queue-grip" aria-hidden="true">⋮⋮</span>${index + 1}</button><span>${escape(definitions.find((item) => item.id === entry.id)?.name)}</span>${entry.until ? `<span class="queue-condition-label">${escape(conditionLabel(entry))}</span>` : singleUse(entry.id) ? '<span class="queue-single">1回</span>' : `<label class="queue-entry-count">残り <input type="number" min="1" max="99" step="1" value="${entry.count}" data-queue-count="${index}" data-focus="queue-count-${index}" aria-label="予約${index + 1}の残り回数"> 回</label>`}<button class="icon-button" data-queue-move="${index}" data-direction="-1" aria-label="予約${index + 1}を上へ" ${index === 0 ? "disabled" : ""}>↑</button><button class="icon-button" data-queue-move="${index}" data-direction="1" aria-label="予約${index + 1}を下へ" ${index === state.run.queue.length - 1 ? "disabled" : ""}>↓</button><button class="icon-button" data-queue-remove="${index}" data-focus="queue-remove-${index}" aria-label="予約${index + 1}を削除">${icon("close")}</button></li>`).join("")}</ol><div class="queue-footer"><span>${state.settings.paused ? "時間停止中" : escape(queueStatus.reason || (enabled ? "順番に実行します" : "手動作業中・予約は保留"))}</span><button data-command="queue-clear" data-focus="queue-clear">予約を全消去</button></div>` : ""}${queueExpanded ? '<p class="queue-help">素材不足では待機。手動作業を選ぶと予約を保留します。</p>' : ""}</section>`,
   );
 }
 
@@ -804,7 +813,8 @@ function facilitySummary(id) {
       infirmary: "処置 " + f.treatmentCharges + "回",
       workshop: "製作 +" + Math.round(f.craftSpeed * 100) + "%",
       market: "割引 " + Math.round(f.purchaseDiscount * 100) + "%",
-      guardhouse: "支援 " + f.supportAttack,
+      guardhouse: "支援 " + getStats(state).support,
+      archery_tower: "弓支援 " + f.rangedAttack + " / 飛行に2.5倍",
     }[id]
   );
 }
@@ -909,7 +919,9 @@ function renderExtra(selector, html) {
     const focus = extra.contains(document.activeElement)
       ? document.activeElement.dataset.focus
       : null;
+    rememberDetails(extra);
     extra.innerHTML = html;
+    restoreDetails(extra);
     extra.dataset.html = html;
     if (focus)
       extra
@@ -969,6 +981,10 @@ function renderScreen() {
     displayedOffer = offerKey;
   }
   if (!offerKey) displayedOffer = "";
+  chapterPresentation(state);
+  document.body.classList.toggle("effects-disabled", !state.settings.effectsEnabled);
+  renderExtra("#next-goal", enemyRoadmap(state) + augmentStatusMarkup(state));
+  renderExtra("#journal-entries", reportMarkup(state) + challengesMarkup(state));
   if (["dead", "cleared"].includes(state.run.status) && !deadShown) showDeath();
   document.querySelector("#death-dialog").classList.toggle("legacy-setup", state.run.status === "legacy_setup");
   if (state.run.status === "legacy_setup") {
@@ -982,7 +998,7 @@ function renderScreen() {
     renderExtra("#content", milestoneMarkup(state));
   }
   if (!isLegacy(state) && state.meta.upgrades.includes("action_queue"))
-    renderExtra("#queue-panel", templatesMarkup(state));
+    renderExtra("#queue-panel", queueTimingMarkup(state) + conditionalMarkup(state) + templatesMarkup(state));
   setHTML(
     "#session-notice",
     session.owned
@@ -1003,14 +1019,14 @@ function renderScreen() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.3.17</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.4.0</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
 
 function showSettingsMenu() {
   state.settings.paused = true;
-  document.querySelector("#settings-dialog").innerHTML = `<div class="dialog-heading"><div class="eyebrow">SETTINGS</div><button class="icon-button" data-close="settings-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="settings-title">設定</h2><section class="presentation-settings settings-options"><h3>ゲームの進行</h3><label><input id="pause-when-hidden" type="checkbox" ${state.settings.pauseWhenHidden ? "checked" : ""}> 別のタブ・アプリへ移ったら一時停止</label><h3>音と演出</h3><label>BGM音量 <input id="music-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.musicVolume ?? .15}"></label><label>効果音量 <input id="sound-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.soundVolume}"></label><label><input id="effects-enabled" type="checkbox" ${state.settings.effectsEnabled ? "checked" : ""}> 演出を表示</label></section>`;
+  document.querySelector("#settings-dialog").innerHTML = `<div class="dialog-heading"><div class="eyebrow">SETTINGS</div><button class="icon-button" data-close="settings-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="settings-title">設定</h2><section class="presentation-settings settings-options"><h3>ゲームの進行</h3><label><input id="pause-when-hidden" type="checkbox" ${state.settings.pauseWhenHidden ? "checked" : ""}> 別のタブ・アプリへ移ったら一時停止</label><h3>音と演出</h3><label>BGM音量 <input id="music-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.musicVolume ?? .15}"></label><label>環境音（風） <input id="ambient-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.ambientVolume || 0}"></label><label>効果音量 <input id="sound-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.soundVolume}"></label><label><input id="effects-enabled" type="checkbox" ${state.settings.effectsEnabled ? "checked" : ""}> 演出を表示</label></section>`;
   document.querySelector("#settings-dialog").showModal();
   render();
 }
@@ -1090,6 +1106,7 @@ function showDeath() {
       `第${state.meta.generation}世代で村を守り抜きました。次は別の構成で挑戦できます。`;
     document.querySelector("#death-dialog .death-stats").insertAdjacentHTML('beforebegin', `<div class="clear-achievement">${icon('trophy')}<strong>第${state.meta.generation}世代でクリア</strong><button class="button gold-outline" data-command="share-clear">${icon('save')}記録画像を保存</button></div>`);
   }
+  document.querySelector("#death-dialog .death-stats").insertAdjacentHTML("afterend", reportMarkup(state) + challengesMarkup(state));
   document.querySelector("#death-dialog").showModal();
   document.querySelector("#death-dialog").scrollTop = 0;
 }
@@ -1447,6 +1464,15 @@ document.addEventListener("click", (event) => {
       saveGame();
       break;
     }
+    case "queue-condition-add": {
+      if (!isLegacy(state)) {
+        const request = conditionalRequest();
+        const result = enqueueConditional(state, request.id, request.until);
+        toast(result.ok ? "条件付きの行動予約を追加しました。" : result.reason);
+        saveGame();
+      }
+      break;
+    }
     case "queue-clear":
       markQueueEdited();
       clearQueue(state);
@@ -1524,6 +1550,7 @@ document.addEventListener("click", (event) => {
 
 document.addEventListener("input", (event) => {
   if (!session.owned) return;
+  updateConditionDraft(event.target);
   if (event.target.dataset.target && Number.isInteger(event.target.valueAsNumber) && event.target.valueAsNumber >= 0 && event.target.valueAsNumber <= 9999) {
     state.settings[event.target.dataset.target] = event.target.valueAsNumber;
     saveGame();
@@ -1605,6 +1632,11 @@ document.addEventListener("change", (event) => {
     unlockAudio(state.settings);
     saveGame();
   }
+  if (event.target.id === "ambient-volume") {
+    state.settings.ambientVolume = Number(event.target.value);
+    unlockAudio(state.settings);
+    saveGame();
+  }
   if (event.target.id === "sound-volume") {
     state.settings.soundVolume = Number(event.target.value);
     previewSound(state.settings);
@@ -1619,6 +1651,7 @@ document.addEventListener("change", (event) => {
     saveGame();
     render();
   }
+  if (updateConditionDraft(event.target)) { render(); }
   if (event.target.id === "queue-action") {
     queueDraftId = event.target.value;
     queueDraftCount = 1;

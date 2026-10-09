@@ -5,8 +5,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.3.17";
-import { icon } from "./icons.js?v=0.3.17";
+} from "./engine.js?v=0.4.0";
+import { icon } from "./icons.js?v=0.4.0";
 
 const escape = (value) =>
   String(value ?? "").replace(
@@ -33,12 +33,12 @@ const descriptions = {
   auto_cook: "材料を使い、食料を並行して調理。",
   lumber_worker: "準備中、6秒ごとに木材 +1。",
   mining_worker: "準備中、7秒ごとに石材 +1。",
-  economy_augments: "伐採収入・施設投資など4種類を候補に追加。",
-  martial_augments: "賞金稼ぎ・勝利の勢いなど4種類を候補に追加。",
-  fortress_augments: "初撃への備え・救護巡回の2種類を候補に追加。",
+  economy_augments: "収入・投資の4種類。最高6・9波で建設連鎖や備蓄など計8種類まで増える。",
+  martial_augments: "賞金・鍛錬の4種類。最高6・9波で追い込みや追撃など計8種類まで増える。",
+  fortress_augments: "初撃・救護の2種類。最高6・9波で兵糧・破甲・反撃など計6種類まで増える。",
   foraging_worker: "準備中、8秒ごとに薬草または食料を集める。",
   processing_worker: "材料を使い、指定した金属を並行して加工。",
-  queue_templates: "予約の手順を保存し、次の命でも呼び出す。",
+  queue_templates: "手順の保存・呼出と、在庫数・Lvを目標にする条件付き予約。",
   stock_targets: "主作業が空いたとき、指定した在庫を補充。",
 };
 

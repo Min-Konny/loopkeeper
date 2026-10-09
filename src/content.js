@@ -1,3 +1,4 @@
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.0';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -2748,6 +2749,7 @@ export const CONTENT = {
     }
   ],
   "augments": [
+    ...STRATEGY_AUGMENTS,
     {
       "id": "forestry",
       "name": "森と鉱脈の知恵",

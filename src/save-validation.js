@@ -1,4 +1,5 @@
-import { CONTENT as C } from "./content.js?v=0.3.17";
+import { validCondition } from './queue-conditions.js?v=0.4.0';
+import { CONTENT as C } from "./content.js?v=0.4.0";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -21,10 +22,11 @@ const validGoal = (x) =>
   object(x) &&
   defs.has(x.id) &&
   integer(x.count, 1, 99) &&
-  ["goal", "action"].includes(x.kind);
+  ["goal", "action"].includes(x.kind) && validCondition(x);
 function validBatch(x) {
   return (
     object(x) &&
+    (x.paidCost === undefined || object(x.paidCost) && Object.entries(x.paidCost).every(([id,n]) => C.resources.some(r => r.id === id) && number(n))) &&
     defs.has(x.id) &&
     integer(x.instanceId, 1) &&
     ["main", "auto_cook", "processing_worker"].includes(x.channel) &&
@@ -237,6 +239,16 @@ export function validateSave(s) {
       r.queue.some((x) => x.goalId > r.queueSeq)
     )
       return false;
+    if (r.encounterDepth !== undefined && typeof r.encounterDepth !== "boolean") return false;
+    if (m.challengeBadges !== undefined && !validList(m.challengeBadges, new Set(['independent','architect','champion']), 3)) return false;
+    if (r.strategy !== undefined && (!object(r.strategy) || !['constructionUntil','focus','playerDamage','facilityDamage'].every(k => number(r.strategy[k])) || r.strategy.focus > 30 || typeof r.strategy.eligible !== 'boolean' || typeof r.strategy.aidUsed !== 'boolean')) return false;
+    const validReport = x => object(x) && ['player','guards','tower','counter','prevented','foodHealing','treatmentHealing','damageTaken','rounds','wave'].every(k => number(x[k]));
+    if (r.battleReports !== undefined && (!Array.isArray(r.battleReports) || r.battleReports.length > 8 || r.battleReports.some(x => !validReport(x) || typeof x.enemy !== 'string' || x.enemy.length > 100 || typeof x.won !== 'boolean' || !number(x.remainingHp) || !number(x.maxHp)))) return false;
+    if (r.enemy?.report !== undefined && !validReport(r.enemy.report)) return false;
+    if (r.enemy?.baseDefense !== undefined && !number(r.enemy.baseDefense)) return false;
+    if (r.enemy?.retaliation !== undefined && typeof r.enemy.retaliation !== 'boolean') return false;
+    if (r.enemy?.supplied !== undefined && typeof r.enemy.supplied !== 'boolean') return false;
+    if (r.enemy?.pressure != null && !['rally','sunder'].includes(r.enemy.pressure)) return false;
     const a = r.augments;
     if (
       !object(a) ||
@@ -322,6 +334,7 @@ export function validateSave(s) {
       ) ||
       !number(t.soundVolume, 0, 1) ||
       (t.musicVolume !== undefined && !number(t.musicVolume, 0, 1)) ||
+      (t.ambientVolume !== undefined && !number(t.ambientVolume, 0, 1)) ||
       typeof t.effectsEnabled !== "boolean" ||
       (t.pauseWhenHidden !== undefined && typeof t.pauseWhenHidden !== "boolean") ||
       typeof t.showHiddenRecipes !== "boolean" ||

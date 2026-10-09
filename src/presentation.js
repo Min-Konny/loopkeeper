@@ -1,10 +1,16 @@
-import { createMusicPlayer, getMusicMode } from './music.js?v=0.3.17';
-import { completedWorkKind, playWorkSound, workSoundKind, workImpactKind, preloadWorkSounds } from './work-audio.js?v=0.3.17';
-import { completedQueueEntries } from './visual-design.js?v=0.3.17';
-import { getCatalog } from "./engine.js?v=0.3.17";
-import { icon } from "./icons.js?v=0.3.17";
-import { availableDiscoveries } from './preparation-ui.js?v=0.3.17';
+import { createAmbience } from './ambience.js?v=0.4.0';
+import { chapterOf } from './strategy.js?v=0.4.0';
+import { createMusicPlayer, getMusicMode } from './music.js?v=0.4.0';
+import { completedWorkKind, playWorkSound, workSoundKind, workImpactKind, preloadWorkSounds } from './work-audio.js?v=0.4.0';
+import { completedQueueEntries } from './visual-design.js?v=0.4.0';
+import { getCatalog } from "./engine.js?v=0.4.0";
+import { icon } from "./icons.js?v=0.4.0";
+import { availableDiscoveries } from './preparation-ui.js?v=0.4.0';
 let audio;
+let ambience;
+let ambienceChapter = 0;
+let ambienceActive = false;
+document.addEventListener("visibilitychange",()=>ambience?.sync(preferences.ambientVolume || 0, ambienceChapter, !document.hidden && ambienceActive));
 let music;
 let musicMode = "camp";
 document.addEventListener('visibilitychange', () => music?.sync(preferences.musicVolume ?? .15, !document.hidden));
@@ -24,10 +30,12 @@ function trackTransient(animation) {
 export function unlockAudio(settings) {
   preferences = settings;
   try { music ||= createMusicPlayer(); music.sync(settings.musicVolume ?? .15, !document.hidden, true, musicMode); } catch { /* Music is optional. */ }
-  if (!settings.soundVolume || document.hidden) return;
+  if ((!settings.soundVolume && !settings.ambientVolume) || document.hidden) return;
   try {
     audio ||= new (window.AudioContext || window.webkitAudioContext)();
     preloadWorkSounds(audio);
+    if (settings.ambientVolume) ambience ||= createAmbience(audio);
+    ambience?.sync(settings.ambientVolume || 0, ambienceChapter, ambienceActive);
     if (audio.state === 'suspended') audio.resume().catch(() => {});
   } catch { /* Sound is optional when the platform provides no audio context. */ }
 }
@@ -129,6 +137,9 @@ function queueFeedback(state, previous, next) {
 }
 export function updatePresentation(state) {
   preferences = state.settings;
+  ambienceChapter = chapterOf(state);
+  ambienceActive = state.run.status === "preparing";
+  ambience?.sync(preferences.ambientVolume || 0, ambienceChapter, !document.hidden && ambienceActive);
   musicMode = getMusicMode(state);
   music?.sync(preferences.musicVolume ?? .15, !document.hidden, false, musicMode);
   const discoveries = availableDiscoveries(state);

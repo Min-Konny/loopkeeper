@@ -1,11 +1,13 @@
-import { CONTENT as C } from "./content.js?v=0.3.17";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.17";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.17";
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.0';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.0';
+import { CONTENT as C } from "./content.js?v=0.4.0";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.0";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.0";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.3.17";
+} from "./legacy-engine.js?v=0.4.0";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -93,7 +95,7 @@ const augmentDescriptions = {
 };
 export const AUGMENTS = C.augments.map((a) => ({
   ...a,
-  description: augmentDescriptions[a.id],
+  description: augmentDescriptions[a.id] || a.description,
 }));
 export const LEGACY_UPGRADES = C.legacy.map((u) => ({
   ...u,
@@ -196,6 +198,9 @@ const log = (s, text, type = "info") => {
 };
 function freshRun(meta, settings) {
   return {
+    strategy: { ...newStrategy(), eligible: meta.clears > 0 },
+    battleReports: [],
+    encounterDepth: true,
     status: "preparing",
     elapsed: 0,
     wave: 0,
@@ -286,6 +291,7 @@ export function createGame() {
     completedMilestones: [],
     templates: [],
     clears: 0,
+    challengeBadges: [],
   };
   const settings = {
     paused: true,
@@ -384,12 +390,13 @@ export function getStats(s) {
   attack *=
     1 + (aug(s, "warrior") ? 0.18 : 0) + (syn.includes("martial") ? 0.12 : 0) + defeatedCountryBonus(s, "attackPercent");
   defense *= 1 + (aug(s, "guard") ? 0.15 : 0);
+  if (aug(s, "shield_master")) attack += defense * .2;
   return {
     attack: round(attack),
     defense: round(defense),
     maxHp: round(maxHp),
     speed: s.run.equipment.tool?.speed || 0,
-    support: effect(s, "guardhouse").supportAttack || 0,
+    support: (effect(s, "guardhouse").supportAttack || 0) * (aug(s, "supply_lines") && (s.run.enemy ? s.run.enemy.supplied : s.run.resources.food >= 20) ? 1.35 : 1),
     ranged: effect(s, "archery_tower").rangedAttack || 0,
   };
 }
@@ -407,6 +414,9 @@ export function getActionDuration(s, d) {
   if (aug(s, "forestry") && ["logging", "mining"].includes(d.skill))
     multiplier *= 0.8;
   if (aug(s, "drill") && d.trainingStat) multiplier *= 0.7;
+  if (aug(s, "construction_rush") && ["logging", "mining", "foraging"].includes(d.skill) && !d.cost && s.run.elapsed < (s.run.strategy?.constructionUntil || 0)) multiplier *= .8;
+  if (d.trainingStat && aug(s, "last_stand") && s.run.nextWaveAt - s.run.elapsed <= 45) multiplier *= .65;
+  if (d.trainingStat && aug(s, "trade_school")) multiplier *= 1 - .04 * (s.run.facilities.market || 0);
   const speed =
     (1 + 0.1 * (lv(s, d.skill) - 1)) *
     (1 + 0.08 * (lv(s, d.skill, true) - 1)) *
@@ -516,7 +526,8 @@ function suspend(s) {
 }
 function batch(s, id, channel = "main", durationMultiplier = 1) {
   const d = defs.get(id);
-  for (const [r, n] of Object.entries(getRecipeCost(s, d)))
+  const paidCost = getRecipeCost(s, d);
+  for (const [r, n] of Object.entries(paidCost))
     s.run.resources[r] = round(s.run.resources[r] - n);
   if (d.equipment && s.run.reinvestment) s.run.reinvestment = 0;
   const xpBonus = aug(s, "field_training") && d.trainingStat ? 1.25 : 1;
@@ -524,6 +535,7 @@ function batch(s, id, channel = "main", durationMultiplier = 1) {
     id,
     instanceId: ++s.run.workSeq,
     channel,
+    paidCost,
     kind: d.cost ? "craft" : "gather",
     progress: 0,
     duration: round(getActionDuration(s, d) * durationMultiplier),
@@ -586,13 +598,19 @@ function gain(s, skill, run, perm, focus) {
       "level",
     );
 }
+export function getActionYields(s, d, channel = "main") {
+  if (typeof d === "string") d = defs.get(d);
+  const bonus = channel === "main" && aug(s, "well_stocked") && s.run.resources.food >= 20 && !d.cost && ["logging", "mining"].includes(d.skill) ? 1 : 0;
+  return Object.fromEntries(Object.entries(d.yields || {}).map(([r,n])=>[r,n+bonus]));
+}
 function complete(s, a) {
   const d = defs.get(a.id);
-  for (const [r, n] of Object.entries(d.yields || {}))
+  for (const [r, n] of Object.entries(getActionYields(s, d, a.channel)))
     s.run.resources[r] = round(Math.min(1e9, s.run.resources[r] + n));
+  if (a.channel === "main" && d.id === "train_combat" && aug(s, "weapon_master")) strategy(s).focus = Math.min(30, strategy(s).focus + 1);
   if (aug(s, "timber_contract") && d.skill === "logging")
     s.run.resources.gold = round(
-      s.run.resources.gold + (d.yields.wood || 0) * 0.15,
+      s.run.resources.gold + (getActionYields(s, d, a.channel).wood || 0) * 0.15,
     );
   if (d.equipment) {
     s.run.equipment[d.slot] = { id: d.id, ...d.equipment };
@@ -600,6 +618,8 @@ function complete(s, a) {
     log(s, `${d.name}を装備した。`, "craft");
   }
   if (d.facility) {
+    if (aug(s, "construction_rush")) strategy(s).constructionUntil = s.run.elapsed + 90;
+    if (aug(s, "salvage")) for (const r of ["wood", "stone"]) s.run.resources[r] = round(s.run.resources[r] + (a.paidCost?.[r] || 0) * .15);
     const oldDelay = effect(s, "watchtower").raidDelay || 0;
     s.run.facilities[d.facility.id] = d.level;
     s.run.nextWaveAt = round(
@@ -751,6 +771,14 @@ export function enqueueAction(
   }
   return ok();
 }
+export function enqueueConditional(s, id, until) {
+  if (!on(s, "queue_templates")) return fail("手順テンプレートを解放すると条件を指定できます。");
+  if (!validCondition({id, until})) return fail("この作業には指定できない条件です。");
+  if (until.type === "unlock" && !isKnown(s, until.recipe)) return fail("未発見の装備です。");
+  const result = enqueueAction(s, id, 1);
+  if (result.ok) s.run.queue.at(-1).until = { ...until };
+  return result;
+}
 export const enqueueGoal = (s, id, count = 1) =>
   enqueueAction(s, id, count, "goal");
 function detach(s) {
@@ -820,8 +848,14 @@ function driveQueue(s) {
     suspend(s);
   }
   while (s.run.queue.length) {
-    const q = s.run.queue[0],
-      r =
+    const q = s.run.queue[0];
+    if (goalSatisfied(s, q)) {
+      s.run.queue.shift();
+      event(s, "queue_complete");
+      if (q.until.pauseAfter) { s.settings.paused = true; s.run.blockedReason = "目標達成。次の備えを選びましょう。"; return; }
+      continue;
+    }
+    const r =
         q.kind === "goal"
           ? resolveGoal(s, q.id)
           : { ...canStartAction(s, q.id, true), id: q.id };
@@ -1075,7 +1109,7 @@ export function saveTemplate(s, name) {
     return fail("手順は最大8件。予約を作って保存してください。");
   s.meta.templates.push({
     name: name.trim(),
-    goals: s.run.queue.map(({ id, count, kind }) => ({ id, count, kind })),
+    goals: s.run.queue.map(({ id, count, kind, until }) => ({ id, count, kind, ...(until ? {until:{...until}} : {}) })),
   });
   return ok();
 }
@@ -1108,7 +1142,7 @@ export function loadTemplate(s, i) {
   if (s.run.queue.length + additions.length > 8) return fail("行動予約が8件でいっぱいです。不要な予約を削除してください。");
   for (const g of additions) {
     const d = defs.get(g.id);
-    s.run.queue.push({ id: g.id, kind: g.kind, count: d?.equipment || d?.facility ? 1 : g.count, goalId: ++s.run.queueSeq });
+    s.run.queue.push({ id: g.id, kind: g.kind, count: d?.equipment || d?.facility ? 1 : g.count, ...(g.until ? {until:{...g.until}} : {}), goalId: ++s.run.queueSeq });
   }
   return { ...ok(), added: additions.length };
 }
@@ -1138,6 +1172,7 @@ function offer(s, stage) {
   const pool = AUGMENTS.filter(
     (x) =>
       !a.selected.includes(x.id) &&
+      s.meta.bestWave >= (x.unlockBestWave || 0) &&
       (!x.pack || on(s, x.pack)) &&
       (!x.requiresPurchasedWorker || C.workers.some((w) => on(s, w.id))),
   );
@@ -1204,6 +1239,7 @@ export function aidCountry(s, id = "saphra") {
     return fail("援助の資源が不足。");
   for (const [id, n] of Object.entries(c.cost)) s.run.resources[id] -= n;
   r.status = "allied";
+  strategy(s).aidUsed = true;
   syncCountries(s);
   event(s, "diplomacy");
   return ok();
@@ -1473,6 +1509,7 @@ export function getNextEnemy(s) {
     inv = C.diplomacy.find((c) => c.id === country)?.invasion;
   return {
     ...e,
+    pressure: s.run.encounterDepth ? ({7:"rally", 10:"sunder", 13:"rally", 16:"sunder", 19:"rally"}[e.wave] || null) : null,
     hp: inv ? Math.ceil(e.hp * inv.hpMultiplier) : e.hp,
     attack: inv ? Math.ceil(e.attack * inv.attackMultiplier) : e.attack,
     defense: e.defense + (inv?.defenseBonus || 0),
@@ -1485,6 +1522,10 @@ export function getNextEnemy(s) {
 function beginRaid(s) {
   s.run.enemy = {
     ...getNextEnemy(s),
+    supplied: s.run.resources.food >= 20,
+    baseDefense: getNextEnemy(s).defense,
+    retaliation: false,
+    report: { wave: s.run.wave + 1, player: 0, guards: 0, tower: 0, counter: 0, prevented: 0, foodHealing: 0, treatmentHealing: 0, damageTaken: 0, rounds: 0 },
     round: 0,
     xpAwarded: 0,
     xpBudget:
@@ -1510,7 +1551,17 @@ function record(s) {
   });
   s.meta.history = s.meta.history.slice(0, 20);
 }
+function finishBattleReport(s, e, won) {
+  if (!e.report) return;
+  e.report.rounds = e.round;
+  const r = { ...e.report, enemy: e.name, won, remainingHp: Math.max(0, e.hp), maxHp: e.maxHp };
+  s.run.battleReports = [r, ...(s.run.battleReports || [])].slice(0, 8);
+  strategy(s).playerDamage += r.player;
+  strategy(s).facilityDamage += r.guards + r.tower + r.counter;
+  strategy(s).focus = 0;
+}
 function die(s, e, before, damage) {
+  finishBattleReport(s, e, false);
   s.run.deathReport = {
     enemy: e.name,
     wave: e.wave,
@@ -1531,6 +1582,7 @@ function die(s, e, before, damage) {
   record(s);
 }
 function victory(s, e) {
+  finishBattleReport(s, e, true);
   s.run.wave = e.wave;
   if (s.run.wave >= s.run.acceleration.limitWave)
     s.run.acceleration.active = false;
@@ -1568,6 +1620,7 @@ function victory(s, e) {
   log(s, `第${e.wave}波を撃退。`, "victory");
   if (e.wave === 21) {
     s.meta.clears++;
+    s.meta.challengeBadges = [...new Set([...(s.meta.challengeBadges || []), ...challengeResults(s)])];
     s.settings.paused = true;
     s.run.acceleration.active = false;
     record(s);
@@ -1578,11 +1631,18 @@ function victory(s, e) {
   if (s.run.wave >= s.run.acceleration.limitWave)
     s.run.acceleration.active = false;
 }
+export function getPlayerStrike(s, e = s.run.enemy || getNextEnemy(s)) {
+  const attack = getStats(s).attack * (aug(s, "executioner") && e.hp <= e.maxHp * .35 ? 1.3 : 1) * (e.retaliation ? 1.5 : 1);
+  const armor = e.defense * (aug(s, "weapon_master") ? 1 - (s.run.strategy?.focus || 0) / 100 : 1);
+  return { attack, armor, damage: Math.max(1, attack - armor) };
+}
 function battleRound(s) {
   const e = s.run.enemy;
   e.round++;
-  function damage(n) {
-    const dealt = Math.min(e.hp, Math.max(1, n - e.defense));
+  function damage(n, source = "player") {
+    const armor = e.defense * (source === "player" && aug(s, "weapon_master") ? 1 - (s.run.strategy?.focus || 0) / 100 : 1);
+    const dealt = Math.min(e.hp, Math.max(1, n - armor));
+    if (e.report) e.report[source] = round(e.report[source] + dealt);
     e.hp = round(Math.max(0, e.hp - dealt));
     const entitled = round(e.xpBudget * (1 - e.hp / e.maxHp)),
       amount = Math.max(0, entitled - e.xpAwarded);
@@ -1594,15 +1654,20 @@ function battleRound(s) {
       amount * 0.2,
     );
   }
-  damage(getStats(s).attack);
+  damage(getPlayerStrike(s, e).attack);
+  e.retaliation = false;
   if (e.hp <= 0) return victory(s, e);
   const support = getStats(s).support;
   if (support) {
-    damage(support * (e.trait === "flying" ? .5 : 1));
+    damage(support * (e.trait === "flying" ? .5 : 1), "guards");
     if (e.hp <= 0) return victory(s, e);
   }
   const ranged = getStats(s).ranged;
-  if (ranged) {damage(ranged*(e.trait==="flying"?2.5:1));if(e.hp<=0)return victory(s,e);}
+  if (ranged) {
+    damage(ranged*(e.trait==="flying"?2.5:1), "tower");
+    if (aug(s, "piercing_volley")) e.defense = round(Math.max((e.baseDefense ?? e.defense) * .6, e.defense - (e.baseDefense ?? e.defense) * .08));
+    if(e.hp<=0)return victory(s,e);
+  }
   const stats = getStats(s),
     hits = (
       e.trait === "combo"
@@ -1612,12 +1677,16 @@ function battleRound(s) {
       round(
         Math.max(
           1,
-          (e.attack * m - stats.defense) *
+          (e.attack * m * (e.pressure === "rally" ? 1 + Math.min(.3, Math.floor((e.round - 1) / 4) * .05) : 1) - stats.defense * (e.pressure === "sunder" && e.round % 4 === 0 ? .6 : 1)) *
             (e.round === 1 && aug(s, "wall_readiness") ? 0.6 : 1),
         ),
       ),
     );
   const packet = hits.reduce((a, b) => a + b, 0);
+  if (e.report) {
+    const raw = (e.trait === "combo" ? 1.5 : e.trait === "heavy" && e.round % 4 === 0 ? 1.6 : 1) * e.attack * (e.pressure === "rally" ? 1 + Math.min(.3, Math.floor((e.round - 1) / 4) * .05) : 1);
+    e.report.prevented = round(e.report.prevented + Math.max(0, raw - packet));
+  }
   if (
     s.run.resources.food > 0 &&
     s.run.hp < stats.maxHp &&
@@ -1625,16 +1694,19 @@ function battleRound(s) {
   ) {
     s.run.resources.food--;
     const heal = getFoodHealing(s);
+    if (e.report) e.report.foodHealing = round(e.report.foodHealing + Math.min(stats.maxHp - s.run.hp, heal));
     s.run.hp = Math.min(stats.maxHp, s.run.hp + heal);
     log(s, `食料で${heal}回復。`, "heal");
   }
   for (const hit of hits) {
     const before = s.run.hp;
+    if (e.report) e.report.damageTaken = round(e.report.damageTaken + Math.min(before, hit));
     s.run.hp = round(s.run.hp - hit);
     if (s.run.hp <= 0) return die(s, e, before, hit);
   }
   if (e.charges > 0 && s.run.hp <= stats.maxHp * 0.35) {
     e.charges--;
+    const beforeHeal = s.run.hp;
     s.run.hp = round(
       Math.min(
         stats.maxHp,
@@ -1645,7 +1717,13 @@ function battleRound(s) {
             (getSynergies(s).includes("fortress") ? 1.2 : 1),
       ),
     );
+    if (e.report) e.report.treatmentHealing = round(e.report.treatmentHealing + s.run.hp - beforeHeal);
+    if (aug(s, "triage")) e.retaliation = true;
     log(s, "救護処置。", "heal");
+  }
+  if (aug(s, "thorn_wall") && s.run.facilities.barricade) {
+    damage(stats.defense * .25, "counter");
+    if (e.hp <= 0) return victory(s, e);
   }
 }
 function step(s, dt) {
@@ -1700,7 +1778,7 @@ function step(s, dt) {
         a.goalId === q.goalId &&
         (q.kind === "action" || a.id === q.id)
       ) {
-        if (--q.count <= 0) {
+        if (!q.until && --q.count <= 0) {
           s.run.queue.splice(queueIndex, 1);
           event(s, "queue_complete");
         }
