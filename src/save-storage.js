@@ -1,4 +1,4 @@
-import { parseSave, serializeGame } from './engine.js?v=0.3.12';
+import { parseSave, serializeGame } from './engine.js?v=0.3.13';
 export const STORAGE_KEY = 'tomori-rebirth-v1';
 const BACKUP_KEY = `${STORAGE_KEY}-backups`;
 const ARCHIVE_KEY = `${STORAGE_KEY}-unreadable`;
