@@ -1,10 +1,10 @@
-import * as legacy from "./legacy-engine.js?v=0.3.14";
-import * as mvp from "./mvp-engine.js?v=0.3.14";
-import { validateSave } from "./save-validation.js?v=0.3.14";
-export { getProductionSources } from "./mvp-engine.js?v=0.3.14";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.3.14";
-export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.3.14";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.3.14";
+import * as legacy from "./legacy-engine.js?v=0.3.15";
+import * as mvp from "./mvp-engine.js?v=0.3.15";
+import { validateSave } from "./save-validation.js?v=0.3.15";
+export { getProductionSources } from "./mvp-engine.js?v=0.3.15";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.3.15";
+export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.3.15";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.3.15";
 export {
   SKILLS,
   getSkillProgress,
@@ -21,7 +21,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.3.14";
+} from "./mvp-engine.js?v=0.3.15";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
@@ -219,6 +219,16 @@ export const toggleUpgrade = (...args) =>
   isLegacy(args[0]) && typeof legacy.toggleUpgrade === "function"
     ? legacy.toggleUpgrade(...args)
     : mvp.toggleUpgrade(...args);
+export function abandonRun(s) {
+  if (!isLegacy(s)) return mvp.abandonRun(s);
+  if (!["preparing", "combat"].includes(s.run.status)) return {ok:false,reason:"進行中の周回だけ切り上げられます。"};
+  const next = mvp.migrateLegacy(s);
+  next.meta.history.unshift({generation:s.meta.generation,wave:s.run.wave,elapsed:s.run.elapsed});
+  next.meta.history = next.meta.history.slice(0,20);
+  next.settings.paused = true;
+  Object.keys(s).forEach(k=>delete s[k]);Object.assign(s,next);
+  return {ok:true,reason:""};
+}
 export function restartRun(s) {
   if (isLegacy(s)) {
     const next = mvp.migrateLegacy(s);

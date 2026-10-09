@@ -1,7 +1,7 @@
-import { equipmentMaterial } from './visual-design.js?v=0.3.14';
-import { battleSound } from "./presentation.js?v=0.3.14";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.3.14";
-import { icon } from "./icons.js?v=0.3.14";
+import { equipmentMaterial } from './visual-design.js?v=0.3.15';
+import { battleSound } from "./presentation.js?v=0.3.15";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.3.15";
+import { icon } from "./icons.js?v=0.3.15";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -21,7 +21,7 @@ function createView(dialog) {
     <section class="battle-scene">
       <header class="battle-heading">
         <div><span class="battle-wave" data-battle="wave"></span><h2 id="battle-title">野営地を防衛中</h2></div>
-        <span class="battle-state" data-battle="state"></span>
+        <span class="battle-state" data-battle="state"></span><button class="button small muted" data-command="abandon-menu">周回を切り上げる</button>
       </header>
       <div class="battle-field"><div class="boss-arrival" data-battle="boss-arrival" aria-hidden="true"><small>強敵襲来</small><strong data-battle="boss-arrival-name"></strong></div>
         <article class="battle-fighter battle-player" data-battle="player-card">

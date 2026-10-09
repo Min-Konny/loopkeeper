@@ -1,11 +1,11 @@
-import { CONTENT as C } from "./content.js?v=0.3.14";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.14";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.14";
+import { CONTENT as C } from "./content.js?v=0.3.15";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.15";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.15";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.3.14";
+} from "./legacy-engine.js?v=0.3.15";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -1377,6 +1377,20 @@ export function toggleUpgrade(s, id) {
     : [...s.settings.disabledUpgrades, id];
   s.run.hp = Math.min(s.run.hp, getStats(s).maxHp);
   return ok();
+}
+export function abandonRun(s) {
+  if (!["preparing", "combat"].includes(s.run.status)) return fail("進行中の周回だけ切り上げられます。");
+  s.run.status = "dead";
+  s.settings.paused = true;
+  s.run.acceleration.active = false;
+  s.run.enemy = null;
+  s.run.activeAction = null;
+  s.run.suspendedActions = {};
+  s.run.queue = [];
+  s.run.simRemainder = 0;
+  s.run.augments.offer = [];
+  record(s);
+  return restartRun(s);
 }
 export function restartRun(s) {
   if (!["dead", "cleared"].includes(s.run.status))

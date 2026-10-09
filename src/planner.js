@@ -1,4 +1,4 @@
-import * as old from "./legacy-planner.js?v=0.3.14";
+import * as old from "./legacy-planner.js?v=0.3.15";
 import {
   isLegacy,
   getCatalog,
@@ -17,7 +17,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.3.14";
+} from "./engine.js?v=0.3.15";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");

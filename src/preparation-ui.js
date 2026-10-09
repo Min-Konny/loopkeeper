@@ -1,5 +1,5 @@
-import { getCatalog, getRecipeCost, getSkillProgress, isKnown, getUnlocks, getAugmentStatus } from './engine.js?v=0.3.14';
-import { icon } from './icons.js?v=0.3.14';
+import { getCatalog, getRecipeCost, getSkillProgress, isKnown, getUnlocks, getAugmentStatus } from './engine.js?v=0.3.15';
+import { icon } from './icons.js?v=0.3.15';
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 export function getPreparation(state) {

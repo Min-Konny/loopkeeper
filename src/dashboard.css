@@ -616,3 +616,5 @@ html, body { height: 100%; overflow: hidden; }
   .mobile-menu-toggle svg {width:24px;height:24px;}
   .topbar {justify-content:space-between;}
 }
+
+#abandon-dialog {width:min(520px,calc(100vw - 24px));}#abandon-dialog p {font-size:15px;line-height:1.7;}#abandon-dialog .save-options {flex-wrap:wrap;}#abandon-dialog .button {min-height:44px;}.end-run-button {margin-bottom:16px;}
