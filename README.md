@@ -2,7 +2,7 @@
 
 資源を集め、村と装備を強化し、自動戦闘で襲撃を迎え撃つ周回型ゲーム。
 
-[ゲームを遊ぶ](https://min-konny.github.io/loopkeeper/?v=0.3.9)
+[ゲームを遊ぶ](https://min-konny.github.io/loopkeeper/?v=0.3.10)
 
 ## 0.3.0
 - 7施設を各5段階へ強化。設備投資の素材費と解放時期を調整。
@@ -45,3 +45,7 @@
 - 全資源の売買に対応し、買う・売るタブと数量選択を追加。
 - 市場未建設時の金貨不足案内を修正。
 - BGMは採用曲の決定まで保留。
+
+
+## 0.3.10
+通常時はchill/simple/simple2/up-tempoをシャッフル再生、ボス戦はEDMboss、最終ボスはbossへ切り替え。設定からBGM音量を変更できます。音楽提供元：Pixabay（assets/music/SOURCE.txt参照）。

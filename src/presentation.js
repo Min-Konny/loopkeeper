@@ -1,11 +1,12 @@
-import { createMusicPlayer } from './music.js?v=0.3.9';
-import { completedWorkKind, playWorkSound } from './work-audio.js?v=0.3.9';
-import { completedQueueEntries } from './visual-design.js?v=0.3.9';
-import { getCatalog } from "./engine.js?v=0.3.9";
-import { icon } from "./icons.js?v=0.3.9";
-import { availableDiscoveries } from './preparation-ui.js?v=0.3.9';
+import { createMusicPlayer, getMusicMode } from './music.js?v=0.3.10';
+import { completedWorkKind, playWorkSound } from './work-audio.js?v=0.3.10';
+import { completedQueueEntries } from './visual-design.js?v=0.3.10';
+import { getCatalog } from "./engine.js?v=0.3.10";
+import { icon } from "./icons.js?v=0.3.10";
+import { availableDiscoveries } from './preparation-ui.js?v=0.3.10';
 let audio;
 let music;
+let musicMode = "camp";
 document.addEventListener('visibilitychange', () => music?.sync(preferences.musicVolume ?? .15, !document.hidden));
 let lastWorkSound = -Infinity;
 let preferences = { soundVolume: 0.3, effectsEnabled: true };
@@ -21,7 +22,7 @@ function trackTransient(animation) {
 }
 export function unlockAudio(settings) {
   preferences = settings;
-  try { music ||= createMusicPlayer(); music.sync(settings.musicVolume ?? .15, !document.hidden, true); } catch { /* Music is optional. */ }
+  try { music ||= createMusicPlayer(); music.sync(settings.musicVolume ?? .15, !document.hidden, true, musicMode); } catch { /* Music is optional. */ }
   if (!settings.soundVolume || document.hidden) return;
   try {
     audio ||= new (window.AudioContext || window.webkitAudioContext)();
@@ -139,7 +140,8 @@ function queueFeedback(state, previous, next) {
 }
 export function updatePresentation(state) {
   preferences = state.settings;
-  music?.sync(preferences.musicVolume ?? .15, !document.hidden);
+  musicMode = getMusicMode(state);
+  music?.sync(preferences.musicVolume ?? .15, !document.hidden, false, musicMode);
   const discoveries = availableDiscoveries(state);
   const unseen = state.meta.discovered ? discoveries.filter(d => !state.meta.discovered.includes(d.id)) : [];
   if (previous?.state !== state || previous.generation !== state.meta.generation) pendingDiscoveries = [];
