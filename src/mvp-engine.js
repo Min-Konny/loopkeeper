@@ -1,11 +1,11 @@
-import { CONTENT as C } from "./content.js?v=0.3.10";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.10";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.10";
+import { CONTENT as C } from "./content.js?v=0.3.11";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.11";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.11";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.3.10";
+} from "./legacy-engine.js?v=0.3.11";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -353,6 +353,10 @@ export function getSynergies(s) {
     )
     .map((y) => y.id);
 }
+function defeatedCountryBonus(s, key) {
+  return C.diplomacy.reduce((total, country) => total +
+    (s.run.countries[country.id]?.status === "defeated" ? country.defeatEffect?.[key] || 0 : 0), 0);
+}
 export function getStats(s) {
   const r = lv(s, "combat") - 1,
     p = lv(s, "combat", true) - 1;
@@ -378,7 +382,7 @@ export function getStats(s) {
   if (s.run.diplomacy.mercenary) attack += 5;
   if (aug(s, "momentum")) attack += s.run.wave * 0.7;
   attack *=
-    1 + (aug(s, "warrior") ? 0.18 : 0) + (syn.includes("martial") ? 0.12 : 0);
+    1 + (aug(s, "warrior") ? 0.18 : 0) + (syn.includes("martial") ? 0.12 : 0) + defeatedCountryBonus(s, "attackPercent");
   defense *= 1 + (aug(s, "guard") ? 0.15 : 0);
   return {
     attack: round(attack),
@@ -1521,7 +1525,8 @@ function victory(s, e) {
     e.gold *
     (1 +
       (aug(s, "bounty") ? 0.75 : 0) +
-      (getSynergies(s).includes("martial") ? 0.2 : 0));
+      (getSynergies(s).includes("martial") ? 0.2 : 0) +
+      defeatedCountryBonus(s, "victoryGoldPercent"));
   s.run.resources.gold = round(s.run.resources.gold + gold);
   s.run.resources.hide += e.hide;
   if (e.boss && !s.meta.defeatedBosses.includes(e.id)) {

@@ -1,14 +1,15 @@
-import { createMusicPlayer, getMusicMode } from './music.js?v=0.3.10';
-import { completedWorkKind, playWorkSound } from './work-audio.js?v=0.3.10';
-import { completedQueueEntries } from './visual-design.js?v=0.3.10';
-import { getCatalog } from "./engine.js?v=0.3.10";
-import { icon } from "./icons.js?v=0.3.10";
-import { availableDiscoveries } from './preparation-ui.js?v=0.3.10';
+import { createMusicPlayer, getMusicMode } from './music.js?v=0.3.11';
+import { completedWorkKind, playWorkSound, workSoundKind, workImpactKind } from './work-audio.js?v=0.3.11';
+import { completedQueueEntries } from './visual-design.js?v=0.3.11';
+import { getCatalog } from "./engine.js?v=0.3.11";
+import { icon } from "./icons.js?v=0.3.11";
+import { availableDiscoveries } from './preparation-ui.js?v=0.3.11';
 let audio;
 let music;
 let musicMode = "camp";
 document.addEventListener('visibilitychange', () => music?.sync(preferences.musicVolume ?? .15, !document.hidden));
 let lastWorkSound = -Infinity;
+let soundedBatch = null;
 let preferences = { soundVolume: 0.3, effectsEnabled: true };
 let previous;
 let queueEdited = false;
@@ -31,20 +32,7 @@ export function unlockAudio(settings) {
 }
 function cue(kind) {
   if (!audio || audio.state !== 'running' || !preferences.soundVolume || document.hidden) return;
-  const notes = { craft: [440, 660], victory: [392, 494, 587], raid: [110, 82], warning: [523, 392, 523], death: [196, 147, 98], heal: [660, 880], hit: [130] }[kind] || [440];
-  notes.forEach((frequency, index) => {
-    const start = audio.currentTime + index * .09;
-    const oscillator = audio.createOscillator();
-    const gain = audio.createGain();
-    oscillator.type = kind === 'hit' || kind === 'raid' ? 'triangle' : 'sine';
-    oscillator.frequency.setValueAtTime(frequency, start);
-    gain.gain.setValueAtTime(0, start);
-    gain.gain.linearRampToValueAtTime(preferences.soundVolume * .10, start + .01);
-    gain.gain.exponentialRampToValueAtTime(.0001, start + .16);
-    oscillator.connect(gain); gain.connect(audio.destination);
-    oscillator.start(start); oscillator.stop(start + .17);
-    oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
-  });
+  try { playWorkSound(audio, kind, preferences.soundVolume); } catch { /* Sound failure must not stop gameplay. */ }
 }
 export function previewSound(settings) { unlockAudio(settings); cue('craft'); }
 export function battleSound(kind) { cue(kind); }
@@ -151,15 +139,16 @@ export function updatePresentation(state) {
     for (const animation of transientAnimations) animation.cancel();
     transientAnimations.clear();
   }
-  const next = { paused:state.settings.paused, status:state.run.status, actionSkill:getCatalog(state).ACTIONS.find(a=>a.id === state.run.activeAction?.id)?.skill, skillXp:Object.fromEntries(Object.entries(state.run.skills).map(([id,skill])=>[id,skill.xp])), actionId:state.run.activeAction?.id, batchKey:state.run.activeAction ? `${state.run.activeAction.id}:${state.run.activeAction.instanceId}` : null, elapsed:state.run.elapsed, remaining:state.run.nextWaveAt-state.run.elapsed, nextWaveAt:state.run.nextWaveAt, xp:Object.values(state.run.skills).reduce((sum,skill)=>sum+skill.xp,0), queue:state.run.queue.map(entry=>({...entry})), state, generation: state.meta.generation, logSeq: state.run.logSeq, resources: { ...state.run.resources }, equipment: Object.fromEntries(Object.entries(state.run.equipment).map(([slot,item]) => [slot,item?.id])), facilities: { ...state.run.facilities } };
+  const next = { paused:state.settings.paused, status:state.run.status, actionSkill:[...getCatalog(state).ACTIONS,...getCatalog(state).RECIPES].find(a=>a.id === state.run.activeAction?.id)?.skill, actionKind:state.run.activeAction?.kind, actionProgress:state.run.activeAction?.progress || 0, actionDuration:state.run.activeAction?.duration || 1, trainingXp:{...state.run.training}, skillXp:Object.fromEntries(Object.entries(state.run.skills).map(([id,skill])=>[id,skill.xp])), actionId:state.run.activeAction?.id, batchKey:state.run.activeAction ? `${state.run.activeAction.id}:${state.run.activeAction.instanceId}` : null, elapsed:state.run.elapsed, remaining:state.run.nextWaveAt-state.run.elapsed, nextWaveAt:state.run.nextWaveAt, xp:Object.values(state.run.skills).reduce((sum,skill)=>sum+skill.xp,0), queue:state.run.queue.map(entry=>({...entry})), state, generation: state.meta.generation, logSeq: state.run.logSeq, resources: { ...state.run.resources }, equipment: Object.fromEntries(Object.entries(state.run.equipment).map(([slot,item]) => [slot,item?.id])), facilities: { ...state.run.facilities } };
   if (previous?.state === state && previous.generation === next.generation && !document.hidden) {
     if (!state.settings.paused && state.run.status === 'preparing' && previous.nextWaveAt === next.nextWaveAt && previous.remaining > 15 && next.remaining <= 15) cue('warning');
     const events = state.run.log.filter(entry => entry.id > previous.logSeq);
     const important = ['death', 'raid', 'victory', 'craft'].find(kind => events.some(entry => entry.type === kind));
-    if (important) cue(important);
-    const workKind = completedWorkKind(previous, next);
+    if (important && !(important === 'craft' && soundedBatch === previous.batchKey)) cue(important === 'craft' && previous.actionKind === 'craft' ? workSoundKind(previous.actionId, previous.actionSkill) || 'craft' : important);
+    const impact = workImpactKind(previous, next);
+    const workKind = impact || (soundedBatch !== previous.batchKey ? completedWorkKind(previous, next) : null);
     if (workKind && !important && audio?.state === 'running' && audio.currentTime - lastWorkSound >= .3 && preferences.soundVolume) {
-      try { if (playWorkSound(audio, workKind, preferences.soundVolume)) lastWorkSound = audio.currentTime; } catch { /* Work audio is optional. */ }
+      try { if (playWorkSound(audio, workKind, preferences.soundVolume)) { lastWorkSound = audio.currentTime; soundedBatch = impact ? next.batchKey : previous.batchKey; } } catch { /* Work audio is optional. */ }
     }
     if (state.settings.effectsEnabled && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       if (pendingDiscoveries.length && !document.querySelector("dialog[open]")) { discoveryFeedback(pendingDiscoveries); pendingDiscoveries = []; }

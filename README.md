@@ -2,7 +2,7 @@
 
 資源を集め、村と装備を強化し、自動戦闘で襲撃を迎え撃つ周回型ゲーム。
 
-[ゲームを遊ぶ](https://min-konny.github.io/loopkeeper/?v=0.3.10)
+[ゲームを遊ぶ](https://min-konny.github.io/loopkeeper/?v=0.3.11)
 
 ## 0.3.0
 - 7施設を各5段階へ強化。設備投資の素材費と解放時期を調整。
@@ -49,3 +49,7 @@
 
 ## 0.3.10
 通常時はchill/simple/simple2/up-tempoをシャッフル再生、ボス戦はEDMboss、最終ボスはbossへ切り替え。設定からBGM音量を変更できます。音楽提供元：Pixabay（assets/music/SOURCE.txt参照）。
+
+
+## 0.3.11
+サフラ軍撃退で、その周回の攻撃+10%・以後の撃退金貨+50%を追加。作業・訓練・調理のSEを追加し、打撃の動きとタイミングを合わせました。

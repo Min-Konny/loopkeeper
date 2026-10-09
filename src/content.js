@@ -3018,6 +3018,10 @@ export const CONTENT = {
       "victory": {
         "gold": 24,
         "runAttack": 4
+      },
+      "defeatEffect": {
+        "attackPercent": 0.10,
+        "victoryGoldPercent": 0.50
       }
     },
     {

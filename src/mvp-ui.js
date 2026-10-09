@@ -1,5 +1,5 @@
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.10";
-import { CONTENT as C } from "./content.js?v=0.3.10";
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.11";
+import { CONTENT as C } from "./content.js?v=0.3.11";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -15,7 +15,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.3.10";
+} from "./engine.js?v=0.3.11";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -86,8 +86,8 @@ export function diplomacyMarkup(s, marketSide = "buy", marketCount = 1) {
                 .map(([id, n]) => `${esc(label(id))} ${n}`)
                 .join(
                   " / ",
-                )}</div><div class="diplomacy-choices">${button("援助する", `data-aid="${c.id}"`, s.run.status !== "preparing" || Object.entries(c.cost).some(([id, n]) => s.run.resources[id] < n))}${button("迎え撃つ", `data-refuse="${c.id}"`, s.run.status !== "preparing")}</div><p class="fine-print">${c.id === "saphra" ? "援助：準備中15秒ごと金貨1。撃退：金貨24・攻撃+4。" : "援助：鉱物購入15%割引。撃退：鋼6・銀4。"} 敵対すると次の敵のHP+15%・攻撃+10%${c.id === "mining_realm" ? "・防御+3" : ""}。</p>`
-            : `<p>${r.status === "allied" ? (c.id === "saphra" ? `交易収入 ${Math.floor(r.incomeTotal)}金貨` : "鉱物購入 −15%") : r.status === "hostile" ? "予定された襲撃に加勢します。" : "この周回の戦利品を獲得しました。"}</p>`
+                )}</div><div class="diplomacy-choices">${button("援助する", `data-aid="${c.id}"`, s.run.status !== "preparing" || Object.entries(c.cost).some(([id, n]) => s.run.resources[id] < n))}${button("迎え撃つ", `data-refuse="${c.id}"`, s.run.status !== "preparing")}</div><p class="fine-print">${c.id === "saphra" ? "援助：準備中15秒ごと金貨1。撃退：金貨24・攻撃+4。その周回の攻撃+10%、以後の撃退金貨+50%。" : "援助：鉱物購入15%割引。撃退：鋼6・銀4。"} 敵対すると次の敵のHP+15%・攻撃+10%${c.id === "mining_realm" ? "・防御+3" : ""}。</p>`
+            : `<p>${r.status === "allied" ? (c.id === "saphra" ? `交易収入 ${Math.floor(r.incomeTotal)}金貨` : "鉱物購入 −15%") : r.status === "hostile" ? "予定された襲撃に加勢します。" : (c.id === "saphra" ? "金貨24・攻撃+4を獲得。攻撃+10%・以後の撃退金貨+50%（この周回）。" : "鋼6・銀4を獲得（この周回）。")}</p>`
         }</section>`;
       })
       .join("") +
