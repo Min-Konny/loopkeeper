@@ -1,4 +1,4 @@
-import { CONTENT as C } from "./content.js?v=0.3.8";
+import { CONTENT as C } from "./content.js?v=0.3.9";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -321,6 +321,7 @@ export function validateSave(s) {
         47,
       ) ||
       !number(t.soundVolume, 0, 1) ||
+      (t.musicVolume !== undefined && !number(t.musicVolume, 0, 1)) ||
       typeof t.effectsEnabled !== "boolean" ||
       (t.pauseWhenHidden !== undefined && typeof t.pauseWhenHidden !== "boolean") ||
       typeof t.showHiddenRecipes !== "boolean" ||

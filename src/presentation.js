@@ -1,8 +1,13 @@
-import { completedQueueEntries } from './visual-design.js?v=0.3.8';
-import { getCatalog } from "./engine.js?v=0.3.8";
-import { icon } from "./icons.js?v=0.3.8";
-import { availableDiscoveries } from './preparation-ui.js?v=0.3.8';
+import { createMusicPlayer } from './music.js?v=0.3.9';
+import { completedWorkKind, playWorkSound } from './work-audio.js?v=0.3.9';
+import { completedQueueEntries } from './visual-design.js?v=0.3.9';
+import { getCatalog } from "./engine.js?v=0.3.9";
+import { icon } from "./icons.js?v=0.3.9";
+import { availableDiscoveries } from './preparation-ui.js?v=0.3.9';
 let audio;
+let music;
+document.addEventListener('visibilitychange', () => music?.sync(preferences.musicVolume ?? .15, !document.hidden));
+let lastWorkSound = -Infinity;
 let preferences = { soundVolume: 0.3, effectsEnabled: true };
 let previous;
 let queueEdited = false;
@@ -16,6 +21,7 @@ function trackTransient(animation) {
 }
 export function unlockAudio(settings) {
   preferences = settings;
+  try { music ||= createMusicPlayer(); music.sync(settings.musicVolume ?? .15, !document.hidden, true); } catch { /* Music is optional. */ }
   if (!settings.soundVolume || document.hidden) return;
   try {
     audio ||= new (window.AudioContext || window.webkitAudioContext)();
@@ -133,6 +139,7 @@ function queueFeedback(state, previous, next) {
 }
 export function updatePresentation(state) {
   preferences = state.settings;
+  music?.sync(preferences.musicVolume ?? .15, !document.hidden);
   const discoveries = availableDiscoveries(state);
   const unseen = state.meta.discovered ? discoveries.filter(d => !state.meta.discovered.includes(d.id)) : [];
   if (previous?.state !== state || previous.generation !== state.meta.generation) pendingDiscoveries = [];
@@ -142,12 +149,16 @@ export function updatePresentation(state) {
     for (const animation of transientAnimations) animation.cancel();
     transientAnimations.clear();
   }
-  const next = { actionId:state.run.activeAction?.id, batchKey:state.run.activeAction ? `${state.run.activeAction.id}:${state.run.activeAction.instanceId}` : null, elapsed:state.run.elapsed, remaining:state.run.nextWaveAt-state.run.elapsed, nextWaveAt:state.run.nextWaveAt, xp:Object.values(state.run.skills).reduce((sum,skill)=>sum+skill.xp,0), queue:state.run.queue.map(entry=>({...entry})), state, generation: state.meta.generation, logSeq: state.run.logSeq, resources: { ...state.run.resources }, equipment: Object.fromEntries(Object.entries(state.run.equipment).map(([slot,item]) => [slot,item?.id])), facilities: { ...state.run.facilities } };
+  const next = { paused:state.settings.paused, status:state.run.status, actionSkill:getCatalog(state).ACTIONS.find(a=>a.id === state.run.activeAction?.id)?.skill, skillXp:Object.fromEntries(Object.entries(state.run.skills).map(([id,skill])=>[id,skill.xp])), actionId:state.run.activeAction?.id, batchKey:state.run.activeAction ? `${state.run.activeAction.id}:${state.run.activeAction.instanceId}` : null, elapsed:state.run.elapsed, remaining:state.run.nextWaveAt-state.run.elapsed, nextWaveAt:state.run.nextWaveAt, xp:Object.values(state.run.skills).reduce((sum,skill)=>sum+skill.xp,0), queue:state.run.queue.map(entry=>({...entry})), state, generation: state.meta.generation, logSeq: state.run.logSeq, resources: { ...state.run.resources }, equipment: Object.fromEntries(Object.entries(state.run.equipment).map(([slot,item]) => [slot,item?.id])), facilities: { ...state.run.facilities } };
   if (previous?.state === state && previous.generation === next.generation && !document.hidden) {
     if (!state.settings.paused && state.run.status === 'preparing' && previous.nextWaveAt === next.nextWaveAt && previous.remaining > 15 && next.remaining <= 15) cue('warning');
     const events = state.run.log.filter(entry => entry.id > previous.logSeq);
     const important = ['death', 'raid', 'victory', 'craft'].find(kind => events.some(entry => entry.type === kind));
     if (important) cue(important);
+    const workKind = completedWorkKind(previous, next);
+    if (workKind && !important && audio?.state === 'running' && audio.currentTime - lastWorkSound >= .3 && preferences.soundVolume) {
+      try { if (playWorkSound(audio, workKind, preferences.soundVolume)) lastWorkSound = audio.currentTime; } catch { /* Work audio is optional. */ }
+    }
     if (state.settings.effectsEnabled && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       if (pendingDiscoveries.length && !document.querySelector("dialog[open]")) { discoveryFeedback(pendingDiscoveries); pendingDiscoveries = []; }
       completionFeedback(state, previous);

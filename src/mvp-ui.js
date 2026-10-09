@@ -1,5 +1,5 @@
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.8";
-import { CONTENT as C } from "./content.js?v=0.3.8";
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.3.9";
+import { CONTENT as C } from "./content.js?v=0.3.9";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -7,6 +7,7 @@ import {
   RESOURCES,
   getSynergies,
   getSupplyCost,
+  getTradeQuote,
   resourceKnown,
   canPurchaseUpgrade,
   canConfigureWorker,
@@ -14,7 +15,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.3.8";
+} from "./engine.js?v=0.3.9";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -70,7 +71,7 @@ export function diplomacyDeadlineMarkup(s) {
   const clock = `${String(Math.floor(seconds/60)).padStart(2,"0")}:${String(seconds%60).padStart(2,"0")}`;
   return `<div class="diplomacy-notice deadline-notice ${seconds <= 30 ? "deadline-urgent" : ""}"><span class="deadline-copy"><strong>${esc(c.name)}から援助要請${pending.length > 1 ? ` · 他${pending.length-1}件` : ""}</strong><small>期限を過ぎると敵対</small></span><span class="deadline-clock"><small>返答期限まで</small><strong>${clock}</strong></span><button data-tab="diplomacy" data-focus="diplomacy-deadline">返答する →</button></div>`;
 }
-export function diplomacyMarkup(s) {
+export function diplomacyMarkup(s, marketSide = "buy", marketCount = 1) {
   return (
     C.diplomacy
       .filter((c) => s.run.countries[c.id].status !== "locked")
@@ -90,18 +91,13 @@ export function diplomacyMarkup(s) {
         }</section>`;
       })
       .join("") +
-    `<div class="market-heading"><h3>市場</h3><span>金貨 ${Math.floor(s.run.resources.gold)}</span></div>${
+    `<div class="market-heading"><h3>市場</h3><span>金貨 ${Number(s.run.resources.gold.toFixed(2))}</span></div>${
       !s.run.facilities.market
         ? "<p>村に市場を建設すると取引できます。</p>"
-        : `<div class="market-list">${C.market
-            .filter((m) => !m.resource || resourceKnown(s, m.resource))
-            .map((m) => {
-              const sell = m.id === "sell_wood",
-                price = getSupplyCost(s, m.id),
-                hired = m.oncePerRun && s.run.diplomacy.mercenary;
-              return `<article class="market-item"><div><h4>${sell ? "木材を納入" : m.id === "mercenary" ? "傭兵を雇う" : esc(label(m.resource))}</h4><p>${sell ? "木材10を金貨" + [2, 3, 4][s.run.facilities.market - 1] + "へ" : m.attack ? "攻撃 +5" : m.quantity + "個"}</p></div>${button(hired ? "雇用済み" : sell ? "木材10" : price + " 金貨", `data-buy-supply="${m.id}"`, hired || s.run.status !== "preparing" || (sell ? s.run.resources.wood < 10 : s.run.resources.gold < price))}</article>`;
-            })
-            .join("")}</div>`
+        : `<div class="market-tabs" role="tablist" aria-label="売買の切り替え"><button role="tab" aria-selected="${marketSide === 'buy'}" data-market-side="buy">買う</button><button role="tab" aria-selected="${marketSide === 'sell'}" data-market-side="sell">売る</button></div><div class="market-options"><label>数量<select id="market-count" data-focus="market-count">${[1,10,100].map(n=>`<option value="${n}" ${marketCount === n ? 'selected' : ''}>${n}個</option>`).join('')}</select></label><small>${marketSide === 'sell' ? '売値は買値より低くなります。' : '発見済みの品を購入できます。'}</small></div><div class="market-list" role="tabpanel" aria-label="${marketSide === 'sell' ? '売る' : '買う'}">${C.resources.filter(r=>r.id !== 'gold' && resourceKnown(s,r.id)).map(r=>{
+          const q=getTradeQuote(s,r.id,marketSide,marketCount);
+          return `<article class="market-item"><div><h4>${esc(r.name)}</h4><p>所持 ${Number(s.run.resources[r.id].toFixed(2))} · ${marketCount}個 → ${q.total}金貨</p></div><div>${button(`${marketCount}個${marketSide === 'sell' ? '売る' : '買う'} · ${q.total}金貨`, `data-trade-resource="${r.id}" data-focus="trade-${r.id}"`, !q.ok)}${!q.ok ? `<small class="trade-reason">${esc(q.reason)}</small>` : ''}</div></article>`;
+        }).join('')}</div>${marketSide === 'buy' ? `<div class="market-hire"><strong>傭兵を雇う <small>攻撃 +5</small></strong>${button(s.run.diplomacy.mercenary ? '雇用済み' : `${getSupplyCost(s,'mercenary')}金貨`, 'data-buy-supply="mercenary"', s.run.diplomacy.mercenary || s.run.status !== 'preparing' || s.run.resources.gold < getSupplyCost(s,'mercenary'))}</div>` : ''}`
     }`
   );
 }
@@ -114,21 +110,31 @@ export function autoCookingMarkup(s) {
   const status = getAutoCookingStatus(s), enabled = status.code !== "disabled";
   return `<section class="auto-cooking-panel"><div class="auto-cooking-heading"><h3>自動調理 <small>薬草のスープ</small></h3><button data-toggle-upgrade="auto_cook" data-focus="auto-cooking-toggle" aria-label="自動調理を${enabled ? "OFF" : "ON"}にする" aria-pressed="${enabled}">${enabled ? "ON" : "OFF"}</button></div><div class="auto-cooking-controls"><strong>食料 ${Math.floor(status.food)}</strong><label>補充目標<input type="number" min="0" max="9999" value="${status.target}" data-target="foodTarget" data-focus="cooking-food-target"></label>${s.settings.paused && enabled && s.run.status === "preparing" && (status.code === "paused") ? '<button class="button small gold-outline" data-command="auto-cook-start" data-focus="auto-cook-start">調理を開始</button>' : ""}</div><p>${esc(autoCookStatus(s))}</p><small>${esc(getUpgradeDescription(s,{id:"auto_cook"}))} 素材集めは別途必要。</small></section>`;
 }
+function workerUpgradeMarkup(s, worker) {
+  const next = worker.levels[s.run.workers[worker.id].level + 1];
+  if (!next) return '<span>最大段階</span>';
+  const reasons = [];
+  if (s.meta.bestWave < next.unlockBestWave) reasons.push(`WAVE ${String(next.unlockBestWave).padStart(2,'0')}撃退で解放（最高 ${String(s.meta.bestWave).padStart(2,'0')}）`);
+  if (s.run.resources.gold < next.goldCost) reasons.push(`金貨あと${Math.ceil(next.goldCost-s.run.resources.gold)}`);
+  if (s.settings.disabledUpgrades.includes(worker.id)) reasons.push('人員をONにしてください');
+  if (s.run.status !== 'preparing') reasons.push('準備中のみ強化可能');
+  const hintId = `upgrade-hint-${worker.id}`;
+  return `<div class="worker-upgrade">${button('強化 '+next.goldCost+'金貨', `data-worker-upgrade="${worker.id}"${reasons.length ? ` aria-describedby="${hintId}"` : ''}`, reasons.length > 0)}${reasons.length ? `<small id="${hintId}" class="worker-upgrade-hint">${esc(reasons.join(' · '))}</small>` : ''}</div>`;
+}
 export function processingMarkup(s) {
   if (!s.meta.upgrades.includes("processing_worker")) return "";
   const status = getProcessingStatus(s), enabled = status.code !== "disabled";
-  const worker = C.workers.find(w=>w.id === "processing_worker"), rw = s.run.workers.processing_worker, next = worker.levels[rw.level + 1];
+  const worker = C.workers.find(w=>w.id === "processing_worker"), rw = s.run.workers.processing_worker;
   const recipe = RECIPES.find(r=>r.id === status.recipe);
   const options = worker.recipeChoices.filter(id=>resourceKnown(s,id) || id === rw.target).map(id=>`<option value="${id}" ${rw.target === id ? 'selected' : ''} ${enabled && !canConfigureWorker(s,worker.id,id).ok ? 'disabled' : ''}>${esc(label(id))}${enabled && !canConfigureWorker(s,worker.id,id).ok ? '（強化が必要）' : ''}</option>`).join('');
   const progress = status.code === "processing" ? ` ${status.batch.progress.toFixed(1)} / ${status.batch.duration.toFixed(1)}秒` : '';
-  return `<section class="auto-cooking-panel processing-panel"><div class="auto-cooking-heading"><h3>加工職人 <small>段階 ${rw.level + 1}</small></h3><button data-toggle-upgrade="processing_worker" data-focus="processing-toggle" aria-label="加工職人を${enabled ? 'OFF' : 'ON'}にする" aria-pressed="${enabled}">${enabled ? 'ON' : 'OFF'}</button></div><div class="auto-cooking-controls"><label>加工する品<select data-worker="processing_worker" data-focus="processing-recipe" aria-label="加工する品" ${enabled ? '' : 'disabled'}>${options}</select></label><strong>${esc(label(status.output))} ${Math.floor(status.stock)}</strong><label>補充目標<input type="number" min="0" max="9999" value="${status.target}" data-target="processingTarget" data-focus="processing-target" aria-label="加工品の補充目標"></label>${s.settings.paused && enabled && status.code === 'paused' ? '<button class="button small gold-outline" data-command="processing-start">加工を開始</button>' : ''}</div><p>${esc(status.text)}${progress}</p><div class="processing-footer"><small>${Object.entries(getRecipeCost(s, recipe)).map(([id,n])=>`${esc(label(id))}${n}`).join('・')} → ${Object.entries(recipe.yields).map(([id,n])=>`${esc(label(id))}${n}`).join('・')}。素材集めは別途必要。</small>${next ? button('強化 '+next.goldCost+'金貨', 'data-worker-upgrade="processing_worker"', !enabled || s.meta.bestWave < next.unlockBestWave || s.run.resources.gold < next.goldCost || s.run.status !== 'preparing') : '<small>最大段階</small>'}</div></section>`;
+  return `<section class="auto-cooking-panel processing-panel"><div class="auto-cooking-heading"><h3>加工職人 <small>段階 ${rw.level + 1}</small></h3><button data-toggle-upgrade="processing_worker" data-focus="processing-toggle" aria-label="加工職人を${enabled ? 'OFF' : 'ON'}にする" aria-pressed="${enabled}">${enabled ? 'ON' : 'OFF'}</button></div><div class="auto-cooking-controls"><label>加工する品<select data-worker="processing_worker" data-focus="processing-recipe" aria-label="加工する品" ${enabled ? '' : 'disabled'}>${options}</select></label><strong>${esc(label(status.output))} ${Math.floor(status.stock)}</strong><label>補充目標<input type="number" min="0" max="9999" value="${status.target}" data-target="processingTarget" data-focus="processing-target" aria-label="加工品の補充目標"></label>${s.settings.paused && enabled && status.code === 'paused' ? '<button class="button small gold-outline" data-command="processing-start">加工を開始</button>' : ''}</div><p>${esc(status.text)}${progress}</p><div class="processing-footer"><small>${Object.entries(getRecipeCost(s, recipe)).map(([id,n])=>`${esc(label(id))}${n}`).join('・')} → ${Object.entries(recipe.yields).map(([id,n])=>`${esc(label(id))}${n}`).join('・')}。素材集めは別途必要。</small>${workerUpgradeMarkup(s, worker)}</div></section>`;
 }
 export function automationMarkup(s) {
   let out = "";
   for (const w of C.workers.filter((w) => w.id !== "processing_worker" && s.meta.upgrades.includes(w.id))) {
     const rw = s.run.workers[w.id],
-      l = w.levels[rw.level],
-      next = w.levels[rw.level + 1];
+      l = w.levels[rw.level];
     out += `<article class="worker-control"><div><strong>${esc(LEGACY_UPGRADES.find((u) => u.id === w.id).name)}</strong><small>段階 ${rw.level + 1}${l.interval ? ` / ${l.interval}秒ごと ${l.quantity}個` : ""}</small></div><label>作業<select data-worker="${w.id}" data-focus="worker-${w.id}">${[
       ...(w.resourceChoices || []),
       ...(w.recipeChoices || []),
@@ -140,7 +146,7 @@ export function automationMarkup(s) {
       )
       .join(
         "",
-      )}</select></label>${next ? button("強化 " + next.goldCost + "金貨", `data-worker-upgrade="${w.id}"`, s.meta.bestWave < next.unlockBestWave || s.run.resources.gold < next.goldCost || s.run.status !== "preparing") : "<span>最大段階</span>"}</article>`;
+      )}</select></label>${workerUpgradeMarkup(s, w)}</article>`;
   }
   if (s.meta.upgrades.includes("auto_cook"))
     out += '<p class="fine-print">自動調理のON/OFF・補充目標は工房で設定できます。</p><button class="button small" data-tab="craft">自動調理を開く</button>';

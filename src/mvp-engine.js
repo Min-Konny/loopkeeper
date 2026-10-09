@@ -1,11 +1,11 @@
-import { CONTENT as C } from "./content.js?v=0.3.8";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.8";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.8";
+import { CONTENT as C } from "./content.js?v=0.3.9";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.3.9";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.3.9";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.3.8";
+} from "./legacy-engine.js?v=0.3.9";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -294,6 +294,7 @@ export function createGame() {
     showHiddenRecipes: false,
     hiddenRecipes: [],
     soundVolume: 0.3,
+    musicVolume: 0.15,
     effectsEnabled: true,
     pauseWhenHidden: false,
     foodTarget: 12,
@@ -714,7 +715,7 @@ export function resolveGoal(s, id, visiting = new Set()) {
     if (locked) return { ...fail(`${RESOURCES[r].name}を集めるには${SKILLS.find(x => x.id === locked.skill).name} Lv.${locked.unlockLevel}が必要。`), skill: locked.skill };
     return fail(
       reason ||
-        `${RESOURCES[r].name}不足。${r === "hide" ? "撃退または市場で入手。" : r === "gold" ? "市場で木材を納入。" : "技能を上げてください。"}`,
+        `${RESOURCES[r].name}不足。${r === "hide" ? "撃退または市場で入手。" : r === "gold" ? (s.run.facilities.market ? "襲撃を撃退、または市場で資源を売却。" : "襲撃の撃退で入手。市場の建設後は資源売却でも入手。") : "技能を上げてください。"}`,
     );
   }
   return { ...ok(), id };
@@ -1246,6 +1247,29 @@ export function buySupply(s, id) {
   if (m.attack) s.run.diplomacy.mercenary = true;
   else s.run.resources[m.resource] += m.quantity;
   return ok();
+}
+export function getTradeQuote(s, resource, direction, count = 1) {
+  const entry = C.market.find(m=>m.direction === 'buy' && m.resource === resource);
+  if (!entry || !['buy','sell'].includes(direction) || !Number.isInteger(count) || count < 1 || count > 9999) return fail('数量は1〜9999個で指定してください。');
+  const buyUnit = getSupplyCost(s,entry.id) / entry.quantity;
+  const sellUnit = resource === 'wood' ? Math.min((effect(s,'market').woodSaleAmount || 2) / 10, buyUnit * .75) : buyUnit * .75;
+  const unit = direction === 'buy' ? buyUnit : sellUnit;
+  const total = direction === 'buy' ? Math.ceil(unit * count * 100 - 1e-8) / 100 : Math.floor(unit * count * 100 + 1e-8) / 100;
+  let reason = '';
+  if (!s.run.facilities.market) reason = '市場を建設してください。';
+  else if (!resourceKnown(s,resource)) reason = '未発見の品です。';
+  else if (s.run.status !== 'preparing') reason = '準備中のみ取引できます。';
+  else if (direction === 'buy' && s.run.resources.gold < total) reason = '金貨不足。';
+  else if (direction === 'sell' && s.run.resources[resource] < count) reason = '所持数不足。';
+  else if (direction === 'buy' && s.run.resources[resource] + count > 1e9 || direction === 'sell' && s.run.resources.gold + total > 1e9) reason = '所持上限に達します。';
+  return {ok:!reason, reason, resource, direction, count, unit, total};
+}
+export function tradeResource(s, resource, direction, count) {
+  const quote = getTradeQuote(s,resource,direction,count);
+  if (!quote.ok) return quote;
+  s.run.resources.gold = round(s.run.resources.gold + (direction === 'buy' ? -quote.total : quote.total));
+  s.run.resources[resource] = round(s.run.resources[resource] + (direction === 'buy' ? count : -count));
+  return quote;
 }
 function income(s, dt) {
   syncCountries(s);

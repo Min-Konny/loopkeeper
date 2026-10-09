@@ -141,7 +141,7 @@ function newRun(meta) {
 
 export function createGame() {
   const meta = { generation: 1, bestWave: 0, skills: emptySkills(), history: [], points: 0, defeatedBosses: [], upgrades: [], completedMilestones: [] };
-  const state = { version: 1, meta, run: newRun(meta), settings: { paused: true, speed: 1, disabledUpgrades: [], showHiddenRecipes: false, hiddenRecipes: [], soundVolume: 0.3, effectsEnabled: true, pauseWhenHidden: false } };
+  const state = { version: 1, meta, run: newRun(meta), settings: { paused: true, speed: 1, disabledUpgrades: [], showHiddenRecipes: false, hiddenRecipes: [], soundVolume: 0.3, musicVolume: 0.15, effectsEnabled: true, pauseWhenHidden: false } };
   addLog(state, `最初の襲撃まで、あと${FIRST_RAID_DELAY}秒。作業を選んで備えよう。`, 'info');
   return state;
 }
@@ -904,13 +904,15 @@ export function parseSave(text) {
     const showHiddenRecipes = Object.hasOwn(settings, 'showHiddenRecipes') ? settings.showHiddenRecipes : (settings.showEquippedRecipes ?? false);
     const hiddenRecipes = Object.hasOwn(settings, 'hiddenRecipes') ? settings.hiddenRecipes : [];
     const soundVolume = settings.soundVolume ?? 0.3;
+    const musicVolume = settings.musicVolume ?? (soundVolume === 0 ? 0 : .15);
+    requireValid(isNumber(musicVolume, 0, 1));
     const effectsEnabled = settings.effectsEnabled ?? true;
     const pauseWhenHidden = settings.pauseWhenHidden ?? false;
     requireValid(typeof pauseWhenHidden === "boolean");
     requireValid(isNumber(soundVolume, 0, 1) && typeof effectsEnabled === 'boolean');
     requireValid(typeof showHiddenRecipes === 'boolean');
     requireValid(Array.isArray(hiddenRecipes) && hiddenRecipes.length <= HIDEABLE_RECIPE_IDS.size && new Set(hiddenRecipes).size === hiddenRecipes.length && hiddenRecipes.every(id => HIDEABLE_RECIPE_IDS.has(id)));
-    state.settings = { paused: settings.paused, speed: 1, disabledUpgrades: [...disabledUpgrades], showHiddenRecipes, hiddenRecipes: [...hiddenRecipes], soundVolume, effectsEnabled, pauseWhenHidden };
+    state.settings = { paused: settings.paused, speed: 1, disabledUpgrades: [...disabledUpgrades], showHiddenRecipes, hiddenRecipes: [...hiddenRecipes], soundVolume, musicVolume, effectsEnabled, pauseWhenHidden };
     requireValid(!upgrades.includes('cycle_acceleration') || !accelerationGate(state));
     requireValid(['preparing', 'combat', 'dead'].includes(run.status));
     requireValid(isNumber(run.elapsed) && isInteger(run.wave, 0, meta.bestWave) && isNumber(run.nextWaveAt, 60));

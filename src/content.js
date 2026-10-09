@@ -2329,6 +2329,46 @@ export const CONTENT = {
       "gold": 45,
       "discountEligible": true,
       "requiresDiscoveredResource": true
+    },
+    {
+      "id": "buy_wood",
+      "direction": "buy",
+      "requiresMarket": true,
+      "resource": "wood",
+      "quantity": 10,
+      "gold": 8,
+      "discountEligible": false,
+      "requiresDiscoveredResource": true
+    },
+    {
+      "id": "buy_stone",
+      "direction": "buy",
+      "requiresMarket": true,
+      "resource": "stone",
+      "quantity": 10,
+      "gold": 8,
+      "discountEligible": false,
+      "requiresDiscoveredResource": true
+    },
+    {
+      "id": "buy_herbs",
+      "direction": "buy",
+      "requiresMarket": true,
+      "resource": "herbs",
+      "quantity": 10,
+      "gold": 8,
+      "discountEligible": false,
+      "requiresDiscoveredResource": true
+    },
+    {
+      "id": "buy_fish",
+      "direction": "buy",
+      "requiresMarket": true,
+      "resource": "fish",
+      "quantity": 1,
+      "gold": 2,
+      "discountEligible": false,
+      "requiresDiscoveredResource": true
     }
   ],
   "encounters": [
