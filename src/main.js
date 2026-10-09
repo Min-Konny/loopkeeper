@@ -1687,6 +1687,12 @@ document.addEventListener("visibilitychange", () => {
   scheduleFrame();
   if (!document.hidden) render();
 });
+window.addEventListener("blur", () => {
+  if (state.settings.pauseWhenHidden) {
+    state.settings.paused = true;
+    saveGame();
+  }
+});
 window.addEventListener("pagehide", () => {
   state.settings.paused = true;
   saveGame();
