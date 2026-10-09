@@ -63,11 +63,13 @@ export function createWorkSamples(kind, rate, take = 0) {
       burst(.09,.18,1400,5500,.30,'air');
       break;
     case 'fish':
-      // Three wet tail flicks, not a continuous splash or a musical bubble.
+      // Tail flicks stay prominent above short sprays and scattered droplets.
       for (const [t,g] of [[.02,.85],[.22,.65],[.43,.5]]) {
         burst(t+shift,.06,150,2600,g);
         burst(t+.012+shift,.095,1100,5800,g*.23);
         body(t+shift,.028,130+take*9,g*.13,130);
+        burst(t+.022+shift,.17,350,6200,g*.13,'air');
+        for (const dt of [.08,.115,.145]) burst(t+dt+shift,.023,1600,7400,g*.07);
       }
       break;
     case 'leaves':
