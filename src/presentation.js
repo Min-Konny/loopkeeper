@@ -1,9 +1,9 @@
-import { createMusicPlayer, getMusicMode } from './music.js?v=0.3.11';
-import { completedWorkKind, playWorkSound, workSoundKind, workImpactKind } from './work-audio.js?v=0.3.11';
-import { completedQueueEntries } from './visual-design.js?v=0.3.11';
-import { getCatalog } from "./engine.js?v=0.3.11";
-import { icon } from "./icons.js?v=0.3.11";
-import { availableDiscoveries } from './preparation-ui.js?v=0.3.11';
+import { createMusicPlayer, getMusicMode } from './music.js?v=0.3.12';
+import { completedWorkKind, playWorkSound, workSoundKind, workImpactKind } from './work-audio.js?v=0.3.12';
+import { completedQueueEntries } from './visual-design.js?v=0.3.12';
+import { getCatalog } from "./engine.js?v=0.3.12";
+import { icon } from "./icons.js?v=0.3.12";
+import { availableDiscoveries } from './preparation-ui.js?v=0.3.12';
 let audio;
 let music;
 let musicMode = "camp";
