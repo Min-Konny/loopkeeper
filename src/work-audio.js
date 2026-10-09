@@ -27,7 +27,7 @@ const cache = new WeakMap();
 // Original procedural foley. Material sounds use damped noise, not ringing
 // oscillator chords. Three independently seeded takes avoid identical repeats.
 export function createWorkSamples(kind, rate, take = 0) {
-  const durations = {wood:.27,swing:.36,fish:.64,leaves:.38,stone:.25,ore:.28,metal:.34,shield:.26,weight:.27,cook:.48,steps:.35};
+  const durations = {wood:.27,swing:.36,fish:.38,leaves:.38,stone:.25,ore:.28,metal:.34,shield:.26,weight:.27,cook:.48,steps:.35};
   const duration = durations[kind] || .6;
   const data = new Float32Array(Math.ceil(rate * duration));
   let seed = (0x9e3779b9 ^ (take + 1) * 7919 ^ [...kind].reduce((n,c)=>n*31+c.charCodeAt(0),0)) >>> 0;
@@ -63,14 +63,12 @@ export function createWorkSamples(kind, rate, take = 0) {
       burst(.09,.18,1400,5500,.30,'air');
       break;
     case 'fish':
-      // Tail flicks stay prominent above short sprays and scattered droplets.
-      for (const [t,g] of [[.02,.85],[.22,.65],[.43,.5]]) {
-        burst(t+shift,.06,150,2600,g);
-        burst(t+.012+shift,.095,1100,5800,g*.23);
-        body(t+shift,.028,130+take*9,g*.13,130);
-        burst(t+.022+shift,.17,350,6200,g*.13,'air');
-        for (const dt of [.08,.115,.145]) burst(t+dt+shift,.023,1600,7400,g*.07);
-      }
+      // One water splash: a soft wet onset, spreading spray, then droplets.
+      // No tail-slaps, low pitched body, or repeating three-hit rhythm.
+      burst(.008,.085,100,2900,.48);
+      burst(.016,.18,600,6800,.55,'air');
+      for (const [t,g] of [[.09,.13],[.137,.10],[.185,.075],[.24,.05]])
+        burst(t+shift,.025,850,5600,g);
       break;
     case 'leaves':
       for (const t of [0,.065,.15]) burst(t+shift,.16,1100,6000,.36,'air');
