@@ -1,13 +1,14 @@
-import { createBackgroundClock } from "./background-clock.js?v=0.3.6";
-import { updateSetupDialog } from "./setup-dialog.js?v=0.3.6";
-import { compareRun } from './visual-design.js?v=0.3.6';
-import { createRenderGuard } from './render-guard.js?v=0.3.6';
-import { installQueueDrag } from './queue-drag.js?v=0.3.6';
-import { preparationMarkup } from './preparation-ui.js?v=0.3.6';
-import { saveClearCard } from './clear-card.js?v=0.3.6';
-import { runFrameTasks } from './frame-loop.js?v=0.3.6';
-import { getCatalog } from "./engine.js?v=0.3.6";
-import { CONTENT } from "./content.js?v=0.3.6";
+import { changelogMarkup } from "./changelog.js?v=0.3.7";
+import { createBackgroundClock } from "./background-clock.js?v=0.3.7";
+import { updateSetupDialog } from "./setup-dialog.js?v=0.3.7";
+import { compareRun } from './visual-design.js?v=0.3.7';
+import { createRenderGuard } from './render-guard.js?v=0.3.7';
+import { installQueueDrag } from './queue-drag.js?v=0.3.7';
+import { preparationMarkup } from './preparation-ui.js?v=0.3.7';
+import { saveClearCard } from './clear-card.js?v=0.3.7';
+import { runFrameTasks } from './frame-loop.js?v=0.3.7';
+import { getCatalog } from "./engine.js?v=0.3.7";
+import { CONTENT } from "./content.js?v=0.3.7";
 import {
   isLegacy,
   isKnown,
@@ -20,7 +21,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.3.6";
+} from "./engine.js?v=0.3.7";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -30,22 +31,22 @@ import {
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.3.6";
-import { createSessionOwner } from "./session-owner.js?v=0.3.6";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.3.6";
+} from "./mvp-ui.js?v=0.3.7";
+import { createSessionOwner } from "./session-owner.js?v=0.3.7";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.3.7";
 import {
   loadStoredGame,
   writeStoredGame,
   readBackups,
   decodeRecord,
   unreadableRecord,
-} from "./save-storage.js?v=0.3.6";
+} from "./save-storage.js?v=0.3.7";
 import {
   updatePresentation,
   markQueueEdited,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.3.6";
+} from "./presentation.js?v=0.3.7";
 import {
   getRaidInterval,
   aidCountry,
@@ -67,9 +68,9 @@ import {
   restartRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.3.6";
-import { icon } from "./icons.js?v=0.3.6";
-import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.3.6";
+} from "./engine.js?v=0.3.7";
+import { icon } from "./icons.js?v=0.3.7";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.3.7";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -78,20 +79,20 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.3.6";
-import { renderAugments } from "./augments-ui.js?v=0.3.6";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.3.6";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.3.6";
-import { mountCampScene } from "./camp-scene.js?v=0.3.6";
-import { workScene } from "./work-scene.js?v=0.3.6";
-import { getRecipeVisibility } from "./workshop.js?v=0.3.6";
-import { getMilestoneStatus } from "./engine.js?v=0.3.6";
+} from "./engine.js?v=0.3.7";
+import { renderAugments } from "./augments-ui.js?v=0.3.7";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.3.7";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.3.7";
+import { mountCampScene } from "./camp-scene.js?v=0.3.7";
+import { workScene } from "./work-scene.js?v=0.3.7";
+import { getRecipeVisibility } from "./workshop.js?v=0.3.7";
+import { getMilestoneStatus } from "./engine.js?v=0.3.7";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.3.6";
+} from "./engine.js?v=0.3.7";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -307,10 +308,10 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.3.6</b></div>
+    <button class="prototype-label updates-link" data-command="updates-menu">更新履歴 <b>v0.3.7</b></button>
   </aside>
   <div class="workspace">
-    <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="settings-menu" title="設定" aria-label="設定">${icon("settings")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
+    <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="updates-menu" title="更新履歴" aria-label="更新履歴">${icon("history")}</button><button class="icon-button" data-command="settings-menu" title="設定" aria-label="設定">${icon("settings")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
     <main>
       <section class="page-heading"><div><div class="eyebrow">A LIFE TO REMEMBER</div><h1>辺境の野営地</h1><p>備え、抗い、次の命へつなぐ。</p></div><div id="time-controls" class="time-controls"></div></section>
       <div id="milestone"></div>
@@ -976,7 +977,7 @@ function renderScreen() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.3.6</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.3.7</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
@@ -1350,6 +1351,15 @@ document.addEventListener("click", (event) => {
         lastTick = performance.now();
       }
       break;
+    case "updates-menu": {
+      state.settings.paused = true;
+      const dialog = document.querySelector("#updates-dialog");
+      dialog.innerHTML = changelogMarkup();
+      dialog.showModal();
+      dialog.scrollTop = 0;
+      render();
+      break;
+    }
     case "settings-menu":
       showSettingsMenu();
       break;
@@ -1610,7 +1620,7 @@ function resumeAfterDialogClose() {
   saveGame();
   render();
 }
-const temporaryDialogs = [document.querySelector("#settings-dialog"), infoDialog, document.querySelector("#save-dialog"), document.querySelector("#help-dialog"), document.querySelector("#augment-dialog")];
+const temporaryDialogs = [document.querySelector("#updates-dialog"), document.querySelector("#settings-dialog"), infoDialog, document.querySelector("#save-dialog"), document.querySelector("#help-dialog"), document.querySelector("#augment-dialog")];
 let queueDragPaused = true;
 let draggedQueue = null;
 installQueueDrag({

@@ -1,0 +1,27 @@
+import { icon } from './icons.js?v=0.3.7';
+
+// Public release notes. Add each released version here, newest first.
+export const UPDATES = [
+  { version: '0.3.7', date: '2026-10-09', title: '更新履歴', changes: ['ゲーム内からアップデート内容を確認できる画面を追加。'] },
+  { version: '0.3.6', date: '2026-10-09', title: '操作と転生の修正', changes: ['人員の作業先・製作回数・補充目標の入力中も時間が進むように変更。', '同じ継承候補で転生すると、死亡画面が残る不具合を修正。'] },
+  { version: '0.3.5', date: '2026-10-09', title: '自動調理と人員', changes: ['自動調理の操作を工房上部へ移動。補充目標・開始・停止理由を表示。', '人員を継承から独立したタブへ分離。', '救護所と衛兵詰所の建設・強化に薬草の消費を追加。', '保留した予約が自動調理の素材を取り置く不具合を修正。'] },
+  { version: '0.3.4', date: '2026-10-09', title: '設定画面', changes: ['上部の歯車から、ゲーム進行・音量・演出の設定を開けるように変更。'] },
+  { version: '0.3.3', date: '2026-10-09', title: '裏画面での進行', changes: ['別のタブ・アプリへ移ったときに停止するか選択可能に。初期設定は停止しない。'] },
+  { version: '0.3.2', date: '2026-10-09', title: '自動調理の表示', changes: ['自動調理の消費素材・生産量・補充目標・動作状況を表示。'] },
+  { version: '0.3.1', date: '2026-10-09', title: '外交の期限', changes: ['未返答の外交要請と期限を全タブで表示。期限間近の強調と返答への導線を追加。'] },
+  { version: '0.3.0', date: '2026-10-09', title: '準備の選択肢を拡張', changes: ['7種類の村の施設を各5段階まで強化できるように拡張。', '段階式の装備強化、釣りと調理、防御・体力訓練を追加。', '飛行敵と弓塔、素材充足表示、資源・施設支援の演出を追加。', '保存手順のプレビューと、クリア世代数を載せた画像保存を追加。'] },
+  { version: '0.2.16', date: '2026-10-09', title: '高さの低いPC画面', changes: ['高さの低い画面で襲撃予報や余白をコンパクトにし、作業一覧の表示領域を改善。'] },
+  { version: '0.2.15', date: '2026-10-09', title: '採掘と行動予約', changes: ['鉱石ごとに採掘風景の色・形・破片を描き分け。', 'オーグメント選択を大きなモーダルへ変更。', '行動予約をドラッグで並べ替えられるように追加。'] },
+  { version: '0.2.14', date: '2026-10-09', title: '画面と操作の改善', changes: ['工房の選択欄や予約一覧のスクロール位置を保持。', '村の発展に合わせた住人表示と、暗色のフォームを改善。'] },
+  { version: '0.2.13', date: '2026-10-09', title: '入力・描画の安定化', changes: ['入力中の画面更新で作業が停止する不具合と、予約クリックの取りこぼしを修正。'] },
+  { version: '0.2.12', date: '2026-10-08', title: '成長と進行の演出', changes: ['装備の作業キャラへの反映、施設建設・襲撃接近・戦闘・予約進行の演出を追加。', '周回の成果表示と、画面全体の文字・要素サイズを改善。'] },
+  { version: '0.2.11', date: '2026-10-08', title: '採集・訓練の予約', changes: ['採集と訓練を各作業から直接予約できるように追加。'] },
+  { version: '0.2.10', date: '2026-10-08', title: '予約の整理', changes: ['予約の重複を防止し、予約枠・回数のメッセージを改善。', '複数作れるアイテムの製作回数指定と、PCの予約一覧を追加。'] },
+  { version: '0.2.9', date: '2026-10-08', title: 'スマホと予約の案内', changes: ['スマホの継承・人員操作を改善。実行不能な予約の理由と対処を表示。'] },
+  { version: '0.2.5〜0.2.8', date: '2026-10-08', title: '継承・作業演出・操作', changes: ['継承画面を整理し、作業のアニメーションを追加。', 'モーダルの外側クリックで閉じる操作と、手動採集から予約への引き渡しを改善。'] },
+  { version: '0.2.1〜0.2.4', date: '2026-10-08', title: '公開テストと初期UI', changes: ['公開テストを開始。PC・スマホの配置、行動予約・クエストなどの画面を改善。', '襲撃予報の重なり、フォント、旧バージョンURLからの移動を改善。'] },
+];
+
+export function changelogMarkup() {
+  return `<div class="dialog-heading"><h2 id="updates-title">更新履歴</h2><button class="icon-button" data-close="updates-dialog" aria-label="閉じる">${icon('close')}</button></div><div class="update-list">${UPDATES.map((entry, index) => `<article class="update-entry"><div class="update-heading"><strong>v${entry.version}</strong>${index === 0 ? '<span class="update-latest">最新</span>' : ''}<time datetime="${entry.date}">${entry.date.replaceAll('-', '/')}</time></div><h3>${entry.title}</h3><ul>${entry.changes.map(change => `<li>${change}</li>`).join('')}</ul></article>`).join('')}</div>`;
+}
