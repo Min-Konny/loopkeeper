@@ -1,4 +1,5 @@
 const paths = {
+  settings: '<path d="m9 3-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3h6l1-3 3-1-1-3 2-2-2-2 1-3-3-1-1-3H9Z"/><circle cx="12" cy="12" r="3"/>',
   fish: '<path d="M3 12q7-10 15 0-8 10-15 0Zm15 0 5-5v10Z"/><circle cx="7" cy="11" r="1"/>',
   bow: '<path d="M6 3q18 9 0 18V3Zm0 9h16m-4-4 4 4-4 4"/>',
   spark:

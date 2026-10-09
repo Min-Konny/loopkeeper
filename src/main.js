@@ -1,12 +1,12 @@
-import { createBackgroundClock } from "./background-clock.js?v=0.3.3";
-import { compareRun } from './visual-design.js?v=0.3.3';
-import { createRenderGuard } from './render-guard.js?v=0.3.3';
-import { installQueueDrag } from './queue-drag.js?v=0.3.3';
-import { preparationMarkup } from './preparation-ui.js?v=0.3.3';
-import { saveClearCard } from './clear-card.js?v=0.3.3';
-import { runFrameTasks } from './frame-loop.js?v=0.3.3';
-import { getCatalog } from "./engine.js?v=0.3.3";
-import { CONTENT } from "./content.js?v=0.3.3";
+import { createBackgroundClock } from "./background-clock.js?v=0.3.4";
+import { compareRun } from './visual-design.js?v=0.3.4';
+import { createRenderGuard } from './render-guard.js?v=0.3.4';
+import { installQueueDrag } from './queue-drag.js?v=0.3.4';
+import { preparationMarkup } from './preparation-ui.js?v=0.3.4';
+import { saveClearCard } from './clear-card.js?v=0.3.4';
+import { runFrameTasks } from './frame-loop.js?v=0.3.4';
+import { getCatalog } from "./engine.js?v=0.3.4";
+import { CONTENT } from "./content.js?v=0.3.4";
 import {
   isLegacy,
   isKnown,
@@ -19,7 +19,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.3.3";
+} from "./engine.js?v=0.3.4";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -28,22 +28,22 @@ import {
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.3.3";
-import { createSessionOwner } from "./session-owner.js?v=0.3.3";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.3.3";
+} from "./mvp-ui.js?v=0.3.4";
+import { createSessionOwner } from "./session-owner.js?v=0.3.4";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.3.4";
 import {
   loadStoredGame,
   writeStoredGame,
   readBackups,
   decodeRecord,
   unreadableRecord,
-} from "./save-storage.js?v=0.3.3";
+} from "./save-storage.js?v=0.3.4";
 import {
   updatePresentation,
   markQueueEdited,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.3.3";
+} from "./presentation.js?v=0.3.4";
 import {
   getRaidInterval,
   aidCountry,
@@ -65,9 +65,9 @@ import {
   restartRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.3.3";
-import { icon } from "./icons.js?v=0.3.3";
-import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.3.3";
+} from "./engine.js?v=0.3.4";
+import { icon } from "./icons.js?v=0.3.4";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.3.4";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -76,20 +76,20 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.3.3";
-import { renderAugments } from "./augments-ui.js?v=0.3.3";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.3.3";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.3.3";
-import { mountCampScene } from "./camp-scene.js?v=0.3.3";
-import { workScene } from "./work-scene.js?v=0.3.3";
-import { getRecipeVisibility } from "./workshop.js?v=0.3.3";
-import { getMilestoneStatus } from "./engine.js?v=0.3.3";
+} from "./engine.js?v=0.3.4";
+import { renderAugments } from "./augments-ui.js?v=0.3.4";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.3.4";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.3.4";
+import { mountCampScene } from "./camp-scene.js?v=0.3.4";
+import { workScene } from "./work-scene.js?v=0.3.4";
+import { getRecipeVisibility } from "./workshop.js?v=0.3.4";
+import { getMilestoneStatus } from "./engine.js?v=0.3.4";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.3.3";
+} from "./engine.js?v=0.3.4";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -304,10 +304,10 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.3.3</b></div>
+    <div class="prototype-label"><span></span> MVP PREVIEW <b>0.3.4</b></div>
   </aside>
   <div class="workspace">
-    <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
+    <header class="topbar"><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="settings-menu" title="設定" aria-label="設定">${icon("settings")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
     <main>
       <section class="page-heading"><div><div class="eyebrow">A LIFE TO REMEMBER</div><h1>辺境の野営地</h1><p>備え、抗い、次の命へつなぐ。</p></div><div id="time-controls" class="time-controls"></div></section>
       <div id="milestone"></div>
@@ -974,8 +974,15 @@ function renderScreen() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.3.3</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.3.4</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
+  render();
+}
+
+function showSettingsMenu() {
+  state.settings.paused = true;
+  document.querySelector("#settings-dialog").innerHTML = `<div class="dialog-heading"><div class="eyebrow">SETTINGS</div><button class="icon-button" data-close="settings-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="settings-title">設定</h2><section class="presentation-settings settings-options"><h3>ゲームの進行</h3><label><input id="pause-when-hidden" type="checkbox" ${state.settings.pauseWhenHidden ? "checked" : ""}> 別のタブ・アプリへ移ったら一時停止</label><h3>音と演出</h3><label>音量 <input id="sound-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.soundVolume}"></label><label><input id="effects-enabled" type="checkbox" ${state.settings.effectsEnabled ? "checked" : ""}> 演出を表示</label></section>`;
+  document.querySelector("#settings-dialog").showModal();
   render();
 }
 
@@ -999,7 +1006,7 @@ function showSaveMenu() {
       })
       .join(
         "",
-      )}${unreadableRecord(localStorage) ? '<button class="button small muted" data-command="export-original">読み込めなかった元データを書き出す</button>' : ""}</details><details class="presentation-settings"><summary>ゲーム設定・音と演出</summary><label><input id="pause-when-hidden" type="checkbox" ${state.settings.pauseWhenHidden ? "checked" : ""}> 別のタブ・アプリへ移ったら一時停止</label><label>音量 <input id="sound-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.soundVolume}"></label><label><input id="effects-enabled" type="checkbox" ${state.settings.effectsEnabled ? "checked" : ""}> 演出を表示</label></details>`,
+      )}${unreadableRecord(localStorage) ? '<button class="button small muted" data-command="export-original">読み込めなかった元データを書き出す</button>' : ""}</details>`,
   );
   if (isLegacy(state))
     document
@@ -1333,6 +1340,9 @@ document.addEventListener("click", (event) => {
     case "help":
       showHelp();
       break;
+    case "settings-menu":
+      showSettingsMenu();
+      break;
     case "save-menu":
       showSaveMenu();
       break;
@@ -1600,7 +1610,7 @@ function resumeAfterDialogClose() {
   saveGame();
   render();
 }
-const temporaryDialogs = [infoDialog, document.querySelector("#save-dialog"), document.querySelector("#help-dialog"), document.querySelector("#augment-dialog")];
+const temporaryDialogs = [document.querySelector("#settings-dialog"), infoDialog, document.querySelector("#save-dialog"), document.querySelector("#help-dialog"), document.querySelector("#augment-dialog")];
 let queueDragPaused = true;
 let draggedQueue = null;
 installQueueDrag({

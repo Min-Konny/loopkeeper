@@ -564,3 +564,5 @@ html, body { height: 100%; overflow: hidden; }
 @media(max-width:690px){.deadline-notice {gap:8px;align-items:center;flex-wrap:wrap;}.deadline-copy strong {font-size:12px;}.deadline-copy small,.deadline-clock small {font-size:10px;}.deadline-clock strong {font-size:18px;}.deadline-notice button {font-size:12px;min-height:32px;}.deadline-copy {flex:1 1 130px;}.deadline-notice .deadline-clock {flex:0 0 auto;}}
 
 .auto-cook-status {padding:12px 0;border-top:1px solid var(--line,#3a493d);}.auto-cook-status h4 {display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;font-size:16px;margin:0 0 6px;}.auto-cook-status h4 small {font-size:13px;color:#cab987;}.auto-cook-status p {font-size:14px;line-height:1.6;margin:0;}
+
+#settings-dialog {width:min(520px,calc(100vw - 32px));}.settings-options {border-top:0;margin-top:0;padding-top:0;}.settings-options h3 {font-size:16px;margin:22px 0 10px;color:#d5bd82;}.settings-options label {font-size:14px;line-height:1.7;}.settings-options input[type="checkbox"] {flex:none;width:18px;height:18px;}.settings-options input[type="range"] {flex:1;min-width:0;}

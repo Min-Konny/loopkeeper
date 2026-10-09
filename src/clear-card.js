@@ -1,4 +1,4 @@
-import { getCatalog } from './engine.js?v=0.3.3';
+import { getCatalog } from './engine.js?v=0.3.4';
 export function clearRecord(state) {
   if (state.run.status !== 'cleared') return null;
   const { AUGMENTS } = getCatalog(state);
