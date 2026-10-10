@@ -1,6 +1,6 @@
-import { challengesMarkup } from './strategy-ui.js?v=0.4.2';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.2";
-import { CONTENT as C } from "./content.js?v=0.4.2";
+import { challengesMarkup } from './strategy-ui.js?v=0.4.3';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.3";
+import { CONTENT as C } from "./content.js?v=0.4.3";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -16,7 +16,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.4.2";
+} from "./engine.js?v=0.4.3";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -32,7 +32,7 @@ const button = (text, attr, disabled = false) =>
 const setupCategories = [
   { id: "combat", name: "戦闘", kinds: ["combat"] },
   { id: "automation", name: "自動化・人員", kinds: ["automation", "worker"] },
-  { id: "augment", name: "オーグメント", kinds: ["augment_pack"] },
+  { id: "augment", name: "オーグメント", kinds: ["augment_pack", "augment_reroll"] },
   { id: "time", name: "周回復帰", kinds: ["time"] },
 ];
 export function setupMarkup(s, category = "combat") {

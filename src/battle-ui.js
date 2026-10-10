@@ -1,8 +1,8 @@
-import { getPlayerStrike } from './engine.js?v=0.4.2';
-import { equipmentMaterial } from './visual-design.js?v=0.4.2';
-import { battleSound } from "./presentation.js?v=0.4.2";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.4.2";
-import { icon } from "./icons.js?v=0.4.2";
+import { getPlayerStrike } from './engine.js?v=0.4.3';
+import { equipmentMaterial } from './visual-design.js?v=0.4.3';
+import { battleSound } from "./presentation.js?v=0.4.3";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.4.3";
+import { icon } from "./icons.js?v=0.4.3";
 
 const views = new WeakMap();
 const number = (value) =>

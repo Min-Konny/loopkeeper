@@ -1,7 +1,8 @@
-import { icon } from './icons.js?v=0.4.2';
+import { icon } from './icons.js?v=0.4.3';
 
 // Public release notes. Add each released version here, newest first.
 export const UPDATES = [
+  { version: '0.4.3', date: '2026-10-10', title: 'オーグメントのリロール', changes: ['1周につき2回、選択中の候補を引き直せます。残り回数は周回内で共有・保存。', '継承の「選択の余地」で各＋1回、最大4回へ拡張。最高6波でI（2pt）、9波でII（3pt）を解放。'] },
   { version: '0.4.2', date: '2026-10-10', title: '襲撃の自動戦闘を修正', changes: ['攻撃演出のエラーで1行動ごとに停止していた不具合を修正。', 'オーグメントに基本候補・追加候補を表示。パック購入で候補が増える説明を明確化。'] },
   { version: '0.4.1', date: '2026-10-10', title: '行動予約の並べ替えを調整', changes: ['つかむ部分とドロップの許容範囲を拡大。端でのスクロール速度を安定させ、挿入位置の細かな揺れを抑制。', '表示・非表示の目のアイコンを現在の状態に統一。'] },
   { version:'0.4.0', date:'2026-10-10', title:'選び方で変わる次の命', changes:[

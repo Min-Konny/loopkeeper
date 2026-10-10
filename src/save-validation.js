@@ -1,5 +1,5 @@
-import { validCondition } from './queue-conditions.js?v=0.4.2';
-import { CONTENT as C } from "./content.js?v=0.4.2";
+import { validCondition } from './queue-conditions.js?v=0.4.3';
+import { CONTENT as C } from "./content.js?v=0.4.3";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -253,6 +253,7 @@ export function validateSave(s) {
     if (
       !object(a) ||
       !integer(a.seed, 0, 4294967295) ||
+      (a.rerollsUsed !== undefined && !integer(a.rerollsUsed, 0, 4)) ||
       !validList(a.selected, new Set(C.augments.map((a) => a.id)), 4) ||
       !validList(a.offer, new Set(C.augments.map((a) => a.id)), 3) ||
       a.offer.some((id) => a.selected.includes(id)) ||

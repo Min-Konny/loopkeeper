@@ -1,13 +1,13 @@
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.2';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.2';
-import { CONTENT as C } from "./content.js?v=0.4.2";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.2";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.2";
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.3';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.3';
+import { CONTENT as C } from "./content.js?v=0.4.3";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.3";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.3";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.4.2";
+} from "./legacy-engine.js?v=0.4.3";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -263,6 +263,7 @@ function freshRun(meta, settings) {
       offer: [],
       selected: [],
       offeredStages: [],
+      rerollsUsed: 0,
       investmentTimer: 0,
     },
     acceleration: {
@@ -1160,22 +1161,13 @@ export function getAugmentStatus(s) {
     remaining: 4 - s.run.augments.selected.length,
   };
 }
-function offer(s, stage) {
+function augmentPool(s) {
   const a = s.run.augments;
-  if (
-    s.meta.bestWave < 3 ||
-    a.offer.length ||
-    a.selected.length >= 4 ||
-    a.offeredStages.includes(stage)
-  )
-    return;
-  const pool = AUGMENTS.filter(
-    (x) =>
-      !a.selected.includes(x.id) &&
-      s.meta.bestWave >= (x.unlockBestWave || 0) &&
-      (!x.pack || on(s, x.pack)) &&
-      (!x.requiresPurchasedWorker || C.workers.some((w) => on(s, w.id))),
-  );
+  return AUGMENTS.filter(x => !a.selected.includes(x.id) && s.meta.bestWave >= (x.unlockBestWave || 0) && (!x.pack || on(s, x.pack)) && (!x.requiresPurchasedWorker || C.workers.some(w => on(s, w.id))));
+}
+function drawAugmentOffer(s, stage, previous = []) {
+  const a = s.run.augments;
+  const pool = augmentPool(s);
   let sets = [];
   for (let i = 0; i < pool.length; i++)
     for (let j = i + 1; j < pool.length; j++)
@@ -1198,10 +1190,47 @@ function offer(s, stage) {
       );
     if (matching.length) sets = matching;
   }
-  a.seed = (Math.imul(a.seed, 1664525) + 1013904223) >>> 0;
-  a.offer = (sets[Math.floor((a.seed / 4294967296) * sets.length)] || []).map(
-    (x) => x.id,
-  );
+  if (previous.length) {
+    // Change as many cards as the unlocked pool and family rules allow.
+    const overlap = xs => xs.filter(x => previous.includes(x.id)).length;
+    const minimum = Math.min(...sets.map(overlap));
+    sets = sets.filter(xs => overlap(xs) === minimum && xs.some(x => !previous.includes(x.id)));
+    if (!sets.length) return null;
+  }
+  const seed = (Math.imul(a.seed, 1664525) + 1013904223) >>> 0;
+  return {seed, offer:(sets[Math.floor((seed / 4294967296) * sets.length)] || []).map(x => x.id)};
+}
+export function getAugmentRerollStatus(s) {
+  const limit = 2 + C.legacy.filter(u => u.effect?.augmentRerolls && s.meta.upgrades.includes(u.id)).reduce((n,u) => n + u.effect.augmentRerolls, 0);
+  const remaining = Math.max(0, limit - (s.run.augments.rerollsUsed || 0));
+  const reason = s.run.status !== 'preparing' || !s.run.augments.offer.length ? '候補の選択中だけ引き直せます。'
+    : !remaining ? 'この周回のリロールを使い切りました。'
+    : !augmentPool(s).some(x => !s.run.augments.offer.includes(x.id)) ? '入れ替えられる候補がありません。' : '';
+  return {limit,remaining,canReroll:!reason,reason};
+}
+export function rerollAugments(s) {
+  const status = getAugmentRerollStatus(s);
+  if (!status.canReroll) return fail(status.reason);
+  const a = s.run.augments;
+  const next = drawAugmentOffer(s, a.offeredStages.at(-1), a.offer);
+  if (!next) return fail('入れ替えられる候補がありません。');
+  Object.assign(a, next);
+  a.rerollsUsed = (a.rerollsUsed || 0) + 1;
+  s.settings.paused = true;
+  s.run.acceleration.active = false;
+  return ok();
+}
+function offer(s, stage) {
+  const a = s.run.augments;
+  if (
+    s.meta.bestWave < 3 ||
+    a.offer.length ||
+    a.selected.length >= 4 ||
+    a.offeredStages.includes(stage)
+  )
+    return;
+  const aNext = drawAugmentOffer(s, stage);
+  Object.assign(a, aNext);
   a.offeredStages.push(stage);
   s.settings.paused = true;
   s.run.acceleration.active = false;
@@ -1402,6 +1431,7 @@ export function refundUpgrade(s, id) {
   return ok();
 }
 export function toggleUpgrade(s, id) {
+  if (upgrades.get(id)?.kind === "augment_reroll") return fail("リロール回数の追加は常に有効です。");
   if (
     !s.meta.upgrades.includes(id) ||
     s.run.status !== "preparing" ||

@@ -1,4 +1,4 @@
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.2';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.3';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -3050,6 +3050,8 @@ export const CONTENT = {
     }
   ],
   "legacy": [
+    {"id":"augment_reroll_1","name":"選択の余地 I","kind":"augment_reroll","cost":2,"rank":1,"unlock":{"bestWave":6},"effect":{"augmentRerolls":1},"description":"1周のリロールを＋1回（合計3回）。購入した周回から有効。"},
+    {"id":"augment_reroll_2","name":"選択の余地 II","kind":"augment_reroll","cost":3,"rank":2,"unlock":{"bestWave":9,"requires":["augment_reroll_1"]},"effect":{"augmentRerolls":1},"description":"1周のリロールをさらに＋1回（合計4回）。購入した周回から有効。"},
     {
       "id": "action_queue",
       "cost": 1,

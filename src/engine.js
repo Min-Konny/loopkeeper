@@ -1,13 +1,13 @@
 export const getActionYields = (s,d) => isLegacy(s) ? d.yields || {} : mvp.getActionYields(s,d);
 export const getPlayerStrike = s => isLegacy(s) ? {attack:getStats(s).attack,armor:(s.run.enemy || getNextEnemy(s)).defense,damage:Math.max(1,getStats(s).attack-(s.run.enemy || getNextEnemy(s)).defense)} : mvp.getPlayerStrike(s);
-export { enqueueConditional } from './mvp-engine.js?v=0.4.2';
-import * as legacy from "./legacy-engine.js?v=0.4.2";
-import * as mvp from "./mvp-engine.js?v=0.4.2";
-import { validateSave } from "./save-validation.js?v=0.4.2";
-export { getProductionSources } from "./mvp-engine.js?v=0.4.2";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.4.2";
-export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.4.2";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.4.2";
+export { enqueueConditional } from './mvp-engine.js?v=0.4.3';
+import * as legacy from "./legacy-engine.js?v=0.4.3";
+import * as mvp from "./mvp-engine.js?v=0.4.3";
+import { validateSave } from "./save-validation.js?v=0.4.3";
+export { getProductionSources } from "./mvp-engine.js?v=0.4.3";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.4.3";
+export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.4.3";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.4.3";
 export {
   SKILLS,
   getSkillProgress,
@@ -24,7 +24,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.4.2";
+} from "./mvp-engine.js?v=0.4.3";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
@@ -298,3 +298,6 @@ export function getCombatPreview(s) {
     trait: (e.pressure === "rally" ? "戦意高揚 · " : e.pressure === "sunder" ? "崩し · " : "") + ({ combo: "連撃", heavy: "強打", armor: "装甲", flying: "飛行" }[e.trait] || "通常"),
   };
 }
+
+export const getAugmentRerollStatus = s => isLegacy(s) ? {limit:0,remaining:0,canReroll:false,reason:'次の世代から利用できます。'} : mvp.getAugmentRerollStatus(s);
+export const rerollAugments = s => isLegacy(s) ? {ok:false,reason:'次の世代から利用できます。'} : mvp.rerollAugments(s);

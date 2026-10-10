@@ -5,8 +5,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.4.2";
-import { icon } from "./icons.js?v=0.4.2";
+} from "./engine.js?v=0.4.3";
+import { icon } from "./icons.js?v=0.4.3";
 
 const escape = (value) =>
   String(value ?? "").replace(
@@ -99,7 +99,7 @@ export function renderUpgradeSections(state) {
               ? `自動化${gate.automationCount}種類で解放`
               : !available.ok && !owned ? available.reason : "";
     return `<article class="upgrade-card"><span class="upgrade-symbol">${icon(symbols[upgrade.id] || "spark")}</span><div class="upgrade-details"><h3>${escape(upgrade.name)}</h3><p>${escape(description)}</p></div><div class="legacy-upgrade-command">${
-      owned
+      owned && upgrade.kind === "augment_reroll" ? `<span class="equipped-tag">解放済み</span>` : owned
         ? `<button class="button small ${enabled ? "gold-outline" : "muted"}" data-toggle-upgrade="${upgrade.id}" data-focus="toggle-${upgrade.id}" aria-pressed="${enabled}" aria-label="${escape(upgrade.name)} ${toggleLabel}">${icon(enabled ? "check" : "pause")}${toggleLabel}</button>`
         : `<button class="button small gold-outline" data-purchase="${upgrade.id}" data-focus="purchase-${upgrade.id}" ${available.ok ? "" : "disabled"}${available.ok ? "" : ` title="${escape(available.reason)}"`}>${upgrade.cost} pt で解放</button>`
     }${!owned && unlockHint ? `<small class="upgrade-unlock-hint">${escape(unlockHint)}</small>` : ""}</div></article>`;
@@ -114,5 +114,5 @@ export function renderUpgradeSections(state) {
     return `<section class="legacy-upgrade-group legacy-${id}" aria-labelledby="legacy-${id}-title"><div class="legacy-group-heading">${icon(symbol)}<div><h3 id="legacy-${id}-title">${name}</h3>${description ? `<p>${description}</p>` : ""}</div></div><div class="upgrade-grid">${upgrades.map(card).join("")}</div>${note ? `<p class="workers-info">${note}</p>` : ""}</section>`;
   }
 
-  return `<section class="upgrade-section legacy-upgrades" aria-label="継承ポイントと技能"><div class="points-banner"><div><h3>次の命を支える力</h3><p>クエストの初達成・ボスの初撃破で獲得</p></div><strong>${state.meta.points}<small>継承 pt</small></strong></div>${group("combat", "戦闘の備え", "shield", ["combat"], "序盤の防衛を支え、内政へ時間を回す。")}${group("automation", "作業を任せる", "tool", ["automation", "worker"])}${group("augment", "周回の選択肢", "spark", ["augment_pack"], "選んだ効果はその周回だけ。", "基本6種類は無料。抽選の切り替えは、次の3択から反映。")}${group("time", "周回の復帰", "clock", ["time"], "突破した区間の準備を速める。")}<p class="workers-info">解放した技能・人員・種類は、次の命にも残ります。</p></section>`;
+  return `<section class="upgrade-section legacy-upgrades" aria-label="継承ポイントと技能"><div class="points-banner"><div><h3>次の命を支える力</h3><p>クエストの初達成・ボスの初撃破で獲得</p></div><strong>${state.meta.points}<small>継承 pt</small></strong></div>${group("combat", "戦闘の備え", "shield", ["combat"], "序盤の防衛を支え、内政へ時間を回す。")}${group("automation", "作業を任せる", "tool", ["automation", "worker"])}${group("augment", "周回の選択肢", "spark", ["augment_pack", "augment_reroll"], "選んだ効果はその周回だけ。", "基本6種類は無料。抽選の切り替えは、次の3択から反映。")}${group("time", "周回の復帰", "clock", ["time"], "突破した区間の準備を速める。")}<p class="workers-info">解放した技能・人員・種類は、次の命にも残ります。</p></section>`;
 }
