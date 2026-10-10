@@ -1,13 +1,13 @@
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.3';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.3';
-import { CONTENT as C } from "./content.js?v=0.4.3";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.3";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.3";
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.4';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.4';
+import { CONTENT as C } from "./content.js?v=0.4.4";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.4";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.4";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.4.3";
+} from "./legacy-engine.js?v=0.4.4";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -1392,16 +1392,13 @@ export function canPurchaseUpgrade(s, id) {
   )
     return fail(`初達成${g.completedQuests}件が必要。`);
   if (g.requires?.some((x) => !owned.includes(x)))
-    return fail("先に前提を解放してください。");
-  if (
-    g.automationCount &&
-    owned.filter((x) =>
-      ["automation", "worker"].includes(upgrades.get(x)?.kind),
-    ).length < g.automationCount
-  )
-    return fail("自動化を3種類解放してください。");
-  if (g.generation && s.meta.generation < g.generation)
-    return fail("次の世代で解放。");
+    return fail(`先に${g.requires.filter(x => !owned.includes(x)).map(x => upgrades.get(x).name).join("・")}を解放してください。`);
+  const automationCount = owned.filter(x => ["automation", "worker"].includes(upgrades.get(x)?.kind)).length;
+  if (g.automationCount && automationCount < g.automationCount)
+    return fail(`自動化・人員を${g.automationCount}種類解放してください（現在${automationCount}/${g.automationCount}種類）。`);
+  const generation = s.meta.generation + (s.run.status === "legacy_setup" ? 1 : 0);
+  if (g.generation && generation < g.generation)
+    return fail(`第${g.generation}世代から解放。`);
   return ok();
 }
 export function purchaseUpgrade(s, id) {

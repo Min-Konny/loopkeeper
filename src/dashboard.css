@@ -679,3 +679,5 @@ body.effects-disabled .work-vignette::after{animation:none!important}
 .queue-drag-handle { min-width:44px; min-height:44px; touch-action:none; cursor:grab; }
 
 .augment-reroll{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;margin:10px 0 14px}.augment-reroll small{color:var(--muted);font-size:13px}
+
+.setup-upgrade .setup-unlock-hint{display:block;color:var(--gold);margin-top:5px;line-height:1.5}

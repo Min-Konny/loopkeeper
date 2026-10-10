@@ -1,6 +1,6 @@
-import { challengesMarkup } from './strategy-ui.js?v=0.4.3';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.3";
-import { CONTENT as C } from "./content.js?v=0.4.3";
+import { challengesMarkup } from './strategy-ui.js?v=0.4.4';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.4";
+import { CONTENT as C } from "./content.js?v=0.4.4";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -16,7 +16,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.4.3";
+} from "./engine.js?v=0.4.4";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -54,7 +54,7 @@ export function setupMarkup(s, category = "combat") {
       const child = LEGACY_UPGRADES.some(
         (x) => d.upgrades.includes(x.id) && x.unlock.requires?.includes(u.id),
       );
-      return `<div class="setup-upgrade"><span>${esc(u.name)}<small>${owned ? d.paidCosts[u.id] : u.cost} pt · ${esc(getUpgradeDescription(s, u))}</small></span>${owned ? button("外す", `data-refund="${u.id}" title="${child ? "先に上位の解放を外してください。" : "購入時のポイントを返却"}"`, child) : button("解放", `data-purchase="${u.id}" title="${esc(allowed.reason)}"`, !allowed.ok)}</div>`;
+      return `<div class="setup-upgrade"><span>${esc(u.name)}<small>${owned ? d.paidCosts[u.id] : u.cost} pt · ${esc(getUpgradeDescription(s, u))}</small>${!owned && !allowed.ok ? `<small class="setup-unlock-hint">${esc(allowed.reason)}</small>` : ""}</span>${owned ? button("外す", `data-refund="${u.id}" title="${child ? "先に上位の解放を外してください。" : "購入時のポイントを返却"}"`, child) : button("解放", `data-purchase="${u.id}" title="${esc(allowed.reason)}"`, !allowed.ok)}</div>`;
     },
   ).join(
     "",

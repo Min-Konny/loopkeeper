@@ -1,4 +1,4 @@
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.3';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.4';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
