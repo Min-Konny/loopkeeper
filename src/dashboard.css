@@ -374,7 +374,7 @@ html, body { height: 100%; overflow: hidden; }
   .queue-preview li.current {background:var(--surface-raised);border-left:2px solid var(--gold);}
   .queue-preview li small {grid-column:2;font-size:12px;color:var(--muted);}
 .queue-preview-name {overflow-wrap:anywhere;}
-.queue-drag-handle{display:flex;align-items:center;justify-content:center;gap:2px;width:34px;min-width:34px;height:36px;border:1px solid transparent;border-radius:5px;cursor:grab;touch-action:none;user-select:none;color:var(--muted);font-size:12px;font-family:inherit;padding:0}
+.queue-drag-handle{display:flex;align-items:center;justify-content:center;gap:2px;width:44px;min-width:44px;height:44px;border:1px solid transparent;border-radius:5px;cursor:grab;touch-action:none;user-select:none;color:var(--muted);font-size:12px;font-family:inherit;padding:0}
 .queue-drag-handle:hover,.queue-drag-handle:focus-visible{border-color:var(--gold-dim);color:var(--gold);background:var(--surface-raised)}
 .queue-drag-handle:active{cursor:grabbing}
 .queue-grip{font-size:14px;letter-spacing:-4px;padding-right:4px;opacity:.6}
@@ -384,7 +384,7 @@ html, body { height: 100%; overflow: hidden; }
 .queue-list{max-height:55dvh;overflow:auto;overscroll-behavior:contain;padding-right:5px;scrollbar-gutter:stable}
 #info-dialog .queue-list{max-height:55dvh}
 .queue-preview li {grid-template-columns:22px minmax(0,1fr) 36px;}
-.queue-preview li:has(.queue-drag-handle){grid-template-columns:34px minmax(0,1fr) 36px;gap:5px}
+.queue-preview li:has(.queue-drag-handle){grid-template-columns:44px minmax(0,1fr) 36px;gap:5px}
 .queue-preview-remove {grid-column:3;grid-row:1 / span 2;width:36px;height:36px;}
   .queue-preview .button {font-size:13px;min-height:36px;flex-shrink:0;}
   .queue-preview-empty {font-size:13px;line-height:1.8;color:var(--muted);}
@@ -675,3 +675,5 @@ body[data-chapter="2"] .work-vignette::after,body[data-chapter="4"] .work-vignet
 @keyframes chapter-mist{from{transform:translateX(-25%);opacity:.3}to{transform:translateX(25%);opacity:.8}}
 @media(prefers-reduced-motion:reduce){.work-vignette::after{animation:none!important}}
 body.effects-disabled .work-vignette::after{animation:none!important}
+
+.queue-drag-handle { min-width:44px; min-height:44px; touch-action:none; cursor:grab; }

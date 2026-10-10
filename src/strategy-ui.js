@@ -1,7 +1,7 @@
-import { CONTENT } from './content.js?v=0.4.0';
-import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.4.0';
-import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.4.0';
-import { conditionLabel } from './queue-conditions.js?v=0.4.0';
+import { CONTENT } from './content.js?v=0.4.1';
+import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.4.1';
+import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.4.1';
+import { conditionLabel } from './queue-conditions.js?v=0.4.1';
 const esc = x => String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Math.round(n).toLocaleString('ja-JP');
 const duration = n => `${Math.floor(n/60)}:${String(Math.ceil(n%60)).padStart(2,'0')}`;

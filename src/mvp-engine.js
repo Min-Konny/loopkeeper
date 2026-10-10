@@ -1,13 +1,13 @@
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.0';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.0';
-import { CONTENT as C } from "./content.js?v=0.4.0";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.0";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.0";
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.1';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.1';
+import { CONTENT as C } from "./content.js?v=0.4.1";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.1";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.1";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.4.0";
+} from "./legacy-engine.js?v=0.4.1";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
