@@ -1,6 +1,6 @@
-import { challengesMarkup } from './strategy-ui.js?v=0.4.1';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.1";
-import { CONTENT as C } from "./content.js?v=0.4.1";
+import { challengesMarkup } from './strategy-ui.js?v=0.4.2';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.2";
+import { CONTENT as C } from "./content.js?v=0.4.2";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -16,7 +16,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.4.1";
+} from "./engine.js?v=0.4.2";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,

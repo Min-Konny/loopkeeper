@@ -1,8 +1,8 @@
-import { getPlayerStrike } from './engine.js?v=0.4.1';
-import { equipmentMaterial } from './visual-design.js?v=0.4.1';
-import { battleSound } from "./presentation.js?v=0.4.1";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.4.1";
-import { icon } from "./icons.js?v=0.4.1";
+import { getPlayerStrike } from './engine.js?v=0.4.2';
+import { equipmentMaterial } from './visual-design.js?v=0.4.2';
+import { battleSound } from "./presentation.js?v=0.4.2";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.4.2";
+import { icon } from "./icons.js?v=0.4.2";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -338,8 +338,8 @@ export function renderBattle(dialog, state) {
   dialog.style.setProperty('--weapon-glow',weaponMaterial.glow);
   dialog.style.setProperty('--shield-glow',shieldMaterial.glow);
   const paused = settings.paused;
-  const strike = getPlayerStrike(state);
-  const outgoing = strike.damage;
+  const playerStrike = getPlayerStrike(state);
+  const outgoing = playerStrike.damage;
 
   const key = `${state.meta.generation}:${enemy.wave}:${enemy.name}:${enemy.maxHp}`;
   const previous = view.previous;
@@ -407,7 +407,7 @@ export function renderBattle(dialog, state) {
   setText(el['treatment-value'], `処置 残り${preview.charges}回`);
   setText(el.incoming, number(preview.packet));
   el["outgoing-formula"].title =
-    `攻撃 ${number(strike.attack)} − 有効防御 ${number(strike.armor)}（オーグメント反映、最低1ダメージ）`;
+    `攻撃 ${number(playerStrike.attack)} − 有効防御 ${number(playerStrike.armor)}（オーグメント反映、最低1ダメージ）`;
   el["incoming-formula"].title =
     `${preview.trait}：${preview.hits.map(number).join(" + ")}（各攻撃から防御を減算、最低1）`;
   const remaining = Math.max(0, 1.5 - run.combatTimer);

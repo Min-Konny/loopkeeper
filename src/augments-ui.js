@@ -1,5 +1,5 @@
-import { getCatalog, getAugmentStatus, getSynergies } from "./engine.js?v=0.4.1";
-import { icon } from "./icons.js?v=0.4.1";
+import { getCatalog, getAugmentStatus, getSynergies } from "./engine.js?v=0.4.2";
+import { icon } from "./icons.js?v=0.4.2";
 
 const families = {
   economy: { name: "生産・投資", icon: "gold" },
@@ -81,7 +81,7 @@ export function renderAugments(state, { offer = false } = {}) {
       const augment = AUGMENTS.find((item) => item.id === id);
       if (!augment) return "";
       const family = families[augment.family];
-      return `<article class="augment-choice ${augment.family}"><div class="augment-card-top"><span class="augment-symbol">${icon(family.icon)}</span><span class="augment-family">${family.name}</span></div><h3>${escape(augment.name)}</h3><p class="augment-effect">${escape(augment.description)}</p>${insightMarkup(state, augment)}<p class="augment-hint">${escape(augment.hint || hints[augment.id] || "")}</p><button class="button gold-outline" data-choose-augment="${augment.id}" data-focus="augment-${augment.id}" aria-label="${escape(augment.name)}を選ぶ">この方針を選ぶ ${icon("arrow")}</button></article>`;
+      return `<article class="augment-choice ${augment.family}"><div class="augment-card-top"><span class="augment-symbol">${icon(family.icon)}</span><span class="augment-family">${family.name} · ${augment.pack ? "追加候補" : "基本候補"}</span></div><h3>${escape(augment.name)}</h3><p class="augment-effect">${escape(augment.description)}</p>${insightMarkup(state, augment)}<p class="augment-hint">${escape(augment.hint || hints[augment.id] || "")}</p><button class="button gold-outline" data-choose-augment="${augment.id}" data-focus="augment-${augment.id}" aria-label="${escape(augment.name)}を選ぶ">この方針を選ぶ ${icon("arrow")}</button></article>`;
     })
     .join(
       "",

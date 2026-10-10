@@ -1,7 +1,8 @@
-import { icon } from './icons.js?v=0.4.1';
+import { icon } from './icons.js?v=0.4.2';
 
 // Public release notes. Add each released version here, newest first.
 export const UPDATES = [
+  { version: '0.4.2', date: '2026-10-10', title: '襲撃の自動戦闘を修正', changes: ['攻撃演出のエラーで1行動ごとに停止していた不具合を修正。', 'オーグメントに基本候補・追加候補を表示。パック購入で候補が増える説明を明確化。'] },
   { version: '0.4.1', date: '2026-10-10', title: '行動予約の並べ替えを調整', changes: ['つかむ部分とドロップの許容範囲を拡大。端でのスクロール速度を安定させ、挿入位置の細かな揺れを抑制。', '表示・非表示の目のアイコンを現在の状態に統一。'] },
   { version:'0.4.0', date:'2026-10-10', title:'選び方で変わる次の命', changes:[
     'オーグメントを12種類追加、合計28種類へ。拡張パック購入後、最高6・9波で段階的に候補が増えます。選択画面に発動条件と相性を表示。',
