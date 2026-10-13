@@ -1,14 +1,14 @@
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.4.6';
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.6';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.6';
-import { CONTENT as C } from "./content.js?v=0.4.6";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.6";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.6";
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.4.7';
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.7';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.7';
+import { CONTENT as C } from "./content.js?v=0.4.7";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.7";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.7";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.4.6";
+} from "./legacy-engine.js?v=0.4.7";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -309,6 +309,7 @@ export function createGame() {
     processingTarget: 6,
     stockTargets: [],
     workerTargets: {},
+    craftMaterialPriority: [],
   };
   const s = {
     version: 2,
@@ -668,7 +669,7 @@ export function getProductionSources(
       (saved ? saved.duration - saved.progress : getActionDuration(s, d)) +
       (count - 1) * getActionDuration(s, d);
     paid.add(d.id);
-    for (const [r, cost] of Object.entries(getRecipeCost(s, d))) {
+    for (const [r, cost] of orderedMaterialCosts(getRecipeCost(s, d), s.settings.craftMaterialPriority || [])) {
       const required = cost * (count - (saved?.kind === "craft" ? 1 : 0));
       const missing = required - (stock[r] || 0);
       if (missing > 0) {
@@ -735,7 +736,9 @@ export function resolveGoal(s, id, visiting = new Set()) {
   }
   if (d.facility && (s.run.facilities[d.facility.id] || 0) < d.level - 1)
     return resolveGoal(s, d.requires[0], seen);
-  for (const [r, n] of Object.entries(getRecipeCost(s, d))) {
+  let unavailable = null;
+  const priority = s.settings.craftMaterialPriority || [];
+  for (const [r, n] of orderRecipeMaterials(s,d,s.run.resources,1,new Set(),seen)) {
     if (s.run.resources[r] >= n) continue;
     const producers = getProductionSources(
       s,
@@ -751,13 +754,21 @@ export function resolveGoal(s, id, visiting = new Set()) {
       reason = result.reason;
     }
     const locked = ACTIONS.filter(p => p.yields?.[r] && isKnown(s, p) && lv(s, p.skill) < p.unlockLevel).sort((a, b) => a.unlockLevel - b.unlockLevel)[0];
-    if (locked) return { ...fail(`${RESOURCES[r].name}を集めるには${SKILLS.find(x => x.id === locked.skill).name} Lv.${locked.unlockLevel}が必要。`), skill: locked.skill };
-    return fail(
+    const failure = locked ? { ...fail(`${RESOURCES[r].name}を集めるには${SKILLS.find(x => x.id === locked.skill).name} Lv.${locked.unlockLevel}が必要。`), skill: locked.skill } : fail(
       reason ||
         `${RESOURCES[r].name}不足。${r === "hide" ? "撃退または市場で入手。" : r === "gold" ? (s.run.facilities.market ? "襲撃を撃退、または市場で資源を売却。" : "襲撃の撃退で入手。市場の建設後は資源売却でも入手。") : "技能を上げてください。"}`,
     );
+    if (!priority.length) return failure;
+    unavailable ||= failure;
   }
-  return { ...ok(), id };
+  return unavailable || { ...ok(), id };
+}
+export function setMaterialPriority(s, priority) {
+  if (!s.meta.upgrades.includes('action_queue')) return fail('行動予約を解放してください。');
+  if (!validMaterialPriority(priority)) return fail('素材は重複せず、優先したい順に指定してください。');
+  if (priority.some(id => !resourceKnown(s, id) || id === 'gold' && !getUnlocks(s).facilities)) return fail('未発見の素材は指定できません。');
+  s.settings.craftMaterialPriority = [...priority];
+  return ok();
 }
 export function enqueueAction(
   s,
@@ -1975,4 +1986,14 @@ export function startEndless(s) {
   s.run.acceleration.active = false;
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
+}
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.4.7';
+
+export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
+  return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{
+    inventory,count,visiting,
+    sourceFor:(id,missing,seen)=>getProductionSources(s,id,missing,inventory,seen,alreadyPaid)[0],
+    costFor:source=>getRecipeCost(s,source),
+    isPaid:source=>!alreadyPaid.has(source.id)&&(s.run.activeAction?.id===source.id?s.run.activeAction:s.run.suspendedActions[source.id])?.kind==='craft',
+  });
 }

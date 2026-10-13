@@ -1,6 +1,6 @@
-import { challengesMarkup } from './strategy-ui.js?v=0.4.6';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.6";
-import { CONTENT as C } from "./content.js?v=0.4.6";
+import { challengesMarkup } from './strategy-ui.js?v=0.4.7';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.7";
+import { CONTENT as C } from "./content.js?v=0.4.7";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -16,7 +16,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.4.6";
+} from "./engine.js?v=0.4.7";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -166,9 +166,9 @@ export function automationMarkup(s) {
 }
 export function templatesMarkup(s) {
   if (!s.meta.upgrades.includes("queue_templates")) return "";
-  return `<details class="template-controls"><summary>保存した手順 (${s.meta.templates.length}/8)</summary><div class="queue-controls"><input id="template-name" maxlength="40" placeholder="手順の名前" aria-label="手順の名前">${button("予約を保存", 'data-command="template-save"', !s.run.queue.length || s.meta.templates.length >= 8)}</div>${s.meta.templates.map((t, i) => {
+  return `<details class="template-controls" data-detail-key="templates"><summary>保存した手順 (${s.meta.templates.length}/8)</summary><div class="queue-controls"><input id="template-name" maxlength="40" placeholder="手順の名前" aria-label="手順の名前">${button("予約を保存", 'data-command="template-save"', !s.run.queue.length || s.meta.templates.length >= 8)}</div>${s.meta.templates.map((t, i) => {
     const p = getTemplatePreview(s, i);
-    return `<details class="template-preview"><summary>${esc(t.name)}<small>追加 ${p.additions.length} · 省略 ${p.items.filter(g => g.status === "skip").length} · 要確認 ${p.items.filter(g => g.status === "blocked").length}</small></summary><ul>${p.items.map(g => `<li class="${g.status}"><span>${g.status === "ready" ? "＋" : g.status === "skip" ? "✓" : "!"} ${esc(g.name)}${g.count > 1 ? ` ×${g.count}` : ""}</span><small>${esc(g.reason)}</small></li>`).join("")}</ul><div class="template-preview-actions">${button(`${p.additions.length}件を追加`, `data-template="${i}"`, !p.ok)}${button("手順を削除", `data-template-delete="${i}"`)}${p.reason ? `<small>${esc(p.reason)}</small>` : ""}</div></details>`;
+    return `<details class="template-preview" data-detail-key="template-${i}"><summary>${esc(t.name)}<small>追加 ${p.additions.length} · 省略 ${p.items.filter(g => g.status === "skip").length} · 要確認 ${p.items.filter(g => g.status === "blocked").length}</small></summary><ul>${p.items.map(g => `<li class="${g.status}"><span>${g.status === "ready" ? "＋" : g.status === "skip" ? "✓" : "!"} ${esc(g.name)}${g.count > 1 ? ` ×${g.count}` : ""}</span><small>${esc(g.reason)}</small></li>`).join("")}</ul><div class="template-preview-actions">${button(`${p.additions.length}件を追加`, `data-template="${i}"`, !p.ok)}${button("現在の予約で上書き", `data-template-overwrite="${i}" data-focus="template-overwrite-${i}"`, !s.run.queue.length || s.settings.disabledUpgrades.includes("queue_templates"))}${button("手順を削除", `data-template-delete="${i}"`)}${p.reason ? `<small>${esc(p.reason)}</small>` : ""}</div></details>`;
   }).join("")}</details>`;
 }
 export function milestoneMarkup(s) {

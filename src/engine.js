@@ -1,13 +1,13 @@
 export const getActionYields = (s,d) => isLegacy(s) ? d.yields || {} : mvp.getActionYields(s,d);
 export const getPlayerStrike = s => isLegacy(s) ? {attack:getStats(s).attack,armor:(s.run.enemy || getNextEnemy(s)).defense,damage:Math.max(1,getStats(s).attack-(s.run.enemy || getNextEnemy(s)).defense)} : mvp.getPlayerStrike(s);
-export { enqueueConditional } from './mvp-engine.js?v=0.4.6';
-import * as legacy from "./legacy-engine.js?v=0.4.6";
-import * as mvp from "./mvp-engine.js?v=0.4.6";
-import { validateSave } from "./save-validation.js?v=0.4.6";
-export { getProductionSources } from "./mvp-engine.js?v=0.4.6";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.4.6";
-export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.4.6";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.4.6";
+export { enqueueConditional } from './mvp-engine.js?v=0.4.7';
+import * as legacy from "./legacy-engine.js?v=0.4.7";
+import * as mvp from "./mvp-engine.js?v=0.4.7";
+import { validateSave } from "./save-validation.js?v=0.4.7";
+export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.4.7";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.4.7";
+export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.4.7";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.4.7";
 export {
   SKILLS,
   getSkillProgress,
@@ -24,7 +24,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.4.6";
+} from "./mvp-engine.js?v=0.4.7";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
@@ -60,6 +60,7 @@ export function parseSave(text) {
     raw.run.training ||= {defense:0, vitality:mvp.getVitalityMigrationXp(raw.run.skills.combat.xp)};
     for (const id of Object.keys(mvp.RESOURCES)) raw.run.resources[id] ??= 0;
     raw.settings.pauseWhenHidden ??= false;
+    raw.settings.craftMaterialPriority ??= [];
     raw.settings.musicVolume ??= raw.settings.soundVolume === 0 ? 0 : .15;
     raw.settings.paused = true;
     raw.run.acceleration.active = false;
@@ -69,6 +70,7 @@ export function parseSave(text) {
   }
 }
 export const serializeGame = (s) => JSON.stringify(s);
+export const setMaterialPriority = (s, priority) => isLegacy(s) ? legacy.setMaterialPriority(s, priority) : mvp.setMaterialPriority(s, priority);
 export const createGame = (...args) => mvp.createGame(...args);
 export const isKnown = (...args) =>
   isLegacy(args[0]) && typeof legacy.isKnown === "function"

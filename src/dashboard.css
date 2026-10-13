@@ -681,3 +681,42 @@ body.effects-disabled .work-vignette::after{animation:none!important}
 .augment-reroll{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;margin:10px 0 14px}.augment-reroll small{color:var(--muted);font-size:13px}
 
 .setup-upgrade .setup-unlock-hint{display:block;color:var(--gold);margin-top:5px;line-height:1.5}
+/* Validation stays next to the editor and wraps on narrow reservation rows. */
+.reservation-input-error {
+  display: block;
+  color: #f1968b;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+/* Keep the search editor outside the list replaced by game-state updates. */
+.recipe-search { flex: none; display: grid; gap: 4px; padding: 6px 0 10px; }
+.recipe-search[hidden] { display: none; }
+.recipe-search > label { font-size: 13px; color: #c2d4cc; }
+.recipe-search-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.recipe-search-controls input { flex: 1 1 140px; min-width: 0; min-height: 44px; font: inherit; }
+.recipe-search-controls button { min-height: 44px; }
+.recipe-search-controls small { font-size: 12px; color: #c2d4cc; }
+.craft-search-empty { padding: 12px; color: #c2d4cc; line-height: 1.6; }
+#template-overwrite-dialog { max-height: calc(100dvh - 40px); overflow-y: auto; }
+#template-overwrite-dialog .save-options button, #template-overwrite-dialog .icon-button { min-height: 44px; }
+#template-overwrite-dialog .icon-button { min-width: 44px; }
+.template-overwrite-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.template-overwrite-summary h3 { font-size: 15px; }
+.template-overwrite-summary ol { padding-left: 22px; }
+.template-overwrite-summary li { margin: 8px 0; }
+.template-overwrite-summary li small { display: block; color: #c2d4cc; }
+@media (max-width: 600px) { .template-overwrite-summary { grid-template-columns: 1fr; } }
+#material-priority-dialog { max-height: calc(100dvh - 40px); overflow-y: auto; }
+#material-priority-dialog button { min-height: 44px; }
+#material-priority-dialog .icon-button { min-width: 44px; }
+.material-priority-controls { flex: none; margin-bottom: 8px; }
+.material-priority-controls[hidden] { display: none; }
+.priority-timing, .priority-default { font-size: 13px; line-height: 1.5; }
+.priority-add { display: flex; align-items: end; gap: 8px; flex-wrap: wrap; }
+.priority-add label { display: grid; flex: 1; gap: 5px; }
+.priority-add select { min-height: 44px; font: inherit; }
+.priority-list { max-height: 42dvh; overflow-y: auto; padding-left: 24px; }
+.priority-list li { display: flex; align-items: center; gap: 6px; margin: 7px 0; }
+.priority-list li span { flex: 1; }

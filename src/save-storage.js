@@ -1,4 +1,4 @@
-import { createGame, parseSave, serializeGame } from './engine.js?v=0.4.6';
+import { createGame, parseSave, serializeGame } from './engine.js?v=0.4.7';
 export const STORAGE_KEY = 'tomori-rebirth-v1';
 const BACKUP_KEY = `${STORAGE_KEY}-backups`;
 const ARCHIVE_KEY = `${STORAGE_KEY}-unreadable`;
@@ -69,3 +69,24 @@ export function writeStoredGame(storage, game, { now = Date.now(), checkpoint = 
   storage.setItem(STORAGE_KEY, JSON.stringify({ storageVersion: 2, savedAt: now, payload }));
 }
 export function unreadableRecord(storage) { try { return storage.getItem(ARCHIVE_KEY); } catch { return null; } }
+
+// Validate both records before writing, and keep the live game unchanged until
+// its checkpoint and the replacement have both reached storage.
+export function replaceStoredGame(storage, current, replacement, { now = Date.now() } = {}) {
+  const next = parseSave(serializeGame(replacement));
+  if (!next || !parseSave(serializeGame(current))) throw new Error('Invalid game');
+  next.settings.paused = true;
+  writeStoredGame(storage, current, { now, checkpoint: true });
+  writeStoredGame(storage, next, { now });
+  return next;
+}
+
+// Preferences and template edits preserve live work/acceleration. Save parsing
+// is used for validation, rather than applying import-time pause/migration rules.
+export function commitStoredGameEdit(storage, current, replacement, { now = Date.now() } = {}) {
+  const next = structuredClone(replacement);
+  if (!parseSave(serializeGame(next)) || !parseSave(serializeGame(current))) throw new Error('Invalid game');
+  writeStoredGame(storage, current, { now, checkpoint: true });
+  writeStoredGame(storage, next, { now });
+  return next;
+}

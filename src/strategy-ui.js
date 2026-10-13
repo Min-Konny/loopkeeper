@@ -1,10 +1,14 @@
-import { CONTENT } from './content.js?v=0.4.6';
-import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.4.6';
-import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.4.6';
-import { conditionLabel } from './queue-conditions.js?v=0.4.6';
+import { CONTENT } from './content.js?v=0.4.7';
+import { setTextIfChanged } from './dom-text.js?v=0.4.7';
+import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.4.7';
+import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.4.7';
+import { conditionLabel } from './queue-conditions.js?v=0.4.7';
 const esc = x => String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Math.round(n).toLocaleString('ja-JP');
-const duration = n => `${Math.floor(n/60)}:${String(Math.ceil(n%60)).padStart(2,'0')}`;
+const duration = n => {
+  const seconds = Math.max(0, Math.ceil(n));
+  return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
+};
 export function reportMarkup(s) {
   const reports = s.run.battleReports || [];
   if (!reports.length) return '';
@@ -29,18 +33,18 @@ export function challengesMarkup(s) {
 }
 export function chapterPresentation(s) {
   const chapter = chapterOf(s);
-  document.body.dataset.chapter = chapter;
+  if (document.body.dataset.chapter !== String(chapter)) document.body.dataset.chapter = chapter;
   const title = document.querySelector('.camp-caption h2');
-  if (title) title.textContent = s.run.endless?.active ? "終わらぬ夜" : CHAPTERS[chapter];
+  setTextIfChanged(title, s.run.endless?.active ? "終わらぬ夜" : CHAPTERS[chapter]);
   const subtitle = document.querySelector('.camp-caption p');
-  if (subtitle) subtitle.textContent = s.run.endless?.active ? '砦を育て、ひとつ先の襲撃へ。' : ['まだ、火は灯っている。','葉の間から、灯りがこぼれる。','霧の向こうに、次の敵が待つ。','赤い岩肌に、槌音が響く。','青い結晶が、夜道を照らす。','長い影が、砦へと伸びる。','あと少し。夜明けは近い。'][chapter];
+  setTextIfChanged(subtitle, s.run.endless?.active ? '砦を育て、ひとつ先の襲撃へ。' : ['まだ、火は灯っている。','葉の間から、灯りがこぼれる。','霧の向こうに、次の敵が待つ。','赤い岩肌に、槌音が響く。','青い結晶が、夜道を照らす。','長い影が、砦へと伸びる。','あと少し。夜明けは近い。'][chapter]);
 }
 let cache = {key:'',value:null};
 export function queueForecast(s) {
   if (s.version !== 2 || !s.run.queue.length || s.run.status !== 'preparing') return null;
   // Reuse within a 3-second window. Simulate a copy only up to the next raid,
   // including paid work, workers, income and skill growth. No speculative combat.
-  const key = JSON.stringify([s.meta.generation, Math.floor(s.run.elapsed/3), s.run.queue, s.settings.workerTargets, s.settings.disabledUpgrades, s.run.equipment, s.run.facilities, s.run.augments.selected, s.run.activeAction?.id, s.run.nextWaveAt]);
+  const key = JSON.stringify([s.meta.generation, Math.floor(s.run.elapsed/3), s.run.queue, s.settings.craftMaterialPriority, s.settings.workerTargets, s.settings.disabledUpgrades, s.run.equipment, s.run.facilities, s.run.augments.selected, s.run.activeAction?.id, s.run.nextWaveAt]);
   if (cache.state === s && key === cache.key) return cache.value;
   const copy = structuredClone(s), start = copy.run.elapsed;
   copy.settings.paused = false; copy.run.augments.offer = [];

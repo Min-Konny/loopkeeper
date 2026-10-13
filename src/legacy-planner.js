@@ -1,4 +1,5 @@
-import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.4.6';
+import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.4.7';
+import { dependencyOrderedCosts } from './material-priority.js?v=0.4.7';
 
 const MAX_STEPS = 8;
 const MAX_COUNT = 99;
@@ -73,7 +74,12 @@ export function planCraft(state, recipeId, count = 1) {
     if (ancestors.has(definition.id)) throw new PlanningError('材料の調達順序を組み立てられません。');
     const nextAncestors = new Set([...ancestors, definition.id]);
     const paidBatch = !context.resumed.has(definition.id) && interrupted[definition.id]?.kind === 'craft' ? 1 : 0;
-    for (const [id, amount] of Object.entries(getRecipeCost(state, definition))) {
+    const costs=dependencyOrderedCosts(getRecipeCost(state,definition),state.settings.craftMaterialPriority||[],{
+      inventory:context.inventory,count:count-paidBatch,visiting:nextAncestors,
+      sourceFor:(id,missing,seen)=>[...ACTIONS,...RECIPES].filter(source=>source.yields?.[id]&&!seen.has(source.id)).filter(source=>{try{checkDefinition(source);return true;}catch{return false;}}).sort((a,b)=>getActionDuration(state,a)-getActionDuration(state,b))[0],
+      costFor:source=>getRecipeCost(state,source),isPaid:source=>!context.resumed.has(source.id)&&interrupted[source.id]?.kind==='craft',
+    });
+    for (const [id, amount] of costs) {
       ensureResource(context, id, amount * (count - paidBatch), nextAncestors);
       // Reserve each ingredient before resolving another ingredient that might
       // consume it too, so shared prerequisites are never counted twice.

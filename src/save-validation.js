@@ -1,6 +1,7 @@
-import { endlessEnemy } from './endless.js?v=0.4.6';
-import { validCondition } from './queue-conditions.js?v=0.4.6';
-import { CONTENT as C } from "./content.js?v=0.4.6";
+import { endlessEnemy } from './endless.js?v=0.4.7';
+import { validMaterialPriority } from './material-priority.js?v=0.4.7';
+import { validCondition } from './queue-conditions.js?v=0.4.7';
+import { CONTENT as C } from "./content.js?v=0.4.7";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -332,6 +333,7 @@ export function validateSave(s) {
       return false;
     if (
       typeof t.paused !== "boolean" ||
+      (t.craftMaterialPriority !== undefined && !validMaterialPriority(t.craftMaterialPriority)) ||
       t.speed !== 1 ||
       !validList(t.disabledUpgrades, upgradeIds, 19) ||
       !validList(

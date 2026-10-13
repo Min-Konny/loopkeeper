@@ -1,4 +1,5 @@
-import * as old from "./legacy-planner.js?v=0.4.6";
+import * as old from "./legacy-planner.js?v=0.4.7";
+import { orderRecipeMaterials } from './engine.js?v=0.4.7';
 import {
   isLegacy,
   getCatalog,
@@ -17,7 +18,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.4.6";
+} from "./engine.js?v=0.4.7";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -73,7 +74,7 @@ export function planCraft(s, id, count = 1) {
       if ((equipment[x.slot]?.tier || 0) >= x.tier) return;
       if ((equipment[x.slot]?.tier || 0) < x.tier - 1) craft(RECIPES.find(r => r.id === x.previousEquipmentId), 1, next);
     }
-    for (const [r, cost] of Object.entries(getRecipeCost(s, x))) {
+    for (const [r, cost] of orderRecipeMaterials(s,x,inventory,n-(saved?.kind==='craft'?1:0),paid,next)) {
       const needed = cost * (n - (saved?.kind === "craft" ? 1 : 0)),
         short = needed - (inventory[r] || 0);
       if (short > 0) {
@@ -196,7 +197,7 @@ export function queueWork(s, id, count = 1, position = "end") {
 // One shared check for warnings and recovery; already-paid crafts must finish.
 export function blockedReservation(s) {
   const first = s.run.queue[0];
-  if (isLegacy(s) || !s.meta.upgrades.includes('action_queue') || s.run.status !== 'preparing' || !first || s.run.activeAction?.kind === 'craft' || s.settings.disabledUpgrades.includes('action_queue')) return null;
+  if (isLegacy(s) || !s.meta.upgrades.includes('action_queue') || s.run.status !== 'preparing' || !first || s.run.activeAction?.kind === 'craft' || s.run.queueManaged && s.run.activeAction || s.settings.disabledUpgrades.includes('action_queue')) return null;
   const check = first.kind === 'goal' ? resolveGoal(s, first.id) : canStartAction(s, first.id, true);
   return check.ok ? null : check;
 }

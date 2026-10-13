@@ -141,7 +141,7 @@ function newRun(meta) {
 
 export function createGame() {
   const meta = { generation: 1, bestWave: 0, skills: emptySkills(), history: [], points: 0, defeatedBosses: [], upgrades: [], completedMilestones: [] };
-  const state = { version: 1, meta, run: newRun(meta), settings: { paused: true, speed: 1, disabledUpgrades: [], showHiddenRecipes: false, hiddenRecipes: [], soundVolume: 0.3, musicVolume: 0.15, effectsEnabled: true, pauseWhenHidden: false } };
+  const state = { version: 1, meta, run: newRun(meta), settings: { paused: true, speed: 1, disabledUpgrades: [], showHiddenRecipes: false, hiddenRecipes: [], soundVolume: 0.3, musicVolume: 0.15, effectsEnabled: true, pauseWhenHidden: false, craftMaterialPriority: [] } };
   addLog(state, `最初の襲撃まで、あと${FIRST_RAID_DELAY}秒。作業を選んで備えよう。`, 'info');
   return state;
 }
@@ -570,6 +570,12 @@ export function stopAction(state) {
   state.run.queueManaged = false;
   suspendAction(state);
 }
+export function setMaterialPriority(state, priority) {
+  if (!state.meta.upgrades.includes('action_queue')) return {ok:false,reason:'行動予約を解放してください。'};
+  if (!validMaterialPriority(priority) || priority.some(id => !RESOURCES[id])) return {ok:false,reason:'素材は重複せず、利用できる素材を優先順に指定してください。'};
+  state.settings.craftMaterialPriority = [...priority];
+  return {ok:true,reason:''};
+}
 
 function addLog(state, text, type = 'info') {
   state.run.logSeq += 1;
@@ -912,7 +918,9 @@ export function parseSave(text) {
     requireValid(isNumber(soundVolume, 0, 1) && typeof effectsEnabled === 'boolean');
     requireValid(typeof showHiddenRecipes === 'boolean');
     requireValid(Array.isArray(hiddenRecipes) && hiddenRecipes.length <= HIDEABLE_RECIPE_IDS.size && new Set(hiddenRecipes).size === hiddenRecipes.length && hiddenRecipes.every(id => HIDEABLE_RECIPE_IDS.has(id)));
-    state.settings = { paused: settings.paused, speed: 1, disabledUpgrades: [...disabledUpgrades], showHiddenRecipes, hiddenRecipes: [...hiddenRecipes], soundVolume, musicVolume, effectsEnabled, pauseWhenHidden };
+    const craftMaterialPriority = Object.hasOwn(settings,'craftMaterialPriority') ? settings.craftMaterialPriority : [];
+    requireValid(validMaterialPriority(craftMaterialPriority) && craftMaterialPriority.every(id => RESOURCES[id]));
+    state.settings = { paused: settings.paused, speed: 1, disabledUpgrades: [...disabledUpgrades], showHiddenRecipes, hiddenRecipes: [...hiddenRecipes], soundVolume, musicVolume, effectsEnabled, pauseWhenHidden, craftMaterialPriority: [...craftMaterialPriority] };
     requireValid(!upgrades.includes('cycle_acceleration') || !accelerationGate(state));
     requireValid(['preparing', 'combat', 'dead'].includes(run.status));
     requireValid(isNumber(run.elapsed) && isInteger(run.wave, 0, meta.bestWave) && isNumber(run.nextWaveAt, 60));
@@ -1074,3 +1082,4 @@ export function parseSave(text) {
   }
 }
 
+import { validMaterialPriority } from './material-priority.js?v=0.4.7';
