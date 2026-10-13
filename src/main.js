@@ -1,19 +1,19 @@
-import { augmentStatusMarkup } from './augments-ui.js?v=0.4.4';
-import { getActionYields } from './engine.js?v=0.4.4';
-import { reportMarkup, enemyRoadmap, challengesMarkup, chapterPresentation, queueTimingMarkup, conditionalMarkup, updateConditionDraft, conditionalRequest, conditionLabel } from './strategy-ui.js?v=0.4.4';
-import { enqueueConditional } from './engine.js?v=0.4.4';
-import { tradeResource } from "./engine.js?v=0.4.4";
-import { changelogMarkup } from "./changelog.js?v=0.4.4";
-import { createBackgroundClock } from "./background-clock.js?v=0.4.4";
-import { updateSetupDialog } from "./setup-dialog.js?v=0.4.4";
-import { compareRun } from './visual-design.js?v=0.4.4';
-import { createRenderGuard } from './render-guard.js?v=0.4.4';
-import { installQueueDrag } from './queue-drag.js?v=0.4.4';
-import { preparationMarkup } from './preparation-ui.js?v=0.4.4';
-import { saveClearCard } from './clear-card.js?v=0.4.4';
-import { runFrameTasks } from './frame-loop.js?v=0.4.4';
-import { getCatalog } from "./engine.js?v=0.4.4";
-import { CONTENT } from "./content.js?v=0.4.4";
+import { augmentStatusMarkup } from './augments-ui.js?v=0.4.5';
+import { getActionYields } from './engine.js?v=0.4.5';
+import { reportMarkup, enemyRoadmap, challengesMarkup, chapterPresentation, queueTimingMarkup, conditionalMarkup, updateConditionDraft, conditionalRequest, conditionLabel } from './strategy-ui.js?v=0.4.5';
+import { enqueueConditional } from './engine.js?v=0.4.5';
+import { tradeResource } from "./engine.js?v=0.4.5";
+import { changelogMarkup } from "./changelog.js?v=0.4.5";
+import { createBackgroundClock } from "./background-clock.js?v=0.4.5";
+import { updateSetupDialog } from "./setup-dialog.js?v=0.4.5";
+import { compareRun } from './visual-design.js?v=0.4.5';
+import { createRenderGuard } from './render-guard.js?v=0.4.5';
+import { installQueueDrag } from './queue-drag.js?v=0.4.5';
+import { preparationMarkup } from './preparation-ui.js?v=0.4.5';
+import { saveClearCard } from './clear-card.js?v=0.4.5';
+import { runFrameTasks } from './frame-loop.js?v=0.4.5';
+import { getCatalog } from "./engine.js?v=0.4.5";
+import { CONTENT } from "./content.js?v=0.4.5";
 import {
   isLegacy,
   isKnown,
@@ -26,7 +26,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.4.4";
+} from "./engine.js?v=0.4.5";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -37,22 +37,24 @@ import {
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.4.4";
-import { createSessionOwner } from "./session-owner.js?v=0.4.4";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.4.4";
+} from "./mvp-ui.js?v=0.4.5";
+import { createSessionOwner } from "./session-owner.js?v=0.4.5";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.4.5";
 import {
   loadStoredGame,
   writeStoredGame,
   readBackups,
   decodeRecord,
   unreadableRecord,
-} from "./save-storage.js?v=0.4.4";
+  readResetBackup,
+  resetStoredGame,
+} from "./save-storage.js?v=0.4.5";
 import {
   updatePresentation,
   markQueueEdited,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.4.4";
+} from "./presentation.js?v=0.4.5";
 import {
   getRaidInterval,
   aidCountry,
@@ -75,9 +77,9 @@ import {
   abandonRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.4.4";
-import { icon } from "./icons.js?v=0.4.4";
-import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.4.4";
+} from "./engine.js?v=0.4.5";
+import { icon } from "./icons.js?v=0.4.5";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.4.5";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -87,20 +89,20 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.4.4";
-import { renderAugments } from "./augments-ui.js?v=0.4.4";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.4.4";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.4.4";
-import { mountCampScene } from "./camp-scene.js?v=0.4.4";
-import { workScene, syncWorkAnimation } from "./work-scene.js?v=0.4.4";
-import { getRecipeVisibility } from "./workshop.js?v=0.4.4";
-import { getMilestoneStatus } from "./engine.js?v=0.4.4";
+} from "./engine.js?v=0.4.5";
+import { renderAugments } from "./augments-ui.js?v=0.4.5";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.4.5";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.4.5";
+import { mountCampScene } from "./camp-scene.js?v=0.4.5";
+import { workScene, syncWorkAnimation } from "./work-scene.js?v=0.4.5";
+import { getRecipeVisibility } from "./workshop.js?v=0.4.5";
+import { getMilestoneStatus } from "./engine.js?v=0.4.5";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.4.4";
+} from "./engine.js?v=0.4.5";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -322,7 +324,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <button class="prototype-label updates-link" data-command="updates-menu">更新履歴 <b>v0.4.4</b></button>
+    <button class="prototype-label updates-link" data-command="updates-menu">更新履歴 <b>v0.4.5</b></button>
   </aside>
   <div class="workspace">
     <header class="topbar"><span class="mobile-header-title">LoopKeeper</span><button class="mobile-menu-toggle" data-command="header-menu" aria-label="メニュー" aria-haspopup="dialog" aria-controls="header-menu-dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="updates-menu" title="更新履歴" aria-label="更新履歴">${icon("history")}</button><button class="icon-button" data-command="settings-menu" title="設定" aria-label="設定">${icon("settings")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
@@ -1020,14 +1022,14 @@ function renderScreen() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.4.4</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.4.5</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
 
 function showSettingsMenu() {
   state.settings.paused = true;
-  document.querySelector("#settings-dialog").innerHTML = `<div class="dialog-heading"><div class="eyebrow">SETTINGS</div><button class="icon-button" data-close="settings-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="settings-title">設定</h2><section class="presentation-settings settings-options"><h3>ゲームの進行</h3><label><input id="pause-when-hidden" type="checkbox" ${state.settings.pauseWhenHidden ? "checked" : ""}> 別のタブ・アプリへ移ったら一時停止</label><h3>音と演出</h3><label>BGM音量 <input id="music-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.musicVolume ?? .15}"></label><label>環境音（風） <input id="ambient-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.ambientVolume || 0}"></label><label>効果音量 <input id="sound-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.soundVolume}"></label><label><input id="effects-enabled" type="checkbox" ${state.settings.effectsEnabled ? "checked" : ""}> 演出を表示</label></section>`;
+  document.querySelector("#settings-dialog").innerHTML = `<div class="dialog-heading"><div class="eyebrow">SETTINGS</div><button class="icon-button" data-close="settings-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="settings-title">設定</h2><section class="presentation-settings settings-options"><h3>ゲームの進行</h3><label><input id="pause-when-hidden" type="checkbox" ${state.settings.pauseWhenHidden ? "checked" : ""}> 別のタブ・アプリへ移ったら一時停止</label><h3>音と演出</h3><label>BGM音量 <input id="music-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.musicVolume ?? .15}"></label><label>環境音（風） <input id="ambient-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.ambientVolume || 0}"></label><label>効果音量 <input id="sound-volume" type="range" min="0" max="1" step="0.05" value="${state.settings.soundVolume}"></label><label><input id="effects-enabled" type="checkbox" ${state.settings.effectsEnabled ? "checked" : ""}> 演出を表示</label></section><section class="presentation-settings"><h3>新しい挑戦</h3><p class="fine-print">継承もリセットして、第1世代から挑戦します。</p><button class="button muted full-width" data-command="reset-menu">最初からやり直す</button></section>`;
   document.querySelector("#settings-dialog").showModal();
   render();
 }
@@ -1043,6 +1045,8 @@ function showSaveMenu() {
       `<details class="save-code"><summary>セーブコードで保存・読み込み</summary><p>ファイルの代わりに、コード全体をコピーして保管できます。</p><textarea id="save-code" aria-label="セーブコード" placeholder="ここにセーブコードを貼り付け" spellcheck="false"></textarea><div><button class="button small muted" data-command="code-export">現在のコードを表示</button><button class="button small gold-outline" data-command="code-import">コードを読み込む</button></div></details>`,
     );
   const backups = readBackups(localStorage);
+  const resetBackup = readResetBackup(localStorage);
+  if (resetBackup) document.querySelector("#save-dialog").insertAdjacentHTML("beforeend", `<div class="save-options"><span>最初からやり直す前 · 第${resetBackup.meta.generation}世代</span><button class="button muted" data-command="restore-reset">リセット前の記録を復元</button></div>`);
   document.querySelector("#save-dialog").insertAdjacentHTML(
     "beforeend",
     `<details class="backup-list"><summary>バックアップから復元（${backups.length}/5）</summary>${backups
@@ -1507,6 +1511,79 @@ document.addEventListener("click", (event) => {
       saveGame();
       break;
     }
+    case "reset-menu": {
+      const dialog = document.querySelector("#reset-dialog");
+      delete dialog.dataset.restore;
+      dialog.innerHTML = `<div class="dialog-heading"><h2 id="reset-title">第1世代からやり直しますか？</h2><button class="icon-button" data-close="reset-dialog" aria-label="閉じる">${icon("close")}</button></div><p class="dialog-lead">第${state.meta.generation}世代の進行・永続レベル・継承ポイント・解放・初達成・クリア記録をすべて初期化します。</p><p class="fine-print">音量・演出の設定は残ります。直前の記録は保存メニューから復元できます。保管するのは直近1回分です。</p><div class="save-options"><button class="button muted" data-close="reset-dialog">キャンセル</button><button class="button gold" data-command="reset-confirm">すべてリセットして始める</button></div>`;
+      state.settings.paused = true;
+      dialog.showModal();
+      break;
+    }
+    case "reset-confirm": {
+      if (!document.querySelector("#reset-dialog").open || document.querySelector("#reset-dialog").dataset.restore) break;
+      try {
+        state = resetStoredGame(localStorage, state);
+      } catch {
+        toast("保存できないため、リセットを中止しました。現在の進行は残っています。");
+        break;
+      }
+      activeBattle = null;
+      deadShown = setupShown = false;
+      displayedOffer = "";
+      queueExpanded = false;
+      queueDraftId = "chop_wood";
+      queueDraftCount = 1;
+      tab = "gather";
+      selectedSkill = null;
+      craftFilter = "all";
+      for (const key of Object.keys(craftQuantities)) delete craftQuantities[key];
+      delete document.querySelector("#death-dialog").dataset.setup;
+      refreshCatalog();
+      markQueueEdited();
+      loadWarning = "";
+      saveFailed = false;
+      savedAt = new Date();
+      lastTick = performance.now();
+      for (const dialog of document.querySelectorAll("dialog[open]")) dialog.close();
+      toast("第1世代から新しい挑戦を始めます。");
+      break;
+    }
+    case "restore-reset": {
+      const previous = readResetBackup(localStorage);
+      if (!previous) { toast("リセット前の記録を読み込めません。"); break; }
+      const dialog = document.querySelector("#reset-dialog");
+      dialog.dataset.restore = "true";
+      dialog.innerHTML = `<div class="dialog-heading"><h2 id="reset-title">リセット前の記録へ戻しますか？</h2><button class="icon-button" data-close="reset-dialog" aria-label="閉じる">${icon("close")}</button></div><p class="dialog-lead">第${previous.meta.generation}世代・最高${previous.meta.bestWave}波の記録を復元します。現在の進行は通常のバックアップに残ります。</p><div class="save-options"><button class="button muted" data-close="reset-dialog">キャンセル</button><button class="button gold" data-command="restore-reset-confirm">記録を復元する</button></div>`;
+      dialog.showModal();
+      break;
+    }
+    case "restore-reset-confirm": {
+      if (!document.querySelector("#reset-dialog").open || !document.querySelector("#reset-dialog").dataset.restore) break;
+      try {
+        const previous = readResetBackup(localStorage);
+        if (!previous) throw Error("Missing backup");
+        previous.settings.paused = true;
+        writeStoredGame(localStorage, state, { checkpoint: true });
+        writeStoredGame(localStorage, previous);
+        state = previous;
+      } catch {
+        toast("復元できませんでした。現在の進行は残っています。");
+        break;
+      }
+      activeBattle = null;
+      deadShown = setupShown = false;
+      displayedOffer = "";
+      delete document.querySelector("#death-dialog").dataset.setup;
+      refreshCatalog();
+      markQueueEdited();
+      savedAt = new Date();
+      loadWarning = "";
+      saveFailed = false;
+      lastTick = performance.now();
+      for (const dialog of document.querySelectorAll("dialog[open]")) dialog.close();
+      toast("リセット前の記録を復元しました。");
+      break;
+    }
     case "abandon-menu":
       if (!["preparing", "combat"].includes(state.run.status)) {toast("進行中の周回だけ切り上げられます。");break;}
       state.settings.paused = true;
@@ -1735,7 +1812,7 @@ function resumeAfterDialogClose() {
   saveGame();
   render();
 }
-const temporaryDialogs = [abandonDialog, headerMenuDialog, document.querySelector("#updates-dialog"), document.querySelector("#settings-dialog"), infoDialog, document.querySelector("#save-dialog"), document.querySelector("#help-dialog"), document.querySelector("#augment-dialog")];
+const temporaryDialogs = [document.querySelector("#reset-dialog"), abandonDialog, headerMenuDialog, document.querySelector("#updates-dialog"), document.querySelector("#settings-dialog"), infoDialog, document.querySelector("#save-dialog"), document.querySelector("#help-dialog"), document.querySelector("#augment-dialog")];
 let queueDragPaused = true;
 let draggedQueue = null;
 installQueueDrag({

@@ -1,7 +1,30 @@
-import { parseSave, serializeGame } from './engine.js?v=0.4.4';
+import { createGame, parseSave, serializeGame } from './engine.js?v=0.4.5';
 export const STORAGE_KEY = 'tomori-rebirth-v1';
 const BACKUP_KEY = `${STORAGE_KEY}-backups`;
 const ARCHIVE_KEY = `${STORAGE_KEY}-unreadable`;
+const RESET_KEY = `${STORAGE_KEY}-before-reset`;
+
+export function readResetBackup(storage) {
+  return decodeRecord(storage.getItem(RESET_KEY));
+}
+
+// Commit storage before the caller replaces its live game. A failed write leaves
+// the current primary save intact and never returns a fresh game to the UI.
+export function resetStoredGame(storage, current, { now = Date.now() } = {}) {
+  const oldPayload = serializeGame(current);
+  if (!parseSave(oldPayload)) throw new Error('Invalid current game');
+  const fresh = createGame();
+  for (const key of ['soundVolume', 'musicVolume', 'ambientVolume', 'effectsEnabled', 'pauseWhenHidden']) {
+    if (current.settings[key] !== undefined) fresh.settings[key] = current.settings[key];
+  }
+  const payload = serializeGame(fresh);
+  if (!parseSave(payload)) throw new Error('Invalid fresh game');
+  const previous = storage.getItem(STORAGE_KEY);
+  if (previous && !decodeRecord(previous)) storage.setItem(ARCHIVE_KEY, previous);
+  storage.setItem(RESET_KEY, JSON.stringify({ storageVersion: 2, savedAt: now, payload: oldPayload }));
+  storage.setItem(STORAGE_KEY, JSON.stringify({ storageVersion: 2, savedAt: now, payload }));
+  return fresh;
+}
 
 // Storage format 2 wraps the game payload; raw version-one saves remain readable.
 export function decodeRecord(raw) {
