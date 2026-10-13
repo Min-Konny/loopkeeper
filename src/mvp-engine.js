@@ -1,13 +1,14 @@
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.5';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.5';
-import { CONTENT as C } from "./content.js?v=0.4.5";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.5";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.5";
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.4.6';
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.6';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.6';
+import { CONTENT as C } from "./content.js?v=0.4.6";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.6";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.6";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.4.5";
+} from "./legacy-engine.js?v=0.4.6";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -64,7 +65,7 @@ export const RECIPES = [
   })),
   ...C.processing.map((p) => ({
     ...p,
-    description: Object.entries(p.yields)
+    description: p.description || Object.entries(p.yields)
       .map(([r, n]) => `${RESOURCES[r].name} +${n}`)
       .join(" / "),
   })),
@@ -189,9 +190,9 @@ const on = (s, id) =>
   s.meta.upgrades.includes(id) && !s.settings.disabledUpgrades.includes(id);
 const aug = (s, id) => s.run.augments.selected.includes(id);
 const effect = (s, id) =>
-  C.facilities.find(
+  reinforcementEffect(id, s.run.endless?.levels[id] || 0, C.facilities.find(
     (f) => f.facilityId === id && f.level === (s.run.facilities[id] || 0),
-  )?.effect || {};
+  )?.effect || {});
 const log = (s, text, type = "info") => {
   s.run.log.unshift({ id: ++s.run.logSeq, time: s.run.elapsed, text, type });
   s.run.log.length = Math.min(40, s.run.log.length);
@@ -323,7 +324,7 @@ export function createGame() {
 export function isKnown(s, d) {
   if (typeof d === "string") d = defs.get(d);
   return (
-    !!d &&
+    !!d && (!d.endlessFacility || s.run.endless?.active) &&
     s.meta.bestWave >=
       (typeof d.knownAfterBoss === "string"
         ? (C.encounters.find((e) => e.id === d.knownAfterBoss)?.wave ?? 999)
@@ -382,6 +383,7 @@ export function getStats(s) {
       defense += e.defense || 0;
       maxHp += e.maxHp || 0;
     }
+  maxHp += effect(s, "barricade").maxHp || 0;
   const syn = getSynergies(s);
   defense +=
     (effect(s, "barricade").defense || 0) *
@@ -427,10 +429,10 @@ export function getActionDuration(s, d) {
 }
 export function getRecipeCost(s, d) {
   if (typeof d === "string") d = defs.get(d);
-  let discount = d?.facility && aug(s, "builder") ? 0.25 : 0;
+  let discount = (d?.facility || d?.endlessFacility) && aug(s, "builder") ? 0.25 : 0;
   if (d?.equipment && s.run.reinvestment > 0) discount += 0.25;
   return Object.fromEntries(
-    Object.entries(d?.cost || {}).map(([id, n]) => [
+    Object.entries(d?.endlessFacility ? reinforcementCost(s, d) : d?.cost || {}).map(([id, n]) => [
       id,
       Math.max(
         1,
@@ -501,6 +503,8 @@ export function canStartAction(s, id, ignoreActive = false) {
     return fail(
       `${SKILLS.find((x) => x.id === d.skill).name} Lv.${d.unlockLevel}が必要。`,
     );
+  if (d.endlessFacility && (s.run.endless?.levels[d.endlessFacility] || 0) >= 10000) return fail("追加強化の上限に到達しました。");
+  if (d.endlessFacility && (!s.run.endless?.active || (s.run.facilities[d.endlessFacility] || 0) < 5)) return fail("エンドレスで施設Vを建設すると追加強化できます。");
   if (d.facility) {
     const current = s.run.facilities[d.facility.id] || 0;
     if (current >= d.level) return fail("建設済みです。");
@@ -628,6 +632,14 @@ function complete(s, a) {
     );
     log(s, `${d.name}が完成。`, "craft");
   }
+  if (d.endlessFacility) {
+    const oldDelay = effect(s, "watchtower").raidDelay || 0;
+    s.run.endless.levels[d.endlessFacility] = (s.run.endless.levels[d.endlessFacility] || 0) + 1;
+    s.run.nextWaveAt = round(s.run.nextWaveAt + (effect(s, "watchtower").raidDelay || 0) - oldDelay);
+    if (aug(s, "construction_rush")) strategy(s).constructionUntil = s.run.elapsed + 90;
+    if (aug(s, "salvage")) for (const r of ["wood", "stone"]) s.run.resources[r] = round(s.run.resources[r] + (a.paidCost?.[r] || 0) * .15);
+    log(s, `${d.name} +${s.run.endless.levels[d.endlessFacility]} が完成。`, "craft");
+  }
   event(s, "craft", d);
   if (getSynergies(s).length) event(s, "synergy");
   gain(s, d.skill, a.runXp, a.permanentXp, d.trainingStat);
@@ -705,6 +717,8 @@ export function getProductionSources(
 export function resolveGoal(s, id, visiting = new Set()) {
   const d = defs.get(id);
   if (!d) return fail("作業がありません。");
+  if (d.endlessFacility && !s.run.endless?.active) return fail("エンドレスで解放されます。");
+  if (d.endlessFacility && (s.run.facilities[d.endlessFacility] || 0) < 5) return resolveGoal(s, `${d.endlessFacility}_level_5`, new Set([...visiting, id]));
   if (visiting.has(id)) return fail("材料の循環があります。");
   if (!isKnown(s, d)) return fail("未発見です。");
   if (s.run.suspendedActions[id]) return { ...ok(), id };
@@ -758,7 +772,7 @@ export function enqueueAction(
   if (s.run.queue.length >= 8)
     return fail("行動予約が8件でいっぱいです。不要な予約を削除してください。");
   if (s.run.status !== "preparing") return fail("準備中に予約してください。");
-  if (defs.get(id)?.equipment || defs.get(id)?.facility) {
+  if (defs.get(id)?.equipment || defs.get(id)?.facility || defs.get(id)?.endlessFacility) {
     if (s.run.queue.some(q => q.id === id)) return fail("既に予約しています。");
     count = 1;
   }
@@ -797,7 +811,7 @@ export function editQueuedAction(s, i, n) {
   s.settings.paused = true;
   detach(s);
   const d = defs.get(s.run.queue[i].id);
-  s.run.queue[i].count = d?.equipment || d?.facility ? 1 : n;
+  s.run.queue[i].count = d?.equipment || d?.facility || d?.endlessFacility ? 1 : n;
   return ok();
 }
 export function moveQueuedAction(s, i, dir) {
@@ -1158,7 +1172,7 @@ export function getAugmentStatus(s) {
     unlocked: s.meta.bestWave >= 3,
     offer: [...s.run.augments.offer],
     selected: [...s.run.augments.selected],
-    remaining: 4 - s.run.augments.selected.length,
+    remaining: (s.run.endless?.active ? C.augments.length : 4) - s.run.augments.selected.length,
   };
 }
 function augmentPool(s) {
@@ -1225,11 +1239,12 @@ function offer(s, stage) {
   if (
     s.meta.bestWave < 3 ||
     a.offer.length ||
-    a.selected.length >= 4 ||
+    a.selected.length >= (s.run.endless?.active ? C.augments.length : 4) ||
     a.offeredStages.includes(stage)
   )
     return;
   const aNext = drawAugmentOffer(s, stage);
+  if (!aNext?.offer.length) return;
   Object.assign(a, aNext);
   a.offeredStages.push(stage);
   s.settings.paused = true;
@@ -1520,6 +1535,7 @@ export function stopAcceleration(s) {
   return ok();
 }
 export function getNextEnemy(s) {
+  if (s.run.endless?.active && s.run.wave >= 21) return endlessEnemy(s.run.wave + 1, C.encounters);
   const e = (s.contentVersion === "A1" ? A1_ENCOUNTERS : s.contentVersion === "A2" ? A2_ENCOUNTERS : C.encounters)[
     s.run.wave
   ];
@@ -1556,7 +1572,7 @@ function beginRaid(s) {
     round: 0,
     xpAwarded: 0,
     xpBudget:
-      C.encounters[s.run.wave].combatXpBudget *
+      getNextEnemy(s).combatXpBudget *
       (aug(s, "field_training") ? 1.25 : 1),
     charges: effect(s, "infirmary").treatmentCharges || 0,
   };
@@ -1565,6 +1581,7 @@ function beginRaid(s) {
   log(s, `第${s.run.enemy.wave}波：${s.run.enemy.name}`, "raid");
 }
 function record(s) {
+  if (s.run.endless?.active && s.meta.history[0]?.generation === s.meta.generation) s.meta.history.shift();
   s.meta.history.unshift({
     generation: s.meta.generation,
     wave: s.run.wave,
@@ -1613,7 +1630,8 @@ function victory(s, e) {
   s.run.wave = e.wave;
   if (s.run.wave >= s.run.acceleration.limitWave)
     s.run.acceleration.active = false;
-  s.meta.bestWave = Math.max(s.meta.bestWave, e.wave);
+  s.meta.bestWave = Math.max(s.meta.bestWave, Math.min(21, e.wave));
+  if (s.run.endless?.active) s.meta.bestEndlessWave = Math.max(s.meta.bestEndlessWave || 21, e.wave);
   let gold =
     e.gold *
     (1 +
@@ -1622,7 +1640,7 @@ function victory(s, e) {
       defeatedCountryBonus(s, "victoryGoldPercent"));
   s.run.resources.gold = round(s.run.resources.gold + gold);
   s.run.resources.hide += e.hide;
-  if (e.boss && !s.meta.defeatedBosses.includes(e.id)) {
+  if (!s.run.endless?.active && e.boss && !s.meta.defeatedBosses.includes(e.id)) {
     s.meta.defeatedBosses.push(e.id);
     s.meta.points++;
     s.meta.totalPoints++;
@@ -1646,6 +1664,8 @@ function victory(s, e) {
   s.run.nextWaveAt = round(s.run.elapsed + getRaidInterval(s));
   log(s, `第${e.wave}波を撃退。`, "victory");
   if (e.wave === 21) {
+    s.run.clearRecord = {generation:s.meta.generation,wave:21,seconds:Math.floor(s.run.elapsed),augments:[...s.run.augments.selected],badges:challengeResults(s)};
+    if (!s.meta.clears) s.meta.firstClear ||= structuredClone(s.run.clearRecord);
     s.meta.clears++;
     s.meta.challengeBadges = [...new Set([...(s.meta.challengeBadges || []), ...challengeResults(s)])];
     s.settings.paused = true;
@@ -1653,7 +1673,7 @@ function victory(s, e) {
     record(s);
   } else {
     syncCountries(s);
-    if ([3, 9, 15].includes(e.wave)) offer(s, e.wave);
+    if ([3, 9, 15].includes(e.wave) || s.run.endless?.active && e.wave % 6 === 0) offer(s, e.wave);
   }
   if (s.run.wave >= s.run.acceleration.limitWave)
     s.run.acceleration.active = false;
@@ -1738,7 +1758,7 @@ function battleRound(s) {
       Math.min(
         stats.maxHp,
         s.run.hp +
-          stats.maxHp *
+          (effect(s, "infirmary").treatmentFlat || 0) + stats.maxHp *
             0.22 *
             (aug(s, "healing_patrol") ? 1.3 : 1) *
             (getSynergies(s).includes("fortress") ? 1.2 : 1),
@@ -1759,6 +1779,13 @@ function step(s, dt) {
     if (s.settings.paused) return;
   }
   s.run.elapsed = round(s.run.elapsed + dt);
+  if (s.run.endless?.active) {
+    s.run.endless.incomeTimer = round(s.run.endless.incomeTimer + dt);
+    if (s.run.endless.incomeTimer >= 15) {
+      s.run.endless.incomeTimer = round(s.run.endless.incomeTimer - 15);
+      s.run.resources.gold = Math.min(1e9, round(s.run.resources.gold + (effect(s, "market").income || 0)));
+    }
+  }
   if (s.run.status === "combat") {
     s.run.combatTimer = round(s.run.combatTimer + dt);
     if (s.run.combatTimer + 1e-8 >= 1.5) {
@@ -1935,4 +1962,17 @@ export function migrateLegacy(old) {
 export function getVitalityMigrationXp(combatXp) {
   const target = Math.ceil((getSkillProgress(combatXp).level-1)*10/18)+1;
   return Array.from({length:target-1},(_,i)=>Math.round(50*(i+1)**1.3)).reduce((a,b)=>a+b,0);
+}
+
+export function startEndless(s) {
+  if (s.run.status !== "cleared" || s.run.wave !== 21 || s.run.endless?.active) return fail("最終襲撃のクリア後に挑戦できます。");
+  s.run.clearRecord ||= {generation:s.meta.generation,wave:21,seconds:Math.floor(s.run.elapsed),augments:[...s.run.augments.selected],badges:challengeResults(s)};
+  if (s.meta.clears === 1) s.meta.firstClear ||= structuredClone(s.run.clearRecord);
+  s.run.endless = {active:true,levels:{},incomeTimer:0};
+  s.run.status = "preparing";
+  s.settings.paused = true;
+  s.run.nextWaveAt = round(s.run.elapsed + getRaidInterval(s));
+  s.run.acceleration.active = false;
+  log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
+  return ok();
 }

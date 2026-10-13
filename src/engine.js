@@ -1,13 +1,13 @@
 export const getActionYields = (s,d) => isLegacy(s) ? d.yields || {} : mvp.getActionYields(s,d);
 export const getPlayerStrike = s => isLegacy(s) ? {attack:getStats(s).attack,armor:(s.run.enemy || getNextEnemy(s)).defense,damage:Math.max(1,getStats(s).attack-(s.run.enemy || getNextEnemy(s)).defense)} : mvp.getPlayerStrike(s);
-export { enqueueConditional } from './mvp-engine.js?v=0.4.5';
-import * as legacy from "./legacy-engine.js?v=0.4.5";
-import * as mvp from "./mvp-engine.js?v=0.4.5";
-import { validateSave } from "./save-validation.js?v=0.4.5";
-export { getProductionSources } from "./mvp-engine.js?v=0.4.5";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.4.5";
-export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.4.5";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.4.5";
+export { enqueueConditional } from './mvp-engine.js?v=0.4.6';
+import * as legacy from "./legacy-engine.js?v=0.4.6";
+import * as mvp from "./mvp-engine.js?v=0.4.6";
+import { validateSave } from "./save-validation.js?v=0.4.6";
+export { getProductionSources } from "./mvp-engine.js?v=0.4.6";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.4.6";
+export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.4.6";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.4.6";
 export {
   SKILLS,
   getSkillProgress,
@@ -24,12 +24,12 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.4.5";
+} from "./mvp-engine.js?v=0.4.6";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
   const recipes = (isLegacy(s) ? legacy : mvp).RECIPES;
-  const single = id => { const d = recipes.find(r => r.id === id); return d?.equipment || d?.facility; };
+  const single = id => { const d = recipes.find(r => r.id === id); return d?.equipment || d?.facility || d?.endlessFacility; };
   const replacements = new Map();
   function uniqueSingles(entries, recordLinks = false) {
     const seen = new Map();
@@ -301,3 +301,5 @@ export function getCombatPreview(s) {
 
 export const getAugmentRerollStatus = s => isLegacy(s) ? {limit:0,remaining:0,canReroll:false,reason:'次の世代から利用できます。'} : mvp.getAugmentRerollStatus(s);
 export const rerollAugments = s => isLegacy(s) ? {ok:false,reason:'次の世代から利用できます。'} : mvp.rerollAugments(s);
+
+export const startEndless = s => isLegacy(s) ? {ok:false,reason:"次の世代から利用できます。"} : mvp.startEndless(s);

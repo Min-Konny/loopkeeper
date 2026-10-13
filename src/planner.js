@@ -1,4 +1,4 @@
-import * as old from "./legacy-planner.js?v=0.4.5";
+import * as old from "./legacy-planner.js?v=0.4.6";
 import {
   isLegacy,
   getCatalog,
@@ -17,7 +17,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.4.5";
+} from "./engine.js?v=0.4.6";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -54,6 +54,7 @@ export function planCraft(s, id, count = 1) {
     if (getSkillProgress(s.run.skills[x.skill].xp).level < x.unlockLevel)
       throw Error(x.skill + " Lv." + x.unlockLevel + "が必要。");
     const next = new Set([...seen, x.id]);
+    if (x.endlessFacility && (s.run.facilities[x.endlessFacility] || 0) < 5) craft(RECIPES.find(r => r.id === `${x.endlessFacility}_level_5`), 1, next);
     if (x.facility) {
       if ((s.run.facilities[x.facility.id] || 0) >= x.level) return;
       if ((s.run.facilities[x.facility.id] || 0) < x.level - 1)
@@ -105,7 +106,7 @@ export function planCraft(s, id, count = 1) {
       inventory[r] = (inventory[r] || 0) + v * n;
   }
   try {
-    craft(d, d.equipment || d.facility ? 1 : count);
+    craft(d, d.equipment || d.facility || d.endlessFacility ? 1 : count);
     return {
       ok: true,
       reason: "",
@@ -162,12 +163,12 @@ export function queueCraft(s, id, position = "end", count = 1) {
   s.settings.disabledUpgrades = s.settings.disabledUpgrades.filter(
     (x) => x !== "action_queue",
   );
-  const result = queueAction(s, id, d.equipment || d.facility ? 1 : count, position);
+  const result = queueAction(s, id, d.equipment || d.facility || d.endlessFacility ? 1 : count, position);
   if (!result.ok) {
     s.settings.disabledUpgrades = previousDisabled;
     return fail(result.reason);
   }
-  return { ok: true, reason: "", moved: result.moved, steps: [{ id, count: d.equipment || d.facility ? 1 : count }] };
+  return { ok: true, reason: "", moved: result.moved, steps: [{ id, count: d.equipment || d.facility || d.endlessFacility ? 1 : count }] };
 }
 
 

@@ -1,7 +1,7 @@
-import { CONTENT } from './content.js?v=0.4.5';
-import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.4.5';
-import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.4.5';
-import { conditionLabel } from './queue-conditions.js?v=0.4.5';
+import { CONTENT } from './content.js?v=0.4.6';
+import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.4.6';
+import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.4.6';
+import { conditionLabel } from './queue-conditions.js?v=0.4.6';
 const esc = x => String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Math.round(n).toLocaleString('ja-JP');
 const duration = n => `${Math.floor(n/60)}:${String(Math.ceil(n%60)).padStart(2,'0')}`;
@@ -15,8 +15,8 @@ export function reportMarkup(s) {
 }
 const traitHints = {flying:'飛行：弓塔が有効。本人の攻撃でも対処可能。',combo:'連撃：防御を高めて一撃ずつ軽減。体力と回復でも耐えられる。',heavy:'強打：4回ごとに大技。最大HP・防御・短期決戦で備える。',armor:'装甲：高い攻撃力、破甲の斉射、研ぎ澄ます一撃が有効。'};
 export function enemyRoadmap(s) {
-  if (s.version !== 2 || s.meta.bestWave < 3 || s.run.wave >= 21) return '';
-  const waves = [0,1,2].filter(n=>s.run.wave+n<21).map(n=>{
+  if (s.version !== 2 || s.meta.bestWave < 3 || s.run.wave >= 21 && !s.run.endless?.active) return '';
+  const waves = [0,1,2].filter(n=>s.run.endless?.active || s.run.wave+n<21).map(n=>{
     const e = getNextEnemy({...s,run:{...s.run,wave:s.run.wave+n,hostileQueue:n ? [] : s.run.hostileQueue}});
     const pressure = e.pressure === 'rally' ? '戦意高揚：4回攻撃するごとに攻撃＋5%（最大＋30%）。火力で早く倒すか、十分な防御・回復を用意。' : e.pressure === 'sunder' ? '崩し：4回目の攻撃は防御を40%無視。体力・回復・短期決戦で対処。' : '';
     return `<article><strong>WAVE ${String(e.wave).padStart(2,'0')} · ${esc(e.name)}</strong><span>HP ${number(e.hp)} · 攻撃 ${number(e.attack)} · 防御 ${number(e.defense)}</span><p>${pressure || traitHints[e.trait] || '通常：攻撃・防御・回復の配分で備える。'}</p></article>`;
@@ -31,9 +31,9 @@ export function chapterPresentation(s) {
   const chapter = chapterOf(s);
   document.body.dataset.chapter = chapter;
   const title = document.querySelector('.camp-caption h2');
-  if (title) title.textContent = CHAPTERS[chapter];
+  if (title) title.textContent = s.run.endless?.active ? "終わらぬ夜" : CHAPTERS[chapter];
   const subtitle = document.querySelector('.camp-caption p');
-  if (subtitle) subtitle.textContent = ['まだ、火は灯っている。','葉の間から、灯りがこぼれる。','霧の向こうに、次の敵が待つ。','赤い岩肌に、槌音が響く。','青い結晶が、夜道を照らす。','長い影が、砦へと伸びる。','あと少し。夜明けは近い。'][chapter];
+  if (subtitle) subtitle.textContent = s.run.endless?.active ? '砦を育て、ひとつ先の襲撃へ。' : ['まだ、火は灯っている。','葉の間から、灯りがこぼれる。','霧の向こうに、次の敵が待つ。','赤い岩肌に、槌音が響く。','青い結晶が、夜道を照らす。','長い影が、砦へと伸びる。','あと少し。夜明けは近い。'][chapter];
 }
 let cache = {key:'',value:null};
 export function queueForecast(s) {

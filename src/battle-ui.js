@@ -1,8 +1,8 @@
-import { getPlayerStrike } from './engine.js?v=0.4.5';
-import { equipmentMaterial } from './visual-design.js?v=0.4.5';
-import { battleSound } from "./presentation.js?v=0.4.5";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.4.5";
-import { icon } from "./icons.js?v=0.4.5";
+import { getPlayerStrike } from './engine.js?v=0.4.6';
+import { equipmentMaterial } from './visual-design.js?v=0.4.6';
+import { battleSound } from "./presentation.js?v=0.4.6";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.4.6";
+import { icon } from "./icons.js?v=0.4.6";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -353,7 +353,7 @@ export function renderBattle(dialog, state) {
     clearFeedback(view);
     view.arrivalPending = enemy.isBoss;
   }
-  dialog.dataset.chapter = String(Math.ceil(enemy.wave / 3));
+  dialog.dataset.chapter = String(Math.min(7,Math.ceil(enemy.wave / 3)));
   view.effectsEnabled = state.settings.effectsEnabled;
   view.paused = paused;
   view.suspended = false;

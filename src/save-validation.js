@@ -1,5 +1,6 @@
-import { validCondition } from './queue-conditions.js?v=0.4.5';
-import { CONTENT as C } from "./content.js?v=0.4.5";
+import { endlessEnemy } from './endless.js?v=0.4.6';
+import { validCondition } from './queue-conditions.js?v=0.4.6';
+import { CONTENT as C } from "./content.js?v=0.4.6";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -67,7 +68,12 @@ export function validateSave(s) {
     )
       return false;
     const { meta: m, run: r, settings: t } = s;
-    if (m.discovered !== undefined && !validList(m.discovered, new Set([...defs.keys(), 'feature_village', 'feature_diplomacy', 'feature_augments']), 100)) return false;
+    const validClear = x => object(x) && integer(x.generation,1,m.generation) && x.wave===21 && integer(x.seconds) && validList(x.augments,new Set(C.augments.map(a=>a.id)),4) && validList(x.badges,new Set(['independent','architect','champion']),3);
+    if (m.firstClear !== undefined && !validClear(m.firstClear)) return false;
+    if (m.bestEndlessWave !== undefined && !integer(m.bestEndlessWave,21)) return false;
+    if (r.clearRecord !== undefined && !validClear(r.clearRecord)) return false;
+    if (r.endless !== undefined && (!object(r.endless) || r.endless.active !== true || r.wave < 21 || !validClear(r.clearRecord) || !object(r.endless.levels) || !number(r.endless.incomeTimer,0,15) || Object.entries(r.endless.levels).some(([id,n])=> !C.facilities.some(f=>f.facilityId===id) || !integer(n,0,10000) || (r.facilities[id]||0)<5))) return false;
+    if (m.discovered !== undefined && !validList(m.discovered, new Set([...defs.keys(), 'feature_village', 'feature_diplomacy', 'feature_augments']), 200)) return false;
     if (
       !integer(m.generation, 1) ||
       !integer(m.bestWave) ||
@@ -127,7 +133,7 @@ export function validateSave(s) {
       !["preparing", "combat", "dead", "cleared", "legacy_setup"].includes(
         r.status,
       ) ||
-      !integer(r.wave, 0, 21) ||
+      !integer(r.wave, 0, r.endless?.active ? 1000000 : 21) ||
       !number(r.elapsed) ||
       !number(r.nextWaveAt) ||
       !number(r.hp) ||
@@ -254,11 +260,11 @@ export function validateSave(s) {
       !object(a) ||
       !integer(a.seed, 0, 4294967295) ||
       (a.rerollsUsed !== undefined && !integer(a.rerollsUsed, 0, 4)) ||
-      !validList(a.selected, new Set(C.augments.map((a) => a.id)), 4) ||
+      !validList(a.selected, new Set(C.augments.map((a) => a.id)), r.endless?.active ? C.augments.length : 4) ||
       !validList(a.offer, new Set(C.augments.map((a) => a.id)), 3) ||
       a.offer.some((id) => a.selected.includes(id)) ||
       !unique(a.offeredStages) ||
-      a.offeredStages.some((x) => !["start", 3, 9, 15].includes(x)) ||
+      a.offeredStages.some((x) => !["start", 3, 9, 15].includes(x) && !(r.endless?.active && integer(x,24,r.wave) && x%6===0)) ||
       !number(a.investmentTimer, 0, 15)
     )
       return false;
@@ -274,7 +280,7 @@ export function validateSave(s) {
       return false;
     if (r.status === "combat") {
       const e = r.enemy,
-        d = C.encounters[r.wave];
+        d = r.endless?.active ? endlessEnemy(r.wave+1,C.encounters) : C.encounters[r.wave];
       if (
         !object(e) ||
         !d ||

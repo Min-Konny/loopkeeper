@@ -1,19 +1,21 @@
-import { augmentStatusMarkup } from './augments-ui.js?v=0.4.5';
-import { getActionYields } from './engine.js?v=0.4.5';
-import { reportMarkup, enemyRoadmap, challengesMarkup, chapterPresentation, queueTimingMarkup, conditionalMarkup, updateConditionDraft, conditionalRequest, conditionLabel } from './strategy-ui.js?v=0.4.5';
-import { enqueueConditional } from './engine.js?v=0.4.5';
-import { tradeResource } from "./engine.js?v=0.4.5";
-import { changelogMarkup } from "./changelog.js?v=0.4.5";
-import { createBackgroundClock } from "./background-clock.js?v=0.4.5";
-import { updateSetupDialog } from "./setup-dialog.js?v=0.4.5";
-import { compareRun } from './visual-design.js?v=0.4.5';
-import { createRenderGuard } from './render-guard.js?v=0.4.5';
-import { installQueueDrag } from './queue-drag.js?v=0.4.5';
-import { preparationMarkup } from './preparation-ui.js?v=0.4.5';
-import { saveClearCard } from './clear-card.js?v=0.4.5';
-import { runFrameTasks } from './frame-loop.js?v=0.4.5';
-import { getCatalog } from "./engine.js?v=0.4.5";
-import { CONTENT } from "./content.js?v=0.4.5";
+import { reinforcementEffect } from './endless.js?v=0.4.6';
+import { startEndless } from './engine.js?v=0.4.6';
+import { augmentStatusMarkup } from './augments-ui.js?v=0.4.6';
+import { getActionYields } from './engine.js?v=0.4.6';
+import { reportMarkup, enemyRoadmap, challengesMarkup, chapterPresentation, queueTimingMarkup, conditionalMarkup, updateConditionDraft, conditionalRequest, conditionLabel } from './strategy-ui.js?v=0.4.6';
+import { enqueueConditional } from './engine.js?v=0.4.6';
+import { tradeResource } from "./engine.js?v=0.4.6";
+import { changelogMarkup } from "./changelog.js?v=0.4.6";
+import { createBackgroundClock } from "./background-clock.js?v=0.4.6";
+import { updateSetupDialog } from "./setup-dialog.js?v=0.4.6";
+import { compareRun } from './visual-design.js?v=0.4.6';
+import { createRenderGuard } from './render-guard.js?v=0.4.6';
+import { installQueueDrag } from './queue-drag.js?v=0.4.6';
+import { preparationMarkup } from './preparation-ui.js?v=0.4.6';
+import { saveClearCard } from './clear-card.js?v=0.4.6';
+import { runFrameTasks } from './frame-loop.js?v=0.4.6';
+import { getCatalog } from "./engine.js?v=0.4.6";
+import { CONTENT } from "./content.js?v=0.4.6";
 import {
   isLegacy,
   isKnown,
@@ -26,7 +28,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.4.5";
+} from "./engine.js?v=0.4.6";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -37,9 +39,9 @@ import {
   templatesMarkup,
   milestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.4.5";
-import { createSessionOwner } from "./session-owner.js?v=0.4.5";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.4.5";
+} from "./mvp-ui.js?v=0.4.6";
+import { createSessionOwner } from "./session-owner.js?v=0.4.6";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.4.6";
 import {
   loadStoredGame,
   writeStoredGame,
@@ -48,13 +50,13 @@ import {
   unreadableRecord,
   readResetBackup,
   resetStoredGame,
-} from "./save-storage.js?v=0.4.5";
+} from "./save-storage.js?v=0.4.6";
 import {
   updatePresentation,
   markQueueEdited,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.4.5";
+} from "./presentation.js?v=0.4.6";
 import {
   getRaidInterval,
   aidCountry,
@@ -77,9 +79,9 @@ import {
   abandonRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.4.5";
-import { icon } from "./icons.js?v=0.4.5";
-import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.4.5";
+} from "./engine.js?v=0.4.6";
+import { icon } from "./icons.js?v=0.4.6";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.4.6";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -89,20 +91,20 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.4.5";
-import { renderAugments } from "./augments-ui.js?v=0.4.5";
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.4.5";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.4.5";
-import { mountCampScene } from "./camp-scene.js?v=0.4.5";
-import { workScene, syncWorkAnimation } from "./work-scene.js?v=0.4.5";
-import { getRecipeVisibility } from "./workshop.js?v=0.4.5";
-import { getMilestoneStatus } from "./engine.js?v=0.4.5";
+} from "./engine.js?v=0.4.6";
+import { renderAugments } from "./augments-ui.js?v=0.4.6";
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.4.6";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.4.6";
+import { mountCampScene } from "./camp-scene.js?v=0.4.6";
+import { workScene, syncWorkAnimation } from "./work-scene.js?v=0.4.6";
+import { getRecipeVisibility } from "./workshop.js?v=0.4.6";
+import { getMilestoneStatus } from "./engine.js?v=0.4.6";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.4.5";
+} from "./engine.js?v=0.4.6";
 
 history.scrollRestoration = "manual";
 let queueExpanded = false;
@@ -324,7 +326,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <button class="prototype-label updates-link" data-command="updates-menu">更新履歴 <b>v0.4.5</b></button>
+    <button class="prototype-label updates-link" data-command="updates-menu">更新履歴 <b>v0.4.6</b></button>
   </aside>
   <div class="workspace">
     <header class="topbar"><span class="mobile-header-title">LoopKeeper</span><button class="mobile-menu-toggle" data-command="header-menu" aria-label="メニュー" aria-haspopup="dialog" aria-controls="header-menu-dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="breadcrumb">${icon("camp")}<span>灰の辺境</span>${icon("chevron")}<strong>野営地</strong></div><div class="topbar-actions"><button class="dashboard-button" data-info="queue">行動予約</button><button class="dashboard-button" data-info="status">状態・装備</button><button class="dashboard-button" data-info="quests">クエスト</button><button class="dashboard-button" data-info="journal">記録</button><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button><button class="icon-button" data-command="updates-menu" title="更新履歴" aria-label="更新履歴">${icon("history")}</button><button class="icon-button" data-command="settings-menu" title="設定" aria-label="設定">${icon("settings")}</button><button class="icon-button" data-command="help" title="遊び方" aria-label="遊び方">${icon("help")}</button></div></header>
@@ -366,7 +368,7 @@ abandonDialog.innerHTML = `<div class="dialog-heading"><h2 id="abandon-title">�
 document.body.append(abandonDialog);
 headerMenuDialog.addEventListener("close", () => document.querySelector(".mobile-menu-toggle").setAttribute("aria-expanded", "false"));
 
-const singleUse = (id) => RECIPES.some((r) => r.id === id && (r.equipment || r.facility));
+const singleUse = (id) => RECIPES.some((r) => r.id === id && (r.equipment || r.facility || r.endlessFacility));
 
 const resourceObserver = new ResizeObserver((entries) => {
   document.documentElement.style.setProperty(
@@ -413,7 +415,7 @@ function renderNavigation() {
   );
   setHTML(
     "#generation",
-    `<span class="generation-symbol">${icon("memory")}</span><div><small>繰り返す命</small><strong>第 ${format(state.meta.generation)} 世代</strong></div><span class="generation-number">${String(state.meta.generation).padStart(2, "0")}</span><span class="generation-compact" aria-label="第${state.meta.generation}世代"><b>${format(state.meta.generation)}</b>世代</span>`,
+    `<span class="generation-symbol">${icon("memory")}</span><div><small>${state.run.endless?.active ? "エンドレス" : "繰り返す命"}</small><strong>第 ${format(state.meta.generation)} 世代</strong></div><span class="generation-number">${String(state.meta.generation).padStart(2, "0")}</span><span class="generation-compact" aria-label="第${state.meta.generation}世代"><b>${format(state.meta.generation)}</b>世代</span>`,
   );
 }
 
@@ -446,9 +448,9 @@ function renderControls() {
 
 function renderWorld() {
   campScene.setActive(state.settings.effectsEnabled && !state.settings.paused && state.run.status === "preparing");
-  campScene.setSettlement(state.run.facilities, state.meta.generation);
+  campScene.setSettlement(Object.fromEntries(Object.entries(state.run.facilities).map(([id,n])=>[id,n+(state.run.endless?.levels[id] || 0)])), state.meta.generation);
   const construction = RECIPES.find(d => d.id === state.run.activeAction?.id && d.facility);
-  campScene.setConstruction(construction?.facility?.id, state.run.activeAction ? state.run.activeAction.progress / state.run.activeAction.duration : 0);
+  campScene.setConstruction(construction?.endlessFacility || construction?.facility?.id, state.run.activeAction ? state.run.activeAction.progress / state.run.activeAction.duration : 0);
   campScene.setThreat(state.run.status === "preparing" ? Math.max(0, 1 - (state.run.nextWaveAt - state.run.elapsed) / 45) : 0, state.settings.paused);
   const families = getCatalog(state).AUGMENTS.filter(a => getAugmentStatus(state).selected.includes(a.id)).map(a => a.family);
   document.body.classList.toggle("build-economy", families.includes("economy"));
@@ -623,7 +625,7 @@ function renderCraft() {
         (a.tier || 0) - (b.tier || 0) ||
         (a.slot === "weapon" ? -1 : b.slot === "weapon" ? 1 : 0),
     )
-    .filter((recipe) => (village ? Boolean(recipe.facility) : !recipe.facility))
+    .filter((recipe) => (village ? Boolean(recipe.facility || recipe.endlessFacility) : !recipe.facility && !recipe.endlessFacility))
     .filter(
       (recipe) =>
         village ||
@@ -657,7 +659,7 @@ function renderCraft() {
       : "";
   setHTML(
     "#content",
-    `${renderSkillOverview()}${village ? '<div class="village-intro">武器にするか、村の備えに使うか。施設は5段階まで強化でき、次の命では建て直します。</div>' : ""}${!village && !isLegacy(state) ? `<div class="workshop-automation">${autoCookingMarkup(state)}${processingMarkup(state)}</div>` : ""}${slotFilter}${filter}${queueNotice}<div class="craft-list">${catalog
+    `${renderSkillOverview()}${village ? `<div class="village-intro">${state.run.endless?.active ? '施設Vから追加強化。資源を投じて備えを伸ばせます。' : '武器にするか、村の備えに使うか。施設は5段階まで強化でき、次の命では建て直します。'}</div>` : ""}${!village && !isLegacy(state) ? `<div class="workshop-automation">${autoCookingMarkup(state)}${processingMarkup(state)}</div>` : ""}${slotFilter}${filter}${queueNotice}<div class="craft-list">${catalog
       .filter(
         (recipe) =>
           state.settings.showHiddenRecipes ||
@@ -719,7 +721,7 @@ function renderCraft() {
             : Object.entries(recipe.yields || {})
                 .map(([id, amount]) => `${resourceName(id)} +${amount}`)
                 .join(" / ");
-        return `<article class="craft-card ${active ? "active" : ""} ${visibility.manuallyHidden ? "craft-hidden" : ""}"><div class="craft-icon">${icon(recipe.facility ? (recipe.id === "watchtower" ? "eye" : recipe.id === "barricade" ? "shield" : "heart") : eq ? slotIcons[eq.slot] : recipe.id === "smelt_iron" ? "ingot" : "food")}</div><div class="craft-info"><h3>${escape(recipe.name)}${equipped ? `<span class="equipped-tag">${village ? "建設済み" : "装備中"}</span>` : visibility.inferior ? '<span class="equipped-tag">下位装備</span>' : ""}</h3><p>${escape(recipe.description)}</p><div class="craft-benefits">${escape(benefits)}<span>${benefits ? " · " : ""}${getActionDuration(state, recipe).toFixed(1)}秒</span></div><div class="recipe-cost">${Object.entries(
+        return `<article class="craft-card ${active ? "active" : ""} ${visibility.manuallyHidden ? "craft-hidden" : ""}"><div class="craft-icon">${icon(recipe.endlessFacility ? "hammer" : recipe.facility ? (recipe.id === "watchtower" ? "eye" : recipe.id === "barricade" ? "shield" : "heart") : eq ? slotIcons[eq.slot] : recipe.id === "smelt_iron" ? "ingot" : "food")}</div><div class="craft-info"><h3>${escape(recipe.name)}${recipe.endlessFacility ? ` <span class="equipped-tag">+${state.run.endless?.levels[recipe.endlessFacility] || 0}</span>` : ""}${equipped ? `<span class="equipped-tag">${village ? "建設済み" : "装備中"}</span>` : visibility.inferior ? '<span class="equipped-tag">下位装備</span>' : ""}</h3><p>${escape(recipe.description)}</p><div class="craft-benefits">${escape(benefits)}<span>${benefits ? " · " : ""}${getActionDuration(state, recipe).toFixed(1)}秒</span></div><div class="recipe-cost">${Object.entries(
           active || suspended ? {} : Object.fromEntries(Object.entries(getRecipeCost(state, recipe)).map(([id,amount]) => [id, amount * (smartUnlocked ? craftCount : 1)])),
         )
           .map(
@@ -728,11 +730,11 @@ function renderCraft() {
           )
           .join(
             "",
-          )}</div>${plan?.ok ? `<small class="craft-eta" title="現在の速度による追加手順の概算。今ある予約の待ち時間・襲撃・今後のレベル成長は含みません">${state.run.queue.length || state.run.activeAction?.kind === "craft" ? "追加手順" : "素材集め込み"} 約${time(Math.ceil(plan.seconds))}</small>` : ""}${savedWorkNote(active ? state.run.activeAction : suspended)}${skillLevel("smithing").level > 1 ? `<div class="craft-growth">製作 Lv.${skillLevel("smithing").level} · 作業速度 +${getSkillEffects(state, "smithing").runSpeedPercent}%</div>` : ""}${plan?.ok && plan.steps.length > 1 ? `<div class="plan-preview">${icon("book")}<span>${escape(plan.summary)}</span></div>` : ""}</div><div class="craft-command">${smartUnlocked && !singleUse(recipe.id) && !active && !suspended ? `<label class="craft-quantity">製作回数<input type="number" min="1" max="99" step="1" inputmode="numeric" data-craft-count="${recipe.id}" data-focus="craft-count-${recipe.id}" aria-label="${escape(recipe.name)}の製作回数" value="${craftCount}"></label><small class="craft-total">${Object.entries(recipe.yields || {}).map(([id,amount]) => `${escape(resourceName(id))} ${format(amount * craftCount)}個`).join(" / ")}</small>` : ""}<div class="craft-buttons"><button class="button small ${allowed ? "gold-outline" : "muted"}" ${smartUnlocked && !active && !suspended ? "data-smart-craft" : "data-action"}="${recipe.id}" data-focus="recipe-${recipe.id}" ${!allowed || queuedIndex >= 0 || (active && !resumable) ? "disabled" : ""}>${queuedIndex >= 0 && !active ? "予約済み" : active && !resumable ? (village ? "建設中" : "製作中") : equipped ? (village ? "建設済み" : "装備済み") : smartUnlocked && state.run.queue.length > 0 && !active && !suspended ? "末尾に予約" : village ? "建設する" : "製作する"}</button>${smartUnlocked && state.run.queue.length > 0 && queuedIndex !== 0 && !active && !suspended && !equipped ? `<button class="button small gold-outline" data-smart-craft="${recipe.id}" data-queue-position="front" data-focus="recipe-front-${recipe.id}" ${!allowed ? "disabled" : ""}>${queuedIndex > 0 ? "先頭へ移す" : "先頭に予約"}</button>` : ""}${visibilityButton}</div>${!allowed && !active && !equipped ? `<small>${escape(reason)}</small>` : smartUnlocked && !active && !suspended && !equipped ? '<small class="permanent-text">材料集めからおまかせ</small>' : ""}</div></article>`;
+          )}</div>${plan?.ok ? `<small class="craft-eta" title="現在の速度による追加手順の概算。今ある予約の待ち時間・襲撃・今後のレベル成長は含みません">${state.run.queue.length || state.run.activeAction?.kind === "craft" ? "追加手順" : "素材集め込み"} 約${time(Math.ceil(plan.seconds))}</small>` : ""}${savedWorkNote(active ? state.run.activeAction : suspended)}${skillLevel("smithing").level > 1 ? `<div class="craft-growth">製作 Lv.${skillLevel("smithing").level} · 作業速度 +${getSkillEffects(state, "smithing").runSpeedPercent}%</div>` : ""}${plan?.ok && plan.steps.length > 1 ? `<div class="plan-preview">${icon("book")}<span>${escape(plan.summary)}</span></div>` : ""}</div><div class="craft-command">${smartUnlocked && !singleUse(recipe.id) && !active && !suspended ? `<label class="craft-quantity">製作回数<input type="number" min="1" max="99" step="1" inputmode="numeric" data-craft-count="${recipe.id}" data-focus="craft-count-${recipe.id}" aria-label="${escape(recipe.name)}の製作回数" value="${craftCount}"></label><small class="craft-total">${Object.entries(recipe.yields || {}).map(([id,amount]) => `${escape(resourceName(id))} ${format(amount * craftCount)}個`).join(" / ")}</small>` : ""}<div class="craft-buttons"><button class="button small ${allowed ? "gold-outline" : "muted"}" ${smartUnlocked && !active && !suspended ? "data-smart-craft" : "data-action"}="${recipe.id}" data-focus="recipe-${recipe.id}" ${!allowed || queuedIndex >= 0 || (active && !resumable) ? "disabled" : ""}>${queuedIndex >= 0 && !active ? "予約済み" : active && !resumable ? (village ? "建設中" : "製作中") : equipped ? (village ? "建設済み" : "装備済み") : smartUnlocked && state.run.queue.length > 0 && !active && !suspended ? "末尾に予約" : recipe.endlessFacility ? "追加強化する" : village ? "建設する" : "製作する"}</button>${smartUnlocked && state.run.queue.length > 0 && queuedIndex !== 0 && !active && !suspended && !equipped ? `<button class="button small gold-outline" data-smart-craft="${recipe.id}" data-queue-position="front" data-focus="recipe-front-${recipe.id}" ${!allowed ? "disabled" : ""}>${queuedIndex > 0 ? "先頭へ移す" : "先頭に予約"}</button>` : ""}${visibilityButton}</div>${!allowed && !active && !equipped ? `<small>${escape(reason)}</small>` : smartUnlocked && !active && !suspended && !equipped ? '<small class="permanent-text">材料集めからおまかせ</small>' : ""}</div></article>`;
       })
       .join(
         "",
-      )}</div><div class="context-hint">${icon("hammer")}<span>${smartUnlocked ? (village ? "「建設する」で足りない材料の採集から予約します。" : "予約すると、足りない材料の採集・加工も行います。獣皮や技能条件は別途必要です。") : village ? "完成すると施設の効果が働きます。" : "完成すると自動で装備します。"}</span></div>`,
+      )}</div><div class="context-hint">${icon("hammer")}<span>${smartUnlocked ? (village ? (state.run.endless?.active ? "追加強化も、足りない材料の採集から予約できます。" : "「建設する」で足りない材料の採集から予約します。") : "予約すると、足りない材料の採集・加工も行います。獣皮や技能条件は別途必要です。") : village ? "完成すると施設の効果が働きます。" : "完成すると自動で装備します。"}</span></div>`,
   );
 }
 
@@ -803,19 +805,20 @@ function facilitySummary(id) {
       : id === "barricade"
         ? "防御 +3"
         : "2回復 /4秒";
-  const f = CONTENT.facilities.find(
+  const rank = state.run.endless?.levels[id] || 0;
+  const f = reinforcementEffect(id,rank,CONTENT.facilities.find(
     (f) => f.facilityId === id && f.level === l,
-  ).effect;
+  ).effect);
   return (
     "Lv." +
-    l +
+    l + (rank ? ` +${rank}` : "") +
     " · " +
     {
       watchtower: "+" + f.raidDelay + "秒",
       barricade: "防御 +" + f.defense,
-      infirmary: "処置 " + f.treatmentCharges + "回",
+      infirmary: "処置 " + f.treatmentCharges + "回" + (rank ? ` / 回復 +${f.treatmentFlat}` : ""),
       workshop: "製作 +" + Math.round(f.craftSpeed * 100) + "%",
-      market: "割引 " + Math.round(f.purchaseDiscount * 100) + "%",
+      market: "割引 " + Math.round(f.purchaseDiscount * 100) + "%" + (rank ? ` / 金貨+${f.income}/15秒` : ""),
       guardhouse: "支援 " + getStats(state).support,
       archery_tower: "弓支援 " + f.rangedAttack + " / 飛行に2.5倍",
     }[id]
@@ -987,7 +990,7 @@ function renderScreen() {
   chapterPresentation(state);
   document.body.classList.toggle("effects-disabled", !state.settings.effectsEnabled);
   renderExtra("#next-goal", enemyRoadmap(state) + augmentStatusMarkup(state));
-  renderExtra("#journal-entries", reportMarkup(state) + challengesMarkup(state));
+  renderExtra("#journal-entries", `${state.meta.firstClear ? `<div class="clear-achievement"><strong>初クリア 第${state.meta.firstClear.generation}世代</strong><button class="button gold-outline" data-command="share-first-clear">初クリアの画像を保存</button></div>` : ""}${state.meta.bestEndlessWave ? `<p class="fine-print">エンドレス最高 ${state.meta.bestEndlessWave}波撃退</p>` : ""}` + reportMarkup(state) + challengesMarkup(state));
   if (["dead", "cleared"].includes(state.run.status) && !deadShown) showDeath();
   document.querySelector("#death-dialog").classList.toggle("legacy-setup", state.run.status === "legacy_setup");
   if (state.run.status === "legacy_setup") {
@@ -1022,7 +1025,7 @@ function renderScreen() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.4.5</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.4.6</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。食料は戦闘中に自動で回復に使われます。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
@@ -1044,6 +1047,7 @@ function showSaveMenu() {
       "beforeend",
       `<details class="save-code"><summary>セーブコードで保存・読み込み</summary><p>ファイルの代わりに、コード全体をコピーして保管できます。</p><textarea id="save-code" aria-label="セーブコード" placeholder="ここにセーブコードを貼り付け" spellcheck="false"></textarea><div><button class="button small muted" data-command="code-export">現在のコードを表示</button><button class="button small gold-outline" data-command="code-import">コードを読み込む</button></div></details>`,
     );
+  if (state.run.endless?.active) document.querySelector("#save-dialog").insertAdjacentHTML("beforeend", `<div class="save-options"><span>エンドレス ${state.run.wave}波 · 最高${state.meta.bestEndlessWave || 21}波</span><button class="button gold-outline" data-command="share-endless">エンドレス記録画像を保存</button><button class="button muted" data-command="share-clear">通常クリアの画像を保存</button></div>`);
   const backups = readBackups(localStorage);
   const resetBackup = readResetBackup(localStorage);
   if (resetBackup) document.querySelector("#save-dialog").insertAdjacentHTML("beforeend", `<div class="save-options"><span>最初からやり直す前 · 第${resetBackup.meta.generation}世代</span><button class="button muted" data-command="restore-reset">リセット前の記録を復元</button></div>`);
@@ -1086,6 +1090,10 @@ function showDeath() {
     dialog.close();
   document.querySelector("#death-dialog").innerHTML =
     `<div class="death-emblem">${icon("flame")}</div><div class="eyebrow">THE EMBER REMAINS</div><h2 id="death-title">火は消えても、記憶は残る。</h2><p class="dialog-lead">第 ${state.meta.generation} 世代の旅が終わりました。<br />積み重ねた経験が、次の命を少し強くする。</p><div class="death-stats"><div><small>この命の時間</small><strong>${time(state.run.elapsed)}</strong></div><div><small>撃退した襲撃</small><strong>${state.run.wave}<span> 波</span></strong></div><div><small>最高記録</small><strong>${state.meta.bestWave}<span> 波</span></strong></div></div>${comparisonMarkup}<div class="inheritance-heading">${icon("memory")}次の命へ引き継ぐ経験</div><div class="inheritance-list">${SKILLS.map((skill) => `<div><span>${icon(skillIcons[skill.id])}${escape(skill.name)}</span><b>永続 Lv.${getSkillProgress(state.run.startPermanentXp?.[skill.id] ?? Math.max(0,state.meta.skills[skill.id].xp-(gains[skill.id] || 0)),true).level} → ${skillLevel(skill.id, true).level}</b><small>+${format(gains[skill.id] || 0)} XP</small></div>`).join("")}</div><p class="death-tip">${state.run.equipment.weapon ? "鍛えた技能で準備を速め、次は装備と食料をひとつ多く。" : "次の命では、伐採から武器を作る順番を試してみよう。"}</p><button class="button gold full-width" data-command="rebirth">次の命を灯す${icon("arrow")}</button><p class="fine-print">資源・装備・進行レベル・オーグメントの効果はリセットされます。</p>`;
+  if (state.run.endless?.active) {
+    document.querySelector('#death-title').textContent = `終わらぬ夜 · ${state.run.wave}波撃退`;
+    document.querySelector('#death-dialog .death-tip').insertAdjacentHTML('afterend', '<button class="button gold-outline full-width" data-command="share-endless">エンドレス記録画像を保存</button>');
+  }
   const report = state.run.deathReport;
   if (report) {
     const tip = document.querySelector("#death-dialog .death-tip");
@@ -1107,6 +1115,7 @@ function showDeath() {
     );
   if (state.run.status === "cleared") {
     document.querySelector("#death-title").textContent = "最終襲撃を撃退。";
+    document.querySelector('#death-dialog .death-tip').insertAdjacentHTML('afterend', '<button class="button gold-outline full-width" data-command="start-endless">エンドレスへ挑む</button><p class="fine-print">装備・施設・資源を維持して22波へ。施設Vの追加強化と追加オーグメントで、到達WAVEを伸ばせます。</p>');
     document.querySelector("#death-dialog .dialog-lead").textContent =
       `第${state.meta.generation}世代で村を守り抜きました。次は別の構成で挑戦できます。`;
     document.querySelector("#death-dialog .death-stats").insertAdjacentHTML('beforebegin', `<div class="clear-achievement">${icon('trophy')}<strong>第${state.meta.generation}世代でクリア</strong><button class="button gold-outline" data-command="share-clear">${icon('save')}記録画像を保存</button></div>`);
@@ -1373,6 +1382,12 @@ document.addEventListener("click", (event) => {
         document.querySelector("#augment-dialog").showModal();
       }
       break;
+    case "share-first-clear":
+      if (state.meta.firstClear) saveClearCard({...state,run:{...state.run,clearRecord:state.meta.firstClear}}).catch(error => toast(error.message));
+      break;
+    case "share-endless":
+      saveClearCard(state, true).catch(error => toast(error.message));
+      break;
     case "share-clear":
       saveClearCard(state).catch(error => toast(error.message));
       break;
@@ -1582,6 +1597,21 @@ document.addEventListener("click", (event) => {
       lastTick = performance.now();
       for (const dialog of document.querySelectorAll("dialog[open]")) dialog.close();
       toast("リセット前の記録を復元しました。");
+      break;
+    }
+    case "start-endless": {
+      saveGame(false, true);
+      const result = startEndless(state);
+      if (!result.ok) { toast(result.reason); break; }
+      deadShown = setupShown = false;
+      displayedOffer = "";
+      activeBattle = null;
+      refreshCatalog();
+      document.querySelector("#death-dialog").close();
+      tab = "village";
+      lastTick = performance.now();
+      saveGame();
+      toast("エンドレス開始。施設Vから追加強化できます。");
       break;
     }
     case "abandon-menu":

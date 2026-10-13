@@ -1,5 +1,5 @@
-import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus } from "./engine.js?v=0.4.5";
-import { icon } from "./icons.js?v=0.4.5";
+import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus } from "./engine.js?v=0.4.6";
+import { icon } from "./icons.js?v=0.4.6";
 
 const families = {
   economy: { name: "生産・投資", icon: "gold" },
@@ -58,7 +58,7 @@ export function augmentStatusMarkup(state) {
   const { AUGMENTS } = getCatalog(state);
   const selected = state.run.augments.selected.map(id => AUGMENTS.find(a=>a.id===id)).filter(Boolean);
   if (!selected.length) return '';
-  return `<details data-detail-key="augment-status" class="strategy-details"><summary>この命のオーグメント · ${selected.length}/4</summary>${selected.map(a=>`<article><strong>${escape(a.name)}</strong><p>${escape(a.description)}</p>${a.tags ? insightMarkup(state,a) : ''}</article>`).join('')}${synergyGuide(state)}</details>`;
+  return `<details data-detail-key="augment-status" class="strategy-details"><summary>この命のオーグメント · ${selected.length}/${state.run.endless?.active ? "∞" : 4}</summary>${selected.map(a=>`<article><strong>${escape(a.name)}</strong><p>${escape(a.description)}</p>${a.tags ? insightMarkup(state,a) : ''}</article>`).join('')}${synergyGuide(state)}</details>`;
 }
 
 export function renderAugments(state, { offer = false } = {}) {
@@ -77,7 +77,7 @@ export function renderAugments(state, { offer = false } = {}) {
     return selectedMarkup
       ? `<section class="augment-summary ${status.offer.length ? "has-offer" : ""}"><div class="augment-summary-label">${icon("spark")}この命の方針 ${status.offer.length ? '<button class="button small gold-outline" data-command="show-augments">オーグメントを選ぶ</button>' : '<span>次の命で選び直す</span>'}</div>${selectedMarkup}</section>`
       : status.offer.length ? `<button class="button gold-outline augment-pending" data-command="show-augments">${icon("spark")}オーグメントを選ぶ${icon("arrow")}</button>` : "";
-  return `<div class="dialog-heading"><span class="eyebrow">A DIFFERENT WAY TO SURVIVE</span><button class="icon-button" data-close="augment-dialog" aria-label="閉じる">${icon("close")}</button></div><section class="augment-offer" aria-labelledby="augment-title"><div class="augment-offer-heading"><div><h2 id="augment-title">この命で、何を伸ばす？</h2><p>3つから1つ。効果はこの周回だけ続きます。</p></div><button class="button small muted" data-command="abandon-menu">周回を切り上げる</button><span class="choice-paused">${icon("pause")}選択中は時間停止</span></div>${selectedMarkup}${state.version !== 1 ? `<div class="augment-reroll"><button class="button small gold-outline" data-command="reroll-augments" data-focus="reroll-augments" ${reroll.canReroll ? "" : "disabled"}>リロール · 残り${reroll.remaining}回</button><small>${!reroll.canReroll ? escape(reroll.reason) : "この周回で共有 · 候補を引き直す"}</small></div>` : ""}<div class="augment-choices">${status.offer
+  return `<div class="dialog-heading"><span class="eyebrow">A DIFFERENT WAY TO SURVIVE</span><button class="icon-button" data-close="augment-dialog" aria-label="閉じる">${icon("close")}</button></div><section class="augment-offer" aria-labelledby="augment-title"><div class="augment-offer-heading"><div><h2 id="augment-title">この命で、何を伸ばす？</h2><p>候補から1つ。効果はこの周回だけ続きます。</p></div><button class="button small muted" data-command="abandon-menu">周回を切り上げる</button><span class="choice-paused">${icon("pause")}選択中は時間停止</span></div>${selectedMarkup}${state.version !== 1 ? `<div class="augment-reroll"><button class="button small gold-outline" data-command="reroll-augments" data-focus="reroll-augments" ${reroll.canReroll ? "" : "disabled"}>リロール · 残り${reroll.remaining}回</button><small>${!reroll.canReroll ? escape(reroll.reason) : "この周回で共有 · 候補を引き直す"}</small></div>` : ""}<div class="augment-choices">${status.offer
     .map((id) => {
       const augment = AUGMENTS.find((item) => item.id === id);
       if (!augment) return "";

@@ -1,9 +1,14 @@
-import { CHALLENGES, challengeResults } from './strategy.js?v=0.4.5';
-import { getCatalog } from './engine.js?v=0.4.5';
-export function clearRecord(state) {
-  if (state.run.status !== 'cleared') return null;
+import { CHALLENGES, challengeResults } from './strategy.js?v=0.4.6';
+import { getCatalog } from './engine.js?v=0.4.6';
+export function clearRecord(state, endless = false) {
   const { AUGMENTS } = getCatalog(state);
-  return { badges:challengeResults(state), generation: state.meta.generation, wave: state.run.wave, seconds: Math.floor(state.run.elapsed), augments: state.run.augments.selected.map(id => AUGMENTS.find(a => a.id === id)?.name).filter(Boolean) };
+  if (endless) {
+    if (!state.run.endless?.active) return null;
+    return {endless:true,badges:[],generation:state.meta.generation,wave:state.run.wave,seconds:Math.floor(state.run.elapsed),augments:state.run.augments.selected.map(id=>AUGMENTS.find(a=>a.id===id)?.name).filter(Boolean)};
+  }
+  const saved = state.run.clearRecord;
+  if (!saved && state.run.status !== 'cleared') return null;
+  return { badges:saved?.badges || challengeResults(state), generation:saved?.generation || state.meta.generation, wave:21, seconds:saved?.seconds ?? Math.floor(state.run.elapsed), augments:(saved?.augments || state.run.augments.selected).map(id=>AUGMENTS.find(a=>a.id===id)?.name).filter(Boolean) };
 }
 export function drawClearCard(canvas, record) {
   canvas.width = 1200; canvas.height = 800;
@@ -27,12 +32,12 @@ export function drawClearCard(canvas, record) {
   const font=(size,weight=500)=>`${weight} ${size}px "Zen Maru Gothic", "Meiryo", sans-serif`;
   ctx.fillStyle='#e1d69e';ctx.font=font(34,700);ctx.fillText('LoopKeeper',80,105);
   ctx.fillStyle='#9cb2a5';ctx.font=font(16);ctx.fillText('IDLE DEFENSE',82,134);
-  ctx.fillStyle='#b8b887';ctx.font=font(20,700);ctx.fillText(record.badges?.length ? record.badges.map(id=>CHALLENGES.find(c=>c.id===id)?.name).join(' / ') : 'CLEAR · 村を守り抜いた',82,227,1000);
+  ctx.fillStyle='#b8b887';ctx.font=font(20,700);ctx.fillText(record.endless ? 'ENDLESS · 終わらぬ夜の記録' : record.badges?.length ? record.badges.map(id=>CHALLENGES.find(c=>c.id===id)?.name).join(' / ') : 'CLEAR · 村を守り抜いた',82,227,1000);
   ctx.fillStyle='#f2ebcb';ctx.font=font(100,700);ctx.fillText(`第${record.generation}世代`,76,350,750);
-  ctx.fillStyle='#c1d4b9';ctx.font=font(30);ctx.fillText('幾度の夜を越え、夜明けへ。',82,409);
+  ctx.fillStyle='#c1d4b9';ctx.font=font(30);ctx.fillText(record.endless ? `WAVE ${record.wave} 撃退` : '幾度の夜を越え、夜明けへ。',82,409);
   const minutes=Math.floor(record.seconds/60),seconds=String(record.seconds%60).padStart(2,'0');
   ctx.fillStyle='#ffffff08';ctx.fillRect(80,454,660,100);
-  ctx.fillStyle='#9eb5a5';ctx.font=font(17);ctx.fillText('最終周回の時間',102,484);ctx.fillText('撃退した襲撃',440,484);
+  ctx.fillStyle='#9eb5a5';ctx.font=font(17);ctx.fillText(record.endless ? 'この周回の時間' : '最終周回の時間',102,484);ctx.fillText('撃退した襲撃',440,484);
   ctx.fillStyle='#e8dbad';ctx.font=font(32,700);ctx.fillText(`${minutes}分${seconds}秒`,102,531);ctx.fillText(`${record.wave} 波`,440,531);
   ctx.fillStyle='#8ea79a';ctx.font=font(16);ctx.fillText('この命のオーグメント',82,603);
   ctx.fillStyle='#d4dcc0';ctx.font=font(22);
@@ -41,14 +46,14 @@ export function drawClearCard(canvas, record) {
   if(names.length>2)ctx.fillText(names.slice(2).join('  /  '),82,679,1000);
   ctx.fillStyle='#879f91';ctx.font=font(17);ctx.fillText('min-konny.github.io/loopkeeper/',82,738);
 }
-export async function saveClearCard(state) {
-  const record=clearRecord(state);
+export async function saveClearCard(state, endless = false) {
+  const record=clearRecord(state, endless);
   if (!record) throw Error('クリア後に記録画像を保存できます。');
   await document.fonts?.ready;
   const canvas=document.createElement('canvas');drawClearCard(canvas,record);
   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
   if (!blob) throw Error('記録画像を保存できませんでした。');
   const url=URL.createObjectURL(blob),link=document.createElement('a');
-  link.href=url;link.download=`LoopKeeper-clear-generation-${record.generation}.png`;
+  link.href=url;link.download=`LoopKeeper-${record.endless ? `endless-wave-${record.wave}` : `clear-generation-${record.generation}`}.png`;
   document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
 }
