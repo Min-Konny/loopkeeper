@@ -1,5 +1,5 @@
-import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.4.7';
-import { dependencyOrderedCosts } from './material-priority.js?v=0.4.7';
+import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.4.8';
+import { dependencyOrderedCosts } from './material-priority.js?v=0.4.8';
 
 const MAX_STEPS = 8;
 const MAX_COUNT = 99;

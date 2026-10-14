@@ -1,5 +1,5 @@
-import { REINFORCEMENTS } from './endless.js?v=0.4.7';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.7';
+import { REINFORCEMENTS } from './endless.js?v=0.4.8';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.8';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",

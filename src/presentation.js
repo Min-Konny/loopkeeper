@@ -1,11 +1,11 @@
-import { createAmbience } from './ambience.js?v=0.4.7';
-import { chapterOf } from './strategy.js?v=0.4.7';
-import { createMusicPlayer, getMusicMode } from './music.js?v=0.4.7';
-import { completedWorkKind, playWorkSound, workSoundKind, workImpactKind, preloadWorkSounds } from './work-audio.js?v=0.4.7';
-import { completedQueueEntries } from './visual-design.js?v=0.4.7';
-import { getCatalog } from "./engine.js?v=0.4.7";
-import { icon } from "./icons.js?v=0.4.7";
-import { availableDiscoveries } from './preparation-ui.js?v=0.4.7';
+import { createAmbience } from './ambience.js?v=0.4.8';
+import { chapterOf } from './strategy.js?v=0.4.8';
+import { createMusicPlayer, getMusicMode } from './music.js?v=0.4.8';
+import { completionSoundKind, playWorkSound, preloadWorkSounds } from './work-audio.js?v=0.4.8';
+import { completedQueueEntries } from './visual-design.js?v=0.4.8';
+import { getCatalog } from "./engine.js?v=0.4.8";
+import { icon } from "./icons.js?v=0.4.8";
+import { availableDiscoveries } from './preparation-ui.js?v=0.4.8';
 let audio;
 let ambience;
 let ambienceChapter = 0;
@@ -14,8 +14,6 @@ document.addEventListener("visibilitychange",()=>ambience?.sync(preferences.ambi
 let music;
 let musicMode = "camp";
 document.addEventListener('visibilitychange', () => music?.sync(preferences.musicVolume ?? .15, !document.hidden));
-let lastWorkSound = -Infinity;
-let soundedBatch = null;
 let preferences = { soundVolume: 0.3, effectsEnabled: true };
 let previous;
 let queueEdited = false;
@@ -45,6 +43,13 @@ function cue(kind) {
 }
 export function previewSound(settings) { unlockAudio(settings); cue('craft'); }
 export function battleSound(kind) { cue(kind); }
+export function playCompletedWork(state, event, {owned=false, live=false}={}) {
+  if (!owned || !live || document.hidden || !audio || audio.state !== 'running' || !(state.settings.soundVolume > 0)) return false;
+  const kind = completionSoundKind(event);
+  if (!kind) return false;
+  try { return playWorkSound(audio, kind, state.settings.soundVolume); }
+  catch { return false; }
+}
 function productionFeedback(element, id, amount) {
   if (!element || document.querySelectorAll('.production-pop').length >= 6) return;
   const rect = element.getBoundingClientRect();
@@ -156,12 +161,7 @@ export function updatePresentation(state) {
     if (!state.settings.paused && state.run.status === 'preparing' && previous.nextWaveAt === next.nextWaveAt && previous.remaining > 15 && next.remaining <= 15) cue('warning');
     const events = state.run.log.filter(entry => entry.id > previous.logSeq);
     const important = ['death', 'raid', 'victory', 'craft'].find(kind => events.some(entry => entry.type === kind));
-    if (important && !(important === 'craft' && soundedBatch === previous.batchKey)) cue(important === 'craft' && previous.actionKind === 'craft' ? workSoundKind(previous.actionId, previous.actionSkill) || 'craft' : important);
-    const impact = workImpactKind(previous, next);
-    const workKind = impact || (soundedBatch !== previous.batchKey ? completedWorkKind(previous, next) : null);
-    if (workKind && !important && audio?.state === 'running' && audio.currentTime - lastWorkSound >= .3 && preferences.soundVolume) {
-      try { if (playWorkSound(audio, workKind, preferences.soundVolume)) { lastWorkSound = audio.currentTime; soundedBatch = impact ? next.batchKey : previous.batchKey; } } catch { /* Work audio is optional. */ }
-    }
+    if (important && important !== 'craft') cue(important);
     if (state.settings.effectsEnabled && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
       if (pendingDiscoveries.length && !document.querySelector("dialog[open]")) { discoveryFeedback(pendingDiscoveries); pendingDiscoveries = []; }
       completionFeedback(state, previous);

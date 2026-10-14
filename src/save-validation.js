@@ -1,7 +1,7 @@
-import { endlessEnemy } from './endless.js?v=0.4.7';
-import { validMaterialPriority } from './material-priority.js?v=0.4.7';
-import { validCondition } from './queue-conditions.js?v=0.4.7';
-import { CONTENT as C } from "./content.js?v=0.4.7";
+import { endlessEnemy } from './endless.js?v=0.4.8';
+import { validMaterialPriority } from './material-priority.js?v=0.4.8';
+import { validCondition } from './queue-conditions.js?v=0.4.8';
+import { CONTENT as C } from "./content.js?v=0.4.8";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;

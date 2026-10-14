@@ -1,3 +1,4 @@
+import { observesWork, completedWork } from './work-completion.js?v=0.4.8';
 // Original local simulation. All mutations stay in this module; no wall-clock or random input.
 export const FIRST_RAID_DELAY = 180;
 export const BASE_RAID_INTERVAL = 180;
@@ -602,8 +603,14 @@ function gainXp(state, skill, runAmount = 10, permanentAmount = 2) {
 function finishAction(state) {
   const active = state.run.activeAction;
   const definition = DEFINITIONS.get(active.id);
+  const observed = observesWork(state), gains = observed ? {} : null;
+  const xpBefore = observed ? state.run.skills[definition.skill].xp : 0;
   if (active.id === 'chop_wood' && hasAugment(state, 'timber_contract')) state.run.resources.gold = Math.min(MAX_NUMBER, state.run.resources.gold + 1);
-  for (const [resource, amount] of Object.entries(definition.yields || {})) state.run.resources[resource] = Math.min(MAX_NUMBER, state.run.resources[resource] + amount);
+  for (const [resource, amount] of Object.entries(definition.yields || {})) {
+    const before = state.run.resources[resource];
+    state.run.resources[resource] = Math.min(MAX_NUMBER, before + amount);
+    if (gains && state.run.resources[resource] > before) gains[resource] = state.run.resources[resource] - before;
+  }
   if (definition.equipment) {
     state.run.equipment[definition.equipment.slot] = { id: definition.id, ...definition.equipment };
     addLog(state, `${definition.name}を装備した。`, 'craft');
@@ -615,6 +622,9 @@ function finishAction(state) {
   } else if (active.kind === 'craft') addLog(state, `${definition.name}が完成した。`, 'craft');
   awardMilestone(state, definition.id);
   gainXp(state, definition.skill);
+  if (observed) completedWork(state, {id:definition.id, skill:definition.skill, kind:active.kind,
+    resourceGains:gains, trainingGain:!Object.keys(definition.yields || {}).length && definition.skill === 'combat' ? state.run.skills[definition.skill].xp - xpBefore : 0,
+    created:!!(definition.equipment || definition.facility)});
   if (active.kind === 'craft') state.run.activeAction = null;
   else {
     active.progress = 0;
@@ -686,12 +696,14 @@ function advanceHelpers(state) {
   }
   state.run.helpers.auto_cook = rounded(state.run.helpers.auto_cook + STEP);
   if (state.run.helpers.auto_cook + 1e-8 >= state.run.autoCraft.duration) {
+    const foodBefore = state.run.resources.food;
     state.run.resources.food = Math.min(MAX_NUMBER, state.run.resources.food + recipe.yields.food);
     state.run.helpers.auto_cook = 0;
     state.run.autoCraft = null;
     gainXp(state, 'smithing');
     awardMilestone(state, recipe.id);
     addLog(state, '自動調理：薬草のスープが完成した。', 'craft');
+    if (observesWork(state)) completedWork(state, {id:recipe.id, skill:recipe.skill, kind:'craft', resourceGains:{food:state.run.resources.food - foodBefore}, trainingGain:0, created:false});
   }
 }
 
@@ -1082,4 +1094,4 @@ export function parseSave(text) {
   }
 }
 
-import { validMaterialPriority } from './material-priority.js?v=0.4.7';
+import { validMaterialPriority } from './material-priority.js?v=0.4.8';

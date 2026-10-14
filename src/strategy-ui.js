@@ -1,8 +1,8 @@
-import { CONTENT } from './content.js?v=0.4.7';
-import { setTextIfChanged } from './dom-text.js?v=0.4.7';
-import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.4.7';
-import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.4.7';
-import { conditionLabel } from './queue-conditions.js?v=0.4.7';
+import { CONTENT } from './content.js?v=0.4.8';
+import { setTextIfChanged } from './dom-text.js?v=0.4.8';
+import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.4.8';
+import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.4.8';
+import { conditionLabel } from './queue-conditions.js?v=0.4.8';
 const esc = x => String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Math.round(n).toLocaleString('ja-JP');
 const duration = n => {

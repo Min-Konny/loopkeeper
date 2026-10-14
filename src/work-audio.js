@@ -1,3 +1,7 @@
+export function completionSoundKind(event) {
+  if (!event || !(Object.values(event.resourceGains || {}).some(amount => amount > 0) || event.trainingGain > 0 || event.created)) return null;
+  return workSoundKind(event.id, event.skill) || (event.kind === 'craft' ? 'craft' : null);
+}
 export function workSoundKind(actionId, skill) {
   if (actionId === 'train_defense') return 'shield';
   if (actionId === 'train_vitality') return 'weight';

@@ -1,0 +1,54 @@
+/* Local art study: existing artwork and static vector scenes, no new assets. */
+:root { --camp-brass: #d1b77c; --camp-edge: #59654f; }
+.sidebar { background: linear-gradient(150deg,#17231f,#101a18 72%); border-right: 1px solid #52604a; box-shadow: 6px 0 22px #0002; }
+.sidebar .brand { padding-bottom: 20px; border-bottom: 1px solid #a58c513b; }
+.nav-item.selected { box-shadow: inset 3px 0 #cdb075, inset 0 1px #ffffff09; background: linear-gradient(110deg,#394336,#25372e); }
+.workspace { background: radial-gradient(ellipse at 45% 0%,#34433455,transparent 65%),#141e1c; }
+.workspace .topbar { border-bottom-color: #aa95603a; }
+.camp-banner { border: 1px solid #9d8b575c; border-radius: 9px; box-shadow: inset 0 1px #dcca9326,0 5px 18px #0003; }
+.camp-caption h2 { color: #f2e6c4; text-shadow: 0 2px 8px #000; letter-spacing: .04em; }
+.raid-forecast { background: linear-gradient(125deg,#152320f2,#202c27f5); border-color: #9886587a; box-shadow: inset 0 1px #fff1; border-radius: 7px; margin-left: auto; }
+.resource-bar { background: linear-gradient(180deg,#26352e,#1d2c26); border: 1px solid #6770518c; border-radius: 7px; box-shadow: inset 0 1px #efdfb21a; }
+.resource strong { color: #f0e8d2; font-variant-numeric: tabular-nums; }
+.section-heading h2 { color: #ead9b4; }
+.active-work { border-color: #6b7755; background: linear-gradient(110deg,#304234,#1b3029); box-shadow: inset 0 1px #b5c39a1c; }
+.queue-preview { background: linear-gradient(160deg,#25312b,#182520); border-color: #53634b; border-radius: 8px; }
+.gather-card .action-card { position: relative; overflow: hidden; border: 1px solid #667254; border-radius: 9px; background: linear-gradient(155deg,#304334,#21352d); box-shadow: inset 0 1px #c5ceac25,0 3px 9px #0002; padding: 12px; transition: border-color 140ms,background-color 140ms; }
+.gather-card .action-card:hover:not(:disabled) { border-color: #baab77; background: linear-gradient(155deg,#3b4e3b,#293e32); }
+.gather-card .action-card.active { border-color: #e0bf7c; box-shadow: inset 0 0 0 1px #bc9f6066,0 3px 9px #0002; }
+.gather-card .action-card:focus-visible { outline: 3px solid #f0d793; outline-offset: 2px; }
+.gather-card .action-icon { width: 28px; height: 28px; border-radius: 5px; background: #1c2d2666; }
+.gather-card .action-icon .icon { width: 20px; height: 20px; }
+.gather-card .action-time { color: #d0d8bc; font-variant-numeric: tabular-nums; }
+.action-portrait { height: 104px; position: relative; overflow: hidden; margin: 5px -12px 10px; border-top: 1px solid #8590673b; border-bottom: 1px solid #85906759; background: linear-gradient(180deg,#536259 0%,#344940 44%,#1d302a 100%); isolation: isolate; flex-shrink: 0; }
+.portrait-horizon { position: absolute; inset: 0; background: radial-gradient(ellipse at 74% 15%,#cfd3a952,transparent 39%),linear-gradient(165deg,transparent 52%,#1c332dc4 52.5%,#2c4335 78%,#1b2f28); }
+.portrait-horizon::before,.portrait-horizon::after { content: ''; position: absolute; bottom: 18px; width: 60%; height: 72px; background: #243c33; clip-path: polygon(0 100%,10% 42%,15% 70%,25% 8%,40% 80%,55% 20%,68% 77%,85% 0,100% 100%); }
+.portrait-horizon::after { right: -12%; bottom: 12px; background: #192e27; height: 89px; }
+.portrait-mining { background: linear-gradient(180deg,#535d62,#394749 52%,#26352e); }
+.portrait-mining .portrait-horizon::before { clip-path: polygon(0 100%,16% 66%,30% 12%,50% 22%,70% 0,100% 100%); background: #3c4b49; }
+.portrait-mining .portrait-horizon::after { clip-path: polygon(0 100%,10% 73%,42% 5%,62% 24%,80% 0,100% 100%); background: #263b35; }
+.portrait-combat { background: linear-gradient(180deg,#796a51,#4d5642 52%,#2b3f31); }
+.portrait-fishing { background: linear-gradient(180deg,#657b75,#395c59 50%,#2e4e49); }
+.portrait-fishing .portrait-horizon { background: radial-gradient(ellipse at 76% 15%,#cfdbb63d,transparent 40%),linear-gradient(168deg,transparent 46%,#597873 47%,#7b96903b 54%,#31534b 55%,#305c54 74%,#223c30 75%); }
+.action-portrait .portrait-vignette { position: absolute; z-index: 1; width: 196px; height: 104px; left: calc(50% - 98px); bottom: 0; border: 0; border-radius: 0; background: none; box-shadow: none; margin: 0; }
+.action-portrait .portrait-vignette::after { display: none; }
+.action-portrait .portrait-vignette svg { width: 100%; height: 100%; }
+.action-portrait .work-tool { display: none; }
+.action-portrait * { animation: none !important; }
+.portrait-caption { position: absolute; right: 10px; bottom: 9px; width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid #cbb78380; border-radius: 50%; color: #ddca9b; background: #15261be0; z-index: 2; }
+.portrait-caption .portrait-badge { width: 16px; height: 16px; }
+.gather-card .action-name h3 { color: #f1e8cc; font-size: 19px; }
+.gather-card .active-pill { color: #17271e; background: #d7bd84; border: 0; font-weight: bold; padding: 3px 7px; }
+.gather-card .action-yield { border-color: #9a9c7133; padding: 7px 0; color: #c7d5bc; }
+.gather-card .action-yield b { color: #e7cf92; }
+.gather-card .card-levels { color: #c5cebb; }
+.gather-card .card-skill-track { background: #13271f; }
+.gather-card .card-skill-track i { background: #a4bc88; }
+.gather-card .action-card.locked { opacity: .72; }
+@media(min-width:1000px) and (min-height:821px) { .camp-banner { height: 110px; min-height: 110px; } .camp-caption h2 { font-size: 26px; } .camp-caption { margin-top: 12px; } .camp-banner .camp-buildings { bottom: 9px; } .resource strong { font-size: 18px; line-height: 1.1; } .resource small { font-size: 11px; } .resource { min-height: 32px; padding: 3px 8px; } .deadline-notice { padding: 8px 12px; } }
+@media(max-width:690px) { .action-portrait { height: 92px; } .action-portrait .portrait-vignette { height: 92px; width: 174px; left: calc(50% - 87px); } .gather-card .action-name h3 { font-size: 17px; } .gather-card .action-card { padding: 12px; } }
+@media(min-width:691px) and (max-height:680px) { .action-portrait { height: 70px; } .action-portrait .portrait-vignette { height: 70px; width: 132px; left: calc(50% - 66px); } }
+@media(prefers-reduced-motion:reduce) { .gather-card .action-card { transition: none; } }
+@media(min-width:1000px) and (min-height:821px) { .camp-caption { position: absolute; left: 18px; top: 14px; margin: 0; } .camp-caption h2 { margin: 0; font-size: 24px; } .camp-banner .camp-buildings { bottom: 5px; } .camp-banner .camp-buildings span { width: 32px; height: 32px; } .camp-banner .camp-buildings svg { width: 28px; height: 28px; } }
+
+.action-portrait img.portrait-vignette { display: block; object-fit: contain; }

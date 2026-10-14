@@ -1,14 +1,15 @@
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.4.7';
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.7';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.7';
-import { CONTENT as C } from "./content.js?v=0.4.7";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.7";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.7";
+import { observesWork, completedWork } from './work-completion.js?v=0.4.8';
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.4.8';
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.8';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.8';
+import { CONTENT as C } from "./content.js?v=0.4.8";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.8";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.8";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.4.7";
+} from "./legacy-engine.js?v=0.4.8";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -611,8 +612,15 @@ export function getActionYields(s, d, channel = "main") {
 }
 function complete(s, a) {
   const d = defs.get(a.id);
-  for (const [r, n] of Object.entries(getActionYields(s, d, a.channel)))
-    s.run.resources[r] = round(Math.min(1e9, s.run.resources[r] + n));
+  const observed = (a.channel === 'main' || a.channel === 'auto_cook') && observesWork(s);
+  const gains = observed ? {} : null;
+  const training = ['defense', 'vitality'].includes(d.trainingStat) ? d.trainingStat : null;
+  const xpBefore = observed ? (training ? s.run.training[training] : s.run.skills[d.skill].xp) : 0;
+  for (const [r, n] of Object.entries(getActionYields(s, d, a.channel))) {
+    const before = s.run.resources[r];
+    s.run.resources[r] = round(Math.min(1e9, before + n));
+    if (gains && s.run.resources[r] > before) gains[r] = s.run.resources[r] - before;
+  }
   if (a.channel === "main" && d.id === "train_combat" && aug(s, "weapon_master")) strategy(s).focus = Math.min(30, strategy(s).focus + 1);
   if (aug(s, "timber_contract") && d.skill === "logging")
     s.run.resources.gold = round(
@@ -644,6 +652,9 @@ function complete(s, a) {
   event(s, "craft", d);
   if (getSynergies(s).length) event(s, "synergy");
   gain(s, d.skill, a.runXp, a.permanentXp, d.trainingStat);
+  if (observed) completedWork(s, {id:d.id, skill:d.skill, kind:a.kind,
+    resourceGains:gains, trainingGain:!Object.keys(d.yields || {}).length && d.skill === 'combat' ? (training ? s.run.training[training] : s.run.skills[d.skill].xp) - xpBefore : 0,
+    created:!!(d.equipment || d.facility || d.endlessFacility)});
 }
 
 // Resolve only the next required batch. Re-evaluate after every completion or helper delivery.
@@ -1987,7 +1998,7 @@ export function startEndless(s) {
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
 }
-import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.4.7';
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.4.8';
 
 export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
   return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{
