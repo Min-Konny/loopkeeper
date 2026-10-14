@@ -1,5 +1,5 @@
-import { CHALLENGES, challengeResults } from './strategy.js?v=0.4.10';
-import { getCatalog } from './engine.js?v=0.4.10';
+import { CHALLENGES, challengeResults } from './strategy.js?v=0.4.11';
+import { getCatalog } from './engine.js?v=0.4.11';
 export function clearRecord(state, endless = false) {
   const { AUGMENTS } = getCatalog(state);
   if (endless) {

@@ -1,7 +1,7 @@
-import { trainingCandidates } from './prerequisite-training.js?v=0.4.10';
-import { getActionXp } from './engine.js?v=0.4.10';
-import * as old from "./legacy-planner.js?v=0.4.10";
-import { orderRecipeMaterials } from './engine.js?v=0.4.10';
+import { trainingCandidates } from './prerequisite-training.js?v=0.4.11';
+import { getActionXp } from './engine.js?v=0.4.11';
+import * as old from "./legacy-planner.js?v=0.4.11";
+import { orderRecipeMaterials } from './engine.js?v=0.4.11';
 import {
   isLegacy,
   getCatalog,
@@ -20,7 +20,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.4.10";
+} from "./engine.js?v=0.4.11";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");

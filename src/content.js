@@ -1,6 +1,6 @@
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.4.10';
-import { REINFORCEMENTS } from './endless.js?v=0.4.10';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.10';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.4.11';
+import { REINFORCEMENTS } from './endless.js?v=0.4.11';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.11';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -499,8 +499,8 @@ export const CONTENT = {
       "knownAfterBoss": null,
       "duration": 18,
       "cost": {
-        "ingot": 10,
-        "hide": 4
+        "ingot": 6,
+        "hide": 3
       },
       "stats": {
         "defense": 3,

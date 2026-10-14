@@ -1,6 +1,6 @@
-import { getCatalog } from './engine.js?v=0.4.10';
-import { commitStoredGameEdit } from './save-storage.js?v=0.4.10';
-import { conditionLabel } from './queue-conditions.js?v=0.4.10';
+import { getCatalog } from './engine.js?v=0.4.11';
+import { commitStoredGameEdit } from './save-storage.js?v=0.4.11';
+import { conditionLabel } from './queue-conditions.js?v=0.4.11';
 
 const fail = reason => ({ ok: false, reason });
 const enabled = state => state.version === 2 && state.meta.upgrades.includes('queue_templates') && !state.settings.disabledUpgrades.includes('queue_templates');
