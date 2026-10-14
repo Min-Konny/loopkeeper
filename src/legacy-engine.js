@@ -1,4 +1,5 @@
-import { observesWork, completedWork } from './work-completion.js?v=0.4.8';
+import { recordReward } from './reward-events.js?v=0.4.9';
+import { observesWork, completedWork } from './work-completion.js?v=0.4.9';
 // Original local simulation. All mutations stay in this module; no wall-clock or random input.
 export const FIRST_RAID_DELAY = 180;
 export const BASE_RAID_INTERVAL = 180;
@@ -182,6 +183,7 @@ function awardMilestone(state, actionId) {
   if (!entry || state.meta.completedMilestones.includes(entry.id)) return;
   state.meta.completedMilestones.push(entry.id);
   state.meta.points += entry.reward;
+  recordReward(state,"points","",state.meta.points-entry.reward,state.meta.points);
   addLog(state, `初達成：${entry.name}。継承ポイント +${entry.reward}。`, 'permanent');
 }
 
@@ -585,11 +587,14 @@ function addLog(state, text, type = 'info') {
 }
 
 function gainXp(state, skill, runAmount = 10, permanentAmount = 2) {
+  const rewardRunBefore=state.run.skills[skill].xp,rewardPermanentBefore=state.meta.skills[skill].xp;
   const oldRunLevel = level(state, skill);
   const oldPermanentLevel = level(state, skill, true);
   const oldHp = getStats(state).maxHp;
   state.run.skills[skill].xp = Math.min(MAX_NUMBER, rounded(state.run.skills[skill].xp + runAmount * (1 + (oldPermanentLevel - 1) * 0.08)));
   state.meta.skills[skill].xp = Math.min(MAX_NUMBER, rounded(state.meta.skills[skill].xp + permanentAmount));
+  recordReward(state,"run",skill,rewardRunBefore,state.run.skills[skill].xp);
+  recordReward(state,"permanent",skill,rewardPermanentBefore,state.meta.skills[skill].xp);
   state.run.hp += getStats(state).maxHp - oldHp;
   const skillName = SKILLS.find(({ id }) => id === skill).name;
   if (level(state, skill) > oldRunLevel) {
@@ -777,6 +782,7 @@ function combatRound(state) {
     if (enemy.isBoss && !state.meta.defeatedBosses.includes(enemy.wave)) {
       state.meta.defeatedBosses.push(enemy.wave);
       state.meta.points += 1;
+      recordReward(state,"points","",state.meta.points-1,state.meta.points);
       addLog(state, `${enemy.name}を初めて撃破。継承ポイント +1。`, 'permanent');
     }
     if (enemy.invasion && state.run.diplomacy.status === 'hostile') {
@@ -1094,4 +1100,4 @@ export function parseSave(text) {
   }
 }
 
-import { validMaterialPriority } from './material-priority.js?v=0.4.8';
+import { validMaterialPriority } from './material-priority.js?v=0.4.9';

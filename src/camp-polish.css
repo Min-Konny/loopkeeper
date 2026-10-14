@@ -52,3 +52,193 @@
 @media(min-width:1000px) and (min-height:821px) { .camp-caption { position: absolute; left: 18px; top: 14px; margin: 0; } .camp-caption h2 { margin: 0; font-size: 24px; } .camp-banner .camp-buildings { bottom: 5px; } .camp-banner .camp-buildings span { width: 32px; height: 32px; } .camp-banner .camp-buildings svg { width: 28px; height: 28px; } }
 
 .action-portrait img.portrait-vignette { display: block; object-fit: contain; }
+#reward-feed{position:fixed;left:50%;top:20%;transform:translateX(-50%);z-index:39;width:min(390px,calc(100vw - 24px));padding:14px 18px;border:1px solid #c6ad6a88;border-radius:12px;background:linear-gradient(135deg,#37483efa,#182a26fa);box-shadow:0 8px 30px #0005;color:#ede6c8;animation:reward-arrive .15s ease-out}
+#reward-feed[hidden]{display:none}
+.reward-heading{display:flex;gap:12px;align-items:center;justify-content:space-between;font-size:15px;color:#eed6a1}
+.reward-close{display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid #98865b55;border-radius:6px;color:#e5d5b1;background:#1b2c2499;cursor:pointer;font:inherit}
+.reward-close:focus-visible,.reward-rows:focus-visible{outline:3px solid #e9ca88;outline-offset:3px}
+.reward-rows{max-height:min(220px,42dvh);overflow:auto;margin:8px 0 0;scrollbar-gutter:stable}
+.reward-rows>div{display:flex;gap:12px;justify-content:space-between;align-items:baseline;padding:7px 2px;border-top:1px solid #b9c7a91f}
+.reward-rows dt{min-width:0;font-size:13px;overflow-wrap:anywhere;color:#c7d3bf}
+.reward-rows dd{margin:0;color:#f0d18b;font-size:18px;white-space:nowrap;font-weight:700;font-variant-numeric:tabular-nums}
+.reward-announcer{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@keyframes reward-arrive{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translate(-50%,0)}}
+#reward-feed.reward-static{animation:none}
+@media(prefers-reduced-motion:reduce){#reward-feed{animation:none}}
+@media(max-width:690px){#reward-feed{top:16%;padding:12px}.reward-heading{font-size:14px}.reward-rows dd{font-size:17px}}
+
+/* Workshop art study: static original SVG images, shared forest/brass palette. */
+.workshop-card{display:grid;grid-template-columns:100px minmax(0,1fr);gap:8px 14px!important;border-color:#6d7654;background:linear-gradient(140deg,#2c4032,#1d3029);border-radius:9px;box-shadow:inset 0 1px #d8d2a31a}
+.workshop-card>.craft-info{display:contents}
+.workshop-product{grid-column:1;grid-row:1 / span 3;align-self:start;text-align:center;color:#cbb781;font-size:10px}
+.workshop-product img{display:block;width:100%;height:auto;border:1px solid #ac985a70;border-radius:8px}
+.workshop-product span{display:block;padding-top:5px;letter-spacing:.12em}
+.workshop-card .craft-info>h3,.workshop-card .craft-info>p,.workshop-card .craft-info>.craft-benefits{grid-column:2;margin:0}
+.workshop-card .craft-info>h3{font-size:20px;color:#eee2bf;line-height:1.5}
+.workshop-card .craft-info>p{font-size:13px;color:#c1ccba;line-height:1.6}
+.workshop-card .craft-benefits{font-size:13px;color:#e2c992}
+.workshop-card .craft-info>.recipe-cost,.workshop-card .craft-info>.craft-eta,.workshop-card .craft-info>.saved-work,.workshop-card .craft-info>.craft-growth,.workshop-card .craft-info>.plan-preview{grid-column:1 / -1;margin:0}
+.workshop-card .recipe-cost{display:flex;flex-wrap:wrap;gap:7px;padding:9px 0 3px;border-top:1px solid #a399662b;font-size:13px}
+.workshop-card .recipe-cost>span{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:3px 6px;align-items:center;padding:6px 8px;background:#15281f99;border:1px solid #77815c66;border-radius:5px;flex:1 1 140px;min-width:0}
+.workshop-card .recipe-cost>span>span{display:block;padding:0;background:none;border:0;margin:0;color:inherit}
+.workshop-card .material-stock{font-variant-numeric:tabular-nums;color:#eee4c7!important;text-align:right;white-space:nowrap}
+.workshop-card .material-stock b{font-weight:400;color:#aebb9e;padding-left:2px}
+.workshop-material-icon{width:20px;height:20px;display:block}
+.workshop-card .recipe-cost>span.insufficient{border-color:#ad784b;background:#412b2299;color:#e4c19b}
+.workshop-card .material-gap{grid-column:2 / -1;color:#f1b889;font-size:11px;line-height:1.4}
+.workshop-card>.craft-command{grid-column:1 / -1;width:100%;min-width:0;max-width:none;display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;padding-top:9px;margin-top:2px;border-top:1px solid #a3996633}
+.workshop-card .craft-buttons{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.workshop-card .craft-buttons>.button{min-height:44px}
+.workshop-card .craft-buttons>.button:focus-visible{outline:3px solid #edcd8a;outline-offset:3px}
+.workshop-card .craft-quantity{margin:0}
+.workshop-card .craft-command>small{flex-basis:100%;text-align:right}
+.workshop-card.active{border-color:#d1b477;box-shadow:inset 0 0 0 1px #bd9e5766}
+@media(max-width:690px){.workshop-card{grid-template-columns:80px minmax(0,1fr);gap:7px 10px!important}.workshop-card .craft-info>h3{font-size:18px}.workshop-card .craft-info>p{font-size:12px}.workshop-card .recipe-cost>span{flex-basis:130px}.workshop-card .craft-command{justify-content:space-between}.workshop-card .craft-quantity input{min-height:44px}.workshop-card .craft-buttons{margin-left:auto}}
+
+.craft-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;align-items:start}
+.craft-list>.craft-card{min-width:0;width:100%;display:grid;grid-template-columns:42px minmax(0,1fr);gap:7px 10px;padding:12px!important}
+.craft-list>.craft-card>.craft-icon{grid-column:1;grid-row:1 / span 2;width:38px;height:38px}
+.craft-list>.craft-card>.craft-info{min-width:0}
+.craft-list>.craft-card>.craft-command{grid-column:1 / -1;width:100%;min-width:0;max-width:none;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px;margin-top:0}
+.craft-list .craft-info h3{overflow-wrap:anywhere;font-size:18px;line-height:1.4}
+.craft-list .craft-info p{font-size:12px;line-height:1.5;margin:4px 0}
+.craft-list .craft-benefits{font-size:12px}
+.craft-list .craft-buttons{flex-wrap:wrap;gap:6px}
+.craft-list .craft-buttons .button{min-height:44px;white-space:normal}
+.craft-list>.workshop-card{grid-template-columns:60px minmax(0,1fr);gap:6px 10px!important}
+.workshop-card .craft-info>h3{font-size:18px}
+.workshop-card .craft-info>p{font-size:12px}
+.workshop-card .craft-info>.recipe-cost{padding:7px 0 0}
+.workshop-card .recipe-cost>span{padding:5px 7px;font-size:12px}
+.workshop-card .craft-info>.craft-growth{font-size:11px}
+.workshop-card>.craft-command{padding-top:7px}
+.workshop-product span{font-size:9px}
+.section-heading{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.section-heading>div:first-child{flex:1;min-width:100px}
+.list-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.list-tools #material-priority-controls{margin:0}
+#recipe-search-tools{display:flex;align-items:center;gap:6px;max-width:100%}
+#recipe-search-tools[hidden]{display:none}
+.list-tools button{min-height:40px;padding:6px 9px;font-size:12px}
+#recipe-search-summary{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#b9c8ad;font-size:11px}
+#recipe-search{padding:4px 0;margin:0}
+#recipe-search label{font-size:11px}
+@media(max-width:690px){.craft-list{grid-template-columns:1fr}.craft-list>.workshop-card{grid-template-columns:64px minmax(0,1fr)}.list-tools{width:100%;justify-content:flex-end}.list-tools button{min-height:44px}#recipe-search-summary{max-width:120px}.recipe-search-controls{flex-wrap:wrap}.recipe-search-controls input{min-width:0;flex:1 1 180px;width:100%}}
+@media(prefers-reduced-motion:reduce){.workshop-card,.list-tools button{transition:none}}
+
+#recipe-search-reset[hidden]{display:none!important}
+.catalog-filters{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.catalog-filters>.craft-filters{margin:0;padding:0;flex:0 1 auto}
+.catalog-filters label{font-size:12px}
+.catalog-filters button,.catalog-filters select{min-height:40px}
+.craft-list>.craft-card>.craft-command{flex-direction:row;align-items:center}
+.craft-list .craft-quantity{display:flex;flex-direction:row;align-items:center;gap:6px;order:1;font-size:11px}
+.craft-list .craft-quantity input{width:52px;min-width:0;margin:0;min-height:44px}
+.craft-list .craft-buttons{order:2;margin-left:auto}
+.workshop-card .craft-command>small.craft-total{order:3;font-size:11px;margin:0;line-height:1.4}
+.workshop-card .craft-command>small:not(.craft-total){order:4;font-size:11px;line-height:1.4}
+.workshop-card>.craft-command{gap:5px 8px}
+.action-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:690px){.catalog-filters{gap:6px}.catalog-filters button,.catalog-filters select{min-height:44px}}
+
+.craft-list .craft-buttons{flex-direction:row;align-items:center}
+.craft-list .recipe-cost .material-gap{color:#f1b889;font-size:11px;margin:0;white-space:nowrap}
+.craft-list>.craft-card:not(.workshop-card) .recipe-cost>span{display:inline-flex;flex-wrap:wrap;gap:3px 5px}
+
+
+.workshop-card .craft-info>*{grid-column:1 / -1}
+
+/* Share natural text/image/detail tracks only within each gathering row. */
+@supports(grid-template-rows:subgrid){
+.action-grid>.gather-card{display:grid;grid-row:span 4;grid-template-rows:subgrid;row-gap:0;min-width:0}
+.gather-card>.action-card{display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:0;align-content:stretch;min-width:0}
+.gather-card .action-summary{align-self:start;min-width:0}
+.gather-card .action-portrait{align-self:start}
+.gather-card .action-details{align-self:end;min-width:0}
+.gather-card .gather-reservation{grid-row:4;align-self:start}
+}
+.gather-card .action-summary h3,.gather-card .action-summary p{overflow-wrap:anywhere}
+.gather-card .action-yield{flex-wrap:wrap}
+@media(max-width:690px){.action-grid,.action-grid.filtered{grid-template-columns:minmax(0,1fr)}}
+
+#material-priority-dialog{width:min(900px,calc(100vw - 24px));max-width:900px;box-sizing:border-box}
+.priority-editor{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px}
+.priority-catalog,.priority-order{min-width:0}
+.priority-editor h3{font-size:14px;margin:12px 0 8px;color:#e3d2a4}
+.priority-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.priority-tile{display:flex;align-items:center;gap:8px;min-width:0;min-height:48px;padding:8px;border:1px solid #7d866544;border-radius:6px;background:#23382c;color:#dddcc6;font:inherit;text-align:left;cursor:pointer}
+.priority-tile.selected{border-color:#e0be77;background:#45533b}
+.priority-tile:disabled{opacity:.65;cursor:default}
+.priority-tile .icon,.priority-row-name .icon{width:20px;height:20px;flex:none}
+.priority-name{flex:1;min-width:0;font-size:13px;overflow-wrap:anywhere}
+.priority-rank{flex:none;color:#eed39a;font-size:12px}
+.priority-tile:focus-visible{outline:3px solid #f0d793;outline-offset:2px}
+#material-priority-dialog .priority-list{max-height:none;overflow:visible;list-style:none;padding:0;margin:0}
+#material-priority-dialog .priority-list li{display:flex;gap:6px;flex-wrap:wrap;padding:6px;background:#1d2e25;border:1px solid #89917233;border-radius:6px}
+#material-priority-dialog .priority-row-name{display:flex;align-items:center;gap:6px;min-width:0;flex:1 1 110px;overflow-wrap:anywhere;font-size:13px}
+.priority-row-name b{white-space:nowrap}
+.priority-row-buttons{display:flex;gap:4px;margin-left:auto}
+#material-priority-dialog .priority-footer{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));position:sticky;bottom:-1px;padding:12px 0 4px;background:#202e27;z-index:1}
+.priority-draft-status{font-size:12px;color:#d7c495}
+@media(max-width:690px){.priority-editor{grid-template-columns:1fr;gap:4px}.priority-order{grid-row:1}#material-priority-dialog .priority-footer{grid-template-columns:repeat(2,minmax(0,1fr))}#material-priority-dialog .priority-footer .button:last-child{grid-column:1/-1}#material-priority-dialog{padding:14px}}
+
+/* Mobile: thumbnail beside the text; preserve the larger desktop portraits. */
+@media(max-width:690px){
+ .action-grid>.gather-card{display:block;grid-row:auto}
+ #content .gather-card>.action-card{display:grid;grid-row:auto;grid-template-columns:64px minmax(0,1fr);grid-template-rows:auto auto;gap:0 10px;padding:10px;min-height:0}
+ .gather-card .action-summary{grid-column:2;grid-row:1;min-width:0}
+ .gather-card .action-summary .action-icon{display:none}
+ .gather-card .action-name{margin-top:4px}
+ .gather-card .action-summary p{margin:4px 0;font-size:11px;line-height:1.4}
+ .gather-card .action-yield{margin:3px 0;padding:3px 0}
+ .gather-card .action-portrait{grid-column:1;grid-row:1;width:64px;height:64px;margin:0;align-self:center;border-radius:6px}
+ .gather-card .action-portrait img.portrait-vignette{width:64px;height:64px;left:0;bottom:0;object-fit:contain}
+ .gather-card .portrait-caption{display:none}
+ .gather-card .action-details{grid-column:1/-1;grid-row:2;margin-top:4px}
+ #content .gather-card .card-levels{margin:0;padding:2px 0;font-size:11px;line-height:1.4}
+ #content .gather-card .card-levels>span{padding:1px 4px}
+ #content .gather-card .card-levels b{font-size:12px}
+ #content .gather-card .run-growth{margin:0;padding:2px 0;font-size:11px}
+ .gather-card .card-skill-track{margin-top:4px}
+ .gather-card .gather-reservation{margin-top:5px}
+ .craft-list>.workshop-card{grid-template-columns:48px minmax(0,1fr)}
+ .workshop-card .workshop-product{width:48px;height:48px}
+ .workshop-card .workshop-product img{width:48px;height:48px}
+ .craft-list>.craft-card:not(.workshop-card){grid-template-columns:42px minmax(0,1fr)}
+ .craft-list>.craft-card:not(.workshop-card)>.craft-icon{width:42px;height:42px}
+ .craft-list>.craft-card{padding:10px;gap:6px 9px}
+ .craft-list .craft-info h3{font-size:16px}
+ .craft-list .craft-info p{margin:2px 0;line-height:1.4}
+ .craft-list .recipe-cost{margin:4px 0}
+ .craft-list .craft-benefits{padding:3px 0;margin:3px 0;font-size:11px;line-height:1.4}
+ .craft-list .craft-command>small{line-height:1.4;margin:1px 0}
+ .craft-list .craft-command{grid-column:1/-1}
+ .craft-list .craft-buttons button,.gather-reservation button,.gather-reservation input{min-height:44px}
+}
+
+.gather-view-controls{display:flex;gap:4px;align-items:center}
+.gather-view-controls[hidden]{display:none}
+.gather-view-controls button[aria-pressed=true]{border-color:#e0bf7c;color:#ecd59e;background:#3d4e36}
+.gather-detail-button{display:none}
+.simple-state{display:none}
+.action-grid.is-simple{grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px}
+.action-grid.is-simple>.gather-card{display:block;grid-row:auto;position:relative;min-width:0}
+#content .action-grid.is-simple .action-card{display:block;grid-row:auto;padding:0;min-height:96px}
+.action-grid.is-simple .action-summary,.action-grid.is-simple .action-details,.action-grid.is-simple .gather-reservation{display:none}
+.action-grid.is-simple .action-portrait{width:100%;height:96px;margin:0;border:0;border-radius:7px}
+.action-grid.is-simple .action-portrait img.portrait-vignette{width:100%;height:96px;left:0;bottom:0;object-fit:contain}
+.action-grid.is-simple .portrait-caption{display:none}
+.action-grid.is-simple .gather-detail-button{display:grid;place-items:center;width:100%;min-height:44px;padding:4px;border:1px solid #667254;border-radius:0 0 6px 6px;background:#1e3329;color:#c9d5bb;font-size:12px}
+.action-grid.is-simple .simple-state{display:block;position:absolute;top:3px;left:3px;padding:2px 5px;background:#14281fde;color:#e3cf95;border-radius:3px;font-size:11px;z-index:2}
+.action-grid.is-simple .simple-state:empty{display:none}
+@media(max-width:690px){.action-grid.is-simple{grid-template-columns:repeat(3,minmax(0,1fr))}#content .action-grid.is-simple .action-card{min-height:78px}.action-grid.is-simple .action-portrait,.action-grid.is-simple .action-portrait img.portrait-vignette{height:78px}.gather-view-controls button{min-height:44px}}
+
+.gather-guide{padding:14px;border:1px solid #8e9b6655;border-radius:8px;background:#23362b;margin-top:14px}.gather-guide h3{font-size:16px;margin:0 0 8px}.gather-guide p{font-size:13px;line-height:1.5}.gather-guide strong{display:block;font-size:13px;color:#decd98}.gather-guide .button{min-height:44px;margin-top:10px}#gather-guide-dialog .button{min-height:44px}
+
+.starting-grant{padding:10px 12px;border:1px solid #a7936066;background:#23382c;border-radius:7px;margin-bottom:10px}.starting-grant strong{display:block;font-size:14px;color:#e4d3a5}.starting-grant div{display:flex;gap:8px 16px;flex-wrap:wrap;margin:6px 0;font-size:14px}.starting-grant small{font-size:11px;line-height:1.4}.training-purpose{display:block;font-size:12px;line-height:1.4;color:#e1ce96;overflow-wrap:anywhere}
+@media(max-width:690px){.craft-list>.craft-card{padding:10px!important;gap:4px 8px!important}.craft-list>.workshop-card{gap:4px 8px!important}.craft-list>.craft-card>.craft-command{gap:4px 6px}.workshop-card .recipe-cost>span{padding-top:3px;padding-bottom:3px}}
+
+.plan-details{font-size:12px;line-height:1.5;color:#c4d0b4}.plan-details summary{display:flex;align-items:center;gap:6px;cursor:pointer;min-height:32px}.plan-details summary:focus-visible{outline:3px solid #ecd092;outline-offset:2px}.plan-details p{overflow-wrap:anywhere;margin:5px 0}@media(max-width:690px){.plan-details summary{min-height:44px}}
+@media(max-width:690px){
+ .workshop-card .recipe-cost>span{flex-basis:100px}
+}

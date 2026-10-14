@@ -1,11 +1,15 @@
-import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.4.8';
-import { dependencyOrderedCosts } from './material-priority.js?v=0.4.8';
+import { trainingCandidates } from './prerequisite-training.js?v=0.4.9';
+import { getSkillProgress } from './legacy-engine.js?v=0.4.9';
+import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.4.9';
+import { dependencyOrderedCosts } from './material-priority.js?v=0.4.9';
 
 const MAX_STEPS = 8;
 const MAX_COUNT = 99;
 const failure = reason => ({ ok: false, reason, steps: [], summary: '' });
 const resourceName = id => RESOURCES[id]?.name || id;
 class PlanningError extends Error {}
+function grantXP(context,skill,count){for(let i=0;i<count;i++){const level=getSkillProgress(context.permanent[skill].xp,true).level;context.skills[skill].xp=Math.min(1e9,Math.round((context.skills[skill].xp+10*(1+(level-1)*.08))*1e6)/1e6);context.permanent[skill].xp=Math.min(1e9,context.permanent[skill].xp+2);}}
+function compactGathering(steps){const out=[],first=new Map();for(const step of steps){const d=ACTIONS.find(x=>x.id===step.id);if(d && Object.keys(d.yields || {}).length){const at=first.get(step.id);if(at!==undefined && out[at].count+step.count<=MAX_COUNT){out[at].count+=step.count;continue;}first.set(step.id,out.length);}out.push({...step});}return out;}
 
 /** Build an inventory-aware crafting plan without changing the game state. */
 export function planCraft(state, recipeId, count = 1) {
@@ -19,27 +23,28 @@ export function planCraft(state, recipeId, count = 1) {
 
   // Validate skill and equipment rules through the engine, ignoring only material
   // shortages and work that will be interrupted after the current raid.
-  function checkDefinition(definition) {
+  function checkDefinition(definition, context) {
     const funded = { ...state.run.resources };
     for (const [id, amount] of Object.entries(getRecipeCost(state, definition))) funded[id] = Math.max(funded[id] || 0, amount);
-    const preview = { ...state, run: { ...state.run, status: 'preparing', activeAction: null, resources: funded } };
+    const preview = { ...state, meta:{...state.meta,skills:context?.permanent || state.meta.skills},run: { ...state.run, skills:context?.skills || state.run.skills, status: 'preparing', activeAction: null, resources: funded } };
     const allowed = canStartAction(preview, definition.id);
     if (!allowed.ok) throw new PlanningError(allowed.reason);
   }
 
   const interrupted = { ...state.run.suspendedActions };
   if (state.run.activeAction?.kind === 'gather') interrupted[state.run.activeAction.id] = state.run.activeAction;
-  const copyContext = context => ({ inventory: { ...context.inventory }, steps: context.steps.map(step => ({ ...step })), seconds: context.seconds, resumed: new Set(context.resumed) });
+  const copyContext = context => ({ skills:structuredClone(context.skills),permanent:structuredClone(context.permanent),inventory: { ...context.inventory }, steps: context.steps.map(step => ({ ...step })), seconds: context.seconds, resumed: new Set(context.resumed) });
 
   function append(context, definition, count) {
     if (!Number.isInteger(count) || count < 1 || count > MAX_COUNT) throw new PlanningError('必要な作業が99回を超えます。材料を集めてから再度予約してください。');
     const previous = context.steps.at(-1);
     if (previous?.id === definition.id && previous.count + count <= MAX_COUNT) previous.count += count;
     else context.steps.push({ id: definition.id, count });
-    if (context.steps.length > MAX_STEPS) throw new PlanningError('必要な作業が予約上限の8件を超えます。材料を集めてから再度予約してください。');
+    if(context.steps.length>512)throw new PlanningError("必要な作業が多すぎます。素材と技能を準備してから再開してください。");
     const saved = !context.resumed.has(definition.id) && interrupted[definition.id];
     context.seconds += saved ? saved.duration - saved.progress + getActionDuration(state, definition) * (count - 1) : getActionDuration(state, definition) * count;
     context.resumed.add(definition.id);
+    grantXP(context,definition.skill,count);
   }
 
   function ensureResource(context, id, amount, ancestors) {
@@ -69,14 +74,23 @@ export function planCraft(state, recipeId, count = 1) {
   }
 
   function schedule(context, definition, count, ancestors) {
-    checkDefinition(definition);
+    while(getSkillProgress(context.skills[definition.skill].xp).level<(definition.unlockLevel || 1)){
+      const preview={...state,run:{...state.run,resources:context.inventory,skills:context.skills},meta:{...state.meta,skills:context.permanent}};
+      const candidate=trainingCandidates(preview,{...definition,cost:{}},{definitions:[...ACTIONS,...RECIPES],levelFor:k=>getSkillProgress(context.skills[k].xp).level,known:()=>true,costFor:d=>getRecipeCost(preview,d),durationFor:d=>getActionDuration(preview,d),visiting:new Set([...ancestors,definition.id])})[0];
+      if(!candidate)throw new PlanningError(definition.skill+"の技能を育てる実行可能な作業がありません。");
+      const estimate={skills:structuredClone(context.skills),permanent:structuredClone(context.permanent)};let n=0;
+      while(getSkillProgress(estimate.skills[definition.skill].xp).level<(definition.unlockLevel || 1)&&n<99){grantXP(estimate,definition.skill,1);n++;}
+      if(!n)throw new PlanningError("技能育成を進められません。");
+      schedule(context,candidate,n,new Set([...ancestors,definition.id]));
+    }
+    checkDefinition(definition,context);
     if (!Number.isInteger(count) || count < 1 || count > MAX_COUNT) throw new PlanningError('必要な作業が99回を超えます。材料を集めてから再度予約してください。');
     if (ancestors.has(definition.id)) throw new PlanningError('材料の調達順序を組み立てられません。');
     const nextAncestors = new Set([...ancestors, definition.id]);
     const paidBatch = !context.resumed.has(definition.id) && interrupted[definition.id]?.kind === 'craft' ? 1 : 0;
     const costs=dependencyOrderedCosts(getRecipeCost(state,definition),state.settings.craftMaterialPriority||[],{
       inventory:context.inventory,count:count-paidBatch,visiting:nextAncestors,
-      sourceFor:(id,missing,seen)=>[...ACTIONS,...RECIPES].filter(source=>source.yields?.[id]&&!seen.has(source.id)).filter(source=>{try{checkDefinition(source);return true;}catch{return false;}}).sort((a,b)=>getActionDuration(state,a)-getActionDuration(state,b))[0],
+      sourceFor:(id,missing,seen)=>[...ACTIONS,...RECIPES].filter(source=>source.yields?.[id]&&!seen.has(source.id)).filter(source=>{try{checkDefinition(source,context);return true;}catch{return false;}}).sort((a,b)=>getActionDuration(state,a)-getActionDuration(state,b))[0],
       costFor:source=>getRecipeCost(state,source),isPaid:source=>!context.resumed.has(source.id)&&interrupted[source.id]?.kind==='craft',
     });
     for (const [id, amount] of costs) {
@@ -90,8 +104,10 @@ export function planCraft(state, recipeId, count = 1) {
   }
 
   try {
-    const context = { inventory: { ...state.run.resources }, steps: [], seconds: 0, resumed: new Set() };
+    const context = { skills:structuredClone(state.run.skills),permanent:structuredClone(state.meta.skills),inventory: { ...state.run.resources }, steps: [], seconds: 0, resumed: new Set() };
     schedule(context, target, count, new Set());
+    if(context.steps.length>MAX_STEPS)context.steps=compactGathering(context.steps);
+    if(context.steps.length>MAX_STEPS)throw new PlanningError("技能育成を含む予約が8件を超えます。素材や技能を準備してから再開してください。");
     const definitions = new Map([...ACTIONS, ...RECIPES].map(definition => [definition.id, definition]));
     const summary = context.steps.map(step => `${definitions.get(step.id).name} ×${step.count}`).join(' → ');
     return { ok: true, reason: '', steps: context.steps, summary, seconds: context.seconds };
@@ -129,6 +145,7 @@ function planAfterPending(state, recipeId, count) {
       preview.run.facilities[definition.facility.id] = true;
     }
     for (const [id, amount] of Object.entries(definition.yields || {})) preview.run.resources[id] += amount * entry.count;
+    grantXP({skills:preview.run.skills,permanent:preview.meta.skills},definition.skill,entry.count);
     delete preview.run.suspendedActions[entry.id];
     consumed.add(entry.id);
   }

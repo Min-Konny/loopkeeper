@@ -1,5 +1,7 @@
-import * as old from "./legacy-planner.js?v=0.4.8";
-import { orderRecipeMaterials } from './engine.js?v=0.4.8';
+import { trainingCandidates } from './prerequisite-training.js?v=0.4.9';
+import { getActionXp } from './engine.js?v=0.4.9';
+import * as old from "./legacy-planner.js?v=0.4.9";
+import { orderRecipeMaterials } from './engine.js?v=0.4.9';
 import {
   isLegacy,
   getCatalog,
@@ -18,7 +20,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.4.8";
+} from "./engine.js?v=0.4.9";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -28,9 +30,12 @@ export function planCraft(s, id, count = 1) {
   const d = RECIPES.find((x) => x.id === id);
   if (!d || !isKnown(s, d)) return fail("未発見の製作です。");
   if (s.run.status !== "preparing") return fail("準備中に予約してください。");
+  const shadow=structuredClone(s);
   const inventory = { ...s.run.resources },
     steps = [];
   const equipment = { ...s.run.equipment };
+  shadow.run.resources=inventory;shadow.run.equipment=equipment;
+  let trainingBatches=0;
   let seconds = 0;
   const paid = new Set();
   function append(x, n) {
@@ -42,6 +47,10 @@ export function planCraft(s, id, count = 1) {
     seconds +=
       (saved ? saved.duration - saved.progress : getActionDuration(s, x)) +
       getActionDuration(s, x) * (n - 1);
+    const xp=getActionXp(shadow,x.id);
+    const gain=saved?{runXp:saved.runXp,permanentXp:saved.permanentXp}:xp;
+    shadow.run.skills[x.skill].xp=Math.min(1e9,shadow.run.skills[x.skill].xp+gain.runXp+xp.runXp*(n-1));
+    shadow.meta.skills[x.skill].xp=Math.min(1e9,shadow.meta.skills[x.skill].xp+gain.permanentXp+xp.permanentXp*(n-1));
     paid.add(x.id);
     while (n) {
       const count = Math.min(99, n);
@@ -52,8 +61,6 @@ export function planCraft(s, id, count = 1) {
   function craft(x, n, seen = new Set()) {
     if (seen.has(x.id)) throw Error("材料の循環。");
     if (!isKnown(s, x)) throw Error("未発見です。");
-    if (getSkillProgress(s.run.skills[x.skill].xp).level < x.unlockLevel)
-      throw Error(x.skill + " Lv." + x.unlockLevel + "が必要。");
     const next = new Set([...seen, x.id]);
     if (x.endlessFacility && (s.run.facilities[x.endlessFacility] || 0) < 5) craft(RECIPES.find(r => r.id === `${x.endlessFacility}_level_5`), 1, next);
     if (x.facility) {
@@ -74,6 +81,12 @@ export function planCraft(s, id, count = 1) {
       if ((equipment[x.slot]?.tier || 0) >= x.tier) return;
       if ((equipment[x.slot]?.tier || 0) < x.tier - 1) craft(RECIPES.find(r => r.id === x.previousEquipmentId), 1, next);
     }
+    while(getSkillProgress(shadow.run.skills[x.skill].xp).level<x.unlockLevel){
+      if(++trainingBatches>512)throw Error("必要な技能育成が長すぎます。技能を育ててから再開してください。");
+      const candidate=trainingCandidates(shadow,x,{definitions:[...ACTIONS,...RECIPES],levelFor:k=>getSkillProgress(shadow.run.skills[k].xp).level,known:d=>isKnown(shadow,d),costFor:d=>getRecipeCost(shadow,d),durationFor:d=>getActionDuration(shadow,d),visiting:next})[0];
+      if(!candidate)throw Error(x.skill+" Lv."+x.unlockLevel+"が必要です。実行可能な採集・製作で育ててください。");
+      const before=shadow.run.skills[x.skill].xp;craft(candidate,1,next);if(shadow.run.skills[x.skill].xp<=before)throw Error("技能育成を進められません。");
+    }
     for (const [r, cost] of orderRecipeMaterials(s,x,inventory,n-(saved?.kind==='craft'?1:0),paid,next)) {
       const needed = cost * (n - (saved?.kind === "craft" ? 1 : 0)),
         short = needed - (inventory[r] || 0);
@@ -86,7 +99,7 @@ export function planCraft(s, id, count = 1) {
           next,
           paid,
         );
-        const p = sources[0];
+        const p = sources[0] || [...ACTIONS,...RECIPES].filter(source=>source.yields?.[r] && isKnown(shadow,source) && !next.has(source.id)).sort((a,b)=>(a.unlockLevel || 1)-(b.unlockLevel || 1))[0];
         if (!p)
           throw Error(
             RESOURCES[r].name +

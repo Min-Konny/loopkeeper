@@ -1,15 +1,18 @@
-import { observesWork, completedWork } from './work-completion.js?v=0.4.8';
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.4.8';
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.8';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.8';
-import { CONTENT as C } from "./content.js?v=0.4.8";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.8";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.8";
+import { startingGrant } from './starting-resources.js?v=0.4.9';
+import { trainingCandidates } from './prerequisite-training.js?v=0.4.9';
+import { recordReward } from './reward-events.js?v=0.4.9';
+import { observesWork, completedWork } from './work-completion.js?v=0.4.9';
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.4.9';
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.9';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.9';
+import { CONTENT as C } from "./content.js?v=0.4.9";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.9";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.9";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.4.8";
+} from "./legacy-engine.js?v=0.4.9";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -448,6 +451,7 @@ function reward(s, id) {
   s.meta.completedMilestones.push(id);
   s.meta.points++;
   s.meta.totalPoints++;
+  recordReward(s,"points","",s.meta.points-1,s.meta.points);
   log(
     s,
     `初達成：${MILESTONES.find((q) => q.id === id)?.name || id} / 継承 +1`,
@@ -583,10 +587,13 @@ export function stopAction(s) {
   return ok();
 }
 function gain(s, skill, run, perm, focus) {
+  const rewardRunBefore=s.run.skills[skill].xp, rewardPermanentBefore=s.meta.skills[skill].xp;
+  let rewardDefenseBefore=0, rewardVitalityBefore=0;
   const before = getStats(s).maxHp,
     old = lv(s, skill);
   if (skill === "combat") {
     s.run.training ||= {defense:0,vitality:s.run.skills.combat.xp * .5};
+    rewardDefenseBefore=s.run.training.defense;rewardVitalityBefore=s.run.training.vitality;
     if (focus === "defense" || focus === "vitality") {
       s.run.training[focus] = round(Math.min(1e9,s.run.training[focus]+run));run=0;
     } else if (!focus) s.run.training.vitality=round(Math.min(1e9,s.run.training.vitality+run*.5));
@@ -595,6 +602,9 @@ function gain(s, skill, run, perm, focus) {
   s.meta.skills[skill].xp = round(
     Math.min(1e9, s.meta.skills[skill].xp + perm),
   );
+  recordReward(s,"run",skill,rewardRunBefore,s.run.skills[skill].xp);
+  recordReward(s,"permanent",skill,rewardPermanentBefore,s.meta.skills[skill].xp);
+  if(skill==="combat"){recordReward(s,"training","defense",rewardDefenseBefore,s.run.training.defense);recordReward(s,"training","vitality",rewardVitalityBefore,s.run.training.vitality);}
   s.run.hp = round(
     Math.min(getStats(s).maxHp, s.run.hp + getStats(s).maxHp - before),
   );
@@ -726,6 +736,15 @@ export function getProductionSources(
     .sort((a, b) => a.seconds - b.seconds)
     .map((x) => x.d);
 }
+export function getActionXp(s,id){const a=batch(s,id);return {runXp:a.runXp,permanentXp:a.permanentXp};}
+function trainForGoal(s,d,visiting){
+ const seen=new Set([...visiting,d.id]);
+ for(const candidate of trainingCandidates(s,d,{definitions:[...ACTIONS,...RECIPES],levelFor:skill=>lv(s,skill),known:x=>isKnown(s,x),costFor:x=>getRecipeCost(s,x),durationFor:x=>getActionDuration(s,x),visiting:seen})){
+  const result=resolveGoal(s,candidate.id,seen);
+  if(result.ok && result.id)return {...result,training:result.training || {skill:d.skill,level:d.unlockLevel,goal:d.id}};
+ }
+ return {...fail(SKILLS.find(x=>x.id===d.skill).name+" Lv."+d.unlockLevel+"が必要です。実行可能な採集・製作で技能を育ててから再開してください。"),skill:d.skill};
+}
 export function resolveGoal(s, id, visiting = new Set()) {
   const d = defs.get(id);
   if (!d) return fail("作業がありません。");
@@ -738,8 +757,6 @@ export function resolveGoal(s, id, visiting = new Set()) {
     return { ...ok(), done: true };
   if (d.equipment && s.run.equipment[d.slot]?.id === id)
     return { ...ok(), done: true };
-  if (lv(s, d.skill) < d.unlockLevel)
-    return { ...fail(`${SKILLS.find((x) => x.id === d.skill).name} Lv.${d.unlockLevel}が必要。`), skill: d.skill };
   const seen = new Set([...visiting, id]);
   if (d.previousEquipmentId && (s.run.equipment[d.slot]?.tier || 0) != d.tier - 1) {
     if ((s.run.equipment[d.slot]?.tier || 0) >= d.tier) return { ...ok(), done: true };
@@ -747,6 +764,7 @@ export function resolveGoal(s, id, visiting = new Set()) {
   }
   if (d.facility && (s.run.facilities[d.facility.id] || 0) < d.level - 1)
     return resolveGoal(s, d.requires[0], seen);
+  if (lv(s,d.skill)<d.unlockLevel) return trainForGoal(s,d,visiting);
   let unavailable = null;
   const priority = s.settings.craftMaterialPriority || [];
   for (const [r, n] of orderRecipeMaterials(s,d,s.run.resources,1,new Set(),seen)) {
@@ -758,6 +776,7 @@ export function resolveGoal(s, id, visiting = new Set()) {
       s.run.resources,
       seen,
     );
+    for(const source of [...ACTIONS,...RECIPES].filter(x=>x.yields?.[r] && isKnown(s,x) && !seen.has(x.id)).sort((a,b)=>(a.unlockLevel || 1)-(b.unlockLevel || 1) || getActionDuration(s,a)-getActionDuration(s,b)))if(!producers.some(p=>p.id===source.id))producers.push(source);
     let reason = "";
     for (const p of producers) {
       const result = resolveGoal(s, p.id, seen);
@@ -765,6 +784,7 @@ export function resolveGoal(s, id, visiting = new Set()) {
       reason = result.reason;
     }
     const locked = ACTIONS.filter(p => p.yields?.[r] && isKnown(s, p) && lv(s, p.skill) < p.unlockLevel).sort((a, b) => a.unlockLevel - b.unlockLevel)[0];
+    if(locked){const training=resolveGoal(s,locked.id,seen);if(training.ok)return training;}
     const failure = locked ? { ...fail(`${RESOURCES[r].name}を集めるには${SKILLS.find(x => x.id === locked.skill).name} Lv.${locked.unlockLevel}が必要。`), skill: locked.skill } : fail(
       reason ||
         `${RESOURCES[r].name}不足。${r === "hide" ? "撃退または市場で入手。" : r === "gold" ? (s.run.facilities.market ? "襲撃を撃退、または市場で資源を売却。" : "襲撃の撃退で入手。市場の建設後は資源売却でも入手。") : "技能を上げてください。"}`,
@@ -1504,6 +1524,7 @@ export function restartRun(s) {
   s.settings.paused = true;
   return ok();
 }
+export function getStartingResources(s){const ids=s.run.status==="legacy_setup"?s.run.legacyDraft.upgrades:s.meta.upgrades;return startingGrant(ids,s.settings.disabledUpgrades);}
 export function confirmRun(s) {
   if (s.run.status !== "legacy_setup") return fail("継承準備ではありません。");
   Object.assign(s.meta, s.run.legacyDraft);
@@ -1513,6 +1534,7 @@ export function confirmRun(s) {
   );
   s.contentVersion = C.revision;
   s.run = freshRun(s.meta, s.settings);
+  Object.assign(s.run.resources,getStartingResources(s));
   s.run.hp = getStats(s).maxHp;
   for (const id of s.meta.upgrades) event(s, "worker_purchase", { id });
   s.settings.paused = true;
@@ -1666,6 +1688,7 @@ function victory(s, e) {
     s.meta.defeatedBosses.push(e.id);
     s.meta.points++;
     s.meta.totalPoints++;
+    recordReward(s,"points","",s.meta.points-1,s.meta.points);
     log(s, "ボス初撃破 / 継承 +1", "permanent");
   }
   if (e.country) {
@@ -1998,7 +2021,7 @@ export function startEndless(s) {
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
 }
-import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.4.8';
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.4.9';
 
 export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
   return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{

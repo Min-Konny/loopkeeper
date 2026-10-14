@@ -1,6 +1,7 @@
-import { challengesMarkup } from './strategy-ui.js?v=0.4.8';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.8";
-import { CONTENT as C } from "./content.js?v=0.4.8";
+import { getStartingResources } from './engine.js?v=0.4.9';
+import { challengesMarkup } from './strategy-ui.js?v=0.4.9';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.9";
+import { CONTENT as C } from "./content.js?v=0.4.9";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -16,7 +17,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.4.8";
+} from "./engine.js?v=0.4.9";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -30,6 +31,7 @@ const label = (id) =>
 const button = (text, attr, disabled = false) =>
   `<button class="button small gold-outline" ${attr} ${disabled ? "disabled" : ""}>${text}</button>`;
 const setupCategories = [
+  {id:"starting",name:"備蓄",kinds:["starting_resources"]},
   { id: "combat", name: "戦闘", kinds: ["combat"] },
   { id: "automation", name: "自動化・人員", kinds: ["automation", "worker"] },
   { id: "augment", name: "オーグメント", kinds: ["augment_pack", "augment_reroll"] },
@@ -58,7 +60,7 @@ export function setupMarkup(s, category = "combat") {
     },
   ).join(
     "",
-  )}</div>${challengesMarkup(s)}<div class="setup-footer">${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
+  )}</div>${challengesMarkup(s)}<div class="setup-footer"><section class="starting-grant"><strong>次の転生で受け取る資源</strong><div>${Object.keys(getStartingResources(s)).length ? Object.entries(getStartingResources(s)).map(([id,n])=>`<span>${esc(RESOURCES[id]?.name || id)} <b>${n}</b></span>`).join("") : "初期支給なし"}</div><small>転生を確定した時だけ支給。現在の手持ちは持ち越しません。</small></section>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
 }
 // Keep the nearest unanswered request visible while working in another tab.
 export function diplomacyDeadlineMarkup(s) {
