@@ -22,7 +22,7 @@ export function miningScene(actionId) {
     coal: `<path d="M72 67 78 48 90 40 99 52 108 38 121 43 136 56 141 70 121 76 101 69 86 77Z" fill="${base}" stroke="${face}" stroke-width="2"/><path d="M78 48 90 56 86 70M108 38 110 56 121 76M110 56 132 57" fill="none" stroke="${vein}" stroke-opacity=".6" stroke-width="1.5"/>`,
     silver: `<path d="M77 59 92 54 101 43 115 48 127 44M92 54 98 66 125 61 136 67" fill="none" stroke="${vein}" stroke-width="4" stroke-linejoin="round"/><path d="M102 44 112 47" stroke="#ffffff" stroke-width="1.5"/>`,
     mithril: crystal(80, 66, .65, deposit) + crystal(103, 65, .9, deposit) + crystal(125, 70, .5, deposit),
-    diamond: crystal(72, 72, .7, deposit) + crystal(92, 71, 1.35, deposit) + crystal(127, 73, .65, deposit),
+    diamond: '<g fill="#bce7f4" stroke="#f0ffff" stroke-width="2"><path d="M77 43 91 25h37l17 18-34 34Z"/><path d="M77 43h68M91 25l8 18 12 34 14-34 3-18M99 43l12-18 14 18" fill="none"/></g>',
     orichalcum: `<path d="M77 65 88 58 99 61 108 48 126 46M99 61 105 69 131 61M108 48 104 39" fill="none" stroke="${vein}" stroke-width="5" stroke-linejoin="round"/><path d="M116 52 125 49 130 55 124 63 115 60Z" fill="#ffe39b"/>`,
   };
   const gleam = ['silver', 'mithril', 'diamond', 'orichalcum'].includes(type)

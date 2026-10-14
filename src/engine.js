@@ -1,13 +1,13 @@
 export const getActionYields = (s,d) => isLegacy(s) ? d.yields || {} : mvp.getActionYields(s,d);
 export const getPlayerStrike = s => isLegacy(s) ? {attack:getStats(s).attack,armor:(s.run.enemy || getNextEnemy(s)).defense,damage:Math.max(1,getStats(s).attack-(s.run.enemy || getNextEnemy(s)).defense)} : mvp.getPlayerStrike(s);
-export { enqueueConditional } from './mvp-engine.js?v=0.4.9';
-import * as legacy from "./legacy-engine.js?v=0.4.9";
-import * as mvp from "./mvp-engine.js?v=0.4.9";
-import { validateSave } from "./save-validation.js?v=0.4.9";
-export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.4.9";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.4.9";
-export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.4.9";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.4.9";
+export { enqueueConditional } from './mvp-engine.js?v=0.4.10';
+import * as legacy from "./legacy-engine.js?v=0.4.10";
+import * as mvp from "./mvp-engine.js?v=0.4.10";
+import { validateSave } from "./save-validation.js?v=0.4.10";
+export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.4.10";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.4.10";
+export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.4.10";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.4.10";
 export {
   SKILLS,
   getSkillProgress,
@@ -24,7 +24,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.4.9";
+} from "./mvp-engine.js?v=0.4.10";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;

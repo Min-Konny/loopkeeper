@@ -1,6 +1,6 @@
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.4.9';
-import { REINFORCEMENTS } from './endless.js?v=0.4.9';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.9';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.4.10';
+import { REINFORCEMENTS } from './endless.js?v=0.4.10';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.10';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -235,7 +235,7 @@ export const CONTENT = {
       "skill": "foraging",
       "duration": 7,
       "yields": {
-        "food": 1
+        "food": 2
       },
       "unlockLevel": 1,
       "knownAfterBoss": null,
@@ -400,9 +400,9 @@ export const CONTENT = {
       "id": "fish_river",
       "name": "川で釣る",
       "skill": "foraging",
-      "duration": 14,
+      "duration": 12,
       "yields": {
-        "fish": 3
+        "fish": 4
       },
       "unlockLevel": 2,
       "unlockBestWave": 1,
@@ -1141,10 +1141,9 @@ export const CONTENT = {
       "id": "cook_fish",
       "name": "魚の香草焼き",
       "skill": "smithing",
-      "duration": 10,
+      "duration": 6,
       "cost": {
         "fish": 3,
-        "herbs": 2,
         "wood": 2
       },
       "yields": {
@@ -1406,10 +1405,10 @@ export const CONTENT = {
       "level": 2,
       "duration": 28,
       "cost": {
-        "wood": 80,
-        "stone": 50,
-        "ingot": 12,
-        "gold": 22
+        "wood": 50,
+        "stone": 30,
+        "ingot": 6,
+        "gold": 12
       },
       "effect": {
         "craftSpeed": 0.3
@@ -1476,10 +1475,10 @@ export const CONTENT = {
       "level": 2,
       "duration": 28,
       "cost": {
-        "wood": 70,
-        "stone": 40,
-        "ingot": 8,
-        "gold": 20
+        "wood": 40,
+        "stone": 24,
+        "ingot": 4,
+        "gold": 10
       },
       "effect": {
         "purchaseDiscount": 0.1,

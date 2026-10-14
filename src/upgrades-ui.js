@@ -1,4 +1,4 @@
-import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.4.9';
+import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.4.10';
 import {
   ACCELERATION,
   LEGACY_UPGRADES,
@@ -6,8 +6,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.4.9";
-import { icon } from "./icons.js?v=0.4.9";
+} from "./engine.js?v=0.4.10";
+import { icon } from "./icons.js?v=0.4.10";
 
 const escape = (value) =>
   String(value ?? "").replace(

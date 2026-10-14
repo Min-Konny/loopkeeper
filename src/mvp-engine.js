@@ -1,18 +1,18 @@
-import { startingGrant } from './starting-resources.js?v=0.4.9';
-import { trainingCandidates } from './prerequisite-training.js?v=0.4.9';
-import { recordReward } from './reward-events.js?v=0.4.9';
-import { observesWork, completedWork } from './work-completion.js?v=0.4.9';
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.4.9';
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.9';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.9';
-import { CONTENT as C } from "./content.js?v=0.4.9";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.9";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.9";
+import { startingGrant } from './starting-resources.js?v=0.4.10';
+import { trainingCandidates } from './prerequisite-training.js?v=0.4.10';
+import { recordReward } from './reward-events.js?v=0.4.10';
+import { observesWork, completedWork } from './work-completion.js?v=0.4.10';
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.4.10';
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.10';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.10';
+import { CONTENT as C } from "./content.js?v=0.4.10";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.10";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.10";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.4.9";
+} from "./legacy-engine.js?v=0.4.10";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -57,7 +57,7 @@ const effectText = (f) =>
     barricade: `防御 +${f.effect.defense}`,
     infirmary: `準備中に回復 / 戦闘処置 ${f.effect.treatmentCharges}回`,
     workshop: `製作速度 +${Math.round(f.effect.craftSpeed * 100)}%`,
-    market: `木材10 → 金貨${f.effect.woodSaleAmount}`,
+    market: `木材10 → 金貨${f.effect.woodSaleAmount}${f.level>=2 ? ` / 対象素材の購入${Math.round(f.effect.purchaseDiscount*100)}%引き（小数反映）` : ""}`,
     guardhouse: `支援攻撃 ${f.effect.supportAttack}`,
     archery_tower: `弓支援 ${f.effect.rangedAttack} / 飛行に2.5倍`,
   })[f.facilityId];
@@ -587,13 +587,10 @@ export function stopAction(s) {
   return ok();
 }
 function gain(s, skill, run, perm, focus) {
-  const rewardRunBefore=s.run.skills[skill].xp, rewardPermanentBefore=s.meta.skills[skill].xp;
-  let rewardDefenseBefore=0, rewardVitalityBefore=0;
   const before = getStats(s).maxHp,
     old = lv(s, skill);
   if (skill === "combat") {
     s.run.training ||= {defense:0,vitality:s.run.skills.combat.xp * .5};
-    rewardDefenseBefore=s.run.training.defense;rewardVitalityBefore=s.run.training.vitality;
     if (focus === "defense" || focus === "vitality") {
       s.run.training[focus] = round(Math.min(1e9,s.run.training[focus]+run));run=0;
     } else if (!focus) s.run.training.vitality=round(Math.min(1e9,s.run.training.vitality+run*.5));
@@ -602,9 +599,6 @@ function gain(s, skill, run, perm, focus) {
   s.meta.skills[skill].xp = round(
     Math.min(1e9, s.meta.skills[skill].xp + perm),
   );
-  recordReward(s,"run",skill,rewardRunBefore,s.run.skills[skill].xp);
-  recordReward(s,"permanent",skill,rewardPermanentBefore,s.meta.skills[skill].xp);
-  if(skill==="combat"){recordReward(s,"training","defense",rewardDefenseBefore,s.run.training.defense);recordReward(s,"training","vitality",rewardVitalityBefore,s.run.training.vitality);}
   s.run.hp = round(
     Math.min(getStats(s).maxHp, s.run.hp + getStats(s).maxHp - before),
   );
@@ -1353,7 +1347,9 @@ export function getSupplyCost(s, id) {
         ? 0.15
         : 0)
     : 0;
-  return Math.max(1, Math.ceil(m.gold * (1 - Math.min(0.4, discount))));
+  const price = m.gold * (1 - Math.min(0.4, discount));
+  // Upgraded markets quote cents so small purchases actually receive their discount.
+  return Math.max(1, s.run.facilities.market >= 2 ? Math.ceil(price * 100 - 1e-8) / 100 : Math.ceil(price));
 }
 export function buySupply(s, id) {
   const m = C.market.find((m) => m.id === id);
@@ -2021,7 +2017,7 @@ export function startEndless(s) {
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
 }
-import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.4.9';
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.4.10';
 
 export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
   return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{
