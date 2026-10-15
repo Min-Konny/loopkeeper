@@ -1,34 +1,36 @@
-import {EXTENDED_CAMPAIGN,CLASSIC_CAMPAIGN,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.5.1';
-import {investmentEffect}from './investments.js?v=0.5.1';
-import {freshContracts,contractEffects}from './contracts.js?v=0.5.1';
-import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.5.1';
-import {freshFarm,advanceFarm}from './farm-state.js?v=0.5.1';import {farmResource,resourceCap}from './farm-content.js?v=0.5.1';
-import {companionById}from './companion-content.js?v=0.5.1';
-import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.5.1';
-import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.5.1';import {alchemyResource}from './magic-content.js?v=0.5.1';
-import {weaponById}from './gear-content.js?v=0.5.1';
-import {initializeGear,accessoryEffects,combatBuild,strikeModifier}from './gear-state.js?v=0.5.1';
-import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.5.1';
-import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.5.1';
-import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.5.1';
-import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.5.1';
-import { maximumTradeCount } from './maximum-trade.js?v=0.5.1';
-import { startingGrant } from './starting-resources.js?v=0.5.1';
-import { tradeSaleUnit } from './fish-economy.js?v=0.5.1';
-import { trainingCandidates } from './prerequisite-training.js?v=0.5.1';
-import { recordReward } from './reward-events.js?v=0.5.1';
-import { observesWork, completedWork } from './work-completion.js?v=0.5.1';
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.5.1';
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.5.1';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.5.1';
-import { CONTENT as C } from "./content.js?v=0.5.1";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.5.1";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.5.1";
+import {recordWorkMilestone}from './work-milestones.js?v=0.6.0';
+import {awardTrophy,trophyShortage,payTrophies,refundUnfinishedTrophies} from './boss-materials.js?v=0.6.0';
+import {EXTENDED_CAMPAIGN,FRONTIER_CAMPAIGN,CLASSIC_CAMPAIGN,campaignFinalWave,campaignIncludes,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.6.0';
+import {investmentEffect}from './investments.js?v=0.6.0';
+import {freshContracts,contractEffects}from './contracts.js?v=0.6.0';
+import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.6.0';
+import {freshFarm,advanceFarm}from './farm-state.js?v=0.6.0';import {farmResource,resourceCap}from './farm-content.js?v=0.6.0';
+import {companionById}from './companion-content.js?v=0.6.0';
+import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.6.0';
+import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.6.0';import {alchemyResource}from './magic-content.js?v=0.6.0';
+import {weaponById}from './gear-content.js?v=0.6.0';
+import {initializeGear,accessoryEffects,combatBuild,strikeModifier}from './gear-state.js?v=0.6.0';
+import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.6.0';
+import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.6.0';
+import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.6.0';
+import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.6.0';
+import { maximumTradeCount } from './maximum-trade.js?v=0.6.0';
+import { startingGrant } from './starting-resources.js?v=0.6.0';
+import { tradeSaleUnit } from './fish-economy.js?v=0.6.0';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.0';
+import { recordReward } from './reward-events.js?v=0.6.0';
+import { observesWork, completedWork } from './work-completion.js?v=0.6.0';
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.6.0';
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.6.0';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.6.0';
+import { CONTENT as C } from "./content.js?v=0.6.0";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.6.0";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.6.0";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.5.1";
+} from "./legacy-engine.js?v=0.6.0";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -219,13 +221,14 @@ const log = (s, text, type = "info") => {
   s.run.log.length = Math.min(40, s.run.log.length);
 };
 const progressRates=new WeakMap();
-function freshRun(meta, settings, campaign=EXTENDED_CAMPAIGN) {
+function freshRun(meta, settings, campaign=FRONTIER_CAMPAIGN) {
   return {
     campaign,
+    trophyClaims:[],regionalClaims:[],
     strategy: { ...newStrategy(), eligible: meta.clears > 0 },
     battleReports: [],
     results:createRunResults(meta),
-    progression:createProgression(meta,campaign===EXTENDED_CAMPAIGN?24:21),
+    progression:createProgression(meta,campaignFinalWave(campaign)),
     encounterDepth: true,
     status: "preparing",
     elapsed: 0,
@@ -310,7 +313,7 @@ function freshRun(meta, settings, campaign=EXTENDED_CAMPAIGN) {
     ),
   };
 }
-export function createGame({campaign=EXTENDED_CAMPAIGN}={}) {
+export function createGame({campaign=FRONTIER_CAMPAIGN}={}) {
   if(!validCampaign(campaign))throw Error("Unknown campaign");
   const meta = {
     generation: 1,
@@ -358,7 +361,7 @@ export function createGame({campaign=EXTENDED_CAMPAIGN}={}) {
 export function isKnown(s, d) {
   if (typeof d === "string") d = defs.get(d);
   return (
-    !!d && (!d.campaign||d.campaign===campaignForRun(s)) && (!d.endlessFacility || s.run.endless?.active) &&
+    !!d && campaignIncludes(s,d.campaign) && (!d.endlessFacility || s.run.endless?.active) &&
     s.meta.bestWave >=
       (typeof d.knownAfterBoss === "string"
         ? (C.encounters.find((e) => e.id === d.knownAfterBoss)?.wave ?? 999)
@@ -446,7 +449,7 @@ export function getFoodHealing(s) {
   );
 }
 export function getRaidInterval(s) {
-  return 180 + (effect(s, "watchtower").raidDelay || 0);
+  return (s.run.campaign===FRONTIER_CAMPAIGN&&s.run.wave>=24?120:180) + (effect(s, "watchtower").raidDelay || 0);
 }
 export function getActionDuration(s, d) {
   if (typeof d === "string") d = defs.get(d);
@@ -459,7 +462,8 @@ export function getActionDuration(s, d) {
   if (d.trainingStat && aug(s, "trade_school")) multiplier *= 1 - .04 * (s.run.facilities.market || 0);
   if(d.skill==="logging")multiplier*=1-(routeEffects(s).loggingSpeed||0);
   const investmentSpeed=d.skill==="combat"?0:!d.cost?investmentEffect(s,"gatherSpeed"):d.kind==="alchemy"?investmentEffect(s,"alchemySpeed"):investmentEffect(s,"craftSpeed");
-  const speed =
+  const fishingSpeed=d.id==='fish_river'?1+(accessoryEffects(s,'preparation').fishingSpeed||0):1;
+  const speed = fishingSpeed*
     (1+investmentSpeed)*(1 + 0.1 * (lv(s, d.skill) - 1)) *
     (1 + 0.08 * (lv(s, d.skill, true) - 1)) *
     (1 + (s.run.equipment.tool?.speed || 0)) *
@@ -538,10 +542,12 @@ export function canStartAction(s, id, ignoreActive = false) {
   if (s.run.status !== "preparing") return fail("準備中に選んでください。");
   if (s.run.augments.offer.length)
     return fail("オーグメントを選んでください。");
+  if (s.run.suspendedActions[id]?.trophyReceipt?.version===0) return ok();
   if (!isKnown(s, d)) return fail("先のボスを撃退すると発見できます。");
   if (!ignoreActive && s.run.activeAction?.id === id)
     return fail("作業中です。");
   if (s.run.suspendedActions[id]) return ok();
+  const missingTrophy=trophyShortage(s,id);if(missingTrophy)return fail(missingTrophy);
   if (lv(s, d.skill) < d.unlockLevel)
     return fail(
       `${SKILLS.find((x) => x.id === d.skill).name} Lv.${d.unlockLevel}が必要。`,
@@ -575,6 +581,7 @@ function suspend(s) {
 }
 function batch(s, id, channel = "main", durationMultiplier = 1) {
   const d = defs.get(id);
+  const trophyReceipt=payTrophies(s,id);
   const paidCost = getRecipeCost(s, d);
   for (const [r, n] of Object.entries(paidCost))
     s.run.resources[r] = round(s.run.resources[r] - n);
@@ -585,6 +592,7 @@ function batch(s, id, channel = "main", durationMultiplier = 1) {
     instanceId: ++s.run.workSeq,
     channel,
     paidCost,
+    ...(trophyReceipt?{trophyReceipt}:{}),
     kind: d.cost ? "craft" : "gather",
     progress: 0,
     duration: round(getActionDuration(s, d) * durationMultiplier),
@@ -656,6 +664,7 @@ export function getActionYields(s, d, channel = "main") {
 }
 function complete(s, a) {
   const d = defs.get(a.id);
+  for(const material of recordWorkMilestone(s,d))log(s,material.name+' +1（作業実績の特殊素材）','permanent');
   const observed = (a.channel === 'main' || a.channel === 'auto_cook') && observesWork(s);
   const gains = observed ? {} : null;
   const woodBefore = s.run.resources.wood;
@@ -790,9 +799,11 @@ export function resolveGoal(s, id, visiting = new Set()) {
   if (d.endlessFacility && !s.run.endless?.active) return fail("エンドレスで解放されます。");
   if (d.endlessFacility && (s.run.facilities[d.endlessFacility] || 0) < 5) return resolveGoal(s, `${d.endlessFacility}_level_5`, new Set([...visiting, id]));
   if (visiting.has(id)) return fail("材料の循環があります。");
+  if (s.run.suspendedActions[id]?.trophyReceipt?.version===0)return {...ok(),id};
   if (!isKnown(s, d)) return fail("未発見です。");
   if (s.run.suspendedActions[id]) return { ...ok(), id };
   if(d.accessory&&s.meta.accessories?.includes(d.accessory))return {...ok(),done:true};
+  const missingTrophy=trophyShortage(s,id);if(missingTrophy)return fail(missingTrophy);
   if (d.facility && (s.run.facilities[d.facility.id] || 0) >= d.level)
     return { ...ok(), done: true };
   if (d.equipment && s.run.equipment[d.slot]?.id === id)
@@ -1574,6 +1585,7 @@ export function abandonRun(s) {
   s.settings.paused = true;
   s.run.acceleration.active = false;
   s.run.enemy = null;
+  refundUnfinishedTrophies(s);
   s.run.activeAction = null;
   s.run.suspendedActions = {};
   s.run.queue = [];
@@ -1604,7 +1616,9 @@ export function confirmRun(s) {
     hasUpgrade(s,id),
   );
   s.contentVersion = C.revision;
-  s.run = freshRun(s.meta, s.settings);
+  refundUnfinishedTrophies(s);
+  s.run = freshRun(s.meta, s.settings,FRONTIER_CAMPAIGN);
+  s.run.trophyClaims=[];
   Object.assign(s.run.resources,getStartingResources(s));
   s.run.hp = getStats(s).maxHp;
   for (const id of s.meta.upgrades) event(s, "worker_purchase", { id });
@@ -1734,6 +1748,7 @@ function die(s, e, before, damage) {
   s.settings.paused = true;
   s.run.acceleration.active = false;
   s.run.enemy = null;
+  refundUnfinishedTrophies(s);
   s.run.activeAction = null;
   s.run.suspendedActions = {};
   s.run.queue = [];
@@ -1745,6 +1760,7 @@ function die(s, e, before, damage) {
 function victory(s, e) {
   if(s.run.routes?.active){finishBattleReport(s,e,true);const points=finishRoute(s,true,"突破");if(points)recordReward(s,"points","",s.meta.points-points,s.meta.points);return;}
   const repeat=rewardRepeatVictory(s,e);if(repeat){recordReward(s,'points','',s.meta.points-repeat,s.meta.points);log(s,'前線への復帰 / 継承 +'+repeat,'permanent');}
+  const trophy=awardTrophy(s,e);if(trophy)log(s,trophy.name+" +1（永久素材）","permanent");
   recordClear(s,e.wave);
   finishBattleReport(s, e, true);
   s.run.wave = e.wave;
@@ -1790,6 +1806,7 @@ function victory(s, e) {
     s.run.clearRecord = {generation:s.meta.generation,wave:finalWaveForRun(s),campaign:campaignForRun(s),seconds:Math.floor(s.run.elapsed),augments:[...s.run.augments.selected],badges:challengeResults(s)};
     if (!s.meta.clears) s.meta.firstClear ||= structuredClone(s.run.clearRecord);
     if(s.run.campaign===EXTENDED_CAMPAIGN)s.meta.firstExtendedClear ||= structuredClone(s.run.clearRecord);
+    if(s.run.campaign===FRONTIER_CAMPAIGN)s.meta.firstFrontierClear ||= structuredClone(s.run.clearRecord);
     s.meta.clears++;
     s.meta.challengeBadges = [...new Set([...(s.meta.challengeBadges || []), ...challengeResults(s)])];
     s.settings.paused = true;
@@ -2142,7 +2159,7 @@ export function startEndless(s) {
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
 }
-import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.5.1';
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.6.0';
 
 export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
   return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{
@@ -2172,7 +2189,7 @@ export function resetLegacyRankDraft(s){if(s.run.status!=='legacy_setup')return 
 
 export function cancelLegacyDraft(s){if(s.run.status!=='legacy_setup')return fail('転生開始前だけ変更を取り消せます。');s.run.legacyDraft={upgrades:[...s.meta.upgrades],paidCosts:{...s.meta.paidCosts},points:s.meta.points};return ok();}
 
-export function startRoute(s,id){const r=canEnterRoute(s,id);if(!r.ok)return r;initializeRoutes(s);const d=routeById(id),enemy={...getNextEnemy(s),name:d.name,hp:d.hp,maxHp:d.hp,attack:d.attack,defense:d.defense,trait:d.trait,pressure:null,isBoss:false,invasion:false,country:null,gold:0,hide:0,combatXpBudget:0};s.run.routes.active={id,startedAt:s.run.elapsed};beginRaid(s,enemy);s.settings.paused=false;return {ok:true};}
+export function startRoute(s,id){const r=canEnterRoute(s,id);if(!r.ok)return r;initializeRoutes(s);const d=routeById(id),enemy={...getNextEnemy(s),name:d.name,hp:d.hp,maxHp:d.hp,attack:d.attack,defense:d.defense,trait:d.trait,...(d.campaign?{image:d.image,traitParams:['heavy','flying'].includes(d.trait)?{every:4,multiplier:1.6}:null}:{}),pressure:null,isBoss:false,invasion:false,country:null,gold:0,hide:0,combatXpBudget:0};s.run.routes.active={id,startedAt:s.run.elapsed};beginRaid(s,enemy);s.settings.paused=false;return {ok:true};}
 export function withdrawRoute(s,reason='撤退・帰還'){if(!s.run.routes?.active)return {ok:false,reason:'地域戦闘中ではありません。'};finishBattleReport(s,s.run.enemy,false);finishRoute(s,false,reason);return {ok:true};}
 
 export const getReservedResources=s=>reserve(s);

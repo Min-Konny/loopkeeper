@@ -1,16 +1,19 @@
-import {validCampaign,campaignForRun,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.5.1';
-import {CONTRACTS,contractById}from './contracts.js?v=0.5.1';
-import {ROUTES,routeById}from './routes.js?v=0.5.1';
-import {farmResource,resourceCap}from './farm-content.js?v=0.5.1';
-import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.5.1';
-import {alchemyResource}from './magic-content.js?v=0.5.1';
-import {validPreset}from './build-presets.js?v=0.5.1';
-import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.5.1';
-import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.5.1';
-import { endlessEnemy } from './endless.js?v=0.5.1';
-import { validMaterialPriority } from './material-priority.js?v=0.5.1';
-import { validCondition } from './queue-conditions.js?v=0.5.1';
-import { CONTENT as C } from "./content.js?v=0.5.1";
+import {validWorkMilestones}from './work-milestones.js?v=0.6.0';
+import {validTrophies} from './boss-materials.js?v=0.6.0';
+import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.0';
+import {CONTRACTS,contractById}from './contracts.js?v=0.6.0';
+import {validRegionalRewards}from './regional-rewards.js?v=0.6.0';
+import {ROUTES,routeById}from './routes.js?v=0.6.0';
+import {farmResource,resourceCap}from './farm-content.js?v=0.6.0';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.0';
+import {alchemyResource}from './magic-content.js?v=0.6.0';
+import {validPreset}from './build-presets.js?v=0.6.0';
+import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.0';
+import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.0';
+import { endlessEnemy } from './endless.js?v=0.6.0';
+import { validMaterialPriority } from './material-priority.js?v=0.6.0';
+import { validCondition } from './queue-conditions.js?v=0.6.0';
+import { CONTENT as C } from "./content.js?v=0.6.0";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -84,12 +87,13 @@ export function validateSave(s) {
       return false;
     const { meta: m, run: r, settings: t } = s;
     if(r.automationOnly!==undefined&&typeof r.automationOnly!=='boolean')return false;
-    if(r.campaign!==undefined&&(!validCampaign(r.campaign)||r.campaign===EXTENDED_CAMPAIGN&&["A1","A2"].includes(s.contentVersion)))return false;
+    if(!validWorkMilestones(s)||!validTrophies(s)||!validRegionalRewards(s))return false;
+    if(r.campaign!==undefined&&(!validCampaign(r.campaign)||r.campaign!=="classic21"&&["A1","A2"].includes(s.contentVersion)))return false;
     const goal=finalWaveForRun(s);
     if(m.freeFeatures!==undefined && (!validList(m.freeFeatures,new Set(FREE_FEATURES.map(x=>x.id)),5) || m.foundationVersion!==1))return false;
     if(m.foundationVersion!==undefined && m.foundationVersion!==1)return false;
     if(m.featureRefundTotal!==undefined && !integer(m.featureRefundTotal,0,m.totalPoints))return false;
-    const validClear = x => object(x) && integer(x.generation,1,m.generation) && (x.campaign===undefined?x.wave===21:validCampaign(x.campaign)&&x.wave===(x.campaign===EXTENDED_CAMPAIGN?24:21)) && integer(x.seconds) && validList(x.augments,new Set(C.augments.map(a=>a.id)),4) && validList(x.badges,new Set(['independent','architect','champion']),3);
+    const validClear = x => object(x) && integer(x.generation,1,m.generation) && (x.campaign===undefined?x.wave===21:validCampaign(x.campaign)&&x.wave===campaignFinalWave(x.campaign)) && integer(x.seconds) && validList(x.augments,new Set(C.augments.map(a=>a.id)),4) && validList(x.badges,new Set(['independent','architect','champion']),3);
     if(r.results!==undefined){const x=r.results,ids=new Set(FREE_FEATURES.map(f=>f.id));if(!object(x)||!integer(x.startPoints,0,m.totalPoints)||!validList(x.startFeatures,ids,5)||typeof x.partial!=='boolean'||typeof x.timingComplete!=='boolean'||!number(x.activeRealSeconds,0,r.elapsed)||!object(x.arrivals)||!object(x.clears)||(x.previousWall!==null&&!integer(x.previousWall,1))||(x.wallReference!==null&&!validTime(x.wallReference)))return false;for(const map of [x.arrivals,x.clears])if(Object.keys(map).length>30||Object.entries(map).some(([k,v])=>!/^\d+$/.test(k)||!integer(Number(k),1,Math.max(goal,r.wave+1))||!validTime(v)))return false;}
     if((m.history||[]).some(x=>x.result!==undefined&&!validResult(x.result)))return false;
     if(m.repeatPoints!==undefined&&!integer(m.repeatPoints,0,Math.min(m.totalPoints,m.generation*4)))return false;
@@ -102,7 +106,7 @@ export function validateSave(s) {
     if(m.accessorySets!==undefined){const slots=m.accessorySlotsVersion===1?ACCESSORY_SLOTS:["ring","bracelet"],sets=m.accessorySets;if(!object(sets)||Object.keys(sets).length!==2)return false;for(const phase of ['preparation','combat']){const row=sets[phase];if(!object(row)||Object.keys(row).length!==slots.length)return false;for(const slot of slots)if(row[slot]!==null&&(!m.accessories?.includes(row[slot])||ACCESSORIES.find(x=>x.id===row[slot])?.slot!==slot))return false;}}
     if((m.buildPresets!==undefined||m.nextBuildPresetId!==undefined||m.presetVersion!==undefined)&&m.presetVersion!==1)return false;
     if(m.presetVersion===1&&(!Array.isArray(m.buildPresets)||m.buildPresets.length>6||!integer(m.nextBuildPresetId,1)||new Set(m.buildPresets.map(p=>p.id)).size!==m.buildPresets.length||new Set(m.buildPresets.map(p=>p.name)).size!==m.buildPresets.length||m.buildPresets.some(p=>!validPreset(p,C.equipment)||p.id>=m.nextBuildPresetId)))return false;
-    if(r.ownedEquipment!==undefined&&(!validList(r.ownedEquipment,new Set(C.equipment.map(x=>x.id)),C.equipment.length)||r.ownedEquipment.some(id=>defs.get(id)?.campaign&&defs.get(id).campaign!==campaignForRun(s))||Object.values(r.equipment).some(x=>!r.ownedEquipment.includes(x.id))))return false;
+    if(r.ownedEquipment!==undefined&&(!validList(r.ownedEquipment,new Set(C.equipment.map(x=>x.id)),C.equipment.length)||r.ownedEquipment.some(id=>!campaignIncludes(s,defs.get(id)?.campaign))||Object.values(r.equipment).some(x=>!r.ownedEquipment.includes(x.id))))return false;
     if(Object.values(r.equipment).some(x=>['orichalcum_bow','orichalcum_crossbow','orichalcum_staff'].includes(x.id)&&!r.ownedEquipment?.includes(x.id)))return false;
     if(r.playerCombatTimer!==undefined&&!number(r.playerCombatTimer,0,3))return false;
     if(r.enemy?.buildCombat!==undefined){const b=r.enemy.buildCombat;if(!object(b)||!number(b.critGauge,0,.999999999)||!integer(b.hits))return false;}
@@ -111,7 +115,7 @@ export function validateSave(s) {
     if(m.contractVersion===1){const x=r.contracts,ids=new Set(CONTRACTS.map(d=>d.id));if(!object(x)||!validList(x.completed,ids,2)||new Set(x.completed.map(id=>contractById(id).country)).size!==x.completed.length||x.completed.some(id=>m.bestWave<contractById(id).gate||r.wave<1)||!(x.active===null||contractById(x.active)&&m.bestWave>=contractById(x.active).gate&&r.wave>=1&&!x.completed.some(id=>contractById(id).country===contractById(x.active).country)))return false;}
     if((r.routes!==undefined||m.routeClears!==undefined)&&m.routeVersion!==1)return false;
     if(m.routeVersion!==undefined&&m.routeVersion!==1)return false;
-    if(m.routeVersion===1){const ids=new Set(ROUTES.map(x=>x.id)),x=r.routes;if(!validList(m.routeClears,ids,4)||(m.routeClears.length>0&&m.bestWave<3)||!object(x)||!validList(x.cleared,ids,4)||x.cleared.some(id=>!m.routeClears.includes(id))||!(x.active===null||object(x.active)&&routeById(x.active.id)&&!x.cleared.includes(x.active.id)&&r.wave>=3&&number(x.active.startedAt,0,r.elapsed)&&r.elapsed-x.active.startedAt<=30.1&&r.status==='combat')||!(x.last===null||object(x.last)&&routeById(x.last.id)&&typeof x.last.won==='boolean'&&typeof x.last.reason==='string'&&number(x.last.seconds,0,30.1)&&integer(x.last.points,0,4)))return false;}
+    if(m.routeVersion===1){const ids=new Set(ROUTES.map(x=>x.id)),x=r.routes;if(!validList(m.routeClears,ids,ROUTES.length)||(m.routeClears.length>0&&m.bestWave<3)||!object(x)||!validList(x.cleared,ids,ROUTES.length)||x.cleared.some(id=>!m.routeClears.includes(id)||routeById(id).campaign&&(r.campaign!==routeById(id).campaign||r.wave<routeById(id).wave))||!(x.active===null||object(x.active)&&routeById(x.active.id)&&(!routeById(x.active.id).campaign||r.campaign===routeById(x.active.id).campaign&&r.wave>=routeById(x.active.id).wave)&&!x.cleared.includes(x.active.id)&&r.wave>=3&&number(x.active.startedAt,0,r.elapsed)&&r.elapsed-x.active.startedAt<=30.1&&r.status==='combat')||!(x.last===null||object(x.last)&&routeById(x.last.id)&&typeof x.last.won==='boolean'&&typeof x.last.reason==='string'&&number(x.last.seconds,0,30.1)&&integer(x.last.points,0,4)))return false;}
     if(m.farmVersion!==undefined&&m.farmVersion!==1)return false;
     if(r.farmState!==undefined&&!validFarm(r.farmState))return false;
     if(m.farmVersion===1&&(!validFarm(r.farmState)||typeof t.farmAutoCook!=='boolean'||typeof t.farmOffline!=='boolean'))return false;
@@ -128,6 +132,7 @@ export function validateSave(s) {
     const free=m.foundationVersion===1?new Set([...(m.freeFeatures||[]),...FREE_FEATURES.filter(f=>m.bestWave>=f.wave).map(f=>f.id)]):new Set();
     if (m.firstClear !== undefined && !validClear(m.firstClear)) return false;
     if(m.firstExtendedClear!==undefined&&(!validClear(m.firstExtendedClear)||m.firstExtendedClear.campaign!==EXTENDED_CAMPAIGN))return false;
+    if(m.firstFrontierClear!==undefined&&(!validClear(m.firstFrontierClear)||m.firstFrontierClear.campaign!==FRONTIER_CAMPAIGN))return false;
     if (m.bestEndlessWave !== undefined && !integer(m.bestEndlessWave,21)) return false;
     if (r.clearRecord !== undefined && (!validClear(r.clearRecord)||r.clearRecord.wave!==goal)) return false;
     if (r.endless !== undefined && (!object(r.endless) || r.endless.active !== true || r.wave < goal || !validClear(r.clearRecord) || r.clearRecord.wave!==goal || !object(r.endless.levels) || !number(r.endless.incomeTimer,0,15) || Object.entries(r.endless.levels).some(([id,n])=> !C.facilities.some(f=>f.facilityId===id) || !integer(n,0,10000) || (r.facilities[id]||0)<5))) return false;
@@ -150,7 +155,7 @@ export function validateSave(s) {
       !unique(m.defeatedBosses) ||
       m.defeatedBosses.some(
         (id) =>
-          ![...C.encounters,...EXTENDED_ENCOUNTERS].some((e) => e.boss && e.id === id) &&
+          ![...C.encounters,...EXTENDED_ENCOUNTERS,...FRONTIER_ENCOUNTERS].some((e) => e.boss && e.id === id) &&
           !/^legacy_boss_wave_\d+$/.test(id),
       )
     )
@@ -221,7 +226,7 @@ export function validateSave(s) {
         return (
           !d ||
           d.slot !== slot ||
-          (d.campaign&&d.campaign!==campaignForRun(s)) ||
+          !campaignIncludes(s,d.campaign) ||
           ["attack", "defense", "maxHp", "speed"].some(
             (k) => (e[k] || 0) !== (d.stats[k] || 0),
           )

@@ -1,8 +1,9 @@
-import {hasUpgrade}from './free-features.js?v=0.5.1';
-import { trainingCandidates } from './prerequisite-training.js?v=0.5.1';
-import { getActionXp } from './engine.js?v=0.5.1';
-import * as old from "./legacy-planner.js?v=0.5.1";
-import { orderRecipeMaterials } from './engine.js?v=0.5.1';
+import {trophyShortage} from './boss-materials.js?v=0.6.0';
+import {hasUpgrade}from './free-features.js?v=0.6.0';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.0';
+import { getActionXp } from './engine.js?v=0.6.0';
+import * as old from "./legacy-planner.js?v=0.6.0";
+import { orderRecipeMaterials } from './engine.js?v=0.6.0';
 import {
   isLegacy,
   getCatalog,
@@ -21,7 +22,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.5.1";
+} from "./engine.js?v=0.6.0";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -78,6 +79,7 @@ export function planCraft(s, id, count = 1) {
       (s.run.activeAction?.id === x.id
         ? s.run.activeAction
         : s.run.suspendedActions[x.id]);
+    if(!saved){const reason=trophyShortage(s,x.id);if(reason)throw Error(reason);}
     if (x.previousEquipmentId && !saved) {
       if ((equipment[x.slot]?.tier || 0) >= x.tier) return;
       if ((equipment[x.slot]?.tier || 0) < x.tier - 1) craft(RECIPES.find(r => r.id === x.previousEquipmentId), 1, next);

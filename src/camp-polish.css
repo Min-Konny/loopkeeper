@@ -242,3 +242,11 @@
 @media(max-width:690px){
  .workshop-card .recipe-cost>span{flex-basis:100px}
 }
+
+/* Keep the working pane usable when notices occupy the available height. */
+.workspace main{overflow-y:auto;overscroll-behavior:contain}.play-layout{flex:1 0 320px;min-height:320px}.work-area{min-height:320px}#content{min-height:180px}
+
+
+#expanded-work-dialog{width:min(1280px,calc(100vw - 24px));height:calc(100dvh - 32px);max-width:none;max-height:calc(100dvh - 32px);padding:16px;overflow:hidden;box-sizing:border-box}#expanded-work-dialog[open]{display:flex;flex-direction:column;gap:12px}.expanded-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none}.expanded-heading h2{font-size:20px;margin:0;min-width:0}.expanded-heading button{min-height:44px;flex:none}.expanded-body{display:flex;flex:1;min-height:0;min-width:0}#expanded-work-dialog .work-area{height:auto;min-height:0;flex:1}#expanded-work-dialog #content{min-height:0}#expanded-work-dialog [data-command="expand-work"]{display:none}.pane-expanded .workspace main{overflow:hidden!important}.work-milestones{padding:12px;border:1px solid var(--line);border-radius:8px;margin:10px 0}.work-milestones p{line-height:1.5}@media(max-width:690px){#expanded-work-dialog{width:calc(100vw - 12px);height:calc(100dvh - 12px);max-height:calc(100dvh - 12px);padding:10px}.expanded-heading h2{font-size:17px}}
+
+#expanded-work-dialog .section-heading>div:first-child{display:none}

@@ -21,8 +21,8 @@ export const CHALLENGES = [
 ];
 export const newStrategy = () => ({ constructionUntil: 0, focus: 0, playerDamage: 0, facilityDamage: 0, aidUsed: false, eligible: false });
 export function strategy(s) { return s.run.strategy ||= newStrategy(); }
-export const chapterOf = s => Math.min(6, Math.floor(s.run.wave / 3));
-export const CHAPTERS = ['灰の辺境', '深緑の森', '霧の谷', '赤銅の山脈', '蒼晶の峡谷', '黄昏の荒野', '夜明け前の砦'];
+export const chapterOf = s => Math.min(s.run.campaign==='frontier36'?11:6, Math.floor(s.run.wave / 3));
+export const CHAPTERS = ['灰の辺境', '深緑の森', '霧の谷', '赤銅の山脈', '蒼晶の峡谷', '黄昏の荒野', '夜明け前の砦', '暁の門外', '渓流の渡し場', '灰燼の工房街', '星見の遺跡', '氷冠の辺境'];
 export function challengeResults(s) {
   const r = s.run.strategy;
   if (!r?.eligible || s.run.status !== 'cleared') return [];

@@ -1,6 +1,7 @@
-import {EXTRA_ACCESSORIES,EXTRA_ACCESSORY_RECIPES}from './extra-accessories.js?v=0.5.1';
+import {ACCESSORY_REQUIREMENTS,SPECIAL_MATERIALS} from './boss-materials.js?v=0.6.0';
+import {EXTRA_ACCESSORIES,EXTRA_ACCESSORY_RECIPES}from './extra-accessories.js?v=0.6.0';
 export const ACCESSORY_SLOTS=['ring','bracelet','boots','necklace'];
-import {LATE_WEAPONS}from './late-weapons.js?v=0.5.1';
+import {LATE_WEAPONS}from './late-weapons.js?v=0.6.0';
 export const WEAPONS=[
  ...LATE_WEAPONS,
  {id:'iron_bow',name:'鉄弓',tier:2,slot:'weapon',skill:'smithing',unlockLevel:2,unlockBestWave:3,knownAfterBoss:null,duration:14,cost:{wood:16,ingot:4,hide:2},stats:{attack:10},xpCoefficient:1.05,combat:{type:'bow',rate:1.25,pierce:0,opening:.75,markEvery:3},description:'手数で攻める。3射ごとに敵防御を2減らす（最大30%）。先制1射。'},
@@ -16,3 +17,5 @@ export const ACCESSORY_RECIPES=ACCESSORIES.map(a=>({id:a.id,name:a.name,accessor
 ACCESSORIES.push(...EXTRA_ACCESSORIES);ACCESSORY_RECIPES.push(...EXTRA_ACCESSORY_RECIPES);
 export const accessoryById=id=>ACCESSORIES.find(x=>x.id===id);
 export const weaponById=id=>WEAPONS.find(x=>x.id===id);
+
+for(const recipe of ACCESSORY_RECIPES){const [key,n,level,cost]=ACCESSORY_REQUIREMENTS[recipe.id];recipe.trophyCost={[key]:n};recipe.cost=cost;recipe.unlockLevel=level;recipe.unlockBestWave=SPECIAL_MATERIALS.find(x=>x.id===key).wave;}

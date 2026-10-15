@@ -1,11 +1,11 @@
-import {finalWaveForRun}from './campaign-rules.js?v=0.5.1';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.5.1';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.5.1';
-import {hasUpgrade}from './free-features.js?v=0.5.1';
-import { getStartingResources } from './engine.js?v=0.5.1';
-import { challengesMarkup } from './strategy-ui.js?v=0.5.1';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.5.1";
-import { CONTENT as C } from "./content.js?v=0.5.1";
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.0';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.0';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.0';
+import {hasUpgrade}from './free-features.js?v=0.6.0';
+import { getStartingResources } from './engine.js?v=0.6.0';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.0';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.0";
+import { CONTENT as C } from "./content.js?v=0.6.0";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -21,7 +21,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.5.1";
+} from "./engine.js?v=0.6.0";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -65,7 +65,7 @@ export function setupMarkup(s, category = "combat") {
     },
   ).join(
     "",
-  )}${['automation','time'].includes(selected.id)?freeFeatureMarkup(s):''}</div>${challengesMarkup(s)}<div class="setup-footer"><p class="fine-print campaign-transition">次の人生は本編24波。現在の人生は本編${finalWaveForRun(s)}波の構成で、過去のクリア記録・獲得済み報酬は引き継ぎます。</p><p data-setup-save-error role="alert" class="danger-text"></p><section class="starting-grant"><strong>次の転生で受け取る資源</strong><div>${Object.keys(getStartingResources(s)).length ? Object.entries(getStartingResources(s)).map(([id,n])=>`<span>${esc(RESOURCES[id]?.name || id)} <b>${n}</b></span>`).join("") : "初期支給なし"}</div><small>転生を確定した時だけ支給。現在の手持ちは持ち越しません。</small></section>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button muted full-width" data-cancel-draft="1" data-focus="cancel-draft">今回の配分変更を取り消す</button><button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
+  )}${['automation','time'].includes(selected.id)?freeFeatureMarkup(s):''}</div>${challengesMarkup(s)}<div class="setup-footer"><p class="fine-print campaign-transition">次の人生は本編36波。現在の人生は本編${finalWaveForRun(s)}波の構成で、過去のクリア記録・獲得済み報酬は引き継ぎます。</p><p data-setup-save-error role="alert" class="danger-text"></p><section class="starting-grant"><strong>次の転生で受け取る資源</strong><div>${Object.keys(getStartingResources(s)).length ? Object.entries(getStartingResources(s)).map(([id,n])=>`<span>${esc(RESOURCES[id]?.name || id)} <b>${n}</b></span>`).join("") : "初期支給なし"}</div><small>転生を確定した時だけ支給。現在の手持ちは持ち越しません。</small></section>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button muted full-width" data-cancel-draft="1" data-focus="cancel-draft">今回の配分変更を取り消す</button><button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
 }
 // Keep the nearest unanswered request visible while working in another tab.
 export function diplomacyDeadlineMarkup(s) {
@@ -98,7 +98,10 @@ export function diplomacyMarkup(s, marketSide = "buy", marketCount = 1) {
             : `<p>${r.status === "allied" ? (c.id === "saphra" ? `交易収入 ${Math.floor(r.incomeTotal)}金貨` : "鉱物購入 −15%") : r.status === "hostile" ? "予定された襲撃に加勢します。" : (c.id === "saphra" ? "金貨24・攻撃+4を獲得。攻撃+10%・以後の撃退金貨+50%（この周回）。" : "鋼6・銀4を獲得（この周回）。")}</p>`
         }</section>`;
       })
-      .join("") +
+      .join("")
+  );
+}
+export function marketMarkup(s,marketSide="buy",marketCount=1){return (
     `<div class="market-heading"><h3>市場</h3><span>金貨 ${Number(s.run.resources.gold.toFixed(2))}</span></div>${
       !s.run.facilities.market
         ? "<p>村に市場を建設すると取引できます。</p>"

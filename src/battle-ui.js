@@ -1,8 +1,9 @@
-import { getPlayerStrike } from './engine.js?v=0.5.1';
-import { equipmentMaterial } from './visual-design.js?v=0.5.1';
-import { battleSound } from "./presentation.js?v=0.5.1";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.5.1";
-import { icon } from "./icons.js?v=0.5.1";
+import { getPlayerStrike } from './engine.js?v=0.6.0';
+import {routeById}from './routes.js?v=0.6.0';
+import { equipmentMaterial } from './visual-design.js?v=0.6.0';
+import { battleSound } from "./presentation.js?v=0.6.0";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.0";
+import { icon } from "./icons.js?v=0.6.0";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -381,7 +382,8 @@ export function renderBattle(dialog, state) {
     : ["wolf", "raider", "boss", "knight", "giant"][
         Math.min(enemy.wave - 1, 4)
       ];
-  const portraitSrc = `./assets/${portraitId}.svg`;
+  const regionArt=routeById(run.routes?.active?.id)?.image;
+  const portraitSrc = regionArt ? `./${regionArt}` : `./assets/${portraitId}.svg`;
   if (el["enemy-illustration"].getAttribute("src") !== portraitSrc)
     el["enemy-illustration"].setAttribute("src", portraitSrc);
 

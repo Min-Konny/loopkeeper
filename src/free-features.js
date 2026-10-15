@@ -1,11 +1,13 @@
-import {initializeContracts}from './contracts.js?v=0.5.1';
-import {initializeRoutes}from './routes.js?v=0.5.1';
-import {initializeFarm}from './farm-state.js?v=0.5.1';
-import {synchronizeCompanions}from './companion-state.js?v=0.5.1';
-import {initializeMagic}from './magic-state.js?v=0.5.1';
-import {initializeGear}from './gear-state.js?v=0.5.1';
-import {initializeProgression}from './progression-rewards.js?v=0.5.1';
-import {initializeRunResults}from './run-results.js?v=0.5.1';
+import {initializeWorkMilestones}from './work-milestones.js?v=0.6.0';
+import {initializeTrophies} from './boss-materials.js?v=0.6.0';
+import {initializeContracts}from './contracts.js?v=0.6.0';
+import {initializeRoutes}from './routes.js?v=0.6.0';
+import {initializeFarm}from './farm-state.js?v=0.6.0';
+import {synchronizeCompanions}from './companion-state.js?v=0.6.0';
+import {initializeMagic}from './magic-state.js?v=0.6.0';
+import {initializeGear}from './gear-state.js?v=0.6.0';
+import {initializeProgression}from './progression-rewards.js?v=0.6.0';
+import {initializeRunResults}from './run-results.js?v=0.6.0';
 export const FREE_FEATURES = [
  {id:'action_queue',name:'行動予約',wave:2},
  {id:'queue_templates',name:'手順テンプレート',wave:3},
@@ -35,7 +37,7 @@ export function synchronizeFreeFeatures(s){
  if(granted.has('acceleration_extension'))granted.add('cycle_acceleration');
  if(granted.has('queue_templates')||granted.has('stock_targets'))granted.add('action_queue');
  s.meta.freeFeatures=[...granted].sort();
- initializeRunResults(s);initializeProgression(s);initializeGear(s);initializeMagic(s);initializeFarm(s);initializeRoutes(s);initializeContracts(s);const companionsAdded=synchronizeCompanions(s);s.meta.foundationVersion=1;
+ initializeTrophies(s);initializeWorkMilestones(s);initializeRunResults(s);initializeProgression(s);initializeGear(s);initializeMagic(s);initializeFarm(s);initializeRoutes(s);initializeContracts(s);const companionsAdded=synchronizeCompanions(s);s.meta.foundationVersion=1;
  if(refunded)s.meta.featureRefundTotal=(s.meta.featureRefundTotal||0)+refunded;
  return {refunded,companionsAdded,changed:before!==JSON.stringify(s)};
 }
