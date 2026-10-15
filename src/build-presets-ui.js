@@ -1,4 +1,4 @@
-import {EQUIPMENT_SLOTS,PHASES,proposeBuildRestore}from './build-presets.js?v=0.6.5';import {ACCESSORY_SLOTS,accessoryById}from './gear-content.js?v=0.6.5';import {RECIPES}from './engine.js?v=0.6.5';
+import {EQUIPMENT_SLOTS,PHASES,proposeBuildRestore}from './build-presets.js?v=0.6.6';import {ACCESSORY_SLOTS,accessoryById}from './gear-content.js?v=0.6.6';import {RECIPES}from './engine.js?v=0.6.6';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const labels={weapon:'武器',armor:'防具',shield:'盾',tool:'道具',ring:'指輪',bracelet:'腕輪',boots:'靴',necklace:'首飾り'};
 const itemName=id=>id===null?'外す':accessoryById(id)?.name||RECIPES.find(x=>x.id===id)?.name||id;
