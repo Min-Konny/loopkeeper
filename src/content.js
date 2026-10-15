@@ -1,12 +1,12 @@
-import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.1';
-import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.1';
-import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.1';
-import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.1';
-import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.1';
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.1';
-import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.1';
-import { REINFORCEMENTS } from './endless.js?v=0.6.1';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.1';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.2';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.2';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.2';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.2';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.2';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.2';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.2';
+import { REINFORCEMENTS } from './endless.js?v=0.6.2';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.2';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -163,9 +163,10 @@ export const CONTENT = {
     "roundOrder": [
       "player_attack_and_xp",
       "support_attack_and_xp",
-      "food",
+      "infirmary_before_food_if_needed",
+      "food_if_still_needed",
       "enemy_packet",
-      "infirmary_if_alive"
+      "infirmary_if_alive_and_not_used_this_packet"
     ],
     "ordinaryStatsMultipliers": "sum additive bonuses within the same stat multiplier group; then multiply flat total once",
     "supportUsesPlayerAttackBuffs": false,

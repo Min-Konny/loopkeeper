@@ -1,9 +1,9 @@
-import { getPlayerStrike } from './engine.js?v=0.6.1';
-import {routeById}from './routes.js?v=0.6.1';
-import { equipmentMaterial } from './visual-design.js?v=0.6.1';
-import { battleSound } from "./presentation.js?v=0.6.1";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.1";
-import { icon } from "./icons.js?v=0.6.1";
+import { getPlayerStrike } from './engine.js?v=0.6.2';
+import {routeById}from './routes.js?v=0.6.2';
+import { equipmentMaterial } from './visual-design.js?v=0.6.2';
+import { battleSound } from "./presentation.js?v=0.6.2";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.2";
+import { icon } from "./icons.js?v=0.6.2";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -420,8 +420,8 @@ export function renderBattle(dialog, state) {
   setText(
     el["food-rule"],
     run.resources.food > 0
-      ? `低HP・致死予測で1食 · ${getFoodHealing(state)}回復${state.version === 2 ? " · 救護 " + getCombatPreview(state).charges + "回" : ""}`
-      : "食料なし · 自動回復できません",
+      ? state.version===2&&preview.charges>0 ? `救護を先に使用 · 必要なら1食で${getFoodHealing(state)}回復` : `低HP・致死予測で1食 · ${getFoodHealing(state)}回復`
+      : state.version===2&&preview.charges>0 ? `食料なし · 低HP時の救護 残り${preview.charges}回` : "食料なし · 自動回復できません",
   );
   el["food-rule"].classList.toggle(
     "battle-food-empty",
