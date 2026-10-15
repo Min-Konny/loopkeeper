@@ -1,5 +1,5 @@
-import { CONTENT } from './content.js?v=0.6.7';
-import { getSkillProgress } from './legacy-engine.js?v=0.6.7';
+import { CONTENT } from './content.js?v=0.6.8';
+import { getSkillProgress } from './legacy-engine.js?v=0.6.8';
 const definitions = [...CONTENT.actions, ...CONTENT.equipment, ...CONTENT.processing, ...CONTENT.facilities];
 export function validCondition(q) {
   const c = q.until, d = definitions.find(d => d.id === q.id);

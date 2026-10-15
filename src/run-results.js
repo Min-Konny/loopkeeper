@@ -1,6 +1,6 @@
-import {earlyLoop}from './early-loop.js?v=0.6.7';
-import {campaignForRun}from './campaign-rules.js?v=0.6.7';
-import {repeatRunPoints}from './progression-rewards.js?v=0.6.7';
+import {earlyLoop}from './early-loop.js?v=0.6.8';import {lateLoop}from './late-loop.js?v=0.6.8';
+import {campaignForRun}from './campaign-rules.js?v=0.6.8';
+import {repeatRunPoints}from './progression-rewards.js?v=0.6.8';
 export function createRunResults(meta){
  const previous=(meta.history||[]).find(x=>x.generation<meta.generation),previousWall=previous?.result?.wallWave||null;
  return {startPoints:meta.totalPoints,startFeatures:[...(meta.freeFeatures||[])],partial:false,activeRealSeconds:0,timingComplete:true,arrivals:{},clears:{},previousWall,wallReference:null};
@@ -24,7 +24,7 @@ export function recordClear(s,wave){
 export function runSummary(s){
  const r=s.run.results;if(!r)return null;
  const wallWave=Math.max(s.run.wave,...Object.keys(r.arrivals).map(Number)),wallTime=r.arrivals[wallWave]||r.clears[wallWave]||null;
- return {...(earlyLoop(s)?{earlyLoopVersion:1,enemyRemainingPercent:s.run.battleReports?.[0]?.maxHp?Math.round(100*s.run.battleReports[0].remainingHp/s.run.battleReports[0].maxHp):null}:{}),campaign:campaignForRun(s),wave:s.run.wave,wallWave,gameSeconds:s.run.elapsed,realSeconds:r.timingComplete?r.activeRealSeconds:null,pointsGained:Math.max(0,s.meta.totalPoints-r.startPoints),repeatPoints:repeatRunPoints(s),partial:r.partial,freeUnlocks:(s.meta.freeFeatures||[]).filter(id=>!r.startFeatures.includes(id)),wallTime,previousWall:r.previousWall,wallReference:r.wallReference};
+ return {...(lateLoop(s)?{lateLoopVersion:1,routeRepeatPoints:s.run.progression?.routeAward||0}:{}),...(earlyLoop(s)?{earlyLoopVersion:1,enemyRemainingPercent:s.run.battleReports?.[0]?.maxHp?Math.round(100*s.run.battleReports[0].remainingHp/s.run.battleReports[0].maxHp):null}:{}),campaign:campaignForRun(s),wave:s.run.wave,wallWave,gameSeconds:s.run.elapsed,realSeconds:r.timingComplete?r.activeRealSeconds:null,pointsGained:Math.max(0,s.meta.totalPoints-r.startPoints),repeatPoints:repeatRunPoints(s),partial:r.partial,freeUnlocks:(s.meta.freeFeatures||[]).filter(id=>!r.startFeatures.includes(id)),wallTime,previousWall:r.previousWall,wallReference:r.wallReference};
 }
 export function runComparison(s){
  const current=runSummary(s),previous=(s.meta.history||[]).find(x=>x.generation<s.meta.generation)?.result;

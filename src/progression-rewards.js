@@ -1,7 +1,8 @@
 // Rewards follow the previous frontier, so retreating to early waves cannot
 // repeatedly fund a mature build. No award is triggered by rebirth or loading.
-import {earlyLoop}from './early-loop.js?v=0.6.7';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.7';
+import {earlyLoop}from './early-loop.js?v=0.6.8';
+import {lateLoop,repeatRouteValue}from './late-loop.js?v=0.6.8';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.8';
 export const repeatCheckpointValue=wave=>Math.min(3,1+Math.floor(wave/6));
 export function createProgression(meta,finalWave=21){return {startBestWave:Math.min(finalWave,meta.bestWave),checkpointAward:null,attemptAward:null};}
 export function initializeProgression(s){
@@ -16,12 +17,14 @@ function credit(s,amount){
 }
 export function rewardRepeatVictory(s,e){
  initializeProgression(s);const p=s.run.progression;
- if(!p||p.startBestWave<(earlyLoop(s)?2:3)||s.run.endless?.active||s.run.routes?.active||(e.country&&!(earlyLoop(s)&&p.startBestWave<=12&&e.wave<=12))||e.wave<p.startBestWave||p.checkpointAward!==null)return 0;
+ if(!p||p.startBestWave<(earlyLoop(s)?2:3)||s.run.endless?.active||s.run.routes?.active||(e.country&&!(lateLoop(s)||earlyLoop(s)&&p.startBestWave<=12&&e.wave<=12))||e.wave<p.startBestWave||p.checkpointAward!==null)return 0;
  return p.checkpointAward=credit(s,earlyLoop(s)&&p.startBestWave<=12?Math.min(4,2+Math.floor(p.startBestWave/6)):repeatCheckpointValue(p.startBestWave));
 }
 export function rewardFrontierAttempt(s,e){
  initializeProgression(s);const p=s.run.progression;
- if(!p||p.startBestWave<3||s.run.endless?.active||s.run.routes?.active||(e.country&&!(earlyLoop(s)&&p.startBestWave<=12&&e.wave<=12))||p.attemptAward!==null||e.wave<Math.max(4,p.startBestWave)||s.run.wave<Math.max(3,p.startBestWave-1)||!e.report||e.hp>e.maxHp*.5)return 0;
+ if(!p||p.startBestWave<3||s.run.endless?.active||s.run.routes?.active||(e.country&&!(lateLoop(s)||earlyLoop(s)&&p.startBestWave<=12&&e.wave<=12))||p.attemptAward!==null||e.wave<Math.max(4,p.startBestWave)||s.run.wave<Math.max(3,p.startBestWave-1)||!e.report||e.hp>e.maxHp*.5)return 0;
  return p.attemptAward=credit(s,earlyLoop(s)&&p.startBestWave<=12&&e.wave<=12?2:1);
 }
-export const repeatRunPoints=s=>s.run.progression?(s.run.progression.checkpointAward||0)+(s.run.progression.attemptAward||0):0;
+export const repeatRunPoints=s=>s.run.progression?(s.run.progression.checkpointAward||0)+(s.run.progression.attemptAward||0)+(s.run.progression.routeAward||0):0;
+
+export function rewardRepeatRoute(s,d){const amount=repeatRouteValue(s,d);if(!amount)return 0;initializeProgression(s);const p=s.run.progression;if((p.routeAward||0)>=2)return 0;const earned=credit(s,amount);p.routeAward=(p.routeAward||0)+earned;return earned;}

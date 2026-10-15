@@ -1,8 +1,9 @@
-import {weaponById}from './gear-content.js?v=0.6.7';
-import {accessoryEffects}from './gear-state.js?v=0.6.7';
-import {contractEffects}from './contracts.js?v=0.6.7';
-import {routeEffects}from './routes.js?v=0.6.7';
-import {alchemyResource}from './magic-content.js?v=0.6.7';
+import {investmentEffect}from './investments.js?v=0.6.8';
+import {weaponById}from './gear-content.js?v=0.6.8';
+import {accessoryEffects}from './gear-state.js?v=0.6.8';
+import {contractEffects}from './contracts.js?v=0.6.8';
+import {routeEffects}from './routes.js?v=0.6.8';
+import {alchemyResource}from './magic-content.js?v=0.6.8';
 export const freshMagic=()=>({mana:30,castTimer:0,burnTimer:0,burnTicks:0,burnPower:0,wardCooldown:0,casts:0,detonations:0,catalystsUsed:0,wardsUsed:0,burnDamage:0,spellDamage:0});
 export function initializeMagic(s){
  if(s.version===1)return;s.meta.magicVersion=1;for(const id of ['spark_catalyst','ward_essence'])s.run.resources[id]??=0;
@@ -19,11 +20,12 @@ export function physicalIgnition(s,e,critical){
  m.burnTicks=3;m.burnPower=2;m.burnTimer=0;
 }
 export const manaRegeneration=s=>2+(routeEffects(s).manaRegen||0)+(contractEffects(s).manaRegen||0)+(accessoryEffects(s,"combat").manaRegen||0);
+export const spellInterval=s=>4/(1+investmentEffect(s,"castHaste"));
 export function advanceMagic(s,dt,damage){
  initializeMagic(s);const m=s.run.magicState;m.mana=Math.min(30,m.mana+manaRegeneration(s)*dt);m.wardCooldown=Math.max(0,m.wardCooldown-dt);
  if(m.burnTicks>0){m.burnTimer+=dt;if(m.burnTimer>=1-1e-8){m.burnTimer=Math.max(0,m.burnTimer-1);m.burnTicks--;m.burnDamage+=damage(m.burnPower);}}
  if(s.run.enemy.hp<=0)return;if(!isCaster(s))return;
- m.castTimer=Math.min(4,m.castTimer+dt);if(m.castTimer<4-1e-8||m.mana<10-1e-8)return;
+ const interval=spellInterval(s);m.castTimer=Math.min(interval,m.castTimer+dt);if(m.castTimer<interval-1e-8||m.mana<10-1e-8)return;
  m.castTimer=0;m.mana=Math.max(0,m.mana-10);m.casts++;m.spellDamage+=damage(30);if(s.run.enemy.hp<=0)return;
  if(has(s,'volatile_ink')&&m.burnTicks>0&&spend(s,'spark_catalyst')){const blast=m.burnTicks*m.burnPower*5;m.burnTicks=0;m.burnPower=0;m.burnTimer=0;m.detonations++;m.spellDamage+=damage(blast);}
  else{m.burnTicks=6;m.burnPower=3;m.burnTimer=0;}

@@ -1,5 +1,7 @@
 const percent=n=>Math.round(n*1000)/10+'%';
 export const INVESTMENT_BRANCHES=[
+ {key:'castHaste',baseId:'inherited_invocation',name:'詠唱の律動',stat:'castHaste',label:'詠唱速度',icon:'flame',increment:r=>.04*r,format:percent,group:'combat',unlockBestWave:12,description:'詠唱間隔は4秒÷(1+合計補正)。MP消費10と再生は変わらず、長期戦はMP維持との組合せ。'},
+ {key:'returnSpeed',baseId:'inherited_returning',name:'帰還の手順',stat:'returnSpeed',label:'既知区間の復帰速度',icon:'clock',increment:r=>.04*r,format:percent,group:'production',unlockBestWave:12,description:'周回復帰の5倍速に加算補正。最大8倍。既知の襲撃まで・残り復帰時間がある間だけ。未知区間や通常待機を速めない。'},
  {key:'haste',baseId:'inherited_haste',name:'攻撃の手数',stat:'haste',label:'攻撃速度',icon:'sword',increment:r=>.025*r,format:percent,group:'combat',description:'武器の速度に加算。実攻撃速度の上限1.6倍。'},
  {key:'critRate',baseId:'inherited_precision',name:'会心の心得',stat:'critRate',label:'会心ゲージ',icon:'spark',increment:r=>.02*r,format:percent,group:'combat',description:'確定会心ゲージに加算。指輪と合わせ最大50%。'},
  {key:'spellPower',baseId:'inherited_spellcraft',name:'魔法の威力',stat:'spellPower',label:'魔法ダメージ',icon:'flame',increment:r=>.04*r,format:percent,group:'combat',description:'呪文・燃焼・触媒爆発に適用。MPと触媒の消費は維持。'},
@@ -9,5 +11,5 @@ export const INVESTMENT_BRANCHES=[
  {key:'tradeSaleBonus',baseId:'inherited_trade',name:'交易の交渉',stat:'tradeSaleBonus',label:'売価補正',icon:'gold',increment:r=>.01*r,format:percent,group:'production',description:'売却金貨に加算。今の買値80%が上限。購入即売却は利益にならない。'},
 ].map(x=>({...x,investment:true}));
 export const investmentRankId=(d,n)=>n===1?d.baseId:d.baseId+'_'+n;
-export const INVESTMENT_UPGRADES=INVESTMENT_BRANCHES.flatMap(d=>Array.from({length:5},(_,i)=>{const n=i+1;return {id:investmentRankId(d,n),name:d.name+' R'+n,cost:n,rank:n,kind:d.group==='production'?'investment':'combat',unlock:n===1?{bestWave:3}:{requires:[investmentRankId(d,n-1)]},effect:{[d.stat]:d.increment(n)},rankEffectMode:'add_to_lower_rank',description:d.description};}));
+export const INVESTMENT_UPGRADES=INVESTMENT_BRANCHES.flatMap(d=>Array.from({length:5},(_,i)=>{const n=i+1;return {id:investmentRankId(d,n),name:d.name+' R'+n,cost:n,rank:n,kind:d.group==='production'?'investment':'combat',unlock:n===1?{bestWave:d.unlockBestWave||3}:{requires:[investmentRankId(d,n-1)]},effect:{[d.stat]:d.increment(n)},rankEffectMode:'add_to_lower_rank',description:d.description};}));
 export function investmentEffect(s,key){if(s.version===1)return 0;const d=INVESTMENT_BRANCHES.find(x=>x.key===key);if(!d)return 0;let sum=0;for(let n=1;n<=5;n++){const id=investmentRankId(d,n);if(s.meta.upgrades.includes(id)&&!s.settings.disabledUpgrades.includes(id))sum+=d.increment(n);}return Math.round(sum*1e8)/1e8;}

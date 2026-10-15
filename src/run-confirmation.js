@@ -1,8 +1,8 @@
-import {confirmRun} from './engine.js?v=0.6.7';
-import {commitStoredGameEdit} from './save-storage.js?v=0.6.7';
-export function confirmStoredRun(storage,current,{isOwner=()=>false,now=Date.now(),earlyLoopPrototype=false}={}){
+import {confirmRun} from './engine.js?v=0.6.8';
+import {commitStoredGameEdit} from './save-storage.js?v=0.6.8';
+export function confirmStoredRun(storage,current,{isOwner=()=>false,now=Date.now(),earlyLoopPrototype=false,lateLoopPrototype=false}={}){
  if(!isOwner())return {ok:false,reason:'別のタブでプレイ中です。操作権を確認してください。'};
- const next=structuredClone(current),result=confirmRun(next,{earlyLoopPrototype});if(!result.ok)return result;
+ const next=structuredClone(current),result=confirmRun(next,{earlyLoopPrototype,lateLoopPrototype});if(!result.ok)return result;
  if(!isOwner())return {ok:false,reason:'操作権が移ったため転生を中止しました。'};
  try{return {ok:true,state:commitStoredGameEdit(storage,current,next,{now})};}
  catch{return {ok:false,reason:'保存できなかったため転生を中止しました。支給と世代はまだ確定していません。'};}
