@@ -3,9 +3,20 @@ export function createExpandedPane({document,area,title,extraNodes=[],sideNodes=
  const dialog=document.createElement('dialog');dialog.id='expanded-work-dialog';dialog.setAttribute('aria-labelledby','expanded-work-title');
  dialog.innerHTML='<div class="expanded-heading"><h2 id="expanded-work-title"></h2><button type="button" class="button muted" data-info="queue" data-focus="expanded-queue-open">予約</button><button type="button" class="button muted" data-command="settings-menu" data-focus="expanded-settings-open">設定</button><button type="button" class="button muted" data-command="header-menu" data-focus="expanded-menu-open">メニュー</button><button type="button" class="button muted" data-expanded-close autofocus aria-label="拡大表示を閉じる">閉じる ×</button></div><div class="expanded-body"></div>';
  document.body.append(dialog);const body=dialog.querySelector('.expanded-body');let saved=null,backdropPress=null,backdropClick=false;
- const heading=dialog.querySelector('h2');
- function restore(){
+ const heading=dialog.querySelector('h2'),viewport=document.defaultView;
+ // Layout can clamp scroll offsets before a media-query change event. Keep the
+ // last position from the previous viewport until the resize handoff completes.
+ function trackScroll(event){
+  if(!saved||viewport?.innerWidth!==saved.width||viewport?.innerHeight!==saved.height)return;
+  const node=event.target,key=node?.dataset?.scrollKey;
+  const entry=saved.scrolls.find(entry=>entry.node===node||(key&&entry.node.dataset?.scrollKey===key));
+  if(entry){entry.node=node;entry.liveTop=node.scrollTop;entry.liveLeft=node.scrollLeft;}
+ }
+ document.addEventListener('scroll',trackScroll,true);
+ viewport?.addEventListener('resize',()=>{const previous=saved;if(!previous)return;viewport.setTimeout(()=>{if(saved!==previous)return;previous.width=viewport.innerWidth;previous.height=viewport.innerHeight;for(const entry of previous.scrolls){entry.liveTop=entry.node.scrollTop;entry.liveLeft=entry.node.scrollLeft;}},0);});
+ function restore({preserveCurrentScroll=false}={}){
   if(!saved)return;const previous=saved;saved=null;
+  if(preserveCurrentScroll)for(const entry of previous.scrolls){entry.top=entry.liveTop;entry.left=entry.liveLeft;}
   for(const entry of previous.nodes){entry.marker.replaceWith(entry.node);}
   document.body.classList.remove('pane-expanded');
   for(const entry of previous.scrolls){entry.node.scrollTop=entry.top;entry.node.scrollLeft=entry.left;}
@@ -15,7 +26,7 @@ export function createExpandedPane({document,area,title,extraNodes=[],sideNodes=
  }
  function clearBackdropPress(){backdropPress=null;backdropClick=false;}
  function outside(event){const rect=dialog.getBoundingClientRect();return event.target===dialog&&(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom);}
- function close(){clearBackdropPress();if(dialog.open)dialog.close();restore();}
+ function close({preserveCurrentScroll=false}={}){clearBackdropPress();if(dialog.open)dialog.close();restore({preserveCurrentScroll});}
  // Both ends must be on the backdrop. Cancel movement so a drag/scroll is not a dismissal.
  dialog.addEventListener('pointerdown',event=>{clearBackdropPress();if(event.button===0&&event.isPrimary!==false&&outside(event))backdropPress={id:event.pointerId,x:event.clientX,y:event.clientY};});
  dialog.addEventListener('pointermove',event=>{if(backdropPress&&event.pointerId===backdropPress.id&&Math.hypot(event.clientX-backdropPress.x,event.clientY-backdropPress.y)>8)clearBackdropPress();});
@@ -33,9 +44,9 @@ export function createExpandedPane({document,area,title,extraNodes=[],sideNodes=
    if(dialog.open)return;
    clearBackdropPress();
    if(saved)restore();
-   const nodes=[area,...sideNodes.filter(Boolean),...extraNodes.filter(Boolean)],scrolls=[document.querySelector('.workspace main'),area,...area.querySelectorAll('#content,[data-scroll-key]')].filter(Boolean).map(node=>({node,top:node.scrollTop,left:node.scrollLeft}));
-   saved={opener,scrolls,nodes:nodes.map(node=>{const marker=document.createComment('expanded-pane-position');node.before(marker);return {node,marker};})};
-   try{body.append(area);for(const node of sideNodes.filter(Boolean))body.append(node);for(const node of extraNodes.filter(Boolean))dialog.append(node);document.body.classList.add('pane-expanded');heading.textContent=title()+' · 拡大';dialog.showModal();dialog.querySelector('[data-expanded-close]').focus();}catch(error){restore();throw error;}
+   const nodes=[area,...sideNodes.filter(Boolean),...extraNodes.filter(Boolean)],scrolls=[document.querySelector('.workspace main'),area,...area.querySelectorAll('#content,[data-scroll-key]'),...sideNodes.filter(Boolean),...sideNodes.filter(Boolean).flatMap(node=>[...node.querySelectorAll('[data-scroll-key]')])].filter(Boolean).map(node=>({node,top:node.scrollTop,left:node.scrollLeft}));
+   saved={opener,scrolls,width:viewport?.innerWidth,height:viewport?.innerHeight,nodes:nodes.map(node=>{const marker=document.createComment('expanded-pane-position');node.before(marker);return {node,marker};})};
+   try{body.append(area);for(const node of sideNodes.filter(Boolean))body.append(node);for(const node of extraNodes.filter(Boolean))dialog.append(node);document.body.classList.add('pane-expanded');heading.textContent=title()+' · 拡大';dialog.showModal();for(const entry of saved.scrolls){entry.liveTop=entry.node.scrollTop;entry.liveLeft=entry.node.scrollLeft;}dialog.querySelector('[data-expanded-close]').focus();}catch(error){restore();throw error;}
   },
   update(){if(dialog.open)heading.textContent=title()+' · 拡大';},
   close,

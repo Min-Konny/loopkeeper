@@ -1,7 +1,7 @@
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.6';
-import { getSkillProgress } from './legacy-engine.js?v=0.6.6';
-import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.6.6';
-import { dependencyOrderedCosts } from './material-priority.js?v=0.6.6';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.7';
+import { getSkillProgress } from './legacy-engine.js?v=0.6.7';
+import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.6.7';
+import { dependencyOrderedCosts } from './material-priority.js?v=0.6.7';
 
 const MAX_STEPS = 8;
 const MAX_COUNT = 99;
