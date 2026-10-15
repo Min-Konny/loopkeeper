@@ -1,8 +1,10 @@
-import { CONTENT } from './content.js?v=0.4.11';
-import { setTextIfChanged } from './dom-text.js?v=0.4.11';
-import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.4.11';
-import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.4.11';
-import { conditionLabel } from './queue-conditions.js?v=0.4.11';
+import {finalWaveForRun,campaignForRun}from './campaign-rules.js?v=0.5.0';
+import {hasUpgrade}from './free-features.js?v=0.5.0';
+import { CONTENT } from './content.js?v=0.5.0';
+import { setTextIfChanged } from './dom-text.js?v=0.5.0';
+import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.5.0';
+import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.5.0';
+import { conditionLabel } from './queue-conditions.js?v=0.5.0';
 const esc = x => String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Math.round(n).toLocaleString('ja-JP');
 const duration = n => {
@@ -13,14 +15,14 @@ export function reportMarkup(s) {
   const reports = s.run.battleReports || [];
   if (!reports.length) return '';
   return `<details data-detail-key="battle-recaps" class="strategy-details battle-recaps"><summary>戦闘の振り返り · 第${reports[0].wave}波 ${reports[0].won ? '撃退' : '敗北'}</summary>${reports.map(r=>{
-    const total = r.player+r.guards+r.tower+r.counter;
-    return `<article class="battle-recap"><h4>第${r.wave}波 · ${esc(r.enemy)}</h4><div class="damage-segments" aria-label="与えたダメージの内訳">${[['player','本人'],['guards','守備隊'],['tower','弓塔'],['counter','反撃']].map(([k,label])=>`<i class="source-${k}" style="flex:${total ? r[k]/total : 0}" title="${label} ${number(r[k])}"></i>`).join('')}</div><dl>${[['player','本人の攻撃'],['guards','守備隊'],['tower','弓塔'],['counter','反撃'],['prevented','防いだダメージ'],['damageTaken','受けたダメージ'],['foodHealing','食料の回復'],['treatmentHealing','救護所の回復']].map(([k,label])=>`<div><dt>${label}</dt><dd>${number(r[k])}</dd></div>`).join('')}</dl>${!r.won ? `<p>敵の残りHP ${number(r.remainingHp)} / ${number(r.maxHp)}（${Math.ceil(r.remainingHp/r.maxHp*100)}%）</p>`:''}</article>`;
+    const total = r.player+r.guards+r.tower+r.counter+(r.magic||0)+(r.pet||0);
+    return `<article class="battle-recap"><h4>第${r.wave}波 · ${esc(r.enemy)}</h4><div class="damage-segments" aria-label="与えたダメージの内訳">${[['player','本人'],['guards','守備隊'],['tower','弓塔'],['counter','反撃'],...((r.magic||0)>0?[['magic','魔法と燃焼']]:[]),...((r.pet||0)>0?[['pet','相棒の追撃']]:[])].map(([k,label])=>`<i class="source-${k}" style="flex:${total ? r[k]/total : 0}" title="${label} ${number(r[k])}"></i>`).join('')}</div><dl>${[['player','本人の攻撃'],['guards','守備隊'],['tower','弓塔'],['counter','反撃'],...((r.magic||0)>0?[['magic','魔法と燃焼']]:[]),['prevented','防いだダメージ'],['damageTaken','受けたダメージ'],['foodHealing','食料の回復'],['treatmentHealing','救護所の回復']].map(([k,label])=>`<div><dt>${label}</dt><dd>${number(r[k])}</dd></div>`).join('')}</dl>${!r.won ? `<p>敵の残りHP ${number(r.remainingHp)} / ${number(r.maxHp)}（${Math.ceil(r.remainingHp/r.maxHp*100)}%）</p>`:''}</article>`;
   }).join('')}</details>`;
 }
 const traitHints = {flying:'飛行：弓塔が有効。本人の攻撃でも対処可能。',combo:'連撃：防御を高めて一撃ずつ軽減。体力と回復でも耐えられる。',heavy:'強打：4回ごとに大技。最大HP・防御・短期決戦で備える。',armor:'装甲：高い攻撃力、破甲の斉射、研ぎ澄ます一撃が有効。'};
 export function enemyRoadmap(s) {
-  if (s.version !== 2 || s.meta.bestWave < 3 || s.run.wave >= 21 && !s.run.endless?.active) return '';
-  const waves = [0,1,2].filter(n=>s.run.endless?.active || s.run.wave+n<21).map(n=>{
+  if (s.version !== 2 || s.meta.bestWave < 3 || s.run.wave >= finalWaveForRun(s) && !s.run.endless?.active) return '';
+  const waves = [0,1,2].filter(n=>s.run.endless?.active || s.run.wave+n<finalWaveForRun(s)).map(n=>{
     const e = getNextEnemy({...s,run:{...s.run,wave:s.run.wave+n,hostileQueue:n ? [] : s.run.hostileQueue}});
     const pressure = e.pressure === 'rally' ? '戦意高揚：4回攻撃するごとに攻撃＋5%（最大＋30%）。火力で早く倒すか、十分な防御・回復を用意。' : e.pressure === 'sunder' ? '崩し：4回目の攻撃は防御を40%無視。体力・回復・短期決戦で対処。' : '';
     return `<article><strong>WAVE ${String(e.wave).padStart(2,'0')} · ${esc(e.name)}</strong><span>HP ${number(e.hp)} · 攻撃 ${number(e.attack)} · 防御 ${number(e.defense)}</span><p>${pressure || traitHints[e.trait] || '通常：攻撃・防御・回復の配分で備える。'}</p></article>`;
@@ -82,13 +84,13 @@ export function conditionalRequest() {
   return {id:draft.action,until:{type:draft.type,target:draft.target,resource:Object.keys(d?.yields || {})[0],recipe:draft.recipe,pauseAfter:draft.type === 'unlock' || draft.pause}};
 }
 export function conditionalMarkup(s) {
-  if (s.version !== 2 || !s.meta.upgrades.includes('queue_templates')) return '';
+  if (s.version !== 2 || !hasUpgrade(s,"queue_templates")) return '';
   const actions = [...CONTENT.actions,...CONTENT.processing].filter(d=>(d.unlockBestWave || 0)<=s.meta.bestWave && (!d.knownAfterBoss || CONTENT.encounters.find(e=>e.id===d.knownAfterBoss)?.wave<=s.meta.bestWave));
   if (!actions.some(d=>d.id===draft.action)) draft.action = actions[0]?.id;
   const action = actions.find(d=>d.id===draft.action);
   draftLevel = getSkillProgress(["defense","vitality"].includes(action?.trainingStat) ? s.run.training?.[action.trainingStat] || 0 : s.run.skills[action?.skill]?.xp || 0).level;
   const hasStock = Object.keys(action?.yields || {}).length > 0;
-  const gear = CONTENT.equipment.filter(d=>d.skill===action?.skill && d.unlockLevel > getSkillProgress(s.run.skills[d.skill].xp).level && (!d.knownAfterBoss || CONTENT.encounters.find(e=>e.id===d.knownAfterBoss)?.wave<=s.meta.bestWave));
+  const gear = CONTENT.equipment.filter(d=>(!d.campaign||d.campaign===campaignForRun(s))&&d.skill===action?.skill && d.unlockLevel > getSkillProgress(s.run.skills[d.skill].xp).level && (!d.knownAfterBoss || CONTENT.encounters.find(e=>e.id===d.knownAfterBoss)?.wave<=s.meta.bestWave));
   if (!gear.some(d=>d.id===draft.recipe)) draft.recipe=gear[0]?.id || '';
   if ((!hasStock && draft.type==='stock') || (!gear.length && draft.type==='unlock')) draft.type='level';
   const options=[...(hasStock ? [['stock','在庫が目標に達するまで']] : []),['level','この作業のLvが目標に達するまで'],...(gear.length ? [['unlock','装備の製作Lvに達したら停止']] : [])];

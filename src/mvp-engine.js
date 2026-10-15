@@ -1,18 +1,34 @@
-import { startingGrant } from './starting-resources.js?v=0.4.11';
-import { trainingCandidates } from './prerequisite-training.js?v=0.4.11';
-import { recordReward } from './reward-events.js?v=0.4.11';
-import { observesWork, completedWork } from './work-completion.js?v=0.4.11';
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.4.11';
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.4.11';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.4.11';
-import { CONTENT as C } from "./content.js?v=0.4.11";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.4.11";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.4.11";
+import {EXTENDED_CAMPAIGN,CLASSIC_CAMPAIGN,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.5.0';
+import {investmentEffect}from './investments.js?v=0.5.0';
+import {freshContracts,contractEffects}from './contracts.js?v=0.5.0';
+import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.5.0';
+import {freshFarm,advanceFarm}from './farm-state.js?v=0.5.0';import {farmResource,resourceCap}from './farm-content.js?v=0.5.0';
+import {companionById}from './companion-content.js?v=0.5.0';
+import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.5.0';
+import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.5.0';import {alchemyResource}from './magic-content.js?v=0.5.0';
+import {weaponById}from './gear-content.js?v=0.5.0';
+import {initializeGear,accessoryEffects,combatBuild,strikeModifier}from './gear-state.js?v=0.5.0';
+import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.5.0';
+import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.5.0';
+import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.5.0';
+import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.5.0';
+import { maximumTradeCount } from './maximum-trade.js?v=0.5.0';
+import { startingGrant } from './starting-resources.js?v=0.5.0';
+import { tradeSaleUnit } from './fish-economy.js?v=0.5.0';
+import { trainingCandidates } from './prerequisite-training.js?v=0.5.0';
+import { recordReward } from './reward-events.js?v=0.5.0';
+import { observesWork, completedWork } from './work-completion.js?v=0.5.0';
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.5.0';
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.5.0';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.5.0';
+import { CONTENT as C } from "./content.js?v=0.5.0";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.5.0";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.5.0";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.4.11";
+} from "./legacy-engine.js?v=0.5.0";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -53,6 +69,7 @@ export const FACILITIES = Object.fromEntries(
 );
 const effectText = (f) =>
   ({
+    smokehouse: '魚料理の加工速度 +25% / 食料の回復量 +4',
     watchtower: `襲撃猶予 +${f.effect.raidDelay}秒`,
     barricade: `防御 +${f.effect.defense}`,
     infirmary: `準備中に回復 / 戦闘処置 ${f.effect.treatmentCharges}回`,
@@ -65,7 +82,7 @@ export const RECIPES = [
   ...C.equipment.map((e) => ({
     ...e,
     equipment: { slot: e.slot, name: e.name, tier: e.tier, ...e.stats },
-    description: statText(e.stats),
+    description: e.description || statText(e.stats),
   })),
   ...C.processing.map((p) => ({
     ...p,
@@ -77,7 +94,7 @@ export const RECIPES = [
     ...f,
     name: f.name + [" I", " II", " III", " IV", " V"][f.level - 1],
     facility: { id: f.facilityId, level: f.level, name: f.name },
-    description: effectText(f),
+    description: f.description || effectText(f),
   })),
 ];
 const augmentDescriptions = {
@@ -87,7 +104,7 @@ const augmentDescriptions = {
   drill: "訓練時間 −30%",
   provisions: "食料回復 +30%",
   guard: "防御 +15%",
-  timber_contract: "自分が伐った木材1につき金貨0.15",
+  timber_contract: "本人の伐採で実際に得た木材1個につき金貨0.6。木材は残る（職人・購入は対象外）",
   investment: "施設段階1につき15秒ごと金貨0.5",
   bounty: "撃退金貨 +75%",
   momentum: "撃退ごと攻撃+0.7、勝利時HP6%回復",
@@ -191,7 +208,7 @@ const ok = () => ({ ok: true, reason: "" }),
 const lv = (s, id, p = false) =>
   getSkillProgress((p ? s.meta : s.run).skills[id].xp, p).level;
 const on = (s, id) =>
-  s.meta.upgrades.includes(id) && !s.settings.disabledUpgrades.includes(id);
+  hasUpgrade(s,id) && !s.settings.disabledUpgrades.includes(id);
 const aug = (s, id) => s.run.augments.selected.includes(id);
 const effect = (s, id) =>
   reinforcementEffect(id, s.run.endless?.levels[id] || 0, C.facilities.find(
@@ -201,10 +218,14 @@ const log = (s, text, type = "info") => {
   s.run.log.unshift({ id: ++s.run.logSeq, time: s.run.elapsed, text, type });
   s.run.log.length = Math.min(40, s.run.log.length);
 };
-function freshRun(meta, settings) {
+const progressRates=new WeakMap();
+function freshRun(meta, settings, campaign=EXTENDED_CAMPAIGN) {
   return {
+    campaign,
     strategy: { ...newStrategy(), eligible: meta.clears > 0 },
     battleReports: [],
+    results:createRunResults(meta),
+    progression:createProgression(meta,campaign===EXTENDED_CAMPAIGN?24:21),
     encounterDepth: true,
     status: "preparing",
     elapsed: 0,
@@ -216,6 +237,10 @@ function freshRun(meta, settings) {
     skills: skills(),
     training: {defense:0, vitality:0},
     equipment: {},
+    ownedEquipment:[],
+    playerCombatTimer:0,
+    magicState:freshMagic(),
+    companionState:freshCompanion(),farmState:freshFarm(),routes:freshRoutes(),contracts:freshContracts(),
     facilities: {},
     activeAction: null,
     suspendedActions: {},
@@ -269,11 +294,12 @@ function freshRun(meta, settings) {
       selected: [],
       offeredStages: [],
       rerollsUsed: 0,
+      exclusionVersion:1,excluded:[],exclusionsUsed:0,
       investmentTimer: 0,
     },
     acceleration: {
       active: false,
-      remainingSeconds: meta.upgrades.includes("acceleration_extension")
+      remainingSeconds: (meta.upgrades.includes("acceleration_extension") || (meta.freeFeatures||[]).includes("acceleration_extension") || meta.bestWave>=9) && !settings.disabledUpgrades.includes("acceleration_extension")
         ? Math.max(120, meta.bestWave * 57)
         : 120,
       limitWave: meta.bestWave,
@@ -283,7 +309,8 @@ function freshRun(meta, settings) {
     ),
   };
 }
-export function createGame() {
+export function createGame({campaign=EXTENDED_CAMPAIGN}={}) {
+  if(!validCampaign(campaign))throw Error("Unknown campaign");
   const meta = {
     generation: 1,
     bestWave: 0,
@@ -321,15 +348,16 @@ export function createGame() {
     contentVersion: C.revision,
     meta,
     settings,
-    run: freshRun(meta, settings),
+    run: freshRun(meta, settings,campaign),
   };
+  synchronizeFreeFeatures(s);
   log(s, "最初の襲撃まで3分。資源と食料を備えよう。");
   return s;
 }
 export function isKnown(s, d) {
   if (typeof d === "string") d = defs.get(d);
   return (
-    !!d && (!d.endlessFacility || s.run.endless?.active) &&
+    !!d && (!d.campaign||d.campaign===campaignForRun(s)) && (!d.endlessFacility || s.run.endless?.active) &&
     s.meta.bestWave >=
       (typeof d.knownAfterBoss === "string"
         ? (C.encounters.find((e) => e.id === d.knownAfterBoss)?.wave ?? 999)
@@ -397,6 +425,9 @@ export function getStats(s) {
   if (aug(s, "momentum")) attack += s.run.wave * 0.7;
   attack *=
     1 + (aug(s, "warrior") ? 0.18 : 0) + (syn.includes("martial") ? 0.12 : 0) + defeatedCountryBonus(s, "attackPercent");
+  const contract=contractEffects(s);defense+=contract.defense||0;maxHp+=contract.maxHp||0;
+  const regional=routeEffects(s);attack+=regional.attack||0;defense+=regional.defense||0;maxHp+=regional.maxHp||0;
+  const accessory=accessoryEffects(s);defense=Math.max(0,defense+(accessory.defense||0));
   defense *= 1 + (aug(s, "guard") ? 0.15 : 0);
   if (aug(s, "shield_master")) attack += defense * .2;
   return {
@@ -410,7 +441,7 @@ export function getStats(s) {
 }
 export function getFoodHealing(s) {
   return Math.floor(
-    (30 + getStats(s).maxHp * 0.1) * (aug(s, "provisions") ? 1.3 : 1),
+    (30 + getStats(s).maxHp * 0.1) * (aug(s, "provisions") ? 1.3 : 1) + (effect(s, 'smokehouse').foodHealingFlat || 0)+(contractEffects(s).foodHealing||0),
   );
 }
 export function getRaidInterval(s) {
@@ -425,11 +456,15 @@ export function getActionDuration(s, d) {
   if (aug(s, "construction_rush") && ["logging", "mining", "foraging"].includes(d.skill) && !d.cost && s.run.elapsed < (s.run.strategy?.constructionUntil || 0)) multiplier *= .8;
   if (d.trainingStat && aug(s, "last_stand") && s.run.nextWaveAt - s.run.elapsed <= 45) multiplier *= .65;
   if (d.trainingStat && aug(s, "trade_school")) multiplier *= 1 - .04 * (s.run.facilities.market || 0);
+  if(d.skill==="logging")multiplier*=1-(routeEffects(s).loggingSpeed||0);
+  const investmentSpeed=d.skill==="combat"?0:!d.cost?investmentEffect(s,"gatherSpeed"):d.kind==="alchemy"?investmentEffect(s,"alchemySpeed"):investmentEffect(s,"craftSpeed");
   const speed =
-    (1 + 0.1 * (lv(s, d.skill) - 1)) *
+    (1+investmentSpeed)*(1 + 0.1 * (lv(s, d.skill) - 1)) *
     (1 + 0.08 * (lv(s, d.skill, true) - 1)) *
     (1 + (s.run.equipment.tool?.speed || 0)) *
-    (d.cost ? 1 + (effect(s, "workshop").craftSpeed || 0) : 1);
+    (d.id === 'cook_fish' ? 1 + (effect(s, 'smokehouse').fishCookingSpeed || 0) : 1) *
+    (d.cost ? 1 + (effect(s, "workshop").craftSpeed || 0) : 1) *
+    (!d.trainingStat?1+(accessoryEffects(s,'preparation').workSpeed||0)+(d.skill==='combat'?0:contractEffects(s).workSpeed||0):1);
   return round(Math.max(0.25, (d.duration * multiplier) / speed));
 }
 export function getRecipeCost(s, d) {
@@ -498,6 +533,7 @@ export function getMilestoneStatus(s) {
 export function canStartAction(s, id, ignoreActive = false) {
   const d = defs.get(id);
   if (!d) return fail("作業がありません。");
+  if(d.kind==='alchemy'&&Object.keys(d.yields).some(id=>(s.run.resources[id]||0)>=12))return fail('錬金在庫の上限12に到達しています。');
   if (s.run.status !== "preparing") return fail("準備中に選んでください。");
   if (s.run.augments.offer.length)
     return fail("オーグメントを選んでください。");
@@ -516,6 +552,7 @@ export function canStartAction(s, id, ignoreActive = false) {
     if (current >= d.level) return fail("建設済みです。");
     if (current !== d.level - 1) return fail("先に前段階を建設してください。");
   }
+  if(d.accessory&&s.meta.accessories?.includes(d.accessory))return fail('永久所持済みです。');
   if (d.equipment && s.run.equipment[d.slot]?.id === id)
     return fail("装備済みです。");
   if (d.previousEquipmentId && (s.run.equipment[d.slot]?.tier || 0) != d.tier - 1)
@@ -618,19 +655,24 @@ function complete(s, a) {
   const d = defs.get(a.id);
   const observed = (a.channel === 'main' || a.channel === 'auto_cook') && observesWork(s);
   const gains = observed ? {} : null;
+  const woodBefore = s.run.resources.wood;
   const training = ['defense', 'vitality'].includes(d.trainingStat) ? d.trainingStat : null;
   const xpBefore = observed ? (training ? s.run.training[training] : s.run.skills[d.skill].xp) : 0;
   for (const [r, n] of Object.entries(getActionYields(s, d, a.channel))) {
     const before = s.run.resources[r];
-    s.run.resources[r] = round(Math.min(1e9, before + n));
+    s.run.resources[r] = round(Math.min(resourceCap(r), before + n));
     if (gains && s.run.resources[r] > before) gains[r] = s.run.resources[r] - before;
   }
+  const petWood=companionWork(s,d,a,Math.max(0,s.run.resources.wood-woodBefore));if(gains&&petWood)gains.wood=(gains.wood||0)+petWood;
   if (a.channel === "main" && d.id === "train_combat" && aug(s, "weapon_master")) strategy(s).focus = Math.min(30, strategy(s).focus + 1);
-  if (aug(s, "timber_contract") && d.skill === "logging")
-    s.run.resources.gold = round(
-      s.run.resources.gold + (getActionYields(s, d, a.channel).wood || 0) * 0.15,
-    );
+  if (a.channel === 'main' && aug(s, 'timber_contract') && d.skill === 'logging') {
+    const delivered = Math.max(0, s.run.resources.wood - woodBefore);
+    const rate = C.augments.find(x=>x.id==='timber_contract').values.goldPerWood;
+    s.run.resources.gold = round(Math.min(1e9, s.run.resources.gold + delivered * rate));
+  }
+  if(d.accessory){initializeGear(s);if(!s.meta.accessories.includes(d.accessory))s.meta.accessories.push(d.accessory);log(s,d.name+'を永久所持に加えた。','craft');}
   if (d.equipment) {
+    initializeGear(s);if(!s.run.ownedEquipment.includes(d.id))s.run.ownedEquipment.push(d.id);
     s.run.equipment[d.slot] = { id: d.id, ...d.equipment };
     s.run.hp = Math.min(s.run.hp, getStats(s).maxHp);
     log(s, `${d.name}を装備した。`, "craft");
@@ -658,7 +700,7 @@ function complete(s, a) {
   gain(s, d.skill, a.runXp, a.permanentXp, d.trainingStat);
   if (observed) completedWork(s, {id:d.id, skill:d.skill, kind:a.kind,
     resourceGains:gains, trainingGain:!Object.keys(d.yields || {}).length && d.skill === 'combat' ? (training ? s.run.training[training] : s.run.skills[d.skill].xp) - xpBefore : 0,
-    created:!!(d.equipment || d.facility || d.endlessFacility)});
+    created:!!(d.equipment || d.facility || d.endlessFacility || d.accessory)});
 }
 
 // Resolve only the next required batch. Re-evaluate after every completion or helper delivery.
@@ -747,13 +789,14 @@ export function resolveGoal(s, id, visiting = new Set()) {
   if (visiting.has(id)) return fail("材料の循環があります。");
   if (!isKnown(s, d)) return fail("未発見です。");
   if (s.run.suspendedActions[id]) return { ...ok(), id };
+  if(d.accessory&&s.meta.accessories?.includes(d.accessory))return {...ok(),done:true};
   if (d.facility && (s.run.facilities[d.facility.id] || 0) >= d.level)
     return { ...ok(), done: true };
   if (d.equipment && s.run.equipment[d.slot]?.id === id)
     return { ...ok(), done: true };
   const seen = new Set([...visiting, id]);
   if (d.previousEquipmentId && (s.run.equipment[d.slot]?.tier || 0) != d.tier - 1) {
-    if ((s.run.equipment[d.slot]?.tier || 0) >= d.tier) return { ...ok(), done: true };
+    if ((s.run.equipment[d.slot]?.tier || 0) >= d.tier && !weaponById(s.run.equipment[d.slot]?.id)) return { ...ok(), done: true };
     return resolveGoal(s, d.previousEquipmentId, seen);
   }
   if (d.facility && (s.run.facilities[d.facility.id] || 0) < d.level - 1)
@@ -789,7 +832,7 @@ export function resolveGoal(s, id, visiting = new Set()) {
   return unavailable || { ...ok(), id };
 }
 export function setMaterialPriority(s, priority) {
-  if (!s.meta.upgrades.includes('action_queue')) return fail('行動予約を解放してください。');
+  if (!hasUpgrade(s,"action_queue")) return fail('行動予約を解放してください。');
   if (!validMaterialPriority(priority)) return fail('素材は重複せず、優先したい順に指定してください。');
   if (priority.some(id => !resourceKnown(s, id) || id === 'gold' && !getUnlocks(s).facilities)) return fail('未発見の素材は指定できません。');
   s.settings.craftMaterialPriority = [...priority];
@@ -808,7 +851,7 @@ export function enqueueAction(
   if (s.run.queue.length >= 8)
     return fail("行動予約が8件でいっぱいです。不要な予約を削除してください。");
   if (s.run.status !== "preparing") return fail("準備中に予約してください。");
-  if (defs.get(id)?.equipment || defs.get(id)?.facility || defs.get(id)?.endlessFacility) {
+  if (defs.get(id)?.equipment || defs.get(id)?.facility || defs.get(id)?.endlessFacility || defs.get(id)?.accessory) {
     if (s.run.queue.some(q => q.id === id)) return fail("既に予約しています。");
     count = 1;
   }
@@ -847,7 +890,7 @@ export function editQueuedAction(s, i, n) {
   s.settings.paused = true;
   detach(s);
   const d = defs.get(s.run.queue[i].id);
-  s.run.queue[i].count = d?.equipment || d?.facility || d?.endlessFacility ? 1 : n;
+  s.run.queue[i].count = d?.equipment || d?.facility || d?.endlessFacility || d?.accessory ? 1 : n;
   return ok();
 }
 export function moveQueuedAction(s, i, dir) {
@@ -996,7 +1039,7 @@ const resourceTier = (id) => {
     }[id] || (["ore", "ingot"].includes(id) ? 2 : 1)
   );
 };
-export const resourceKnown = (s, id) =>
+export const resourceKnown = (s, id) => (alchemyResource(id)||farmResource(id)) ? s.meta.bestWave>=3 :
   s.meta.bestWave >=
     {
       coal: 6,
@@ -1041,7 +1084,8 @@ export function upgradeWorker(s, id) {
   return ok();
 }
 export function getAutoCookingStatus(s) {
-  const recipe = defs.get("cook_meal"), reserved = reserve(s), cost = getRecipeCost(s, recipe);
+  const reserved=reserve(s),egg=defs.get("egg_stew");
+  const recipe=defs.get(s.run.autoCraft?.id || (s.settings.farmAutoCook && isKnown(s,egg) && lv(s,egg.skill)>=egg.unlockLevel && Object.entries(getRecipeCost(s,egg)).every(([r,n])=>s.run.resources[r]-(reserved[r]||0)>=n)?"egg_stew":"cook_meal")),cost=getRecipeCost(s,recipe);
   const materials = Object.entries(cost).map(([id, required]) => ({id, required, stock:s.run.resources[id], reserved:reserved[id] || 0, available:Math.max(0,s.run.resources[id]-(reserved[id] || 0))}));
   const base = {materials, food:s.run.resources.food, target:s.settings.foodTarget, batch:s.run.autoCraft};
   const result = (code, text) => ({...base, code, text});
@@ -1078,7 +1122,8 @@ function helpers(s, dt) {
       ([r, n]) => s.run.resources[r] - (reserved[r] || 0) >= n,
     );
   if (on(s, "auto_cook")) {
-    const d = defs.get("cook_meal");
+    const egg=defs.get("egg_stew");
+    const d = s.settings.farmAutoCook && isKnown(s,egg) && lv(s,egg.skill)>=egg.unlockLevel && funded(egg) ? egg : defs.get("cook_meal");
     if (
       !s.run.autoCraft &&
       s.run.resources.food < s.settings.foodTarget &&
@@ -1129,7 +1174,7 @@ function helpers(s, dt) {
         if (w.recipeChoices) complete(s, rw.batch);
         else
           s.run.resources[rw.batch.target] = round(
-            Math.min(1e9, s.run.resources[rw.batch.target] + rw.batch.quantity),
+            Math.min(resourceCap(rw.batch.target), s.run.resources[rw.batch.target] + rw.batch.quantity),
           );
         rw.batch = null;
       }
@@ -1142,7 +1187,7 @@ export function setStockTarget(s, id, n) {
     !RESOURCES[id] ||
     !Number.isInteger(n) ||
     n < 0 ||
-    n > 9999
+    n > Math.min(9999,resourceCap(id))
   )
     return fail("在庫目標は0〜9999。");
   s.settings.stockTargets = s.settings.stockTargets.filter((x) => x.id !== id);
@@ -1172,7 +1217,7 @@ export function getTemplatePreview(s, i) {
     const item = { ...g, name: d?.name || g.id, status: "ready", reason: "追加" };
     const paid = s.run.activeAction?.id === g.id || s.run.suspendedActions[g.id];
     const equipped = d?.equipment && s.run.equipment[d.slot];
-    const completed = !paid && (d?.facility ? (s.run.facilities[d.facility.id] || 0) >= d.level : equipped && ["attack", "defense", "maxHp", "speed"].every(stat => (equipped[stat] || 0) >= (d.equipment[stat] || 0)));
+    const completed = !paid && (d?.facility ? (s.run.facilities[d.facility.id] || 0) >= d.level : equipped && !d.combat && !weaponById(equipped.id) && ["attack", "defense", "maxHp", "speed"].every(stat => (equipped[stat] || 0) >= (d.equipment[stat] || 0)));
     if (completed) return { ...item, status: "skip", reason: d.facility ? "建設済み" : "装備済み・上位装備あり" };
     if ((d?.equipment || d?.facility) && seen.has(g.id)) return { ...item, status: "skip", reason: "予約済み" };
     if (!isKnown(s, g.id)) return { ...item, status: "blocked", reason: "未解放" };
@@ -1213,7 +1258,7 @@ export function getAugmentStatus(s) {
 }
 function augmentPool(s) {
   const a = s.run.augments;
-  return AUGMENTS.filter(x => !a.selected.includes(x.id) && s.meta.bestWave >= (x.unlockBestWave || 0) && (!x.pack || on(s, x.pack)) && (!x.requiresPurchasedWorker || C.workers.some(w => on(s, w.id))));
+  return AUGMENTS.filter(x => !(a.excluded||[]).includes(x.id) && !a.selected.includes(x.id) && s.meta.bestWave >= (x.unlockBestWave || 0) && (!x.pack || on(s, x.pack)) && (!x.requiresPurchasedWorker || C.workers.some(w => on(s, w.id))));
 }
 function drawAugmentOffer(s, stage, previous = []) {
   const a = s.run.augments;
@@ -1269,6 +1314,19 @@ export function rerollAugments(s) {
   s.settings.paused = true;
   s.run.acceleration.active = false;
   return ok();
+}
+export function getAugmentExclusionStatus(s,id){
+  const a=s.run.augments,remaining=Math.max(0,1-(a.exclusionsUsed||0)),rerolls=getAugmentRerollStatus(s);
+  const alternatives=augmentPool(s).filter(x=>!a.offer.includes(x.id));
+  const reason=s.run.status!=='preparing'||!a.offer.length?'候補の選択中だけ除外できます。':!remaining?'この人生では候補を除外済みです。':!a.offer.includes(id)?'現在の提示から1候補を選んでください。':!rerolls.remaining?'再抽選の残り回数がありません。':!alternatives.length?'補充できる候補がないため除外できません。':'';
+  return {limit:1,remaining,canExclude:!reason,reason};
+}
+export function excludeAugment(s,id){
+  const status=getAugmentExclusionStatus(s,id);if(!status.canExclude)return fail(status.reason);
+  const a=s.run.augments,kept=a.offer.filter(x=>x!==id);let candidates=augmentPool(s).filter(x=>!a.offer.includes(x.id));
+  const families=kept.map(id=>AUGMENTS.find(x=>x.id===id).family),balanced=candidates.filter(x=>families.filter(f=>f===x.family).length<2);if(balanced.length)candidates=balanced;
+  const seed=(Math.imul(a.seed,1664525)+1013904223)>>>0,replacement=candidates[Math.floor(seed/4294967296*candidates.length)];
+  a.offer=a.offer.map(x=>x===id?replacement.id:x);a.seed=seed;a.exclusionVersion=1;a.excluded=[id];a.exclusionsUsed=1;a.rerollsUsed=(a.rerollsUsed||0)+1;s.settings.paused=true;s.run.acceleration.active=false;return ok();
 }
 function offer(s, stage) {
   const a = s.run.augments;
@@ -1358,12 +1416,14 @@ export function buySupply(s, id) {
   if (m.resource && !resourceKnown(s, m.resource)) return fail("未発見です。");
   if (m.oncePerRun && s.run.diplomacy.mercenary) return fail("雇用済み。");
   if (id === "sell_wood") {
+    if(investmentEffect(s,"tradeSaleBonus"))return tradeResource(s,"wood","sell",10);
     if (s.run.resources.wood < 10) return fail("木材10が必要。");
     s.run.resources.wood -= 10;
     s.run.resources.gold += effect(s, "market").woodSaleAmount;
     return ok();
   }
   const price = getSupplyCost(s, id);
+  if(m.resource && s.run.resources[m.resource]+m.quantity>resourceCap(m.resource))return fail('資源上限に達します。');
   if (s.run.resources.gold < price) return fail("金貨不足。");
   s.run.resources.gold -= price;
   if (m.attack) s.run.diplomacy.mercenary = true;
@@ -1372,25 +1432,32 @@ export function buySupply(s, id) {
 }
 export function getTradeQuote(s, resource, direction, count = 1) {
   const entry = C.market.find(m=>m.direction === 'buy' && m.resource === resource);
-  if (!entry || !['buy','sell'].includes(direction) || !Number.isInteger(count) || count < 1 || count > 9999) return fail('数量は1〜9999個で指定してください。');
+  const all = count === 'all';
+  if (!entry || !['buy','sell'].includes(direction) || (!all && (!Number.isInteger(count) || count < 1 || count > 9999))) return fail('数量は1〜9999個、または全てを指定してください。');
   const buyUnit = getSupplyCost(s,entry.id) / entry.quantity;
-  const sellUnit = resource === 'wood' ? Math.min((effect(s,'market').woodSaleAmount || 2) / 10, buyUnit * .75) : buyUnit * .75;
-  const unit = direction === 'buy' ? buyUnit : sellUnit;
-  const total = direction === 'buy' ? Math.ceil(unit * count * 100 - 1e-8) / 100 : Math.floor(unit * count * 100 + 1e-8) / 100;
+  const ordinaryUnit = resource === 'eggs' ? .3 : resource === 'wood' ? Math.min((effect(s,'market').woodSaleAmount || 2) / 10, buyUnit * .75) : buyUnit * .75;
+  const unitFor = n => direction === 'buy' ? buyUnit : tradeSaleUnit(s, resource, n, buyUnit, ordinaryUnit);
+  const totalFor = n => direction === 'buy' ? Math.ceil(unitFor(n) * n * 100 - 1e-8) / 100 : Math.floor(unitFor(n) * n * 100 + 1e-8) / 100;
+  if (all) {
+    const limit = direction === 'buy' ? resourceCap(resource) - s.run.resources[resource] : s.run.resources[resource];
+    count = maximumTradeCount(limit, n => direction === 'buy' ? round(s.run.resources.gold-totalFor(n)) >= 0 : round(s.run.resources.gold+totalFor(n)) <= 1e9);
+  }
+  const unit = unitFor(count), total = totalFor(count);
   let reason = '';
   if (!s.run.facilities.market) reason = '市場を建設してください。';
   else if (!resourceKnown(s,resource)) reason = '未発見の品です。';
   else if (s.run.status !== 'preparing') reason = '準備中のみ取引できます。';
-  else if (direction === 'buy' && s.run.resources.gold < total) reason = '金貨不足。';
+  else if (!count) reason = direction === 'buy' ? '購入できる数量がありません。' : '売却できる数量がありません。';
+  else if (direction === 'buy' && round(s.run.resources.gold-total) < 0) reason = '金貨不足。';
   else if (direction === 'sell' && s.run.resources[resource] < count) reason = '所持数不足。';
-  else if (direction === 'buy' && s.run.resources[resource] + count > 1e9 || direction === 'sell' && s.run.resources.gold + total > 1e9) reason = '所持上限に達します。';
+  else if (direction === 'buy' && s.run.resources[resource] + count > resourceCap(resource) || direction === 'sell' && s.run.resources.gold + total > 1e9) reason = '所持上限に達します。';
   return {ok:!reason, reason, resource, direction, count, unit, total};
 }
 export function tradeResource(s, resource, direction, count) {
   const quote = getTradeQuote(s,resource,direction,count);
   if (!quote.ok) return quote;
   s.run.resources.gold = round(s.run.resources.gold + (direction === 'buy' ? -quote.total : quote.total));
-  s.run.resources[resource] = round(s.run.resources[resource] + (direction === 'buy' ? count : -count));
+  s.run.resources[resource] = round(s.run.resources[resource] + (direction === 'buy' ? quote.count : -quote.count));
   return quote;
 }
 function income(s, dt) {
@@ -1418,6 +1485,7 @@ function income(s, dt) {
   }
 }
 export function canPurchaseUpgrade(s, id) {
+  if(isFreeFeature(id)) return fail("到達WAVEで無料解放されます。");
   const u = upgrades.get(id);
   if (!u) return fail("解放がありません。");
   if (
@@ -1444,7 +1512,7 @@ export function canPurchaseUpgrade(s, id) {
     s.meta.bestWave < 3
   )
     return fail(`初達成${g.completedQuests}件が必要。`);
-  if (g.requires?.some((x) => !owned.includes(x)))
+  if (g.requires?.some((x) => !owned.includes(x) && !hasUpgrade(s,x)))
     return fail(`先に${g.requires.filter(x => !owned.includes(x)).map(x => upgrades.get(x).name).join("・")}を解放してください。`);
   const automationCount = owned.filter(x => ["automation", "worker"].includes(upgrades.get(x)?.kind)).length;
   if (g.automationCount && automationCount < g.automationCount)
@@ -1455,6 +1523,7 @@ export function canPurchaseUpgrade(s, id) {
   return ok();
 }
 export function purchaseUpgrade(s, id) {
+  if(isFreeFeature(id)){if(!["preparing","legacy_setup"].includes(s.run.status)||s.run.augments.offer.length)return fail("準備中に解放を確認してください。");if(!hasUpgrade(s,id))return fail("到達WAVEで無料解放されます。");synchronizeFreeFeatures(s);return ok();}
   const r = canPurchaseUpgrade(s, id);
   if (!r.ok) return r;
   const u = upgrades.get(id),
@@ -1469,6 +1538,7 @@ export function purchaseUpgrade(s, id) {
   return ok();
 }
 export function refundUpgrade(s, id) {
+  if(isFreeFeature(id))return fail("無料機能はポイントを使用しません。");
   if (s.run.status !== "legacy_setup")
     return fail("次周開始前だけ再配分できます。");
   const d = s.run.legacyDraft;
@@ -1483,7 +1553,7 @@ export function refundUpgrade(s, id) {
 export function toggleUpgrade(s, id) {
   if (upgrades.get(id)?.kind === "augment_reroll") return fail("リロール回数の追加は常に有効です。");
   if (
-    !s.meta.upgrades.includes(id) ||
+    !hasUpgrade(s,id) ||
     s.run.status !== "preparing" ||
     s.run.augments.offer.length
   )
@@ -1495,6 +1565,7 @@ export function toggleUpgrade(s, id) {
   return ok();
 }
 export function abandonRun(s) {
+  if(s.run.routes?.active)withdrawRoute(s,"周回中止・帰還");
   if (!["preparing", "combat"].includes(s.run.status)) return fail("進行中の周回だけ切り上げられます。");
   s.run.status = "dead";
   s.settings.paused = true;
@@ -1523,10 +1594,11 @@ export function restartRun(s) {
 export function getStartingResources(s){const ids=s.run.status==="legacy_setup"?s.run.legacyDraft.upgrades:s.meta.upgrades;return startingGrant(ids,s.settings.disabledUpgrades);}
 export function confirmRun(s) {
   if (s.run.status !== "legacy_setup") return fail("継承準備ではありません。");
+  synchronizeFreeFeatures(s);
   Object.assign(s.meta, s.run.legacyDraft);
   s.meta.generation++;
   s.settings.disabledUpgrades = s.settings.disabledUpgrades.filter((id) =>
-    s.meta.upgrades.includes(id),
+    hasUpgrade(s,id),
   );
   s.contentVersion = C.revision;
   s.run = freshRun(s.meta, s.settings);
@@ -1540,11 +1612,7 @@ export function confirmRun(s) {
 export function getAccelerationStatus(s) {
   const a = s.run.acceleration,
     available =
-      s.meta.bestWave >= 9 &&
-      s.meta.generation >= 2 &&
-      s.meta.upgrades.filter((x) =>
-        ["automation", "worker"].includes(upgrades.get(x)?.kind),
-      ).length >= 3;
+      hasUpgrade(s,"cycle_acceleration") && s.meta.generation >= 2;
   const unlocked = on(s, "cycle_acceleration");
   const eligible =
     unlocked &&
@@ -1575,8 +1643,8 @@ export function stopAcceleration(s) {
   return ok();
 }
 export function getNextEnemy(s) {
-  if (s.run.endless?.active && s.run.wave >= 21) return endlessEnemy(s.run.wave + 1, C.encounters);
-  const e = (s.contentVersion === "A1" ? A1_ENCOUNTERS : s.contentVersion === "A2" ? A2_ENCOUNTERS : C.encounters)[
+  if (s.run.endless?.active && s.run.wave >= finalWaveForRun(s)) return endlessEnemy(s.run.wave + 1, encountersForRun(s,C.encounters),finalWaveForRun(s));
+  const e = encountersForRun(s,(s.contentVersion === "A1" ? A1_ENCOUNTERS : s.contentVersion === "A2" ? A2_ENCOUNTERS : C.encounters))[
     s.run.wave
   ];
   if (!e)
@@ -1585,7 +1653,7 @@ export function getNextEnemy(s) {
       hp: 0,
       attack: 0,
       defense: 0,
-      wave: 21,
+      wave: finalWaveForRun(s),
       isBoss: true,
     };
   const country = s.run.hostileQueue[0],
@@ -1602,22 +1670,24 @@ export function getNextEnemy(s) {
     country: country || null,
   };
 }
-function beginRaid(s) {
+function beginRaid(s,encounter=null) {
+  const next=()=>encounter||getNextEnemy(s);
   s.run.enemy = {
-    ...getNextEnemy(s),
+    ...next(),
     supplied: s.run.resources.food >= 20,
-    baseDefense: getNextEnemy(s).defense,
+    baseDefense: next().defense,
     retaliation: false,
-    report: { wave: s.run.wave + 1, player: 0, guards: 0, tower: 0, counter: 0, prevented: 0, foodHealing: 0, treatmentHealing: 0, damageTaken: 0, rounds: 0 },
+    report: { wave: s.run.wave + 1, magic:0, pet:0, player: 0, guards: 0, tower: 0, counter: 0, prevented: 0, foodHealing: 0, treatmentHealing: 0, damageTaken: 0, rounds: 0 },
     round: 0,
     xpAwarded: 0,
     xpBudget:
-      getNextEnemy(s).combatXpBudget *
+      next().combatXpBudget *
       (aug(s, "field_training") ? 1.25 : 1),
     charges: effect(s, "infirmary").treatmentCharges || 0,
   };
   s.run.status = "combat";
-  s.run.combatTimer = 0;
+  if(!encounter)recordArrival(s,s.run.enemy.wave);
+  beginCompanionFight(s);s.run.magicState=freshMagic();s.run.combatTimer = 0;const build=combatBuild(s);s.run.playerCombatTimer=build.opening?build.interval-build.opening:0;
   log(s, `第${s.run.enemy.wave}波：${s.run.enemy.name}`, "raid");
 }
 function record(s) {
@@ -1626,6 +1696,7 @@ function record(s) {
     generation: s.meta.generation,
     wave: s.run.wave,
     elapsed: s.run.elapsed,
+    ...(s.run.results?{result:runSummary(s)}:{}),
     skillGains: Object.fromEntries(
       SKILLS.map((x) => [
         x.id,
@@ -1638,13 +1709,14 @@ function record(s) {
 function finishBattleReport(s, e, won) {
   if (!e.report) return;
   e.report.rounds = e.round;
-  const r = { ...e.report, enemy: e.name, won, remainingHp: Math.max(0, e.hp), maxHp: e.maxHp };
+  const r = { ...e.report, magicState:structuredClone(s.run.magicState||freshMagic()), companion:{id:activeCompanion(s),...s.run.companionState}, enemy: e.name, won, remainingHp: Math.max(0, e.hp), maxHp: e.maxHp };
   s.run.battleReports = [r, ...(s.run.battleReports || [])].slice(0, 8);
-  strategy(s).playerDamage += r.player;
-  strategy(s).facilityDamage += r.guards + r.tower + r.counter;
+  if(!s.run.routes?.active)strategy(s).playerDamage += r.player+(r.magic||0);
+  if(!s.run.routes?.active)strategy(s).facilityDamage += r.guards + r.tower + r.counter+(r.pet||0);
   strategy(s).focus = 0;
 }
 function die(s, e, before, damage) {
+  if(s.run.routes?.active){finishBattleReport(s,e,false);finishRoute(s,false,"敗北・帰還");return;}
   finishBattleReport(s, e, false);
   s.run.deathReport = {
     enemy: e.name,
@@ -1663,15 +1735,20 @@ function die(s, e, before, damage) {
   s.run.queue = [];
   s.run.simRemainder = 0;
   log(s, "力尽きた。経験を次の命へ。", "death");
+  const repeat=rewardFrontierAttempt(s,e);if(repeat){recordReward(s,'points','',s.meta.points-repeat,s.meta.points);log(s,'前線への挑戦 / 継承 +'+repeat,'permanent');}
   record(s);
 }
 function victory(s, e) {
+  if(s.run.routes?.active){finishBattleReport(s,e,true);const points=finishRoute(s,true,"突破");if(points)recordReward(s,"points","",s.meta.points-points,s.meta.points);return;}
+  const repeat=rewardRepeatVictory(s,e);if(repeat){recordReward(s,'points','',s.meta.points-repeat,s.meta.points);log(s,'前線への復帰 / 継承 +'+repeat,'permanent');}
+  recordClear(s,e.wave);
   finishBattleReport(s, e, true);
   s.run.wave = e.wave;
   if (s.run.wave >= s.run.acceleration.limitWave)
     s.run.acceleration.active = false;
-  s.meta.bestWave = Math.max(s.meta.bestWave, Math.min(21, e.wave));
-  if (s.run.endless?.active) s.meta.bestEndlessWave = Math.max(s.meta.bestEndlessWave || 21, e.wave);
+  s.meta.bestWave = Math.max(s.meta.bestWave, Math.min(finalWaveForRun(s), e.wave));
+  const rewards=synchronizeFreeFeatures(s);for(const id of rewards.companionsAdded||[])log(s,'相棒を永久所持に加えた：'+companionById(id).name,'permanent');
+  if (s.run.endless?.active) s.meta.bestEndlessWave = Math.max(s.meta.bestEndlessWave || finalWaveForRun(s), e.wave);
   let gold =
     e.gold *
     (1 +
@@ -1701,12 +1778,14 @@ function victory(s, e) {
     s.run.hp = Math.min(getStats(s).maxHp, s.run.hp + getStats(s).maxHp * 0.06);
   if (aug(s, "spoils_reinvestment")) s.run.reinvestment = 1;
   s.run.enemy = null;
-  s.run.status = e.wave === 21 ? "cleared" : "preparing";
+  const finalClear=!s.run.endless?.active&&e.wave===finalWaveForRun(s);
+  s.run.status = finalClear ? "cleared" : "preparing";
   s.run.nextWaveAt = round(s.run.elapsed + getRaidInterval(s));
   log(s, `第${e.wave}波を撃退。`, "victory");
-  if (e.wave === 21) {
-    s.run.clearRecord = {generation:s.meta.generation,wave:21,seconds:Math.floor(s.run.elapsed),augments:[...s.run.augments.selected],badges:challengeResults(s)};
+  if (finalClear) {
+    s.run.clearRecord = {generation:s.meta.generation,wave:finalWaveForRun(s),campaign:campaignForRun(s),seconds:Math.floor(s.run.elapsed),augments:[...s.run.augments.selected],badges:challengeResults(s)};
     if (!s.meta.clears) s.meta.firstClear ||= structuredClone(s.run.clearRecord);
+    if(s.run.campaign===EXTENDED_CAMPAIGN)s.meta.firstExtendedClear ||= structuredClone(s.run.clearRecord);
     s.meta.clears++;
     s.meta.challengeBadges = [...new Set([...(s.meta.challengeBadges || []), ...challengeResults(s)])];
     s.settings.paused = true;
@@ -1721,16 +1800,13 @@ function victory(s, e) {
 }
 export function getPlayerStrike(s, e = s.run.enemy || getNextEnemy(s)) {
   const attack = getStats(s).attack * (aug(s, "executioner") && e.hp <= e.maxHp * .35 ? 1.3 : 1) * (e.retaliation ? 1.5 : 1);
-  const armor = e.defense * (aug(s, "weapon_master") ? 1 - (s.run.strategy?.focus || 0) / 100 : 1);
+  const armor = e.defense * (1-combatBuild(s).pierce) * (aug(s, "weapon_master") ? 1 - (s.run.strategy?.focus || 0) / 100 : 1);
   return { attack, armor, damage: Math.max(1, attack - armor) };
 }
-function battleRound(s) {
-  const e = s.run.enemy;
-  e.round++;
-  function damage(n, source = "player") {
-    const armor = e.defense * (source === "player" && aug(s, "weapon_master") ? 1 - (s.run.strategy?.focus || 0) / 100 : 1);
+function battleDamage(s,e,n,source='player') {
+    const armor = e.defense * (source==="magic"||source==="pet"?0:source==="player"?1-combatBuild(s).pierce:1) * (source === "player" && aug(s, "weapon_master") ? 1 - (s.run.strategy?.focus || 0) / 100 : 1);
     const dealt = Math.min(e.hp, Math.max(1, n - armor));
-    if (e.report) e.report[source] = round(e.report[source] + dealt);
+    if (e.report) e.report[source] = round((e.report[source]||0) + dealt);
     e.hp = round(Math.max(0, e.hp - dealt));
     const entitled = round(e.xpBudget * (1 - e.hp / e.maxHp)),
       amount = Math.max(0, entitled - e.xpAwarded);
@@ -1741,9 +1817,16 @@ function battleRound(s) {
       amount * Math.min(2, 1 + 0.04 * (lv(s, "combat", true) - 1)),
       amount * 0.2,
     );
-  }
-  damage(getPlayerStrike(s, e).attack);
-  e.retaliation = false;
+    return dealt;
+}
+function playerAttack(s){
+  const e=s.run.enemy,mod=strikeModifier(s,e,true);battleDamage(s,e,getPlayerStrike(s,e).attack*mod.multiplier);
+  if(e.report){e.report.playerHits=(e.report.playerHits||0)+1;e.report.criticalHits=(e.report.criticalHits||0)+(mod.critical?1:0);}
+  physicalIgnition(s,e,mod.critical);companionCritical(s,e,mod.critical,n=>battleDamage(s,e,n,'pet'));
+  if(mod.build.markEvery&&e.buildCombat.hits%mod.build.markEvery===0)e.defense=round(Math.min(e.defense,Math.max((e.baseDefense??e.defense)*.7,e.defense-2)));
+  e.retaliation=false;if(e.hp<=0)return victory(s,e);
+}
+function battleRound(s){const e=s.run.enemy;const damage=(n,source='player')=>battleDamage(s,e,n,source);
   if (e.hp <= 0) return victory(s, e);
   const support = getStats(s).support;
   if (support) {
@@ -1756,8 +1839,8 @@ function battleRound(s) {
     if (aug(s, "piercing_volley")) e.defense = round(Math.max((e.baseDefense ?? e.defense) * .6, e.defense - (e.baseDefense ?? e.defense) * .08));
     if(e.hp<=0)return victory(s,e);
   }
-  const stats = getStats(s),
-    hits = (
+  const stats = getStats(s);
+  let hits = (
       e.trait === "combo"
         ? [0.75, 0.75]
         : [e.trait === "heavy" && e.round % 4 === 0 ? 1.6 : 1]
@@ -1770,6 +1853,8 @@ function battleRound(s) {
         ),
       ),
     );
+  hits=companionPacket(s,e,hits);
+  hits=wardPacket(s,hits,stats.maxHp);
   const packet = hits.reduce((a, b) => a + b, 0);
   if (e.report) {
     const raw = (e.trait === "combo" ? 1.5 : e.trait === "heavy" && e.round % 4 === 0 ? 1.6 : 1) * e.attack * (e.pressure === "rally" ? 1 + Math.min(.3, Math.floor((e.round - 1) / 4) * .05) : 1);
@@ -1809,6 +1894,7 @@ function battleRound(s) {
     if (aug(s, "triage")) e.retaliation = true;
     log(s, "救護処置。", "heal");
   }
+  if(combatBuild(s).counter){damage(stats.defense*combatBuild(s).counter,'counter');if(e.hp<=0)return victory(s,e);}
   if (aug(s, "thorn_wall") && s.run.facilities.barricade) {
     damage(stats.defense * .25, "counter");
     if (e.hp <= 0) return victory(s, e);
@@ -1819,7 +1905,10 @@ function step(s, dt) {
     driveQueue(s);
     if (s.settings.paused) return;
   }
+  advanceFarm(s,dt,reserve(s));
   s.run.elapsed = round(s.run.elapsed + dt);
+  if(s.run.routes?.active&&s.run.elapsed-s.run.routes.active.startedAt>=30){withdrawRoute(s,"時間切れ・帰還");return;}
+  if(s.run.results){const rate=progressRates.get(s);if(rate)s.run.results.activeRealSeconds=round(s.run.results.activeRealSeconds+dt/rate);else s.run.results.timingComplete=false;}
   if (s.run.endless?.active) {
     s.run.endless.incomeTimer = round(s.run.endless.incomeTimer + dt);
     if (s.run.endless.incomeTimer >= 15) {
@@ -1828,11 +1917,12 @@ function step(s, dt) {
     }
   }
   if (s.run.status === "combat") {
-    s.run.combatTimer = round(s.run.combatTimer + dt);
-    if (s.run.combatTimer + 1e-8 >= 1.5) {
-      s.run.combatTimer = round(s.run.combatTimer - 1.5);
-      battleRound(s);
-    }
+    s.run.companionState??=freshCompanion();s.run.companionState.foxCooldown=Math.max(0,s.run.companionState.foxCooldown-dt);
+    advanceMagic(s,dt,n=>battleDamage(s,s.run.enemy,n*casterMultiplier(s)*(1+investmentEffect(s,'spellPower')+(accessoryEffects(s,'combat').spellPower||0)),'magic'));if(s.run.enemy.hp<=0){victory(s,s.run.enemy);return;}
+    initializeGear(s);s.run.combatTimer=round(s.run.combatTimer+dt);s.run.playerCombatTimer=round(s.run.playerCombatTimer+dt);
+    const enemyDue=s.run.combatTimer+1e-8>=1.5;if(enemyDue){s.run.enemy.round++;s.run.combatTimer=round(s.run.combatTimer-1.5);}
+    const interval=combatBuild(s).interval;if(s.run.playerCombatTimer+1e-8>=interval){s.run.playerCombatTimer=round(s.run.playerCombatTimer-interval);playerAttack(s);}
+    if(s.run.status==='combat'&&enemyDue)battleRound(s);
     return;
   }
   if (s.run.status !== "preparing") return;
@@ -1955,7 +2045,8 @@ export function advanceTime(s, seconds) {
       s.run.acceleration.active = false;
       continue;
     }
-    tick(s, chunk * (fast ? 5 : 1));
+    progressRates.set(s,fast?5:1);
+    try{tick(s, chunk * (fast ? 5 : 1));}finally{progressRates.delete(s);}
     if (fast)
       s.run.acceleration.remainingSeconds = round(
         Math.max(0, s.run.acceleration.remainingSeconds - chunk),
@@ -1984,7 +2075,7 @@ export function migrateLegacy(old) {
   };
   s.settings = { ...s.settings, ...old.settings };
   s.contentVersion = C.revision;
-  s.run = freshRun(s.meta, s.settings);
+  s.run = freshRun(s.meta, s.settings,CLASSIC_CAMPAIGN);
   s.run.status = "legacy_setup";
   for (const id of old.meta.upgrades) event(s, "worker_purchase", { id });
   for (const e of Object.values(old.run.equipment)) {
@@ -2006,8 +2097,8 @@ export function getVitalityMigrationXp(combatXp) {
 }
 
 export function startEndless(s) {
-  if (s.run.status !== "cleared" || s.run.wave !== 21 || s.run.endless?.active) return fail("最終襲撃のクリア後に挑戦できます。");
-  s.run.clearRecord ||= {generation:s.meta.generation,wave:21,seconds:Math.floor(s.run.elapsed),augments:[...s.run.augments.selected],badges:challengeResults(s)};
+  if (s.run.status !== "cleared" || s.run.wave !== finalWaveForRun(s) || s.run.endless?.active) return fail("最終襲撃のクリア後に挑戦できます。");
+  s.run.clearRecord ||= {generation:s.meta.generation,wave:finalWaveForRun(s),campaign:campaignForRun(s),seconds:Math.floor(s.run.elapsed),augments:[...s.run.augments.selected],badges:challengeResults(s)};
   if (s.meta.clears === 1) s.meta.firstClear ||= structuredClone(s.run.clearRecord);
   s.run.endless = {active:true,levels:{},incomeTimer:0};
   s.run.status = "preparing";
@@ -2017,7 +2108,7 @@ export function startEndless(s) {
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
 }
-import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.4.11';
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.5.0';
 
 export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
   return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{
@@ -2027,3 +2118,27 @@ export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alrea
     isPaid:source=>!alreadyPaid.has(source.id)&&(s.run.activeAction?.id===source.id?s.run.activeAction:s.run.suspendedActions[source.id])?.kind==='craft',
   });
 }
+
+export function getLegacyRankStatus(s,key){
+ const def=LEGACY_RANKS.find(x=>x.key===key);if(!def)return null;
+ const target=s.run.status==='legacy_setup'?s.run.legacyDraft:s.meta;
+ const owned=Array.from({length:MAX_LEGACY_RANK},(_,i)=>rankId(def,i+1)).filter(id=>target.upgrades.includes(id));
+ const rank=owned.length,nextRank=rank<MAX_LEGACY_RANK?rank+1:null,next=nextRank?upgrades.get(rankId(def,nextRank)):null;
+ const paidTotal=owned.reduce((n,id)=>n+target.paidCosts[id],0);
+ const activeEffect=owned.reduce((n,id)=>n+(s.settings.disabledUpgrades.includes(id)?0:upgrades.get(id).effect[def.stat]),0);
+ const totalEffect=owned.reduce((n,id)=>n+upgrades.get(id).effect[def.stat],0);
+ const check=next?canPurchaseUpgrade(s,next.id):fail('初期実装はR5までです。');
+ return {key,rank,nextRank,nextCost:next?.cost,nextIncrement:next?.effect[def.stat],nextTotal:totalEffect+(next?.effect[def.stat]||0),paidTotal,activeEffect,refundCost:rank?target.paidCosts[rankId(def,rank)]:0,canBuy:check.ok,reason:check.reason,canToggle:s.run.status==='preparing'&&!s.run.augments.offer.length,toggleLabel:owned.some(id=>s.settings.disabledUpgrades.includes(id))?'全段階を有効化':'停止'};
+}
+export function purchaseLegacyRank(s,key){const r=getLegacyRankStatus(s,key),def=LEGACY_RANKS.find(x=>x.key===key);return r?.nextRank?purchaseUpgrade(s,rankId(def,r.nextRank)):fail('追加できるランクがありません。');}
+export function refundLegacyRank(s,key){const r=getLegacyRankStatus(s,key),def=LEGACY_RANKS.find(x=>x.key===key);return r?.rank?refundUpgrade(s,rankId(def,r.rank)):fail('返却できるランクがありません。');}
+export function toggleLegacyRank(s,key){const r=getLegacyRankStatus(s,key),def=LEGACY_RANKS.find(x=>x.key===key);if(!r?.rank||!r.canToggle)return fail('準備中に選択してください。');const owned=Array.from({length:r.rank},(_,i)=>rankId(def,i+1));const enable=owned.some(id=>s.settings.disabledUpgrades.includes(id));s.settings.disabledUpgrades=s.settings.disabledUpgrades.filter(id=>!owned.includes(id));if(!enable)s.settings.disabledUpgrades.push(...owned);s.run.hp=Math.min(s.run.hp,getStats(s).maxHp);return ok();}
+
+export function resetLegacyRankDraft(s){if(s.run.status!=='legacy_setup')return fail('転生開始前だけ振り直せます。');let refunded=0;for(const def of LEGACY_RANKS)for(let n=MAX_LEGACY_RANK;n>=1;n--){const id=rankId(def,n);if(s.run.legacyDraft.upgrades.includes(id)){refunded+=s.run.legacyDraft.paidCosts[id];const result=refundUpgrade(s,id);if(!result.ok)return result;}}return {...ok(),refunded};}
+
+export function cancelLegacyDraft(s){if(s.run.status!=='legacy_setup')return fail('転生開始前だけ変更を取り消せます。');s.run.legacyDraft={upgrades:[...s.meta.upgrades],paidCosts:{...s.meta.paidCosts},points:s.meta.points};return ok();}
+
+export function startRoute(s,id){const r=canEnterRoute(s,id);if(!r.ok)return r;initializeRoutes(s);const d=routeById(id),enemy={...getNextEnemy(s),name:d.name,hp:d.hp,maxHp:d.hp,attack:d.attack,defense:d.defense,trait:d.trait,pressure:null,isBoss:false,invasion:false,country:null,gold:0,hide:0,combatXpBudget:0};s.run.routes.active={id,startedAt:s.run.elapsed};beginRaid(s,enemy);s.settings.paused=false;return {ok:true};}
+export function withdrawRoute(s,reason='撤退・帰還'){if(!s.run.routes?.active)return {ok:false,reason:'地域戦闘中ではありません。'};finishBattleReport(s,s.run.enemy,false);finishRoute(s,false,reason);return {ok:true};}
+
+export const getReservedResources=s=>reserve(s);

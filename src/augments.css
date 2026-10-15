@@ -7,6 +7,7 @@
 .choice-paused{display:flex;align-items:center;gap:6px;white-space:nowrap;border:1px solid #645f43;border-radius:30px;padding:7px 11px;color:#cfbc88;font-size:10px;margin-top:4px}
 .choice-paused .icon{height:12px;width:12px}
 .augment-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+#augment-dialog .augment-choice button[data-exclude-augment]{font-size:12px;line-height:1.5;white-space:normal;overflow-wrap:anywhere;padding:10px 8px;margin-top:8px}
 .augment-choice{--augment-accent:#c5b278;display:flex;flex-direction:column;min-width:0;padding:19px;border:1px solid #716548;border-top:3px solid var(--augment-accent);border-radius:5px;background:#29382c;transition:border-color .2s,transform .2s,box-shadow .2s}
 .augment-choice.martial{--augment-accent:#c48f77;border-color:#705647;background:#342f28}
 .augment-choice.fortress{--augment-accent:#91b5a0;border-color:#49695a;background:#24392e}

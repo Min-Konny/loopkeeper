@@ -1,5 +1,5 @@
-import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus } from "./engine.js?v=0.4.11";
-import { icon } from "./icons.js?v=0.4.11";
+import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus,getAugmentExclusionStatus } from "./engine.js?v=0.5.0";
+import { icon } from "./icons.js?v=0.5.0";
 
 const families = {
   economy: { name: "生産・投資", icon: "gold" },
@@ -37,6 +37,8 @@ export function augmentInsight(state, augment) {
   if (augment.id === 'construction_rush') readiness = (state.run.strategy?.constructionUntil || 0) > state.run.elapsed ? `採集加速 残り${Math.ceil(state.run.strategy.constructionUntil-state.run.elapsed)}秒` : '施設完成で90秒発動';
   if (augment.id === 'weapon_master') readiness = `次の戦闘の防御無視 ${state.run.strategy?.focus || 0}% / 30%`;
   if (augment.id === 'last_stand') readiness = state.run.nextWaveAt-state.run.elapsed <= 45 ? '追い込み時間中' : '襲撃45秒前から発動';
+  if (augment.id === 'fish_export') readiness = state.run.facilities.market && state.run.facilities.smokehouse ? '市場・燻製小屋の準備OK' : '市場と燻製小屋の建設が必要';
+  if (augment.id === 'bulk_shipping' && state.run.facilities.market >= 2) readiness = '市場IIの準備OK・1回に10個以上で有効';
   return {readiness, pairs:pairs.map(id=>AUGMENTS.find(a=>a.id===id)?.name).filter(Boolean)};
 }
 
@@ -61,7 +63,7 @@ export function augmentStatusMarkup(state) {
   return `<details data-detail-key="augment-status" class="strategy-details"><summary>この命のオーグメント · ${selected.length}/${state.run.endless?.active ? "∞" : 4}</summary>${selected.map(a=>`<article><strong>${escape(a.name)}</strong><p>${escape(a.description)}</p>${a.tags ? insightMarkup(state,a) : ''}</article>`).join('')}${synergyGuide(state)}</details>`;
 }
 
-export function renderAugments(state, { offer = false } = {}) {
+export function renderAugments(state, { offer = false,error="" } = {}) {
   const { AUGMENTS } = getCatalog(state);
   const status = getAugmentStatus(state);
   const reroll = getAugmentRerollStatus(state);
@@ -77,14 +79,14 @@ export function renderAugments(state, { offer = false } = {}) {
     return selectedMarkup
       ? `<section class="augment-summary ${status.offer.length ? "has-offer" : ""}"><div class="augment-summary-label">${icon("spark")}この命の方針 ${status.offer.length ? '<button class="button small gold-outline" data-command="show-augments">オーグメントを選ぶ</button>' : '<span>次の命で選び直す</span>'}</div>${selectedMarkup}</section>`
       : status.offer.length ? `<button class="button gold-outline augment-pending" data-command="show-augments">${icon("spark")}オーグメントを選ぶ${icon("arrow")}</button>` : "";
-  return `<div class="dialog-heading"><span class="eyebrow">A DIFFERENT WAY TO SURVIVE</span><button class="icon-button" data-close="augment-dialog" aria-label="閉じる">${icon("close")}</button></div><section class="augment-offer" aria-labelledby="augment-title"><div class="augment-offer-heading"><div><h2 id="augment-title">この命で、何を伸ばす？</h2><p>候補から1つ。効果はこの周回だけ続きます。</p></div><button class="button small muted" data-command="abandon-menu">周回を切り上げる</button><span class="choice-paused">${icon("pause")}選択中は時間停止</span></div>${selectedMarkup}${state.version !== 1 ? `<div class="augment-reroll"><button class="button small gold-outline" data-command="reroll-augments" data-focus="reroll-augments" ${reroll.canReroll ? "" : "disabled"}>リロール · 残り${reroll.remaining}回</button><small>${!reroll.canReroll ? escape(reroll.reason) : "この周回で共有 · 候補を引き直す"}</small></div>` : ""}<div class="augment-choices">${status.offer
+  return `<div class="dialog-heading"><span class="eyebrow">A DIFFERENT WAY TO SURVIVE</span><button class="icon-button" data-close="augment-dialog" aria-label="閉じる">${icon("close")}</button></div><section class="augment-offer" aria-labelledby="augment-title"><div class="augment-offer-heading"><div><h2 id="augment-title">この命で、何を伸ばす？</h2><p>候補から1つ。効果はこの周回だけ続きます。</p></div><button class="button small muted" data-command="abandon-menu">周回を切り上げる</button><span class="choice-paused">${icon("pause")}選択中は時間停止</span></div>${selectedMarkup}${state.version !== 1 ? `<div class="augment-reroll"><button class="button small gold-outline" data-command="reroll-augments" data-focus="reroll-augments" ${reroll.canReroll ? "" : "disabled"}>リロール · 残り${reroll.remaining}回</button><small>${!reroll.canReroll ? escape(reroll.reason) : "この周回で共有 · 候補を引き直す"}</small></div>` : ""}<p data-augment-save-error role="alert" class="danger-text">${escape(error)}</p><div class="augment-choices">${status.offer
     .map((id) => {
       const augment = AUGMENTS.find((item) => item.id === id);
       if (!augment) return "";
       const family = families[augment.family];
-      return `<article class="augment-choice ${augment.family}"><div class="augment-card-top"><span class="augment-symbol">${icon(family.icon)}</span><span class="augment-family">${family.name} · ${augment.pack ? "追加候補" : "基本候補"}</span></div><h3>${escape(augment.name)}</h3><p class="augment-effect">${escape(augment.description)}</p>${insightMarkup(state, augment)}<p class="augment-hint">${escape(augment.hint || hints[augment.id] || "")}</p><button class="button gold-outline" data-choose-augment="${augment.id}" data-focus="augment-${augment.id}" aria-label="${escape(augment.name)}を選ぶ">この方針を選ぶ ${icon("arrow")}</button></article>`;
+      return `<article class="augment-choice ${augment.family}"><div class="augment-card-top"><span class="augment-symbol">${icon(family.icon)}</span><span class="augment-family">${family.name} · ${augment.pack ? "追加候補" : "基本候補"}</span></div><h3>${escape(augment.name)}</h3><p class="augment-effect">${escape(augment.description)}</p>${insightMarkup(state, augment)}<p class="augment-hint">${escape(augment.hint || hints[augment.id] || "")}</p><button class="button gold-outline" data-choose-augment="${augment.id}" data-focus="augment-${augment.id}" aria-label="${escape(augment.name)}を選ぶ">この方針を選ぶ ${icon("arrow")}</button>${state.version!==1?`<button class="button small muted" data-exclude-augment="${augment.id}" ${getAugmentExclusionStatus(state,augment.id).canExclude?"":"disabled"}>この人生の候補から外す（再抽選1回）</button>`:""}</article>`;
     })
     .join(
       "",
-    )}</div>${synergyGuide(state)}<div class="augment-offer-footer"><span>${icon("memory")}解放した自動化は、どの方針でも使えます。</span></div></section>`;
+    )}</div>${synergyGuide(state)}<div class="augment-offer-footer">${state.version!==1?`<p class="fine-print">除外はこの人生で1候補だけ。再抽選と同じ回数を使います。${state.run.augments.excluded?.length?"除外中："+state.run.augments.excluded.map(id=>escape(AUGMENTS.find(a=>a.id===id)?.name||id)).join("・"):getAugmentExclusionStatus(state,state.run.augments.offer[0]).reason||"除外せず、そのまま選んでも進められます。"}</p>`:""}<span>${icon("memory")}解放した自動化は、どの方針でも使えます。</span></div></section>`;
 }

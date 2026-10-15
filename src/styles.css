@@ -4869,3 +4869,23 @@ dialog h2 {
 @media (max-width: 690px) {
   .prep-status button { width: 40px; height: 40px; }
 }
+
+.free-features p {display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.free-features p span {min-width:0;}
+.free-features .button {flex-shrink:0;min-height:36px;}
+
+.setup-upgrades > .free-features {grid-column:1/-1;}
+
+.setup-upgrades > .legacy-upgrade-group {grid-column:1/-1;margin:0;}
+.setup-upgrades > [data-reset-ranks], .setup-upgrades > .fine-print {grid-column:1/-1;}
+.rank-card .upgrade-details small {display:block;}
+
+.run-result {padding:12px;margin:12px 0;border:1px solid var(--line);border-radius:8px;background:var(--panel);} .run-result h3{margin:0 0 8px;} .run-result p{margin:6px 0;font-size:13px;} .run-result small{display:block;color:var(--muted);font-size:11px;}
+
+.gear-panel button{min-height:44px;margin:4px 2px;white-space:normal}.gear-panel small,.gear-panel output{display:block;overflow-wrap:anywhere}.gear-panel summary{min-height:44px;cursor:pointer}.gear-panel [aria-pressed="true"]{border-color:#c9ad6b;background:#384738}.gear-panel p{line-height:1.6}.gear-panel h3{margin-top:18px}
+
+.magic-battle-readout{font-size:12px;line-height:1.5;overflow-wrap:anywhere;margin:4px 0}.source-magic{background:#bd995e}
+
+.companion-codex summary{min-height:44px;cursor:pointer}.companion-entry{border-top:1px solid #455444;padding:10px 0}.companion-entry h3{display:flex;align-items:center;gap:6px}.companion-entry h3 svg{width:20px;height:20px}.companion-entry p{line-height:1.5;margin:6px 0}.companion-entry button{min-height:44px;white-space:normal}.companion-entry [aria-pressed="true"]{border-color:#c9ad6b;background:#384738}.source-pet{background:#9bbf7c}
+
+.gear-slot-line{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}.gear-slot-line strong{flex-basis:100%}.accessory-codex-entry,.build-preset-entry{border-top:1px solid var(--line);padding:10px 0}.build-presets input{max-width:100%;width:100%;margin:6px 0}.accessory-codex-entry small{display:block}.accessory-codex summary{margin:12px 0}#build-restore-dialog{max-height:90vh;overflow:auto}#build-restore-dialog li{margin:5px 0}

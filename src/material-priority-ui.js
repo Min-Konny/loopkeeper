@@ -1,11 +1,12 @@
-import { icon } from './icons.js?v=0.4.11';
-import { getCatalog, resourceKnown, getUnlocks, isLegacy, setMaterialPriority } from './engine.js?v=0.4.11';
-import { commitStoredGameEdit } from './save-storage.js?v=0.4.11';
+import {hasUpgrade}from './free-features.js?v=0.5.0';
+import { icon } from './icons.js?v=0.5.0';
+import { getCatalog, resourceKnown, getUnlocks, isLegacy, setMaterialPriority } from './engine.js?v=0.5.0';
+import { commitStoredGameEdit } from './save-storage.js?v=0.5.0';
 export function materialPriorityChoices(state) {
   return Object.entries(getCatalog(state).RESOURCES).filter(([id]) => isLegacy(state) || resourceKnown(state, id) && (id !== 'gold' || getUnlocks(state).facilities)).map(([id, resource]) => ({ id, name: resource.name }));
 }
 export function prepareMaterialPriority(state) {
-  if (!state.meta.upgrades.includes('action_queue')) return {ok:false,reason:'行動予約を解放してください。'};
+  if (!hasUpgrade(state,"action_queue")) return {ok:false,reason:'行動予約を解放してください。'};
   const allowed = new Set(materialPriorityChoices(state).map(resource => resource.id));
   return {ok:true, proposal:{state, run:state.run, originalJSON:JSON.stringify(state.settings.craftMaterialPriority || []), draft:[...(state.settings.craftMaterialPriority || [])], error:''}};
 }

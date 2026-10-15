@@ -1,8 +1,8 @@
-import { getPlayerStrike } from './engine.js?v=0.4.11';
-import { equipmentMaterial } from './visual-design.js?v=0.4.11';
-import { battleSound } from "./presentation.js?v=0.4.11";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.4.11";
-import { icon } from "./icons.js?v=0.4.11";
+import { getPlayerStrike } from './engine.js?v=0.5.0';
+import { equipmentMaterial } from './visual-design.js?v=0.5.0';
+import { battleSound } from "./presentation.js?v=0.5.0";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.5.0";
+import { icon } from "./icons.js?v=0.5.0";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -23,7 +23,7 @@ function createView(dialog) {
       <header class="battle-heading">
         <div><span class="battle-wave" data-battle="wave"></span><h2 id="battle-title">野営地を防衛中</h2></div>
         <span class="battle-state" data-battle="state"></span><button class="button small muted" data-command="abandon-menu">周回を切り上げる</button>
-      </header>
+      </header><p data-battle="magic-readout" class="magic-battle-readout" hidden></p>
       <div class="battle-field"><div class="boss-arrival" data-battle="boss-arrival" aria-hidden="true"><small>強敵襲来</small><strong data-battle="boss-arrival-name"></strong></div>
         <article class="battle-fighter battle-player" data-battle="player-card">
           ${portrait("player", "shield", `<span class="battle-sigil">${icon("flame")}</span>`)}
@@ -369,7 +369,7 @@ export function renderBattle(dialog, state) {
   }
   setText(
     el.wave,
-    `第 ${enemy.wave} 波${enemy.isBoss ? " · BOSS" : ""}${enemy.invasion ? " · 国家軍が加勢" : ""}`,
+    run.routes?.active ? "地域遠征（本線WAVE "+run.wave+"）" : `第 ${enemy.wave} 波${enemy.isBoss ? " · BOSS" : ""}${enemy.invasion ? " · 国家軍が加勢" : ""}`,
   );
   setText(el.state, paused ? "時間停止中" : "自動戦闘");
   setText(
@@ -399,6 +399,7 @@ export function renderBattle(dialog, state) {
         : ""),
   );
   const preview = getCombatPreview(state);
+  if(el['magic-readout']){const m=run.magicState,visible=state.version===2&&m&&(run.equipment.weapon?.id==='ember_staff'||run.resources.spark_catalyst||run.resources.ward_essence);el['magic-readout'].hidden=!visible;if(visible)setText(el['magic-readout'],'MP '+Math.floor(m.mana)+'/30 ・ 詠唱 '+m.casts+' / 爆発 '+m.detonations+' ・ 触媒 '+(run.resources.spark_catalyst||0)+' / 護符液 '+(run.resources.ward_essence||0));}
   el['guardhouse-sign'].hidden = stats.support <= 0;
   el['archery-sign'].hidden = (stats.ranged || 0) <= 0;
   setText(el['ranged-value'], `${number((stats.ranged || 0)*(enemy.trait==='flying'?2.5:1))}${enemy.trait==='flying'?' · 対空':''}`);

@@ -1,13 +1,13 @@
 export const getActionYields = (s,d) => isLegacy(s) ? d.yields || {} : mvp.getActionYields(s,d);
 export const getPlayerStrike = s => isLegacy(s) ? {attack:getStats(s).attack,armor:(s.run.enemy || getNextEnemy(s)).defense,damage:Math.max(1,getStats(s).attack-(s.run.enemy || getNextEnemy(s)).defense)} : mvp.getPlayerStrike(s);
-export { enqueueConditional } from './mvp-engine.js?v=0.4.11';
-import * as legacy from "./legacy-engine.js?v=0.4.11";
-import * as mvp from "./mvp-engine.js?v=0.4.11";
-import { validateSave } from "./save-validation.js?v=0.4.11";
-export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.4.11";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.4.11";
-export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.4.11";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.4.11";
+export { enqueueConditional } from './mvp-engine.js?v=0.5.0';
+import * as legacy from "./legacy-engine.js?v=0.5.0";
+import * as mvp from "./mvp-engine.js?v=0.5.0";
+import { validateSave } from "./save-validation.js?v=0.5.0";
+export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.5.0";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.5.0";
+export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.5.0";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.5.0";
 export {
   SKILLS,
   getSkillProgress,
@@ -24,12 +24,12 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.4.11";
+} from "./mvp-engine.js?v=0.5.0";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
   const recipes = (isLegacy(s) ? legacy : mvp).RECIPES;
-  const single = id => { const d = recipes.find(r => r.id === id); return d?.equipment || d?.facility || d?.endlessFacility; };
+  const single = id => { const d = recipes.find(r => r.id === id); return d?.equipment || d?.facility || d?.endlessFacility || d?.accessory; };
   const replacements = new Map();
   function uniqueSingles(entries, recordLinks = false) {
     const seen = new Map();
@@ -276,6 +276,8 @@ export const migrateLegacy = (...args) =>
     ? legacy.migrateLegacy(...args)
     : mvp.migrateLegacy(...args);
 
+export const getAugmentExclusionStatus=(s,id)=>isLegacy(s)?{limit:0,remaining:0,canExclude:false,reason:'旧形式では候補除外を使えません。'}:mvp.getAugmentExclusionStatus(s,id);
+export const excludeAugment=(s,id)=>isLegacy(s)?{ok:false,reason:'旧形式では候補除外を使えません。'}:mvp.excludeAugment(s,id);
 export const getCatalog = (s) => (isLegacy(s) ? legacy : mvp);
 export function getCombatPreview(s) {
   const e = s.run.enemy || getNextEnemy(s),
@@ -309,3 +311,16 @@ export const startEndless = s => isLegacy(s) ? {ok:false,reason:"次の世代か
 export const getActionXp = (...args) => mvp.getActionXp(...args);
 
 export const getStartingResources = s => isLegacy(s) ? {} : mvp.getStartingResources(s);
+
+export const getLegacyRankStatus=(s,key)=>isLegacy(s)?null:mvp.getLegacyRankStatus(s,key);
+export const purchaseLegacyRank=(s,key)=>isLegacy(s)?{ok:false,reason:'次の世代から利用できます。'}:mvp.purchaseLegacyRank(s,key);
+export const refundLegacyRank=(s,key)=>isLegacy(s)?{ok:false,reason:'次の世代から利用できます。'}:mvp.refundLegacyRank(s,key);
+export const toggleLegacyRank=(s,key)=>isLegacy(s)?{ok:false,reason:'次の世代から利用できます。'}:mvp.toggleLegacyRank(s,key);
+
+export const resetLegacyRankDraft=s=>isLegacy(s)?{ok:false,reason:'次の世代から利用できます。'}:mvp.resetLegacyRankDraft(s);
+
+export const cancelLegacyDraft=s=>isLegacy(s)?{ok:false,reason:'次の世代から利用できます。'}:mvp.cancelLegacyDraft(s);
+
+export {startRoute,withdrawRoute}from './mvp-engine.js?v=0.5.0';
+
+export {getReservedResources}from './mvp-engine.js?v=0.5.0';

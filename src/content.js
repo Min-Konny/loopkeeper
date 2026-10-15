@@ -1,6 +1,12 @@
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.4.11';
-import { REINFORCEMENTS } from './endless.js?v=0.4.11';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.4.11';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.5.0';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.5.0';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.5.0';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.5.0';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.5.0';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.5.0';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.5.0';
+import { REINFORCEMENTS } from './endless.js?v=0.5.0';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.5.0';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -2829,7 +2835,7 @@ export const CONTENT = {
       "family": "economy",
       "pack": "economy_augments",
       "values": {
-        "goldPerWood": 0.15
+        "goldPerWood": 0.6
       },
       "scope": "No hired-worker trigger; no sale required",
       "requiresPurchasedWorker": false,
@@ -3590,3 +3596,15 @@ export const CONTENT = {
 CONTENT.processing.push(...REINFORCEMENTS);
 
 CONTENT.legacy.push(...STARTING_UPGRADES);
+CONTENT.facilities.push(...FISH_FACILITIES);
+CONTENT.augments.push(...TRADE_AUGMENTS);
+
+CONTENT.legacy.push(...INVESTMENT_UPGRADES);
+for(const rank of LEGACY_RANKS)delete CONTENT.legacy.find(x=>x.id===rankId(rank,2)).unlock.bestWave;
+CONTENT.legacy.push(...EXTRA_LEGACY_RANKS);
+
+CONTENT.equipment.push(...WEAPONS);CONTENT.processing.push(...ACCESSORY_RECIPES);
+
+WEAPONS.push(MAGIC_WEAPON);CONTENT.equipment.push(MAGIC_WEAPON);CONTENT.resources.push(...ALCHEMY_RESOURCES);CONTENT.processing.push(...ALCHEMY_RECIPES);CONTENT.augments.push(...MAGIC_AUGMENTS);
+
+CONTENT.resources.push(...FARM_RESOURCES);CONTENT.actions.push(FARM_ACTION);CONTENT.facilities.push(FARM_FACILITY);CONTENT.processing.push(FARM_RECIPE);CONTENT.workers.find(w=>w.id==='foraging_worker').resourceChoices.push('fodder');CONTENT.market.push({id:'buy_eggs',name:'卵を購入',direction:'buy',resource:'eggs',quantity:10,gold:30,discountEligible:false});

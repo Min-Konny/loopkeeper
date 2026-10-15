@@ -24,10 +24,10 @@ export function reinforcementEffect(id, rank, base) {
   if(id==='archery_tower') e.rangedAttack=(e.rangedAttack||0)+rank*30;
   return e;
 }
-export function endlessEnemy(wave, encounters) {
-  const n=wave-21, boss=wave%3===0;
-  const template=encounters[18+(n-1)%3];
-  const king=encounters[20];
+export function endlessEnemy(wave, encounters,anchor=21) {
+  const n=wave-anchor, boss=wave%3===0;
+  const template=encounters[anchor-3+(n-1)%3];
+  const king=encounters[anchor-1];
   const trait=['combo','flying','armor','heavy'][(n-1)%4];
   const scale=(value,rate)=>Math.min(1e8,Math.ceil(value*.9*rate**Math.min(n,400)*(boss?1.12:1)));
   return {...template,id:`endless_wave_${wave}`,name:`${boss?'深夜の主':'終わらぬ夜'} · ${{combo:'群れの猛攻',flying:'空からの襲撃',armor:'鋼の軍勢',heavy:'巨獣の進撃'}[trait]}`,wave,chapter:7,boss,isBoss:boss,trait,

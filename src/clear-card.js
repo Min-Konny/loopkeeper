@@ -1,5 +1,6 @@
-import { CHALLENGES, challengeResults } from './strategy.js?v=0.4.11';
-import { getCatalog } from './engine.js?v=0.4.11';
+import {finalWaveForRun}from './campaign-rules.js?v=0.5.0';
+import { CHALLENGES, challengeResults } from './strategy.js?v=0.5.0';
+import { getCatalog } from './engine.js?v=0.5.0';
 export function clearRecord(state, endless = false) {
   const { AUGMENTS } = getCatalog(state);
   if (endless) {
@@ -8,7 +9,7 @@ export function clearRecord(state, endless = false) {
   }
   const saved = state.run.clearRecord;
   if (!saved && state.run.status !== 'cleared') return null;
-  return { badges:saved?.badges || challengeResults(state), generation:saved?.generation || state.meta.generation, wave:21, seconds:saved?.seconds ?? Math.floor(state.run.elapsed), augments:(saved?.augments || state.run.augments.selected).map(id=>AUGMENTS.find(a=>a.id===id)?.name).filter(Boolean) };
+  return { badges:saved?.badges || challengeResults(state), generation:saved?.generation || state.meta.generation, wave:saved?.wave??finalWaveForRun(state), seconds:saved?.seconds ?? Math.floor(state.run.elapsed), augments:(saved?.augments || state.run.augments.selected).map(id=>AUGMENTS.find(a=>a.id===id)?.name).filter(Boolean) };
 }
 export function drawClearCard(canvas, record) {
   canvas.width = 1200; canvas.height = 800;

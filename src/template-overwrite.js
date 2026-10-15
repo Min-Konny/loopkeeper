@@ -1,9 +1,10 @@
-import { getCatalog } from './engine.js?v=0.4.11';
-import { commitStoredGameEdit } from './save-storage.js?v=0.4.11';
-import { conditionLabel } from './queue-conditions.js?v=0.4.11';
+import {hasUpgrade}from './free-features.js?v=0.5.0';
+import { getCatalog } from './engine.js?v=0.5.0';
+import { commitStoredGameEdit } from './save-storage.js?v=0.5.0';
+import { conditionLabel } from './queue-conditions.js?v=0.5.0';
 
 const fail = reason => ({ ok: false, reason });
-const enabled = state => state.version === 2 && state.meta.upgrades.includes('queue_templates') && !state.settings.disabledUpgrades.includes('queue_templates');
+const enabled = state => state.version === 2 && hasUpgrade(state,"queue_templates") && !state.settings.disabledUpgrades.includes('queue_templates');
 const queueGoals = state => state.run.queue.map(({ id, count, kind, until }) => ({ id, count, kind, ...(until ? { until: { ...until } } : {}) }));
 
 export function prepareTemplateOverwrite(state, index) {

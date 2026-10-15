@@ -1,7 +1,8 @@
-import { trainingCandidates } from './prerequisite-training.js?v=0.4.11';
-import { getActionXp } from './engine.js?v=0.4.11';
-import * as old from "./legacy-planner.js?v=0.4.11";
-import { orderRecipeMaterials } from './engine.js?v=0.4.11';
+import {hasUpgrade}from './free-features.js?v=0.5.0';
+import { trainingCandidates } from './prerequisite-training.js?v=0.5.0';
+import { getActionXp } from './engine.js?v=0.5.0';
+import * as old from "./legacy-planner.js?v=0.5.0";
+import { orderRecipeMaterials } from './engine.js?v=0.5.0';
 import {
   isLegacy,
   getCatalog,
@@ -20,12 +21,12 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.4.11";
+} from "./engine.js?v=0.5.0";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
   if (isLegacy(s)) return old.planCraft(s, id, count);
-  if (!s.meta.upgrades.includes("action_queue"))
+  if (!hasUpgrade(s,"action_queue"))
     return fail("行動予約を解放してください。");
   const d = RECIPES.find((x) => x.id === id);
   if (!d || !isKnown(s, d)) return fail("未発見の製作です。");
@@ -120,7 +121,7 @@ export function planCraft(s, id, count = 1) {
       inventory[r] = (inventory[r] || 0) + v * n;
   }
   try {
-    craft(d, d.equipment || d.facility || d.endlessFacility ? 1 : count);
+    craft(d, d.equipment || d.facility || d.endlessFacility || d.accessory ? 1 : count);
     return {
       ok: true,
       reason: "",
@@ -153,7 +154,7 @@ export function queueAction(s, id, count, position = "end") {
   const d = getCatalog(s).RECIPES.find(r => r.id === id);
   const existing = (d?.equipment || d?.facility) ? s.run.queue.findIndex(q => q.id === id) : -1;
   if (position === "front" && existing >= 0) {
-    if (!s.meta.upgrades.includes("action_queue") || s.run.status !== "preparing") return fail("準備中に予約してください。");
+    if (!hasUpgrade(s,"action_queue") || s.run.status !== "preparing") return fail("準備中に予約してください。");
     const paidGoalId = !isLegacy(s) && s.run.activeAction?.kind === "craft" ? s.run.activeAction.goalId : undefined;
     for (let index = existing; index > 0; index--) moveQueuedAction(s, index, -1);
     if (paidGoalId !== undefined) s.run.activeAction.goalId = paidGoalId;
@@ -177,12 +178,12 @@ export function queueCraft(s, id, position = "end", count = 1) {
   s.settings.disabledUpgrades = s.settings.disabledUpgrades.filter(
     (x) => x !== "action_queue",
   );
-  const result = queueAction(s, id, d.equipment || d.facility || d.endlessFacility ? 1 : count, position);
+  const result = queueAction(s, id, d.equipment || d.facility || d.endlessFacility || d.accessory ? 1 : count, position);
   if (!result.ok) {
     s.settings.disabledUpgrades = previousDisabled;
     return fail(result.reason);
   }
-  return { ok: true, reason: "", moved: result.moved, steps: [{ id, count: d.equipment || d.facility || d.endlessFacility ? 1 : count }] };
+  return { ok: true, reason: "", moved: result.moved, steps: [{ id, count: d.equipment || d.facility || d.endlessFacility || d.accessory ? 1 : count }] };
 }
 
 
@@ -210,7 +211,7 @@ export function queueWork(s, id, count = 1, position = "end") {
 // One shared check for warnings and recovery; already-paid crafts must finish.
 export function blockedReservation(s) {
   const first = s.run.queue[0];
-  if (isLegacy(s) || !s.meta.upgrades.includes('action_queue') || s.run.status !== 'preparing' || !first || s.run.activeAction?.kind === 'craft' || s.run.queueManaged && s.run.activeAction || s.settings.disabledUpgrades.includes('action_queue')) return null;
+  if (isLegacy(s) || !hasUpgrade(s,"action_queue") || s.run.status !== 'preparing' || !first || s.run.activeAction?.kind === 'craft' || s.run.queueManaged && s.run.activeAction || s.settings.disabledUpgrades.includes('action_queue')) return null;
   const check = first.kind === 'goal' ? resolveGoal(s, first.id) : canStartAction(s, first.id, true);
   return check.ok ? null : check;
 }

@@ -1,7 +1,11 @@
-import { getStartingResources } from './engine.js?v=0.4.11';
-import { challengesMarkup } from './strategy-ui.js?v=0.4.11';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.4.11";
-import { CONTENT as C } from "./content.js?v=0.4.11";
+import {finalWaveForRun}from './campaign-rules.js?v=0.5.0';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.5.0';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.5.0';
+import {hasUpgrade}from './free-features.js?v=0.5.0';
+import { getStartingResources } from './engine.js?v=0.5.0';
+import { challengesMarkup } from './strategy-ui.js?v=0.5.0';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.5.0";
+import { CONTENT as C } from "./content.js?v=0.5.0";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -17,7 +21,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.4.11";
+} from "./engine.js?v=0.5.0";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -32,6 +36,7 @@ const button = (text, attr, disabled = false) =>
   `<button class="button small gold-outline" ${attr} ${disabled ? "disabled" : ""}>${text}</button>`;
 const setupCategories = [
   {id:"starting",name:"備蓄",kinds:["starting_resources"]},
+  {id:"investment",name:"生産・取引",kinds:["investment"]},
   { id: "combat", name: "戦闘", kinds: ["combat"] },
   { id: "automation", name: "自動化・人員", kinds: ["automation", "worker"] },
   { id: "augment", name: "オーグメント", kinds: ["augment_pack", "augment_reroll"] },
@@ -49,7 +54,7 @@ export function setupMarkup(s, category = "combat") {
       },
     };
   const selected = setupCategories.find(c => c.id === category) || setupCategories[0];
-  return `<div class="setup-header"><h2 id="death-title">次の命への継承</h2><div class="setup-points">残り <strong>${d.points} pt</strong></div></div><div class="setup-tabs" role="tablist" aria-label="継承の分類">${setupCategories.map(c => `<button role="tab" id="setup-tab-${c.id}" aria-selected="${c.id === selected.id}" aria-controls="setup-upgrades" data-setup-category="${c.id}">${c.name}</button>`).join("")}</div><div class="setup-upgrades" id="setup-upgrades" role="tabpanel" aria-labelledby="setup-tab-${selected.id}">${LEGACY_UPGRADES.filter(u => selected.kinds.includes(u.kind)).map(
+  return `<div class="setup-header"><h2 id="death-title">次の命への継承</h2><div class="setup-points">残り <strong>${d.points} pt</strong></div></div><div class="setup-tabs" role="tablist" aria-label="継承の分類">${setupCategories.map(c => `<button role="tab" id="setup-tab-${c.id}" aria-selected="${c.id === selected.id}" aria-controls="setup-upgrades" data-setup-category="${c.id}">${c.name}</button>`).join("")}</div><div class="setup-upgrades" id="setup-upgrades" role="tabpanel" aria-labelledby="setup-tab-${selected.id}">${['combat','investment'].includes(selected.id)?legacyRanksMarkup(s,true,selected.id==='combat'?'combat':'production'):LEGACY_UPGRADES.filter(u => selected.kinds.includes(u.kind)&&!isFreeFeature(u.id)).map(
     (u) => {
       const owned = d.upgrades.includes(u.id),
         allowed = canPurchaseUpgrade(preview, u.id);
@@ -60,7 +65,7 @@ export function setupMarkup(s, category = "combat") {
     },
   ).join(
     "",
-  )}</div>${challengesMarkup(s)}<div class="setup-footer"><section class="starting-grant"><strong>次の転生で受け取る資源</strong><div>${Object.keys(getStartingResources(s)).length ? Object.entries(getStartingResources(s)).map(([id,n])=>`<span>${esc(RESOURCES[id]?.name || id)} <b>${n}</b></span>`).join("") : "初期支給なし"}</div><small>転生を確定した時だけ支給。現在の手持ちは持ち越しません。</small></section>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
+  )}${['automation','time'].includes(selected.id)?freeFeatureMarkup(s):''}</div>${challengesMarkup(s)}<div class="setup-footer"><p class="fine-print campaign-transition">次の人生は本編24波。現在の人生は本編${finalWaveForRun(s)}波の構成で、過去のクリア記録・獲得済み報酬は引き継ぎます。</p><p data-setup-save-error role="alert" class="danger-text"></p><section class="starting-grant"><strong>次の転生で受け取る資源</strong><div>${Object.keys(getStartingResources(s)).length ? Object.entries(getStartingResources(s)).map(([id,n])=>`<span>${esc(RESOURCES[id]?.name || id)} <b>${n}</b></span>`).join("") : "初期支給なし"}</div><small>転生を確定した時だけ支給。現在の手持ちは持ち越しません。</small></section>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button muted full-width" data-cancel-draft="1" data-focus="cancel-draft">今回の配分変更を取り消す</button><button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
 }
 // Keep the nearest unanswered request visible while working in another tab.
 export function diplomacyDeadlineMarkup(s) {
@@ -97,9 +102,9 @@ export function diplomacyMarkup(s, marketSide = "buy", marketCount = 1) {
     `<div class="market-heading"><h3>市場</h3><span>金貨 ${Number(s.run.resources.gold.toFixed(2))}</span></div>${
       !s.run.facilities.market
         ? "<p>村に市場を建設すると取引できます。</p>"
-        : `<div class="market-tabs" role="tablist" aria-label="売買の切り替え"><button role="tab" aria-selected="${marketSide === 'buy'}" data-market-side="buy">買う</button><button role="tab" aria-selected="${marketSide === 'sell'}" data-market-side="sell">売る</button></div><div class="market-options"><label>数量<select id="market-count" data-focus="market-count">${[1,10,100].map(n=>`<option value="${n}" ${marketCount === n ? 'selected' : ''}>${n}個</option>`).join('')}</select></label><small>${marketSide === 'sell' ? '売値は買値より低くなります。' : '発見済みの品を購入できます。'}</small></div><div class="market-list" role="tabpanel" aria-label="${marketSide === 'sell' ? '売る' : '買う'}">${C.resources.filter(r=>r.id !== 'gold' && resourceKnown(s,r.id)).map(r=>{
+        : `<div class="market-tabs" role="tablist" aria-label="売買の切り替え"><button role="tab" aria-selected="${marketSide === 'buy'}" data-market-side="buy">買う</button><button role="tab" aria-selected="${marketSide === 'sell'}" data-market-side="sell">売る</button></div><div class="market-options"><label>数量<select id="market-count" data-focus="market-count">${[1,10,100,"all"].map(n=>`<option value="${n}" ${marketCount === n ? 'selected' : ''}>${n === 'all' ? '全て' : n+'個'}</option>`).join('')}</select></label><small>${marketSide === 'sell' ? '売値は買値より低くなります。' : '発見済みの品を購入できます。'}</small></div><div class="market-list" role="tabpanel" aria-label="${marketSide === 'sell' ? '売る' : '買う'}">${C.resources.filter(r=>r.id !== 'gold' && resourceKnown(s,r.id)).map(r=>{
           const q=getTradeQuote(s,r.id,marketSide,marketCount);
-          return `<article class="market-item"><div><h4>${esc(r.name)}</h4><p>所持 ${Number(s.run.resources[r.id].toFixed(2))} · ${marketCount}個 → ${q.total}金貨</p></div><div>${button(`${marketCount}個${marketSide === 'sell' ? '売る' : '買う'} · ${q.total}金貨`, `data-trade-resource="${r.id}" data-focus="trade-${r.id}"`, !q.ok)}${!q.ok ? `<small class="trade-reason">${esc(q.reason)}</small>` : ''}</div></article>`;
+          return `<article class="market-item"><div><h4>${esc(r.name)}</h4><p>所持 ${Number(s.run.resources[r.id].toFixed(2))} · ${q.count ?? 0}個 → ${q.total ?? 0}金貨</p></div><div>${button(`${q.count ?? 0}個${marketSide === 'sell' ? '売る' : '買う'} · ${q.total ?? 0}金貨`, `data-trade-resource="${r.id}" data-focus="trade-${r.id}"`, !q.ok)}${!q.ok ? `<small class="trade-reason">${esc(q.reason)}</small>` : ''}</div></article>`;
         }).join('')}</div>${marketSide === 'buy' ? `<div class="market-hire"><strong>傭兵を雇う <small>攻撃 +5</small></strong>${button(s.run.diplomacy.mercenary ? '雇用済み' : `${getSupplyCost(s,'mercenary')}金貨`, 'data-buy-supply="mercenary"', s.run.diplomacy.mercenary || s.run.status !== 'preparing' || s.run.resources.gold < getSupplyCost(s,'mercenary'))}</div>` : ''}`
     }`
   );
@@ -155,7 +160,7 @@ export function automationMarkup(s) {
     out += '<p class="fine-print">自動調理のON/OFF・補充目標は工房で設定できます。</p><button class="button small" data-tab="craft">自動調理を開く</button>';
   if (s.meta.upgrades.includes("processing_worker"))
     out += '<p class="fine-print">加工職人の作業先・補充目標・強化は工房で設定できます。</p><button class="button small" data-tab="craft">加工職人を開く</button>';
-  if (s.meta.upgrades.includes("stock_targets"))
+  if (hasUpgrade(s,"stock_targets"))
     out += `<details><summary>在庫の補充目標</summary>${s.settings.stockTargets.map((x) => `<label class="stock-setting">${esc(label(x.id))}<input type="number" min="0" max="9999" value="${x.count}" data-stock="${x.id}" data-focus="stock-${x.id}"></label>`).join("")}<div class="queue-controls"><select id="stock-resource">${C.resources
       .filter((x) => !["hide", "gold"].includes(x.id) && resourceKnown(s, x.id))
       .map((x) => `<option value="${x.id}">${x.name}</option>`)
@@ -167,7 +172,7 @@ export function automationMarkup(s) {
     : "";
 }
 export function templatesMarkup(s) {
-  if (!s.meta.upgrades.includes("queue_templates")) return "";
+  if (!hasUpgrade(s,"queue_templates")) return "";
   return `<details class="template-controls" data-detail-key="templates"><summary>保存した手順 (${s.meta.templates.length}/8)</summary><div class="queue-controls"><input id="template-name" maxlength="40" placeholder="手順の名前" aria-label="手順の名前">${button("予約を保存", 'data-command="template-save"', !s.run.queue.length || s.meta.templates.length >= 8)}</div>${s.meta.templates.map((t, i) => {
     const p = getTemplatePreview(s, i);
     return `<details class="template-preview" data-detail-key="template-${i}"><summary>${esc(t.name)}<small>追加 ${p.additions.length} · 省略 ${p.items.filter(g => g.status === "skip").length} · 要確認 ${p.items.filter(g => g.status === "blocked").length}</small></summary><ul>${p.items.map(g => `<li class="${g.status}"><span>${g.status === "ready" ? "＋" : g.status === "skip" ? "✓" : "!"} ${esc(g.name)}${g.count > 1 ? ` ×${g.count}` : ""}</span><small>${esc(g.reason)}</small></li>`).join("")}</ul><div class="template-preview-actions">${button(`${p.additions.length}件を追加`, `data-template="${i}"`, !p.ok)}${button("現在の予約で上書き", `data-template-overwrite="${i}" data-focus="template-overwrite-${i}"`, !s.run.queue.length || s.settings.disabledUpgrades.includes("queue_templates"))}${button("手順を削除", `data-template-delete="${i}"`)}${p.reason ? `<small>${esc(p.reason)}</small>` : ""}</div></details>`;

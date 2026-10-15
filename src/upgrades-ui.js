@@ -1,4 +1,6 @@
-import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.4.11';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.5.0';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.5.0';
+import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.5.0';
 import {
   ACCELERATION,
   LEGACY_UPGRADES,
@@ -6,8 +8,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.4.11";
-import { icon } from "./icons.js?v=0.4.11";
+} from "./engine.js?v=0.5.0";
+import { icon } from "./icons.js?v=0.5.0";
 
 const escape = (value) =>
   String(value ?? "").replace(
@@ -72,7 +74,7 @@ export function renderUpgradeSections(state) {
     !state.meta.points &&
     !state.meta.upgrades.length
   )
-    return "";
+    return freeFeatureMarkup(state);
   const acceleration = getAccelerationStatus(state);
   const catalog = getCatalog(state).LEGACY_UPGRADES;
 
@@ -111,11 +113,11 @@ export function renderUpgradeSections(state) {
   function group(id, name, symbol, kinds, description = "", note = "") {
     const upgrades = catalog.filter(
       (upgrade) =>
-        kinds.includes(upgrade.kind),
+        kinds.includes(upgrade.kind) && !(state.version!==1&&isFreeFeature(upgrade.id)),
     );
     if (!upgrades.length) return "";
     return `<section class="legacy-upgrade-group legacy-${id}" aria-labelledby="legacy-${id}-title"><div class="legacy-group-heading">${icon(symbol)}<div><h3 id="legacy-${id}-title">${name}</h3>${description ? `<p>${description}</p>` : ""}</div></div><div class="upgrade-grid">${upgrades.map(card).join("")}</div>${note ? `<p class="workers-info">${note}</p>` : ""}</section>`;
   }
 
-  return `<section class="upgrade-section legacy-upgrades" aria-label="継承ポイントと技能"><div class="points-banner"><div><h3>次の命を支える力</h3><p>クエストの初達成・ボスの初撃破で獲得</p></div><strong>${state.meta.points}<small>継承 pt</small></strong></div>${group("combat", "戦闘の備え", "shield", ["combat"], "序盤の防衛を支え、内政へ時間を回す。")}${group("starting","再出発の備蓄","wood",["starting_resources"],"転生を確定すると初期資源を受け取る。")}${group("automation", "作業を任せる", "tool", ["automation", "worker"])}${group("augment", "周回の選択肢", "spark", ["augment_pack", "augment_reroll"], "選んだ効果はその周回だけ。", "基本6種類は無料。抽選の切り替えは、次の3択から反映。")}${group("time", "周回の復帰", "clock", ["time"], "突破した区間の準備を速める。")}<p class="workers-info">解放した技能・人員・種類は、次の命にも残ります。</p></section>`;
+  return freeFeatureMarkup(state)+`<section class="upgrade-section legacy-upgrades" aria-label="継承ポイントと技能"><div class="points-banner"><div><h3>次の命を支える力</h3><p>クエストの初達成・ボスの初撃破で獲得</p></div><strong>${state.meta.points}<small>継承 pt</small></strong></div>${state.version===1?group("combat", "戦闘の備え", "shield", ["combat"], "序盤の防衛を支え、内政へ時間を回す。"):legacyRanksMarkup(state)}${group("starting","再出発の備蓄","wood",["starting_resources"],"転生を確定すると初期資源を受け取る。")}${group("automation", "作業を任せる", "tool", ["automation", "worker"])}${group("augment", "周回の選択肢", "spark", ["augment_pack", "augment_reroll"], "選んだ効果はその周回だけ。", "基本6種類は無料。抽選の切り替えは、次の3択から反映。")}${group("time", "周回の復帰", "clock", ["time"], "突破した区間の準備を速める。")}<p class="workers-info">解放した技能・人員・種類は、次の命にも残ります。</p></section>`;
 }

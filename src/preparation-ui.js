@@ -1,11 +1,12 @@
-import { getCatalog, getRecipeCost, getSkillProgress, isKnown, getUnlocks, getAugmentStatus } from './engine.js?v=0.4.11';
-import { icon } from './icons.js?v=0.4.11';
+import {hasUpgrade}from './free-features.js?v=0.5.0';
+import { getCatalog, getRecipeCost, getSkillProgress, isKnown, getUnlocks, getAugmentStatus } from './engine.js?v=0.5.0';
+import { icon } from './icons.js?v=0.5.0';
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 export function getPreparation(state) {
   const goal = state.run.queue[0];
   if (!goal || goal.kind !== 'goal' || state.settings.disabledUpgrades.includes('action_queue') || (!state.run.queueManaged && state.run.activeAction?.kind === 'gather')) return null;
-  if (!state.meta.upgrades.includes('action_queue')) return null;
+  if (!hasUpgrade(state,"action_queue")) return null;
   const recipe = getCatalog(state).RECIPES.find(r => r.id === goal.id);
   if (!recipe) return null;
   const batch = state.run.activeAction?.id === goal.id ? state.run.activeAction : state.run.suspendedActions[goal.id];

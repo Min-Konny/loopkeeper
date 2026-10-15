@@ -1,13 +1,27 @@
-import { endlessEnemy } from './endless.js?v=0.4.11';
-import { validMaterialPriority } from './material-priority.js?v=0.4.11';
-import { validCondition } from './queue-conditions.js?v=0.4.11';
-import { CONTENT as C } from "./content.js?v=0.4.11";
+import {validCampaign,campaignForRun,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.5.0';
+import {CONTRACTS,contractById}from './contracts.js?v=0.5.0';
+import {ROUTES,routeById}from './routes.js?v=0.5.0';
+import {farmResource,resourceCap}from './farm-content.js?v=0.5.0';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.5.0';
+import {alchemyResource}from './magic-content.js?v=0.5.0';
+import {validPreset}from './build-presets.js?v=0.5.0';
+import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.5.0';
+import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.5.0';
+import { endlessEnemy } from './endless.js?v=0.5.0';
+import { validMaterialPriority } from './material-priority.js?v=0.5.0';
+import { validCondition } from './queue-conditions.js?v=0.5.0';
+import { CONTENT as C } from "./content.js?v=0.5.0";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
 const integer = (x, min = 0, max = 1e9) =>
   number(x, min, max) && Number.isInteger(x);
 const unique = (xs) => Array.isArray(xs) && new Set(xs).size === xs.length;
+const validMagicState=x=>object(x)&&number(x.mana,0,30)&&number(x.castTimer,0,4)&&number(x.burnTimer,0,1)&&integer(x.burnTicks,0,6)&&number(x.burnPower,0,3)&&number(x.wardCooldown,0,6)&&['casts','detonations','catalystsUsed','wardsUsed'].every(k=>integer(x[k]))&&['burnDamage','spellDamage'].every(k=>number(x[k]))&&x.catalystsUsed<=12&&x.wardsUsed<=12&&x.detonations<=x.casts&&x.detonations<=x.catalystsUsed;
+const validCompanionState=x=>object(x)&&integer(x.woodCount,0,2)&&number(x.bonusWood)&&number(x.foxCooldown,0,8)&&integer(x.foxHits)&&number(x.foxDamage)&&integer(x.turtleCharges,0,2)&&integer(x.turtleBlocks,0,2)&&number(x.turtlePrevented,0,28);
+const validFarm=x=>object(x)&&integer(x.feedUsed)&&integer(x.eggsProduced)&&integer(x.cycles,0,5e8)&&x.eggsProduced===x.cycles*2&&x.feedUsed===x.cycles*2+(x.batch?2:0)&&(x.batch===null||object(x.batch)&&number(x.batch.progress,0,20)&&x.batch.paidFeed===2&&x.batch.quantity===2);
+const validTime=x=>object(x) && (x.game===null||number(x.game)) && (x.real===null||number(x.real));
+const validResult=x=>object(x)&&(x.campaign===undefined||validCampaign(x.campaign))&&integer(x.wave)&&integer(x.wallWave)&&number(x.gameSeconds)&&(x.realSeconds===null||number(x.realSeconds))&&integer(x.pointsGained)&&typeof x.partial==='boolean'&&(x.repeatPoints===undefined||integer(x.repeatPoints,0,4))&&validList(x.freeUnlocks,new Set(FREE_FEATURES.map(f=>f.id)),5)&&(x.wallTime===null||validTime(x.wallTime))&&(x.previousWall===null||integer(x.previousWall,1))&&(x.wallReference===null||validTime(x.wallReference));
 const defs = new Map(
   [...C.actions, ...C.equipment, ...C.processing, ...C.facilities].map((x) => [
     x.id,
@@ -39,10 +53,10 @@ function validBatch(x) {
     number(x.permanentXp)
   );
 }
-function ledger(x, total) {
+function ledger(x, total, free = new Set()) {
   return (
     object(x) &&
-    validList(x.upgrades, upgradeIds, 19) &&
+    validList(x.upgrades, upgradeIds, upgradeIds.size) &&
     object(x.paidCosts) &&
     integer(x.points) &&
     Object.keys(x.paidCosts).length === x.upgrades.length &&
@@ -51,7 +65,7 @@ function ledger(x, total) {
         integer(x.paidCosts[id], 1, 100) &&
         C.legacy
           .find((u) => u.id === id)
-          .unlock.requires?.every((p) => x.upgrades.includes(p)) !== false,
+          .unlock.requires?.every((p) => x.upgrades.includes(p) || free.has(p)) !== false,
     ) &&
     x.points + x.upgrades.reduce((n, id) => n + x.paidCosts[id], 0) === total
   );
@@ -69,18 +83,60 @@ export function validateSave(s) {
     )
       return false;
     const { meta: m, run: r, settings: t } = s;
-    const validClear = x => object(x) && integer(x.generation,1,m.generation) && x.wave===21 && integer(x.seconds) && validList(x.augments,new Set(C.augments.map(a=>a.id)),4) && validList(x.badges,new Set(['independent','architect','champion']),3);
+    if(r.campaign!==undefined&&(!validCampaign(r.campaign)||r.campaign===EXTENDED_CAMPAIGN&&["A1","A2"].includes(s.contentVersion)))return false;
+    const goal=finalWaveForRun(s);
+    if(m.freeFeatures!==undefined && (!validList(m.freeFeatures,new Set(FREE_FEATURES.map(x=>x.id)),5) || m.foundationVersion!==1))return false;
+    if(m.foundationVersion!==undefined && m.foundationVersion!==1)return false;
+    if(m.featureRefundTotal!==undefined && !integer(m.featureRefundTotal,0,m.totalPoints))return false;
+    const validClear = x => object(x) && integer(x.generation,1,m.generation) && (x.campaign===undefined?x.wave===21:validCampaign(x.campaign)&&x.wave===(x.campaign===EXTENDED_CAMPAIGN?24:21)) && integer(x.seconds) && validList(x.augments,new Set(C.augments.map(a=>a.id)),4) && validList(x.badges,new Set(['independent','architect','champion']),3);
+    if(r.results!==undefined){const x=r.results,ids=new Set(FREE_FEATURES.map(f=>f.id));if(!object(x)||!integer(x.startPoints,0,m.totalPoints)||!validList(x.startFeatures,ids,5)||typeof x.partial!=='boolean'||typeof x.timingComplete!=='boolean'||!number(x.activeRealSeconds,0,r.elapsed)||!object(x.arrivals)||!object(x.clears)||(x.previousWall!==null&&!integer(x.previousWall,1))||(x.wallReference!==null&&!validTime(x.wallReference)))return false;for(const map of [x.arrivals,x.clears])if(Object.keys(map).length>30||Object.entries(map).some(([k,v])=>!/^\d+$/.test(k)||!integer(Number(k),1,Math.max(goal,r.wave+1))||!validTime(v)))return false;}
+    if((m.history||[]).some(x=>x.result!==undefined&&!validResult(x.result)))return false;
+    if(m.repeatPoints!==undefined&&!integer(m.repeatPoints,0,Math.min(m.totalPoints,m.generation*4)))return false;
+    if(r.progression!==undefined){const p=r.progression;if(!object(p)||!integer(p.startBestWave,0,Math.min(goal,m.bestWave))||!(p.checkpointAward===null||integer(p.checkpointAward,0,3))||!(p.attemptAward===null||integer(p.attemptAward,0,1))||(p.checkpointAward||0)+(p.attemptAward||0)>(m.repeatPoints||0))return false;if((p.checkpointAward||0)>0&&(p.startBestWave<3||r.wave<p.startBestWave)||p.attemptAward===1&&p.startBestWave<3)return false;}
+    if(m.gearVersion!==undefined&&m.gearVersion!==1)return false;
+    if((m.accessories!==undefined||m.accessorySets!==undefined)&&m.gearVersion!==1)return false;
+    if(m.accessories!==undefined&&!validList(m.accessories,new Set(ACCESSORIES.map(x=>x.id)),ACCESSORIES.length))return false;
+    if(m.accessorySlotsVersion!==undefined&&m.accessorySlotsVersion!==1)return false;
+    if(m.accessorySlotsVersion===1&&(m.gearVersion!==1||m.accessorySets===undefined||!Array.isArray(r.ownedEquipment)))return false;
+    if(m.accessorySets!==undefined){const slots=m.accessorySlotsVersion===1?ACCESSORY_SLOTS:["ring","bracelet"],sets=m.accessorySets;if(!object(sets)||Object.keys(sets).length!==2)return false;for(const phase of ['preparation','combat']){const row=sets[phase];if(!object(row)||Object.keys(row).length!==slots.length)return false;for(const slot of slots)if(row[slot]!==null&&(!m.accessories?.includes(row[slot])||ACCESSORIES.find(x=>x.id===row[slot])?.slot!==slot))return false;}}
+    if((m.buildPresets!==undefined||m.nextBuildPresetId!==undefined||m.presetVersion!==undefined)&&m.presetVersion!==1)return false;
+    if(m.presetVersion===1&&(!Array.isArray(m.buildPresets)||m.buildPresets.length>6||!integer(m.nextBuildPresetId,1)||new Set(m.buildPresets.map(p=>p.id)).size!==m.buildPresets.length||new Set(m.buildPresets.map(p=>p.name)).size!==m.buildPresets.length||m.buildPresets.some(p=>!validPreset(p,C.equipment)||p.id>=m.nextBuildPresetId)))return false;
+    if(r.ownedEquipment!==undefined&&(!validList(r.ownedEquipment,new Set(C.equipment.map(x=>x.id)),C.equipment.length)||r.ownedEquipment.some(id=>defs.get(id)?.campaign&&defs.get(id).campaign!==campaignForRun(s))||Object.values(r.equipment).some(x=>!r.ownedEquipment.includes(x.id))))return false;
+    if(Object.values(r.equipment).some(x=>['orichalcum_bow','orichalcum_crossbow','orichalcum_staff'].includes(x.id)&&!r.ownedEquipment?.includes(x.id)))return false;
+    if(r.playerCombatTimer!==undefined&&!number(r.playerCombatTimer,0,3))return false;
+    if(r.enemy?.buildCombat!==undefined){const b=r.enemy.buildCombat;if(!object(b)||!number(b.critGauge,0,.999999999)||!integer(b.hits))return false;}
+    if(r.enemy?.report&&['playerHits','criticalHits'].some(k=>r.enemy.report[k]!==undefined&&!integer(r.enemy.report[k])))return false;
+    if((r.contracts!==undefined||m.contractVersion!==undefined)&&m.contractVersion!==1)return false;
+    if(m.contractVersion===1){const x=r.contracts,ids=new Set(CONTRACTS.map(d=>d.id));if(!object(x)||!validList(x.completed,ids,2)||new Set(x.completed.map(id=>contractById(id).country)).size!==x.completed.length||x.completed.some(id=>m.bestWave<contractById(id).gate||r.wave<1)||!(x.active===null||contractById(x.active)&&m.bestWave>=contractById(x.active).gate&&r.wave>=1&&!x.completed.some(id=>contractById(id).country===contractById(x.active).country)))return false;}
+    if((r.routes!==undefined||m.routeClears!==undefined)&&m.routeVersion!==1)return false;
+    if(m.routeVersion!==undefined&&m.routeVersion!==1)return false;
+    if(m.routeVersion===1){const ids=new Set(ROUTES.map(x=>x.id)),x=r.routes;if(!validList(m.routeClears,ids,4)||(m.routeClears.length>0&&m.bestWave<3)||!object(x)||!validList(x.cleared,ids,4)||x.cleared.some(id=>!m.routeClears.includes(id))||!(x.active===null||object(x.active)&&routeById(x.active.id)&&!x.cleared.includes(x.active.id)&&r.wave>=3&&number(x.active.startedAt,0,r.elapsed)&&r.elapsed-x.active.startedAt<=30.1&&r.status==='combat')||!(x.last===null||object(x.last)&&routeById(x.last.id)&&typeof x.last.won==='boolean'&&typeof x.last.reason==='string'&&number(x.last.seconds,0,30.1)&&integer(x.last.points,0,4)))return false;}
+    if(m.farmVersion!==undefined&&m.farmVersion!==1)return false;
+    if(r.farmState!==undefined&&!validFarm(r.farmState))return false;
+    if(m.farmVersion===1&&(!validFarm(r.farmState)||typeof t.farmAutoCook!=='boolean'||typeof t.farmOffline!=='boolean'))return false;
+    if(!['fodder','eggs'].every(id=>r.resources[id]===undefined&&m.farmVersion===undefined||number(r.resources[id],0,resourceCap(id))))return false;
+    if(m.magicVersion!==undefined&&m.magicVersion!==1)return false;
+    if(m.magicVersion===1&&(r.magicState===undefined||t.alchemyUse===undefined))return false;
+    if(r.magicState!==undefined&&!validMagicState(r.magicState))return false;
+    if(t.alchemyUse!==undefined&&(!object(t.alchemyUse)||typeof t.alchemyUse.catalyst!=='boolean'||typeof t.alchemyUse.ward!=='boolean'))return false;
+    if(['spark_catalyst','ward_essence'].some(id=>r.resources[id]!==undefined&&!integer(r.resources[id],0,12)))return false;
+    if(m.companionVersion!==undefined&&m.companionVersion!==1)return false;
+    if((m.companions!==undefined||m.activeCompanion!==undefined)&&m.companionVersion!==1)return false;
+    if(r.companionState!==undefined&&!validCompanionState(r.companionState))return false;
+    if(m.companionVersion===1){if(!validList(m.companions,new Set(COMPANIONS.map(p=>p.id)),COMPANIONS.length)||m.companions.some(id=>!companionEligible(s,companionById(id)))||(m.activeCompanion!==null&&!m.companions.includes(m.activeCompanion))||!validCompanionState(r.companionState))return false;}
+    const free=m.foundationVersion===1?new Set([...(m.freeFeatures||[]),...FREE_FEATURES.filter(f=>m.bestWave>=f.wave).map(f=>f.id)]):new Set();
     if (m.firstClear !== undefined && !validClear(m.firstClear)) return false;
+    if(m.firstExtendedClear!==undefined&&(!validClear(m.firstExtendedClear)||m.firstExtendedClear.campaign!==EXTENDED_CAMPAIGN))return false;
     if (m.bestEndlessWave !== undefined && !integer(m.bestEndlessWave,21)) return false;
-    if (r.clearRecord !== undefined && !validClear(r.clearRecord)) return false;
-    if (r.endless !== undefined && (!object(r.endless) || r.endless.active !== true || r.wave < 21 || !validClear(r.clearRecord) || !object(r.endless.levels) || !number(r.endless.incomeTimer,0,15) || Object.entries(r.endless.levels).some(([id,n])=> !C.facilities.some(f=>f.facilityId===id) || !integer(n,0,10000) || (r.facilities[id]||0)<5))) return false;
+    if (r.clearRecord !== undefined && (!validClear(r.clearRecord)||r.clearRecord.wave!==goal)) return false;
+    if (r.endless !== undefined && (!object(r.endless) || r.endless.active !== true || r.wave < goal || !validClear(r.clearRecord) || r.clearRecord.wave!==goal || !object(r.endless.levels) || !number(r.endless.incomeTimer,0,15) || Object.entries(r.endless.levels).some(([id,n])=> !C.facilities.some(f=>f.facilityId===id) || !integer(n,0,10000) || (r.facilities[id]||0)<5))) return false;
     if (m.discovered !== undefined && !validList(m.discovered, new Set([...defs.keys(), 'feature_village', 'feature_diplomacy', 'feature_augments']), 200)) return false;
     if (
       !integer(m.generation, 1) ||
       !integer(m.bestWave) ||
       !integer(m.totalPoints) ||
       !integer(m.clears) ||
-      !ledger(m, m.totalPoints) ||
+      !ledger(m, m.totalPoints,free) ||
       !validSkills(m.skills)
     )
       return false;
@@ -93,7 +149,7 @@ export function validateSave(s) {
       !unique(m.defeatedBosses) ||
       m.defeatedBosses.some(
         (id) =>
-          !C.encounters.some((e) => e.boss && e.id === id) &&
+          ![...C.encounters,...EXTENDED_ENCOUNTERS].some((e) => e.boss && e.id === id) &&
           !/^legacy_boss_wave_\d+$/.test(id),
       )
     )
@@ -127,14 +183,14 @@ export function validateSave(s) {
       ) ||
       !validSkills(r.skills) ||
       !object(r.resources) ||
-      !C.resources.every((x) => number(r.resources[x.id]) || x.id === "fish" && r.resources.fish === undefined && ["A1","A2"].includes(s.contentVersion))
+      !C.resources.every((x) => number(r.resources[x.id]) || farmResource(x.id)&&r.resources[x.id]===undefined&&m.farmVersion===undefined || alchemyResource(x.id)&&r.resources[x.id]===undefined&&m.magicVersion===undefined || x.id === "fish" && r.resources.fish === undefined && ["A1","A2"].includes(s.contentVersion))
     )
       return false;
     if (
       !["preparing", "combat", "dead", "cleared", "legacy_setup"].includes(
         r.status,
       ) ||
-      !integer(r.wave, 0, r.endless?.active ? 1000000 : 21) ||
+      !integer(r.wave, 0, r.endless?.active ? 1000000 : goal) ||
       !number(r.elapsed) ||
       !number(r.nextWaveAt) ||
       !number(r.hp) ||
@@ -143,9 +199,9 @@ export function validateSave(s) {
     )
       return false;
     if (r.training !== undefined && (!object(r.training) || !number(r.training.defense) || !number(r.training.vitality))) return false;
-    if (r.status === "legacy_setup" && !ledger(r.legacyDraft, m.totalPoints))
+    if (r.status === "legacy_setup" && !ledger(r.legacyDraft, m.totalPoints,free))
       return false;
-    if (r.status === "cleared" && r.wave !== 21) return false;
+    if (r.status === "cleared" && r.wave !== goal) return false;
     if (
       r.deathReport !== null &&
       (!object(r.deathReport) ||
@@ -164,6 +220,7 @@ export function validateSave(s) {
         return (
           !d ||
           d.slot !== slot ||
+          (d.campaign&&d.campaign!==campaignForRun(s)) ||
           ["attack", "defense", "maxHp", "speed"].some(
             (k) => (e[k] || 0) !== (d.stats[k] || 0),
           )
@@ -199,7 +256,7 @@ export function validateSave(s) {
       r.autoCraft &&
       (!validBatch(r.autoCraft) ||
         r.autoCraft.channel !== "auto_cook" ||
-        r.autoCraft.id !== "cook_meal")
+        !["cook_meal","egg_stew"].includes(r.autoCraft.id))
     )
       return false;
     if (
@@ -249,7 +306,7 @@ export function validateSave(s) {
     if (r.encounterDepth !== undefined && typeof r.encounterDepth !== "boolean") return false;
     if (m.challengeBadges !== undefined && !validList(m.challengeBadges, new Set(['independent','architect','champion']), 3)) return false;
     if (r.strategy !== undefined && (!object(r.strategy) || !['constructionUntil','focus','playerDamage','facilityDamage'].every(k => number(r.strategy[k])) || r.strategy.focus > 30 || typeof r.strategy.eligible !== 'boolean' || typeof r.strategy.aidUsed !== 'boolean')) return false;
-    const validReport = x => object(x) && ['player','guards','tower','counter','prevented','foodHealing','treatmentHealing','damageTaken','rounds','wave'].every(k => number(x[k]));
+    const validReport = x => object(x) && (x.magic===undefined||number(x.magic)) && (x.magicState===undefined||validMagicState(x.magicState)) && (x.pet===undefined||number(x.pet)) && (x.companion===undefined||validCompanionState(x.companion)&&(x.companion.id===null||!!companionById(x.companion.id))) && ['player','guards','tower','counter','prevented','foodHealing','treatmentHealing','damageTaken','rounds','wave'].every(k => number(x[k]));
     if (r.battleReports !== undefined && (!Array.isArray(r.battleReports) || r.battleReports.length > 8 || r.battleReports.some(x => !validReport(x) || typeof x.enemy !== 'string' || x.enemy.length > 100 || typeof x.won !== 'boolean' || !number(x.remainingHp) || !number(x.maxHp)))) return false;
     if (r.enemy?.report !== undefined && !validReport(r.enemy.report)) return false;
     if (r.enemy?.baseDefense !== undefined && !number(r.enemy.baseDefense)) return false;
@@ -261,6 +318,9 @@ export function validateSave(s) {
       !object(a) ||
       !integer(a.seed, 0, 4294967295) ||
       (a.rerollsUsed !== undefined && !integer(a.rerollsUsed, 0, 4)) ||
+      (a.exclusionVersion!==undefined&&a.exclusionVersion!==1) ||
+      ((a.excluded!==undefined||a.exclusionsUsed!==undefined)&&a.exclusionVersion!==1) ||
+      (a.exclusionVersion===1&&(!validList(a.excluded,new Set(C.augments.map(x=>x.id)),1)||!integer(a.exclusionsUsed,0,1)||a.exclusionsUsed!==a.excluded.length||a.exclusionsUsed>(a.rerollsUsed||0)||a.excluded.some(id=>a.offer.includes(id)||a.selected.includes(id)))) ||
       !validList(a.selected, new Set(C.augments.map((a) => a.id)), r.endless?.active ? C.augments.length : 4) ||
       !validList(a.offer, new Set(C.augments.map((a) => a.id)), 3) ||
       a.offer.some((id) => a.selected.includes(id)) ||
@@ -281,12 +341,13 @@ export function validateSave(s) {
       return false;
     if (r.status === "combat") {
       const e = r.enemy,
-        d = r.endless?.active ? endlessEnemy(r.wave+1,C.encounters) : C.encounters[r.wave];
+        d = r.endless?.active ? endlessEnemy(r.wave+1,encountersForRun(s,C.encounters),goal) : encountersForRun(s,C.encounters)[r.wave];
       if (
         !object(e) ||
         !d ||
         e.id !== d.id ||
         e.wave !== r.wave + 1 ||
+        (r.routes?.active&&(e.xpBudget!==0||e.maxHp!==routeById(r.routes.active.id).hp||e.attack!==routeById(r.routes.active.id).attack||e.defense>routeById(r.routes.active.id).defense||e.trait!==routeById(r.routes.active.id).trait||e.country!==null||e.invasion!==false||e.pressure!=null)) ||
         !number(e.hp, 0, e.maxHp) ||
         !number(e.maxHp, 1) ||
         !number(e.attack) ||
@@ -335,11 +396,11 @@ export function validateSave(s) {
       typeof t.paused !== "boolean" ||
       (t.craftMaterialPriority !== undefined && !validMaterialPriority(t.craftMaterialPriority)) ||
       t.speed !== 1 ||
-      !validList(t.disabledUpgrades, upgradeIds, 19) ||
+      !validList(t.disabledUpgrades, upgradeIds, upgradeIds.size) ||
       !validList(
         t.hiddenRecipes,
         new Set(C.equipment.concat(C.facilities).map((x) => x.id)),
-        47,
+          48,
       ) ||
       !number(t.soundVolume, 0, 1) ||
       (t.musicVolume !== undefined && !number(t.musicVolume, 0, 1)) ||
@@ -350,10 +411,10 @@ export function validateSave(s) {
       !integer(t.foodTarget, 0, 9999) ||
       !integer(t.processingTarget, 0, 9999) ||
       !Array.isArray(t.stockTargets) ||
-      t.stockTargets.length > 17 ||
+      t.stockTargets.length > C.resources.length ||
       t.stockTargets.some(
         (x) =>
-          !C.resources.some((y) => y.id === x.id) || !integer(x.count, 1, 9999),
+          !C.resources.some((y) => y.id === x.id) || !integer(x.count, 1, Math.min(9999,resourceCap(x.id))),
       ) ||
       !object(t.workerTargets)
     )
