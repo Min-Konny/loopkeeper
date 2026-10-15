@@ -1,6 +1,7 @@
 // Rewards follow the previous frontier, so retreating to early waves cannot
 // repeatedly fund a mature build. No award is triggered by rebirth or loading.
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.3';
+import {earlyLoop}from './early-loop.js?v=0.6.4';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.4';
 export const repeatCheckpointValue=wave=>Math.min(3,1+Math.floor(wave/6));
 export function createProgression(meta,finalWave=21){return {startBestWave:Math.min(finalWave,meta.bestWave),checkpointAward:null,attemptAward:null};}
 export function initializeProgression(s){
@@ -15,12 +16,12 @@ function credit(s,amount){
 }
 export function rewardRepeatVictory(s,e){
  initializeProgression(s);const p=s.run.progression;
- if(!p||p.startBestWave<3||s.run.endless?.active||e.country||e.wave<p.startBestWave||p.checkpointAward!==null)return 0;
- return p.checkpointAward=credit(s,repeatCheckpointValue(p.startBestWave));
+ if(!p||p.startBestWave<(earlyLoop(s)?2:3)||s.run.endless?.active||s.run.routes?.active||(e.country&&!(earlyLoop(s)&&p.startBestWave<=12&&e.wave<=12))||e.wave<p.startBestWave||p.checkpointAward!==null)return 0;
+ return p.checkpointAward=credit(s,earlyLoop(s)&&p.startBestWave<=12?Math.min(4,2+Math.floor(p.startBestWave/6)):repeatCheckpointValue(p.startBestWave));
 }
 export function rewardFrontierAttempt(s,e){
  initializeProgression(s);const p=s.run.progression;
- if(!p||p.startBestWave<3||s.run.endless?.active||e.country||p.attemptAward!==null||e.wave<Math.max(4,p.startBestWave)||s.run.wave<Math.max(3,p.startBestWave-1)||!e.report||e.hp>e.maxHp*.5)return 0;
- return p.attemptAward=credit(s,1);
+ if(!p||p.startBestWave<3||s.run.endless?.active||s.run.routes?.active||(e.country&&!(earlyLoop(s)&&p.startBestWave<=12&&e.wave<=12))||p.attemptAward!==null||e.wave<Math.max(4,p.startBestWave)||s.run.wave<Math.max(3,p.startBestWave-1)||!e.report||e.hp>e.maxHp*.5)return 0;
+ return p.attemptAward=credit(s,earlyLoop(s)&&p.startBestWave<=12&&e.wave<=12?2:1);
 }
 export const repeatRunPoints=s=>s.run.progression?(s.run.progression.checkpointAward||0)+(s.run.progression.attemptAward||0):0;

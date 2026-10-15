@@ -1,14 +1,15 @@
 export const getActionYields = (s,d) => isLegacy(s) ? d.yields || {} : mvp.getActionYields(s,d);
 export const getPlayerStrike = s => isLegacy(s) ? {attack:getStats(s).attack,armor:(s.run.enemy || getNextEnemy(s)).defense,damage:Math.max(1,getStats(s).attack-(s.run.enemy || getNextEnemy(s)).defense)} : mvp.getPlayerStrike(s);
-export {startManualRepeat,canStartManualRepeat}from './mvp-engine.js?v=0.6.3';
-export { enqueueConditional } from './mvp-engine.js?v=0.6.3';
-import * as legacy from "./legacy-engine.js?v=0.6.3";
-import * as mvp from "./mvp-engine.js?v=0.6.3";
-import { validateSave } from "./save-validation.js?v=0.6.3";
-export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.6.3";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.6.3";
-export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.6.3";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.6.3";
+export {startManualRepeat,canStartManualRepeat}from './mvp-engine.js?v=0.6.4';
+export { enqueueConditional } from './mvp-engine.js?v=0.6.4';
+import {earlyLoop,earlyDefinition}from './early-loop.js?v=0.6.4';
+import * as legacy from "./legacy-engine.js?v=0.6.4";
+import * as mvp from "./mvp-engine.js?v=0.6.4";
+import { validateSave } from "./save-validation.js?v=0.6.4";
+export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.6.4";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.6.4";
+export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.6.4";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.6.4";
 export {
   SKILLS,
   getSkillProgress,
@@ -25,7 +26,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.6.3";
+} from "./mvp-engine.js?v=0.6.4";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
@@ -281,7 +282,7 @@ export const migrateLegacy = (...args) =>
 
 export const getAugmentExclusionStatus=(s,id)=>isLegacy(s)?{limit:0,remaining:0,canExclude:false,reason:'旧形式では候補除外を使えません。'}:mvp.getAugmentExclusionStatus(s,id);
 export const excludeAugment=(s,id)=>isLegacy(s)?{ok:false,reason:'旧形式では候補除外を使えません。'}:mvp.excludeAugment(s,id);
-export const getCatalog = (s) => (isLegacy(s) ? legacy : mvp);
+export const getCatalog = (s) => isLegacy(s)?legacy:earlyLoop(s)?{...mvp,ACTIONS:mvp.ACTIONS.map(d=>earlyDefinition(s,d)),RECIPES:mvp.RECIPES.map(d=>earlyDefinition(s,d))}:mvp;
 export function getCombatPreview(s) {
   const e = s.run.enemy || getNextEnemy(s),
     stats = getStats(s);
@@ -324,8 +325,8 @@ export const resetLegacyRankDraft=s=>isLegacy(s)?{ok:false,reason:'次の世代�
 
 export const cancelLegacyDraft=s=>isLegacy(s)?{ok:false,reason:'次の世代から利用できます。'}:mvp.cancelLegacyDraft(s);
 
-export {startRoute,withdrawRoute}from './mvp-engine.js?v=0.6.3';
+export {startRoute,withdrawRoute}from './mvp-engine.js?v=0.6.4';
 
-export {getReservedResources}from './mvp-engine.js?v=0.6.3';
+export {getReservedResources}from './mvp-engine.js?v=0.6.4';
 
 export const getClockStatus=s=>isLegacy(s)?{kind:s.run.activeAction?'work':'none',label:s.run.activeAction?.id||'作業なし'}:mvp.getClockStatus(s);

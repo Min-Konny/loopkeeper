@@ -1,7 +1,7 @@
-import { equipmentMaterial } from './visual-design.js?v=0.6.3';
-import { icon } from './icons.js?v=0.6.3';
-import { miningScene } from './mining-scene.js?v=0.6.3';
-import { actionTarget } from './action-target.js?v=0.6.3';
+import { equipmentMaterial } from './visual-design.js?v=0.6.4';
+import { icon } from './icons.js?v=0.6.4';
+import { miningScene } from './mining-scene.js?v=0.6.4';
+import { actionTarget } from './action-target.js?v=0.6.4';
 
 // Decorative work scenes follow the actual selected skill; no separate timer or game state.
 export function workScene(skill, actionId, equipment = {}) {

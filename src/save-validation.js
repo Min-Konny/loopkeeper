@@ -1,19 +1,19 @@
-import {validWorkMilestones}from './work-milestones.js?v=0.6.3';
-import {validTrophies} from './boss-materials.js?v=0.6.3';
-import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.3';
-import {CONTRACTS,contractById}from './contracts.js?v=0.6.3';
-import {validRegionalRewards}from './regional-rewards.js?v=0.6.3';
-import {ROUTES,routeById}from './routes.js?v=0.6.3';
-import {farmResource,resourceCap}from './farm-content.js?v=0.6.3';
-import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.3';
-import {alchemyResource}from './magic-content.js?v=0.6.3';
-import {validPreset}from './build-presets.js?v=0.6.3';
-import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.3';
-import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.3';
-import { endlessEnemy } from './endless.js?v=0.6.3';
-import { validMaterialPriority } from './material-priority.js?v=0.6.3';
-import { validCondition } from './queue-conditions.js?v=0.6.3';
-import { CONTENT as C } from "./content.js?v=0.6.3";
+import {validWorkMilestones}from './work-milestones.js?v=0.6.4';
+import {validTrophies} from './boss-materials.js?v=0.6.4';
+import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.4';
+import {CONTRACTS,contractById}from './contracts.js?v=0.6.4';
+import {validRegionalRewards}from './regional-rewards.js?v=0.6.4';
+import {ROUTES,routeById}from './routes.js?v=0.6.4';
+import {farmResource,resourceCap}from './farm-content.js?v=0.6.4';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.4';
+import {alchemyResource}from './magic-content.js?v=0.6.4';
+import {validPreset}from './build-presets.js?v=0.6.4';
+import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.4';
+import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.4';
+import { endlessEnemy } from './endless.js?v=0.6.4';
+import { validMaterialPriority } from './material-priority.js?v=0.6.4';
+import { validCondition } from './queue-conditions.js?v=0.6.4';
+import { CONTENT as C } from "./content.js?v=0.6.4";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -24,7 +24,7 @@ const validMagicState=x=>object(x)&&number(x.mana,0,30)&&number(x.castTimer,0,4)
 const validCompanionState=x=>object(x)&&integer(x.woodCount,0,2)&&number(x.bonusWood)&&number(x.foxCooldown,0,8)&&integer(x.foxHits)&&number(x.foxDamage)&&integer(x.turtleCharges,0,2)&&integer(x.turtleBlocks,0,2)&&number(x.turtlePrevented,0,28);
 const validFarm=x=>object(x)&&integer(x.feedUsed)&&integer(x.eggsProduced)&&integer(x.cycles,0,5e8)&&x.eggsProduced===x.cycles*2&&x.feedUsed===x.cycles*2+(x.batch?2:0)&&(x.batch===null||object(x.batch)&&number(x.batch.progress,0,20)&&x.batch.paidFeed===2&&x.batch.quantity===2);
 const validTime=x=>object(x) && (x.game===null||number(x.game)) && (x.real===null||number(x.real));
-const validResult=x=>object(x)&&(x.campaign===undefined||validCampaign(x.campaign))&&integer(x.wave)&&integer(x.wallWave)&&number(x.gameSeconds)&&(x.realSeconds===null||number(x.realSeconds))&&integer(x.pointsGained)&&typeof x.partial==='boolean'&&(x.repeatPoints===undefined||integer(x.repeatPoints,0,4))&&validList(x.freeUnlocks,new Set(FREE_FEATURES.map(f=>f.id)),5)&&(x.wallTime===null||validTime(x.wallTime))&&(x.previousWall===null||integer(x.previousWall,1))&&(x.wallReference===null||validTime(x.wallReference));
+const validResult=x=>object(x)&&(x.earlyLoopVersion===undefined||x.earlyLoopVersion===1)&&(x.enemyRemainingPercent===undefined||x.enemyRemainingPercent===null||integer(x.enemyRemainingPercent,0,100))&&(x.campaign===undefined||validCampaign(x.campaign))&&integer(x.wave)&&integer(x.wallWave)&&number(x.gameSeconds)&&(x.realSeconds===null||number(x.realSeconds))&&integer(x.pointsGained)&&typeof x.partial==='boolean'&&(x.repeatPoints===undefined||integer(x.repeatPoints,0,x.earlyLoopVersion===1?6:4))&&validList(x.freeUnlocks,new Set(FREE_FEATURES.map(f=>f.id)),5)&&(x.wallTime===null||validTime(x.wallTime))&&(x.previousWall===null||integer(x.previousWall,1))&&(x.wallReference===null||validTime(x.wallReference));
 const defs = new Map(
   [...C.actions, ...C.equipment, ...C.processing, ...C.facilities].map((x) => [
     x.id,
@@ -44,7 +44,7 @@ const validGoal = (x) =>
   ["goal", "action"].includes(x.kind) && validCondition(x);
 function validBatch(x) {
   return (
-    object(x) &&
+    object(x) && (x.earlyLoopBatch===undefined||x.earlyLoopBatch===1) &&
     (x.paidCost === undefined || object(x.paidCost) && Object.entries(x.paidCost).every(([id,n]) => C.resources.some(r => r.id === id) && number(n))) &&
     defs.has(x.id) &&
     integer(x.instanceId, 1) &&
@@ -97,8 +97,12 @@ export function validateSave(s) {
     const validClear = x => object(x) && integer(x.generation,1,m.generation) && (x.campaign===undefined?x.wave===21:validCampaign(x.campaign)&&x.wave===campaignFinalWave(x.campaign)) && integer(x.seconds) && validList(x.augments,new Set(C.augments.map(a=>a.id)),4) && validList(x.badges,new Set(['independent','architect','champion']),3);
     if(r.results!==undefined){const x=r.results,ids=new Set(FREE_FEATURES.map(f=>f.id));if(!object(x)||!integer(x.startPoints,0,m.totalPoints)||!validList(x.startFeatures,ids,5)||typeof x.partial!=='boolean'||typeof x.timingComplete!=='boolean'||!number(x.activeRealSeconds,0,r.elapsed)||!object(x.arrivals)||!object(x.clears)||(x.previousWall!==null&&!integer(x.previousWall,1))||(x.wallReference!==null&&!validTime(x.wallReference)))return false;for(const map of [x.arrivals,x.clears])if(Object.keys(map).length>30||Object.entries(map).some(([k,v])=>!/^\d+$/.test(k)||!integer(Number(k),1,Math.max(goal,r.wave+1))||!validTime(v)))return false;}
     if((m.history||[]).some(x=>x.result!==undefined&&!validResult(x.result)))return false;
-    if(m.repeatPoints!==undefined&&!integer(m.repeatPoints,0,Math.min(m.totalPoints,m.generation*4)))return false;
-    if(r.progression!==undefined){const p=r.progression;if(!object(p)||!integer(p.startBestWave,0,Math.min(goal,m.bestWave))||!(p.checkpointAward===null||integer(p.checkpointAward,0,3))||!(p.attemptAward===null||integer(p.attemptAward,0,1))||(p.checkpointAward||0)+(p.attemptAward||0)>(m.repeatPoints||0))return false;if((p.checkpointAward||0)>0&&(p.startBestWave<3||r.wave<p.startBestWave)||p.attemptAward===1&&p.startBestWave<3)return false;}
+    if([r.activeAction,...Object.values(r.suspendedActions||{})].some(x=>x?.earlyLoopBatch!==undefined&&r.earlyLoopVersion!==1))return false;
+    if(m.earlyLoopFishBatching!==undefined&&(typeof m.earlyLoopFishBatching!=='boolean'||m.earlyLoopVersion!==1))return false;
+    if(m.earlyLoopBatching!==undefined&&(typeof m.earlyLoopBatching!=='boolean'||m.earlyLoopVersion!==1))return false;
+    if((m.earlyLoopVersion!==undefined&&m.earlyLoopVersion!==1)||(r.earlyLoopVersion!==undefined&&(r.earlyLoopVersion!==1||m.earlyLoopVersion!==1)))return false;
+    if(m.repeatPoints!==undefined&&!integer(m.repeatPoints,0,Math.min(m.totalPoints,m.generation*(m.earlyLoopVersion===1?6:4))))return false;
+    if(r.progression!==undefined){const p=r.progression;if(!object(p)||!integer(p.startBestWave,0,Math.min(goal,m.bestWave))||!(p.checkpointAward===null||integer(p.checkpointAward,0,r.earlyLoopVersion===1?4:3))||!(p.attemptAward===null||integer(p.attemptAward,0,r.earlyLoopVersion===1?2:1))||(p.checkpointAward||0)+(p.attemptAward||0)>(m.repeatPoints||0))return false;if((p.checkpointAward||0)>0&&(p.startBestWave<(r.earlyLoopVersion===1?2:3)||r.wave<p.startBestWave)||(p.attemptAward||0)>0&&p.startBestWave<3)return false;}
     if(m.gearVersion!==undefined&&m.gearVersion!==1)return false;
     if((m.accessories!==undefined||m.accessorySets!==undefined)&&m.gearVersion!==1)return false;
     if(m.accessories!==undefined&&!validList(m.accessories,new Set(ACCESSORIES.map(x=>x.id)),ACCESSORIES.length))return false;
