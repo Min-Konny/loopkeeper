@@ -1,9 +1,9 @@
-import {investmentEffect}from './investments.js?v=0.6.9';
-import {weaponById}from './gear-content.js?v=0.6.9';
-import {accessoryEffects}from './gear-state.js?v=0.6.9';
-import {contractEffects}from './contracts.js?v=0.6.9';
-import {routeEffects}from './routes.js?v=0.6.9';
-import {alchemyResource}from './magic-content.js?v=0.6.9';
+import {investmentEffect}from './investments.js?v=0.6.10';
+import {weaponById}from './gear-content.js?v=0.6.10';
+import {accessoryEffects}from './gear-state.js?v=0.6.10';
+import {contractEffects}from './contracts.js?v=0.6.10';
+import {routeEffects}from './routes.js?v=0.6.10';
+import {alchemyResource}from './magic-content.js?v=0.6.10';
 export const freshMagic=()=>({mana:30,castTimer:0,burnTimer:0,burnTicks:0,burnPower:0,wardCooldown:0,casts:0,detonations:0,catalystsUsed:0,wardsUsed:0,burnDamage:0,spellDamage:0});
 export function initializeMagic(s){
  if(s.version===1)return;s.meta.magicVersion=1;for(const id of ['spark_catalyst','ward_essence'])s.run.resources[id]??=0;
