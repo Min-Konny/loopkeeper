@@ -1,7 +1,8 @@
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.10';
-import { getSkillProgress } from './legacy-engine.js?v=0.6.10';
-import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.6.10';
-import { dependencyOrderedCosts } from './material-priority.js?v=0.6.10';
+import {queueUnlocked}from './queue-unlock.js?v=0.6.11';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.11';
+import { getSkillProgress } from './legacy-engine.js?v=0.6.11';
+import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.6.11';
+import { dependencyOrderedCosts } from './material-priority.js?v=0.6.11';
 
 const MAX_STEPS = 8;
 const MAX_COUNT = 99;
@@ -17,7 +18,7 @@ export function planCraft(state, recipeId, count = 1) {
   if (!target) return failure('その製作は存在しません。');
   if (!Number.isInteger(count) || count < 1 || count > MAX_COUNT) return failure('回数は1〜99の整数で指定してください。');
   if (target.equipment || target.facility) count = 1;
-  if (!state.meta.upgrades.includes('action_queue')) return failure('継承ポイントで「行動予約・おまかせ製作」を解放してください。');
+  if (!queueUnlocked(state)) return failure('WAVE 1撃退で行動予約が無料解放されます。');
   if (state.run.status === 'dead') return failure('次の世代で製作を予約してください。');
   if (state.run.queue.length > 0 || state.run.activeAction?.kind === 'craft') return planAfterPending(state, recipeId, count);
 

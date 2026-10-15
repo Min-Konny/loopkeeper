@@ -1,5 +1,6 @@
-import { recordReward } from './reward-events.js?v=0.6.10';
-import { observesWork, completedWork } from './work-completion.js?v=0.6.10';
+import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.11';
+import { recordReward } from './reward-events.js?v=0.6.11';
+import { observesWork, completedWork } from './work-completion.js?v=0.6.11';
 // Original local simulation. All mutations stay in this module; no wall-clock or random input.
 export const FIRST_RAID_DELAY = 180;
 export const BASE_RAID_INTERVAL = 180;
@@ -110,7 +111,7 @@ const rounded = (n) => Math.round(n * 1e8) / 1e8 + 0;
 const freshDiplomacy = (elapsed = 0, unlocked = false) => ({ status: unlocked ? 'pending' : 'locked', deadline: rounded(elapsed + DIPLOMACY.deadline), incomeTimer: 0, incomeTotal: 0, mercenary: false });
 const freshAugments = (meta) => ({ seed: (Math.imul(meta.generation, 0x9e3779b1) ^ 0xa5f1523d) >>> 0, offer: [], selected: [], offeredStages: [], investmentTimer: 0 });
 const hasAugment = (state, id) => state.run.augments.selected.includes(id);
-const upgradeEnabled = (state, id) => state.meta.upgrades.includes(id) && !state.settings.disabledUpgrades.includes(id);
+const upgradeEnabled = (state, id) => (state.meta.upgrades.includes(id)||(id==='action_queue'&&queueUnlocked(state))) && !state.settings.disabledUpgrades.includes(id);
 const freshAcceleration = (meta) => ({ active: false, remainingSeconds: ACCELERATION.duration, limitWave: meta.bestWave });
 
 export function getSkillProgress(xp, permanent = false) {
@@ -360,7 +361,7 @@ export function canPurchaseUpgrade(state, id) {
   const upgrade = LEGACY_UPGRADES.find((entry) => entry.id === id);
   if (!upgrade) return { ok: false, reason: 'その継承は存在しません。' };
   if (state.meta.upgrades.includes(id)) return { ok: false, reason: 'すでに解放済みです。' };
-  if (id === 'action_queue' && state.meta.bestWave < 3 && state.meta.completedMilestones.length < 2) return { ok: false, reason: '初達成のクエストを2つ終えると解放できます。' };
+  if(id==='action_queue')return {ok:false,reason:queueUnlocked(state)?'すでに無料解放済みです。':'WAVE 1撃退で無料解放されます。'};
   if (id === 'cycle_acceleration') {
     const reason = accelerationGate(state);
     if (reason) return { ok: false, reason };
@@ -381,7 +382,7 @@ export function purchaseUpgrade(state, id) {
 }
 
 export function toggleUpgrade(state, id) {
-  if (!UPGRADE_IDS.has(id) || !state.meta.upgrades.includes(id)) return { ok: false, reason: '先に解放してください。' };
+  if (!UPGRADE_IDS.has(id) || !(state.meta.upgrades.includes(id)||(id==='action_queue'&&queueUnlocked(state)))) return { ok: false, reason: '先に解放してください。' };
   if (state.settings.disabledUpgrades.includes(id)) state.settings.disabledUpgrades = state.settings.disabledUpgrades.filter((entry) => entry !== id);
   else state.settings.disabledUpgrades.push(id);
   state.run.hp = Math.min(state.run.hp, getStats(state).maxHp);
@@ -437,7 +438,7 @@ function enforceAccelerationBoundary(state) {
 }
 
 export function enqueueAction(state, id, count = 1) {
-  if (!state.meta.upgrades.includes('action_queue')) return { ok: false, reason: '継承ポイントで行動予約を解放してください。' };
+  if (!queueUnlocked(state)) return { ok: false, reason: '継承ポイントで行動予約を解放してください。' };
   if (state.run.status === 'dead') return { ok: false, reason: '次の世代で予約してください。' };
   if (!DEFINITIONS.has(id)) return { ok: false, reason: 'その作業は存在しません。' };
   if (!Number.isInteger(count) || count < 1 || count > 99) return { ok: false, reason: '実行回数は1〜99回で指定してください。' };
@@ -478,7 +479,7 @@ function detachQueueAction(state) {
 }
 
 function pauseAfterQueueRemoval(state, hadWork) {
-  const hasFollowup = state.run.queue.length > 0 && state.meta.upgrades.includes('action_queue') && !state.settings.disabledUpgrades.includes('action_queue');
+  const hasFollowup = state.run.queue.length > 0 && queueUnlocked(state) && !state.settings.disabledUpgrades.includes('action_queue');
   if (hadWork && !state.run.activeAction && !hasFollowup && state.run.status === 'preparing') state.settings.paused = true;
 }
 
@@ -500,7 +501,7 @@ export function clearQueue(state) {
 }
 
 export function getQueueStatus(state) {
-  if (!state.meta.upgrades.includes('action_queue')) return { active: false, reason: '行動予約は未解放です。' };
+  if (!queueUnlocked(state)) return { active: false, reason: '行動予約は未解放です。' };
   if (state.run.status === 'dead') return { active: false, reason: '次の世代で予約してください。' };
   if (state.run.queue.length === 0) return { active: false, reason: '予約はありません。' };
   if (state.settings.disabledUpgrades.includes('action_queue')) return { active: false, reason: '行動予約を保留中。ONで再開します。' };
@@ -574,7 +575,7 @@ export function stopAction(state) {
   suspendAction(state);
 }
 export function setMaterialPriority(state, priority) {
-  if (!state.meta.upgrades.includes('action_queue')) return {ok:false,reason:'行動予約を解放してください。'};
+  if (!queueUnlocked(state)) return {ok:false,reason:'行動予約を解放してください。'};
   if (!validMaterialPriority(priority) || priority.some(id => !RESOURCES[id])) return {ok:false,reason:'素材は重複せず、利用できる素材を優先順に指定してください。'};
   state.settings.craftMaterialPriority = [...priority];
   return {ok:true,reason:''};
@@ -646,7 +647,7 @@ function finishAction(state) {
 }
 
 function advanceQueue(state) {
-  if (!state.meta.upgrades.includes('action_queue') || state.settings.disabledUpgrades.includes('action_queue') || state.run.queue.length === 0) return;
+  if (!queueUnlocked(state) || state.settings.disabledUpgrades.includes('action_queue') || state.run.queue.length === 0) return;
   if (state.run.queueManaged && state.run.activeAction) return;
   if (state.run.activeAction?.kind === 'craft') return;
   // Keep interrupted gathering progress, and let a paid preexisting craft finish.
@@ -678,7 +679,7 @@ function queuedResourceCosts(state) {
 // Automated cooking is a real paid recipe and awards normal crafting XP.
 // All helpers stop during raids, death and pause. Disabling preserves paid work.
 function advanceHelpers(state) {
-  const enabled = (id) => state.meta.upgrades.includes(id) && !state.settings.disabledUpgrades.includes(id);
+  const enabled = (id) => (state.meta.upgrades.includes(id)||(id==='action_queue'&&queueUnlocked(state))) && !state.settings.disabledUpgrades.includes(id);
   for (const [id, worker] of Object.entries(WORKERS)) {
     if (!enabled(id)) continue;
     state.run.helpers[id] = rounded(state.run.helpers[id] + STEP);
@@ -860,7 +861,7 @@ export function advanceTime(state, realSeconds) {
     tick(state, slice * (accelerated ? ACCELERATION.multiplier : 1));
     // The real-time driver waits for the next decision after a finite task.
     // An explicit resume with no work can still advance the clock.
-    const hasFollowup = state.run.queue.length > 0 && state.meta.upgrades.includes('action_queue') && !state.settings.disabledUpgrades.includes('action_queue');
+    const hasFollowup = state.run.queue.length > 0 && queueUnlocked(state) && !state.settings.disabledUpgrades.includes('action_queue');
     if (hadWork && !state.run.activeAction && !hasFollowup && state.run.status === 'preparing') state.settings.paused = true;
     enforceAccelerationBoundary(state);
     remaining = rounded(remaining - slice);
@@ -919,7 +920,7 @@ export function parseSave(text) {
     requireValid(Array.isArray(defeatedBosses) && defeatedBosses.length <= 3333 && new Set(defeatedBosses).size === defeatedBosses.length && defeatedBosses.every((wave) => isInteger(wave, 3, meta.bestWave) && wave % 3 === 0));
     requireValid(Array.isArray(upgrades) && upgrades.length <= LEGACY_UPGRADES.length && new Set(upgrades).size === upgrades.length && upgrades.every((id) => UPGRADE_IDS.has(id)));
     requireValid(points + upgrades.reduce((sum, id) => sum + LEGACY_UPGRADES.find(upgrade => upgrade.id === id).cost, 0) === defeatedBosses.length + completedMilestones.reduce((sum, id) => sum + MILESTONES.find(entry => entry.id === id).reward, 0));
-    requireValid(Array.isArray(disabledUpgrades) && disabledUpgrades.length <= upgrades.length && new Set(disabledUpgrades).size === disabledUpgrades.length && disabledUpgrades.every((id) => upgrades.includes(id)));
+    requireValid(Array.isArray(disabledUpgrades) && disabledUpgrades.length <= upgrades.length+(meta.bestWave>=QUEUE_UNLOCK_WAVE&&!upgrades.includes('action_queue')?1:0) && new Set(disabledUpgrades).size === disabledUpgrades.length && disabledUpgrades.every((id) => upgrades.includes(id)||(id==='action_queue'&&meta.bestWave>=QUEUE_UNLOCK_WAVE)));
     Object.assign(state.meta, { points, defeatedBosses: [...defeatedBosses], upgrades: [...upgrades], completedMilestones: [...completedMilestones] });
     requireValid(!Object.hasOwn(settings, 'showEquippedRecipes') || typeof settings.showEquippedRecipes === 'boolean');
     const showHiddenRecipes = Object.hasOwn(settings, 'showHiddenRecipes') ? settings.showHiddenRecipes : (settings.showEquippedRecipes ?? false);
@@ -1033,7 +1034,7 @@ export function parseSave(text) {
     const queue = Object.hasOwn(run, 'queue') ? run.queue : [];
     const queueManaged = Object.hasOwn(run, 'queueManaged') ? run.queueManaged : false;
     requireValid(Array.isArray(queue) && queue.length <= 8 && typeof queueManaged === 'boolean');
-    requireValid(queue.length === 0 || (upgrades.includes('action_queue') && run.status !== 'dead'));
+    requireValid(queue.length === 0 || ((upgrades.includes('action_queue')||meta.bestWave>=QUEUE_UNLOCK_WAVE) && run.status !== 'dead'));
     state.run.queue = queue.map((entry) => {
       requireValid(isObject(entry) && DEFINITIONS.has(entry.id) && isInteger(entry.count, 1, 99));
       return { id: entry.id, count: entry.count };
@@ -1097,4 +1098,4 @@ export function parseSave(text) {
   }
 }
 
-import { validMaterialPriority } from './material-priority.js?v=0.6.10';
+import { validMaterialPriority } from './material-priority.js?v=0.6.11';

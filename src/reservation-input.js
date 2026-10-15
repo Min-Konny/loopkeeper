@@ -1,11 +1,11 @@
 export function isReservationInput(input) {
-  return input?.type === 'number' && (input.id === 'queue-count' || input.dataset.craftCount !== undefined || input.dataset.queueCount !== undefined || input.dataset.conditionField === 'target');
+  return input?.type === 'number' && (input.id === 'queue-count' || input.dataset.craftCount !== undefined || input.dataset.queueCount !== undefined || input.dataset.queueTrainingLevel !== undefined || input.dataset.conditionField === 'target');
 }
 
 export function reservationInputError(input) {
   if (!isReservationInput(input)) return '';
   const min = Number(input.min), max = Number(input.max);
-  const name = input.dataset.conditionField === 'target' ? '目標' : '回数';
+  const name = input.dataset.trainingLevel !== undefined ? '目標レベル' : input.dataset.conditionField === 'target' ? '目標' : '回数';
   if (!input.value.trim()) return `${name}を入力してください（${min}〜${max}の整数）。`;
   return Number.isInteger(input.valueAsNumber) && input.valueAsNumber >= min && input.valueAsNumber <= max
     ? '' : `${name}は${min}〜${max}の整数で入力してください。`;

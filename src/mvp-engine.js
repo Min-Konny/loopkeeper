@@ -1,38 +1,38 @@
-import {lateLoop,lateEncounter,lateRelief}from './late-loop.js?v=0.6.10';
-import {earlyLoop,earlyDefinition,earlyEncounter,earlyJobMultiplier}from './early-loop.js?v=0.6.10';
-import {recordWorkMilestone}from './work-milestones.js?v=0.6.10';
-import {awardTrophy,trophyShortage,payTrophies,refundUnfinishedTrophies} from './boss-materials.js?v=0.6.10';
-import {EXTENDED_CAMPAIGN,FRONTIER_CAMPAIGN,CLASSIC_CAMPAIGN,campaignFinalWave,campaignIncludes,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.6.10';
-import {investmentEffect}from './investments.js?v=0.6.10';
-import {freshContracts,contractEffects}from './contracts.js?v=0.6.10';
-import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.6.10';
-import {freshFarm,advanceFarm}from './farm-state.js?v=0.6.10';import {farmResource,resourceCap}from './farm-content.js?v=0.6.10';
-import {companionById}from './companion-content.js?v=0.6.10';
-import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.6.10';
-import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.6.10';import {alchemyResource}from './magic-content.js?v=0.6.10';
-import {weaponById}from './gear-content.js?v=0.6.10';
-import {initializeGear,accessoryEffects,combatBuild,strikeModifier}from './gear-state.js?v=0.6.10';
-import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.6.10';
-import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.6.10';
-import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.6.10';
-import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.6.10';
-import { maximumTradeCount } from './maximum-trade.js?v=0.6.10';
-import { startingGrant } from './starting-resources.js?v=0.6.10';
-import { tradeSaleUnit } from './fish-economy.js?v=0.6.10';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.10';
-import { recordReward } from './reward-events.js?v=0.6.10';
-import { observesWork, completedWork } from './work-completion.js?v=0.6.10';
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.6.10';
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.6.10';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.6.10';
-import { CONTENT as C } from "./content.js?v=0.6.10";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.6.10";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.6.10";
+import {lateLoop,lateEncounter,lateRelief}from './late-loop.js?v=0.6.11';
+import {earlyLoop,earlyDefinition,earlyEncounter,earlyJobMultiplier}from './early-loop.js?v=0.6.11';
+import {recordWorkMilestone}from './work-milestones.js?v=0.6.11';
+import {awardTrophy,trophyShortage,payTrophies,refundUnfinishedTrophies} from './boss-materials.js?v=0.6.11';
+import {EXTENDED_CAMPAIGN,FRONTIER_CAMPAIGN,CLASSIC_CAMPAIGN,campaignFinalWave,campaignIncludes,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.6.11';
+import {investmentEffect}from './investments.js?v=0.6.11';
+import {freshContracts,contractEffects}from './contracts.js?v=0.6.11';
+import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.6.11';
+import {freshFarm,advanceFarm}from './farm-state.js?v=0.6.11';import {farmResource,resourceCap}from './farm-content.js?v=0.6.11';
+import {companionById}from './companion-content.js?v=0.6.11';
+import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.6.11';
+import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.6.11';import {alchemyResource}from './magic-content.js?v=0.6.11';
+import {weaponById}from './gear-content.js?v=0.6.11';
+import {initializeGear,accessoryEffects,combatBuild,strikeModifier}from './gear-state.js?v=0.6.11';
+import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.6.11';
+import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.6.11';
+import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.6.11';
+import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.6.11';
+import { maximumTradeCount } from './maximum-trade.js?v=0.6.11';
+import { startingGrant } from './starting-resources.js?v=0.6.11';
+import { tradeSaleUnit } from './fish-economy.js?v=0.6.11';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.11';
+import { recordReward } from './reward-events.js?v=0.6.11';
+import { observesWork, completedWork } from './work-completion.js?v=0.6.11';
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.6.11';
+import { validCondition, goalSatisfied, isCombatTraining } from './queue-conditions.js?v=0.6.11';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.6.11';
+import { CONTENT as C } from "./content.js?v=0.6.11";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.6.11";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.6.11";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.6.10";
+} from "./legacy-engine.js?v=0.6.11";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -911,6 +911,20 @@ export function enqueueConditional(s, id, until) {
   if (result.ok) s.run.queue.at(-1).until = { ...until };
   return result;
 }
+export function enqueueTrainingLevel(s,id,target){
+ const until={type:'level',target,pauseAfter:false};
+ if(s.version!==2||!isCombatTraining(id)||!validCondition({id,until}))return fail('目標レベルは2〜100の整数で指定してください。');
+ if(!on(s,'action_queue'))return fail('行動予約を解放してください。');
+ if(s.run.status!=='preparing')return fail('準備中に予約してください。');
+ if(!isKnown(s,id))return fail('未発見です。');
+ if(goalSatisfied(s,{id,until}))return {...ok(),skipped:true};
+ const result=enqueueAction(s,id,1,'action');if(result.ok)s.run.queue.at(-1).until=until;return result;
+}
+export function editQueuedTrainingLevel(s,index,target){
+ const q=s.run.queue[index];if(s.version!==2||!q||!isCombatTraining(q.id)||q.until?.type!=='level')return fail('この予約は目標レベル指定ではありません。');
+ if(!validCondition({...q,until:{...q.until,target}}))return fail('目標レベルは2〜100の整数で指定してください。');
+ if(q.until.target===target)return ok();s.settings.paused=true;detach(s);q.until.target=target;return ok();
+}
 export const enqueueGoal = (s, id, count = 1) =>
   enqueueAction(s, id, count, "goal");
 function detach(s) {
@@ -975,6 +989,10 @@ export function getQueueStatus(s) {
 function driveQueue(s) {
   if(s.run.manualRepeat&&on(s,'action_queue')&&s.run.queue.length)delete s.run.manualRepeat;
   if (!on(s, "action_queue") || !s.run.queue.length) return;
+  const trainingGoal=s.run.queue[0];
+  if(s.run.queueManaged&&s.run.activeAction?.kind==='gather'&&isCombatTraining(trainingGoal.id)&&trainingGoal.until?.type==='level'&&s.run.activeAction.goalId===trainingGoal.goalId&&goalSatisfied(s,trainingGoal)){
+    const id=s.run.activeAction.id;suspend(s);delete s.run.suspendedActions[id].goalId;s.run.queueManaged=false;
+  }
   if (s.run.activeAction) {
     if (s.run.queueManaged || s.run.activeAction.kind === "craft") return;
     // A manual gathering loop must yield to an explicitly enabled reservation.
@@ -1255,6 +1273,7 @@ export function getTemplatePreview(s, i) {
   const items = (t?.goals || []).map(g => {
     const d = defs.get(g.id);
     const item = { ...g, name: d?.name || g.id, status: "ready", reason: "追加" };
+    if(isCombatTraining(g.id)&&g.until?.type==='level'&&!g.until.pauseAfter&&goalSatisfied(s,g))return {...item,status:'skip',reason:'この命の目標レベルに到達済み'};
     const paid = s.run.activeAction?.id === g.id || s.run.suspendedActions[g.id];
     const equipped = d?.equipment && s.run.equipment[d.slot];
     const completed = !paid && (d?.facility ? (s.run.facilities[d.facility.id] || 0) >= d.level : equipped && !d.combat && !weaponById(equipped.id) && ["attack", "defense", "maxHp", "speed"].every(stat => (equipped[stat] || 0) >= (d.equipment[stat] || 0)));
@@ -2209,7 +2228,7 @@ export function startEndless(s) {
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
 }
-import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.6.10';
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.6.11';
 
 export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
   return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{

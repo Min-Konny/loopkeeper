@@ -1,15 +1,16 @@
-import {initializeWorkMilestones}from './work-milestones.js?v=0.6.10';
-import {initializeTrophies} from './boss-materials.js?v=0.6.10';
-import {initializeContracts}from './contracts.js?v=0.6.10';
-import {initializeRoutes}from './routes.js?v=0.6.10';
-import {initializeFarm}from './farm-state.js?v=0.6.10';
-import {synchronizeCompanions}from './companion-state.js?v=0.6.10';
-import {initializeMagic}from './magic-state.js?v=0.6.10';
-import {initializeGear}from './gear-state.js?v=0.6.10';
-import {initializeProgression}from './progression-rewards.js?v=0.6.10';
-import {initializeRunResults}from './run-results.js?v=0.6.10';
+import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.11';
+import {initializeWorkMilestones}from './work-milestones.js?v=0.6.11';
+import {initializeTrophies} from './boss-materials.js?v=0.6.11';
+import {initializeContracts}from './contracts.js?v=0.6.11';
+import {initializeRoutes}from './routes.js?v=0.6.11';
+import {initializeFarm}from './farm-state.js?v=0.6.11';
+import {synchronizeCompanions}from './companion-state.js?v=0.6.11';
+import {initializeMagic}from './magic-state.js?v=0.6.11';
+import {initializeGear}from './gear-state.js?v=0.6.11';
+import {initializeProgression}from './progression-rewards.js?v=0.6.11';
+import {initializeRunResults}from './run-results.js?v=0.6.11';
 export const FREE_FEATURES = [
- {id:'action_queue',name:'行動予約',wave:2},
+ {id:'action_queue',name:'行動予約',wave:QUEUE_UNLOCK_WAVE},
  {id:'queue_templates',name:'手順テンプレート',wave:3},
  {id:'stock_targets',name:'在庫目標',wave:4},
  {id:'cycle_acceleration',name:'周回復帰',wave:5},
@@ -18,6 +19,7 @@ export const FREE_FEATURES = [
 const ids=new Set(FREE_FEATURES.map(x=>x.id));
 export const isFreeFeature=id=>ids.has(id);
 export function hasUpgrade(s,id){
+ if(id==='action_queue')return queueUnlocked(s);
  if(s.version===1||!ids.has(id))return s.meta.upgrades.includes(id);
  return s.meta.upgrades.includes(id)||(s.meta.freeFeatures||[]).includes(id)||s.meta.bestWave>=FREE_FEATURES.find(x=>x.id===id).wave;
 }

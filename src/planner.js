@@ -1,9 +1,10 @@
-import {trophyShortage} from './boss-materials.js?v=0.6.10';
-import {hasUpgrade}from './free-features.js?v=0.6.10';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.10';
-import { getActionXp } from './engine.js?v=0.6.10';
-import * as old from "./legacy-planner.js?v=0.6.10";
-import { orderRecipeMaterials } from './engine.js?v=0.6.10';
+import {enqueueTrainingLevel}from './engine.js?v=0.6.11';
+import {trophyShortage} from './boss-materials.js?v=0.6.11';
+import {hasUpgrade}from './free-features.js?v=0.6.11';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.11';
+import { getActionXp } from './engine.js?v=0.6.11';
+import * as old from "./legacy-planner.js?v=0.6.11";
+import { orderRecipeMaterials } from './engine.js?v=0.6.11';
 import {
   isLegacy,
   getCatalog,
@@ -22,7 +23,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.6.10";
+} from "./engine.js?v=0.6.11";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -228,4 +229,13 @@ export function recoverReservation(s, operation) {
     if (!result.ok) return result;
   }
   return { ok: true, reason: '' };
+}
+
+// New training goals use the existing condition schema; old count reservations stay intact.
+export function queueTraining(s,id,target,position='end'){
+ const disabled=s.settings.disabledUpgrades,previousLength=s.run.queue.length;s.settings.disabledUpgrades=disabled.filter(x=>x!=='action_queue');
+ const result=enqueueTrainingLevel(s,id,target);
+ if(!result.ok||result.skipped)s.settings.disabledUpgrades=disabled;
+ if(result.ok&&!result.skipped&&position==='front')prioritizeAddedReservations(s,previousLength);
+ return result;
 }
