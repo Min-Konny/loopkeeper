@@ -1,5 +1,5 @@
-import { recordReward } from './reward-events.js?v=0.6.2';
-import { observesWork, completedWork } from './work-completion.js?v=0.6.2';
+import { recordReward } from './reward-events.js?v=0.6.3';
+import { observesWork, completedWork } from './work-completion.js?v=0.6.3';
 // Original local simulation. All mutations stay in this module; no wall-clock or random input.
 export const FIRST_RAID_DELAY = 180;
 export const BASE_RAID_INTERVAL = 180;
@@ -1097,4 +1097,4 @@ export function parseSave(text) {
   }
 }
 
-import { validMaterialPriority } from './material-priority.js?v=0.6.2';
+import { validMaterialPriority } from './material-priority.js?v=0.6.3';

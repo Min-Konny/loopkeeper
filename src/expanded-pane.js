@@ -9,7 +9,9 @@ export function createExpandedPane({document,area,title,extraNodes=[]}){
   for(const entry of previous.nodes){entry.marker.replaceWith(entry.node);}
   document.body.classList.remove('pane-expanded');
   for(const entry of previous.scrolls){entry.node.scrollTop=entry.top;entry.node.scrollLeft=entry.left;}
-  if(previous.opener?.isConnected&&!document.querySelector('dialog[open]'))previous.opener.focus({preventScroll:true});
+  const focusKey=previous.opener?.dataset?.focus;
+  const target=previous.opener?.isConnected?previous.opener:focusKey?[...document.querySelectorAll('[data-focus]')].find(node=>node.dataset.focus===focusKey):null;
+  if(target&&!document.querySelector('dialog[open]'))target.focus({preventScroll:true});
  }
  function clearBackdropPress(){backdropPress=null;backdropClick=false;}
  function outside(event){const rect=dialog.getBoundingClientRect();return event.target===dialog&&(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom);}
@@ -25,6 +27,8 @@ export function createExpandedPane({document,area,title,extraNodes=[]}){
  dialog.addEventListener('keydown',event=>{if(event.key==='Escape'&&!event.isComposing){event.preventDefault();event.stopPropagation();close();}},true);
  return {
   dialog,
+  getOpener:()=>saved?.opener,
+  setOpener(opener){if(saved)saved.opener=opener;},
   open(opener){
    if(dialog.open)return;
    clearBackdropPress();
