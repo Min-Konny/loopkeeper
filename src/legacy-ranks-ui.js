@@ -1,12 +1,13 @@
-import {LEGACY_RANKS}from './legacy-rank-definitions.js?v=0.6.0';import {getLegacyRankStatus}from './engine.js?v=0.6.0';import {icon}from './icons.js?v=0.6.0';
+import {legacyRankCategory}from './legacy-categories.js?v=0.6.1';
+import {LEGACY_RANKS}from './legacy-rank-definitions.js?v=0.6.1';import {getLegacyRankStatus}from './engine.js?v=0.6.1';import {icon}from './icons.js?v=0.6.1';
 export function legacyRanksMarkup(s,setup=false,group='all'){
  if(s.version===1)return '';
- if(group==='all')return legacyRanksMarkup(s,setup,'combat')+legacyRanksMarkup(s,false,'production');
- const ranks=LEGACY_RANKS.filter(d=>(d.group||'combat')===group),name=group==='production'?'生産・取引の投資':'戦闘・魔法の投資';
+ if(group==='all')return legacyRanksMarkup(s,setup,'combat')+legacyRanksMarkup(s,false,'production')+legacyRanksMarkup(s,false,'trade');
+ const ranks=LEGACY_RANKS.filter(d=>legacyRankCategory(d)===(group==='production'?'investment':group)),name=group==='trade'?'交易の投資':group==='production'?'生産の投資':'戦闘・魔法の投資';
  return (setup?'<button class="button small muted" data-reset-ranks="1" data-focus="reset-ranks">ランク投資を全て戻す</button><p class="fine-print">配分は次の周回開始で反映。全てのランク投資が対象です。</p>':'')+'<section class="legacy-upgrade-group"><div class="legacy-group-heading">'+icon(group==='production'?'tool':'shield')+'<div><h3>'+name+'</h3><p>追加費用1/2/3/4/5pt、各枝R5まで。現在の効果と実際の投資総額を表示します。</p></div></div><div class="upgrade-grid">'+ranks.map(rank=>{
   const r=getLegacyRankStatus(s,rank.key),fmt=rank.format||String,next=r.nextRank?'次 R'+r.nextRank+'：'+rank.label+' +'+fmt(r.nextIncrement)+'（全段階有効時 +'+fmt(r.nextTotal)+'）':'最高ランク R5';
   const refund=setup&&r.rank?'<button class="button small muted" data-refund-rank="'+rank.key+'" data-focus="rank-refund-'+rank.key+'">R'+r.rank+'を戻す ・ '+r.refundCost+'pt</button>':'';
   const toggle=!setup&&r.rank?'<button class="button small muted" data-toggle-rank="'+rank.key+'" data-focus="rank-toggle-'+rank.key+'" '+(!r.canToggle?'disabled':'')+'>'+r.toggleLabel+'</button>':'';
-  return '<article class="upgrade-card rank-card"><span class="upgrade-symbol">'+icon(rank.icon)+'</span><div class="upgrade-details"><h3>'+rank.name+' ・ R'+r.rank+'</h3><p>現在の効果：'+rank.label+' +'+fmt(r.activeEffect)+'</p><p>'+next+'</p>'+(rank.description?'<small>'+rank.description+'</small>':'')+'<small>現在の投資合計 '+r.paidTotal+'pt</small></div><div class="legacy-upgrade-command">'+(r.nextRank?'<button class="button small gold-outline" data-buy-rank="'+rank.key+'" data-focus="rank-buy-'+rank.key+'" '+(!r.canBuy?'disabled':'')+'>追加 '+r.nextCost+'pt で R'+r.nextRank+'</button>':'')+refund+toggle+(!r.canBuy&&r.nextRank?'<small>'+r.reason+'</small>':'')+'</div></article>';
+  return '<article class="upgrade-card rank-card" data-legacy-rank="'+rank.key+'"><span class="upgrade-symbol">'+icon(rank.icon)+'</span><div class="upgrade-details"><h3>'+rank.name+' ・ R'+r.rank+'</h3><p>現在の効果：'+rank.label+' +'+fmt(r.activeEffect)+'</p><p>'+next+'</p>'+(rank.description?'<small>'+rank.description+'</small>':'')+'<small>現在の投資合計 '+r.paidTotal+'pt</small></div><div class="legacy-upgrade-command">'+(r.nextRank?'<button class="button small gold-outline" data-buy-rank="'+rank.key+'" data-focus="rank-buy-'+rank.key+'" '+(!r.canBuy?'disabled':'')+'>追加 '+r.nextCost+'pt で R'+r.nextRank+'</button>':'')+refund+toggle+(!r.canBuy&&r.nextRank?'<small>'+r.reason+'</small>':'')+'</div></article>';
  }).join('')+'</div></section>';
 }

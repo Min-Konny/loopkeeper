@@ -1,11 +1,12 @@
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.0';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.0';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.0';
-import {hasUpgrade}from './free-features.js?v=0.6.0';
-import { getStartingResources } from './engine.js?v=0.6.0';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.0';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.0";
-import { CONTENT as C } from "./content.js?v=0.6.0";
+import {LEGACY_CATEGORIES}from './legacy-categories.js?v=0.6.1';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.1';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.1';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.1';
+import {hasUpgrade}from './free-features.js?v=0.6.1';
+import { getStartingResources } from './engine.js?v=0.6.1';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.1';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.1";
+import { CONTENT as C } from "./content.js?v=0.6.1";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -21,7 +22,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.0";
+} from "./engine.js?v=0.6.1";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -34,14 +35,8 @@ const label = (id) =>
   RESOURCES[id]?.name || RECIPES.find((x) => x.id === id)?.name || id;
 const button = (text, attr, disabled = false) =>
   `<button class="button small gold-outline" ${attr} ${disabled ? "disabled" : ""}>${text}</button>`;
-const setupCategories = [
-  {id:"starting",name:"備蓄",kinds:["starting_resources"]},
-  {id:"investment",name:"生産・取引",kinds:["investment"]},
-  { id: "combat", name: "戦闘", kinds: ["combat"] },
-  { id: "automation", name: "自動化・人員", kinds: ["automation", "worker"] },
-  { id: "augment", name: "オーグメント", kinds: ["augment_pack", "augment_reroll"] },
-  { id: "time", name: "周回復帰", kinds: ["time"] },
-];
+const setupCategories=LEGACY_CATEGORIES.filter(c=>c.id!=='all');
+
 export function setupMarkup(s, category = "combat") {
   const d = s.run.legacyDraft,
     preview = {
@@ -54,7 +49,7 @@ export function setupMarkup(s, category = "combat") {
       },
     };
   const selected = setupCategories.find(c => c.id === category) || setupCategories[0];
-  return `<div class="setup-header"><h2 id="death-title">次の命への継承</h2><div class="setup-points">残り <strong>${d.points} pt</strong></div></div><div class="setup-tabs" role="tablist" aria-label="継承の分類">${setupCategories.map(c => `<button role="tab" id="setup-tab-${c.id}" aria-selected="${c.id === selected.id}" aria-controls="setup-upgrades" data-setup-category="${c.id}">${c.name}</button>`).join("")}</div><div class="setup-upgrades" id="setup-upgrades" role="tabpanel" aria-labelledby="setup-tab-${selected.id}">${['combat','investment'].includes(selected.id)?legacyRanksMarkup(s,true,selected.id==='combat'?'combat':'production'):LEGACY_UPGRADES.filter(u => selected.kinds.includes(u.kind)&&!isFreeFeature(u.id)).map(
+  return `<div class="setup-header"><h2 id="death-title">次の命への継承</h2><div class="setup-points">残り <strong>${d.points} pt</strong></div></div><div class="setup-tabs" role="tablist" aria-label="継承の分類">${setupCategories.map(c => `<button role="tab" id="setup-tab-${c.id}" aria-selected="${c.id === selected.id}" aria-controls="setup-upgrades" data-setup-category="${c.id}">${c.name}</button>`).join("")}</div><div class="setup-upgrades" id="setup-upgrades" role="tabpanel" aria-labelledby="setup-tab-${selected.id}">${selected.rankGroup?legacyRanksMarkup(s,true,selected.rankGroup):LEGACY_UPGRADES.filter(u => selected.kinds.includes(u.kind)&&!isFreeFeature(u.id)).map(
     (u) => {
       const owned = d.upgrades.includes(u.id),
         allowed = canPurchaseUpgrade(preview, u.id);
@@ -65,7 +60,7 @@ export function setupMarkup(s, category = "combat") {
     },
   ).join(
     "",
-  )}${['automation','time'].includes(selected.id)?freeFeatureMarkup(s):''}</div>${challengesMarkup(s)}<div class="setup-footer"><p class="fine-print campaign-transition">次の人生は本編36波。現在の人生は本編${finalWaveForRun(s)}波の構成で、過去のクリア記録・獲得済み報酬は引き継ぎます。</p><p data-setup-save-error role="alert" class="danger-text"></p><section class="starting-grant"><strong>次の転生で受け取る資源</strong><div>${Object.keys(getStartingResources(s)).length ? Object.entries(getStartingResources(s)).map(([id,n])=>`<span>${esc(RESOURCES[id]?.name || id)} <b>${n}</b></span>`).join("") : "初期支給なし"}</div><small>転生を確定した時だけ支給。現在の手持ちは持ち越しません。</small></section>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button muted full-width" data-cancel-draft="1" data-focus="cancel-draft">今回の配分変更を取り消す</button><button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
+  )}${selected.free?freeFeatureMarkup(s,selected.free):''}</div>${challengesMarkup(s)}<div class="setup-footer"><p class="fine-print campaign-transition">次の人生は本編36波。現在の人生は本編${finalWaveForRun(s)}波の構成で、過去のクリア記録・獲得済み報酬は引き継ぎます。</p><p data-setup-save-error role="alert" class="danger-text"></p><section class="starting-grant"><strong>次の転生で受け取る資源</strong><div>${Object.keys(getStartingResources(s)).length ? Object.entries(getStartingResources(s)).map(([id,n])=>`<span>${esc(RESOURCES[id]?.name || id)} <b>${n}</b></span>`).join("") : "初期支給なし"}</div><small>転生を確定した時だけ支給。現在の手持ちは持ち越しません。</small></section>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button muted full-width" data-cancel-draft="1" data-focus="cancel-draft">今回の配分変更を取り消す</button><button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
 }
 // Keep the nearest unanswered request visible while working in another tab.
 export function diplomacyDeadlineMarkup(s) {

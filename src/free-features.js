@@ -1,13 +1,13 @@
-import {initializeWorkMilestones}from './work-milestones.js?v=0.6.0';
-import {initializeTrophies} from './boss-materials.js?v=0.6.0';
-import {initializeContracts}from './contracts.js?v=0.6.0';
-import {initializeRoutes}from './routes.js?v=0.6.0';
-import {initializeFarm}from './farm-state.js?v=0.6.0';
-import {synchronizeCompanions}from './companion-state.js?v=0.6.0';
-import {initializeMagic}from './magic-state.js?v=0.6.0';
-import {initializeGear}from './gear-state.js?v=0.6.0';
-import {initializeProgression}from './progression-rewards.js?v=0.6.0';
-import {initializeRunResults}from './run-results.js?v=0.6.0';
+import {initializeWorkMilestones}from './work-milestones.js?v=0.6.1';
+import {initializeTrophies} from './boss-materials.js?v=0.6.1';
+import {initializeContracts}from './contracts.js?v=0.6.1';
+import {initializeRoutes}from './routes.js?v=0.6.1';
+import {initializeFarm}from './farm-state.js?v=0.6.1';
+import {synchronizeCompanions}from './companion-state.js?v=0.6.1';
+import {initializeMagic}from './magic-state.js?v=0.6.1';
+import {initializeGear}from './gear-state.js?v=0.6.1';
+import {initializeProgression}from './progression-rewards.js?v=0.6.1';
+import {initializeRunResults}from './run-results.js?v=0.6.1';
 export const FREE_FEATURES = [
  {id:'action_queue',name:'行動予約',wave:2},
  {id:'queue_templates',name:'手順テンプレート',wave:3},
@@ -41,10 +41,11 @@ export function synchronizeFreeFeatures(s){
  if(refunded)s.meta.featureRefundTotal=(s.meta.featureRefundTotal||0)+refunded;
  return {refunded,companionsAdded,changed:before!==JSON.stringify(s)};
 }
-export function freeFeatureMarkup(s){
+export function freeFeatureMarkup(s,allowedIds=null){
+ const visible=FREE_FEATURES.filter(f=>!allowedIds||allowedIds.includes(f.id));if(!visible.length)return "";
  if(s.version===1)return '';
- return '<section class="strategy-details free-features"><h3>無料の便利機能</h3>'+FREE_FEATURES.map(f=>{
+ return '<section class="strategy-details free-features"><h3>無料の便利機能</h3>'+visible.map(f=>{
   const unlocked=hasUpgrade(s,f.id),enabled=!s.settings.disabledUpgrades.includes(f.id),disabled=s.run.status!=='preparing'||s.run.augments.offer.length;
-  return '<p><span>'+f.name+' · '+(unlocked?'解放済み':'最高WAVE '+f.wave+'で解放')+'</span>'+(unlocked?'<button class="button small gold-outline" data-toggle-upgrade="'+f.id+'" aria-pressed="'+enabled+'" '+(disabled?'disabled':'')+'>'+ (enabled?'有効':'停止')+'</button>':'')+'</p>';
+  return '<p data-free-feature="'+f.id+'"><span>'+f.name+' · '+(unlocked?'解放済み':'最高WAVE '+f.wave+'で解放')+'</span>'+(unlocked?'<button class="button small gold-outline" data-toggle-upgrade="'+f.id+'" aria-pressed="'+enabled+'" '+(disabled?'disabled':'')+'>'+ (enabled?'有効':'停止')+'</button>':'')+'</p>';
  }).join('')+(s.meta.featureRefundTotal?'<small>旧取得分 '+s.meta.featureRefundTotal+'pt を返還済み</small>':'')+'</section>';
 }
