@@ -1,7 +1,7 @@
-import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.8';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.8';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.8';
-import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.8';
+import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.9';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.9';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.9';
+import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.9';
 import {
   ACCELERATION,
   LEGACY_UPGRADES,
@@ -9,8 +9,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.6.8";
-import { icon } from "./icons.js?v=0.6.8";
+} from "./engine.js?v=0.6.9";
+import { icon } from "./icons.js?v=0.6.9";
 
 const escape = (value) =>
   String(value ?? "").replace(

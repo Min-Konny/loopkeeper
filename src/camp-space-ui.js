@@ -1,22 +1,7 @@
-import {getCatalog}from './engine.js?v=0.6.8';
-import {BOSS_MATERIALS}from './boss-materials.js?v=0.6.8';
-import {REGIONAL_MATERIALS}from './regional-content.js?v=0.6.8';
-import {WORK_MILESTONES}from './work-milestone-content.js?v=0.6.8';
+import {getCatalog}from './engine.js?v=0.6.9';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const number=x=>Math.floor(Number(x)||0).toLocaleString('ja-JP');
-export const BAG_CATEGORIES=[['resources','資源・金貨'],['supplies','食料・錬金'],['equipment','装備'],['permanent','永久所持']];
-const supplies=new Set(['food','fish','eggs','feed','spark_catalyst','ward_essence']);
-export function compactResourceIds(state){const d=[...getCatalog(state).ACTIONS,...getCatalog(state).RECIPES].find(x=>x.id===state.run.activeAction?.id);return [...new Set(['food','gold',...Object.keys(d?.yields||{}).slice(0,1)])].filter(id=>Object.hasOwn(state.run.resources,id));}
-export function inventoryMarkup(s,category='resources',visibleIds=Object.keys(getCatalog(s).RESOURCES)){
- const {RESOURCES,RECIPES}=getCatalog(s);const selected=BAG_CATEGORIES.some(([id])=>id===category)?category:'resources';let entries=[];
- if(['resources','supplies'].includes(selected))entries=Object.entries(RESOURCES).filter(([id])=>(visibleIds.includes(id)||s.run.resources[id]>0)&&supplies.has(id)===(selected==='supplies')).map(([id,d])=>({id,name:d.name,count:s.run.resources[id]}));
- if(selected==='equipment')entries=(s.run.ownedEquipment||Object.values(s.run.equipment).map(x=>x?.id).filter(Boolean)).map(id=>({id,name:RECIPES.find(r=>r.id===id)?.name||id,count:1,note:Object.values(s.run.equipment).some(x=>x?.id===id)?'装備中':'所持'}));
- if(selected==='permanent'){
-  entries=(s.meta.accessories||[]).map(id=>({id,name:RECIPES.find(r=>r.accessory===id||r.id===id)?.name||id,count:1,note:'永久所持'}));
-  for(const id of Object.keys(s.meta.trophyEarned||{})){const d=BOSS_MATERIALS.find(x=>x.id===id)||REGIONAL_MATERIALS.find(x=>x.id===id)||WORK_MILESTONES.find(x=>x.material===id);entries.push({id,name:d?.name||d?.materialName||id,count:s.meta.trophies?.[id]||0,note:'特殊素材'});}
- }
- return '<div class="bag-tabs" role="group" aria-label="所持品の分類">'+BAG_CATEGORIES.map(([id,name])=>'<button class="button small '+(selected===id?'gold-outline':'muted')+'" data-bag-category="'+id+'" data-focus="bag-'+id+'" aria-pressed="'+(selected===id)+'">'+name+'</button>').join('')+'</div><div class="inventory-list">'+(entries.length?entries.map(e=>'<div class="inventory-item" data-inventory-item="'+esc(e.id)+'"><span>'+esc(e.name)+(e.note?'<small>'+esc(e.note)+'</small>':'')+'</span><strong>'+number(e.count)+'</strong></div>').join(''):'<p class="fine-print">この分類の所持品はありません。</p>')+'</div>'+(['equipment','permanent'].includes(selected)?'<button class="button muted" data-info="status">装備・相棒の設定</button>':'');
-}
+export {BAG_CATEGORIES,inventoryMarkup}from './inventory-ui.js?v=0.6.9';
+export function compactResourceIds(state){return ['food','gold'].filter(id=>Object.hasOwn(state.run.resources,id));}
 export function queueStopStatus(s,issue,{manualReason=''}={}){
  if(s.run.status!=='preparing'||!s.settings.paused||!s.run.queue.length)return null;
  const disabled=s.settings.disabledUpgrades.includes('action_queue'),head=s.run.queue[0],d=[...getCatalog(s).ACTIONS,...getCatalog(s).RECIPES].find(x=>x.id===head.id);
