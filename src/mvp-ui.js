@@ -1,11 +1,11 @@
-import {finalWaveForRun}from './campaign-rules.js?v=0.5.0';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.5.0';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.5.0';
-import {hasUpgrade}from './free-features.js?v=0.5.0';
-import { getStartingResources } from './engine.js?v=0.5.0';
-import { challengesMarkup } from './strategy-ui.js?v=0.5.0';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.5.0";
-import { CONTENT as C } from "./content.js?v=0.5.0";
+import {finalWaveForRun}from './campaign-rules.js?v=0.5.1';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.5.1';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.5.1';
+import {hasUpgrade}from './free-features.js?v=0.5.1';
+import { getStartingResources } from './engine.js?v=0.5.1';
+import { challengesMarkup } from './strategy-ui.js?v=0.5.1';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.5.1";
+import { CONTENT as C } from "./content.js?v=0.5.1";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -21,7 +21,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.5.0";
+} from "./engine.js?v=0.5.1";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,

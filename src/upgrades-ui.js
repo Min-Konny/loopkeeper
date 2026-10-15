@@ -1,6 +1,6 @@
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.5.0';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.5.0';
-import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.5.0';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.5.1';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.5.1';
+import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.5.1';
 import {
   ACCELERATION,
   LEGACY_UPGRADES,
@@ -8,8 +8,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.5.0";
-import { icon } from "./icons.js?v=0.5.0";
+} from "./engine.js?v=0.5.1";
+import { icon } from "./icons.js?v=0.5.1";
 
 const escape = (value) =>
   String(value ?? "").replace(

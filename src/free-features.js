@@ -1,11 +1,11 @@
-import {initializeContracts}from './contracts.js?v=0.5.0';
-import {initializeRoutes}from './routes.js?v=0.5.0';
-import {initializeFarm}from './farm-state.js?v=0.5.0';
-import {synchronizeCompanions}from './companion-state.js?v=0.5.0';
-import {initializeMagic}from './magic-state.js?v=0.5.0';
-import {initializeGear}from './gear-state.js?v=0.5.0';
-import {initializeProgression}from './progression-rewards.js?v=0.5.0';
-import {initializeRunResults}from './run-results.js?v=0.5.0';
+import {initializeContracts}from './contracts.js?v=0.5.1';
+import {initializeRoutes}from './routes.js?v=0.5.1';
+import {initializeFarm}from './farm-state.js?v=0.5.1';
+import {synchronizeCompanions}from './companion-state.js?v=0.5.1';
+import {initializeMagic}from './magic-state.js?v=0.5.1';
+import {initializeGear}from './gear-state.js?v=0.5.1';
+import {initializeProgression}from './progression-rewards.js?v=0.5.1';
+import {initializeRunResults}from './run-results.js?v=0.5.1';
 export const FREE_FEATURES = [
  {id:'action_queue',name:'行動予約',wave:2},
  {id:'queue_templates',name:'手順テンプレート',wave:3},

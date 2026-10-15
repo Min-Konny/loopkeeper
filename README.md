@@ -1,4 +1,12 @@
-# LoopKeeper: Idle Defense 0.5.0
+# LoopKeeper: Idle Defense 0.5.1
+
+[ゲームを遊ぶ](https://min-konny.github.io/loopkeeper/?v=0.5.1)
+
+製作中の一時停止・再開後、作業が完了しても時間が進み続ける不具合を修正しました。自動調理・加工も目標到達や材料不足で停止します。作業なしで意図的に時間を進める操作は「作業なしで待機」と表示します。
+
+560件の逐次テストと、隔離ブラウザで製作停止・自動調理・保存/再読込・二重タブを確認。既存保存・所持品・支払済み製作・21/24波・エンドレスを保持します。地域/素材/UI分類などの拡張は含みません。
+
+## 前の更新: LoopKeeper: Idle Defense 0.5.0
 
 [ゲームを遊ぶ](https://min-konny.github.io/loopkeeper/?v=0.5.0)
 

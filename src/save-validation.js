@@ -1,16 +1,16 @@
-import {validCampaign,campaignForRun,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.5.0';
-import {CONTRACTS,contractById}from './contracts.js?v=0.5.0';
-import {ROUTES,routeById}from './routes.js?v=0.5.0';
-import {farmResource,resourceCap}from './farm-content.js?v=0.5.0';
-import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.5.0';
-import {alchemyResource}from './magic-content.js?v=0.5.0';
-import {validPreset}from './build-presets.js?v=0.5.0';
-import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.5.0';
-import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.5.0';
-import { endlessEnemy } from './endless.js?v=0.5.0';
-import { validMaterialPriority } from './material-priority.js?v=0.5.0';
-import { validCondition } from './queue-conditions.js?v=0.5.0';
-import { CONTENT as C } from "./content.js?v=0.5.0";
+import {validCampaign,campaignForRun,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.5.1';
+import {CONTRACTS,contractById}from './contracts.js?v=0.5.1';
+import {ROUTES,routeById}from './routes.js?v=0.5.1';
+import {farmResource,resourceCap}from './farm-content.js?v=0.5.1';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.5.1';
+import {alchemyResource}from './magic-content.js?v=0.5.1';
+import {validPreset}from './build-presets.js?v=0.5.1';
+import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.5.1';
+import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.5.1';
+import { endlessEnemy } from './endless.js?v=0.5.1';
+import { validMaterialPriority } from './material-priority.js?v=0.5.1';
+import { validCondition } from './queue-conditions.js?v=0.5.1';
+import { CONTENT as C } from "./content.js?v=0.5.1";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -83,6 +83,7 @@ export function validateSave(s) {
     )
       return false;
     const { meta: m, run: r, settings: t } = s;
+    if(r.automationOnly!==undefined&&typeof r.automationOnly!=='boolean')return false;
     if(r.campaign!==undefined&&(!validCampaign(r.campaign)||r.campaign===EXTENDED_CAMPAIGN&&["A1","A2"].includes(s.contentVersion)))return false;
     const goal=finalWaveForRun(s);
     if(m.freeFeatures!==undefined && (!validList(m.freeFeatures,new Set(FREE_FEATURES.map(x=>x.id)),5) || m.foundationVersion!==1))return false;

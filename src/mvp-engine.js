@@ -1,34 +1,34 @@
-import {EXTENDED_CAMPAIGN,CLASSIC_CAMPAIGN,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.5.0';
-import {investmentEffect}from './investments.js?v=0.5.0';
-import {freshContracts,contractEffects}from './contracts.js?v=0.5.0';
-import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.5.0';
-import {freshFarm,advanceFarm}from './farm-state.js?v=0.5.0';import {farmResource,resourceCap}from './farm-content.js?v=0.5.0';
-import {companionById}from './companion-content.js?v=0.5.0';
-import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.5.0';
-import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.5.0';import {alchemyResource}from './magic-content.js?v=0.5.0';
-import {weaponById}from './gear-content.js?v=0.5.0';
-import {initializeGear,accessoryEffects,combatBuild,strikeModifier}from './gear-state.js?v=0.5.0';
-import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.5.0';
-import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.5.0';
-import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.5.0';
-import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.5.0';
-import { maximumTradeCount } from './maximum-trade.js?v=0.5.0';
-import { startingGrant } from './starting-resources.js?v=0.5.0';
-import { tradeSaleUnit } from './fish-economy.js?v=0.5.0';
-import { trainingCandidates } from './prerequisite-training.js?v=0.5.0';
-import { recordReward } from './reward-events.js?v=0.5.0';
-import { observesWork, completedWork } from './work-completion.js?v=0.5.0';
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.5.0';
-import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.5.0';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.5.0';
-import { CONTENT as C } from "./content.js?v=0.5.0";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.5.0";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.5.0";
+import {EXTENDED_CAMPAIGN,CLASSIC_CAMPAIGN,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.5.1';
+import {investmentEffect}from './investments.js?v=0.5.1';
+import {freshContracts,contractEffects}from './contracts.js?v=0.5.1';
+import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.5.1';
+import {freshFarm,advanceFarm}from './farm-state.js?v=0.5.1';import {farmResource,resourceCap}from './farm-content.js?v=0.5.1';
+import {companionById}from './companion-content.js?v=0.5.1';
+import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.5.1';
+import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.5.1';import {alchemyResource}from './magic-content.js?v=0.5.1';
+import {weaponById}from './gear-content.js?v=0.5.1';
+import {initializeGear,accessoryEffects,combatBuild,strikeModifier}from './gear-state.js?v=0.5.1';
+import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.5.1';
+import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.5.1';
+import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.5.1';
+import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.5.1';
+import { maximumTradeCount } from './maximum-trade.js?v=0.5.1';
+import { startingGrant } from './starting-resources.js?v=0.5.1';
+import { tradeSaleUnit } from './fish-economy.js?v=0.5.1';
+import { trainingCandidates } from './prerequisite-training.js?v=0.5.1';
+import { recordReward } from './reward-events.js?v=0.5.1';
+import { observesWork, completedWork } from './work-completion.js?v=0.5.1';
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.5.1';
+import { validCondition, goalSatisfied } from './queue-conditions.js?v=0.5.1';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.5.1';
+import { CONTENT as C } from "./content.js?v=0.5.1";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.5.1";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.5.1";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.5.0";
+} from "./legacy-engine.js?v=0.5.1";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -257,6 +257,7 @@ function freshRun(meta, settings, campaign=EXTENDED_CAMPAIGN) {
     workSeq: 0,
     blockedReason: "",
     idleWait: false,
+    automationOnly:false,
     deathReport: null,
     healTimer: 0,
     workers: Object.fromEntries(
@@ -597,6 +598,7 @@ function batch(s, id, channel = "main", durationMultiplier = 1) {
   };
 }
 function begin(s, id) {
+  s.run.idleWait=false;s.run.automationOnly=false;
   if (s.run.activeAction?.id === id) return;
   suspend(s);
   s.run.activeAction = s.run.suspendedActions[id] || batch(s, id);
@@ -619,6 +621,7 @@ export function startAction(s, id) {
 }
 export function stopAction(s) {
   if (s.run.status !== "preparing") return fail("襲撃中です。");
+  s.run.idleWait=false;s.run.automationOnly=false;
   suspend(s);
   s.settings.paused = true;
   return ok();
@@ -1635,7 +1638,7 @@ export function startAcceleration(s) {
   if (!getAccelerationStatus(s).canStart) return fail("復帰を使えません。");
   s.run.acceleration.active = true;
   s.settings.paused = false;
-  if (!s.run.activeAction && !s.run.queue.length) s.run.idleWait = true;
+  s.run.idleWait=false;s.run.automationOnly=false;
   return ok();
 }
 export function stopAcceleration(s) {
@@ -1671,6 +1674,7 @@ export function getNextEnemy(s) {
   };
 }
 function beginRaid(s,encounter=null) {
+  s.run.idleWait=false;
   const next=()=>encounter||getNextEnemy(s);
   s.run.enemy = {
     ...next(),
@@ -1900,10 +1904,39 @@ function battleRound(s){const e=s.run.enemy;const damage=(n,source='player')=>ba
     if (e.hp <= 0) return victory(s, e);
   }
 }
+// The foreground, bounded automation, and explicit manual waiting are distinct clock owners.
+function automaticClockWork(s){
+ const active=new Set(['ready','paused','cooking','processing']);
+ return [[getAutoCookingStatus(s),'自動調理'],[getProcessingStatus(s),'自動加工']].filter(([x])=>active.has(x.code)).map(([,name])=>name);
+}
+export function getClockStatus(s){
+ if(s.run.status==='combat')return {kind:'combat',label:s.run.routes?.active?'地域遠征中':'襲撃中'};
+ if(s.run.activeAction)return {kind:'work',label:defs.get(s.run.activeAction.id)?.name||'作業中'};
+ if(s.run.acceleration?.active&&getAccelerationStatus(s).canStart)return {kind:'acceleration',label:'周回復帰（自動待機）'};
+ const automatic=s.run.automationOnly?automaticClockWork(s):[];
+ if(automatic.length)return {kind:'automation',label:automatic.join('・')};
+ if(s.run.idleWait)return {kind:'wait',label:'手動待機（襲撃まで時間を進める）'};
+ return {kind:'none',label:'作業なし'};
+}
+function startReadyStockWork(s){
+ if(s.run.activeAction||!on(s,'stock_targets'))return;
+ for(const target of s.settings.stockTargets){
+  if(s.run.resources[target.id]>=target.count)continue;
+  for(const producer of getProductionSources(s,target.id,target.count-s.run.resources[target.id])){
+   const result=resolveGoal(s,producer.id);
+   if(result.ok&&result.id){begin(s,result.id);s.run.activeAction.stock=true;return;}
+  }
+ }
+}
 function step(s, dt) {
+  if(s.run.status==='combat')s.run.idleWait=false;
   if (s.run.status === "preparing") {
     driveQueue(s);
     if (s.settings.paused) return;
+    startReadyStockWork(s);
+    // Discard stale wait permissions when real work owns this tick.
+    if(s.run.activeAction){s.run.idleWait=false;s.run.automationOnly=false;}
+    if(getClockStatus(s).kind==='none'){s.settings.paused=true;s.run.automationOnly=false;return;}
   }
   advanceFarm(s,dt,reserve(s));
   s.run.elapsed = round(s.run.elapsed + dt);
@@ -2012,8 +2045,9 @@ function step(s, dt) {
         if (s.run.activeAction) break;
       }
     }
-    if (!s.run.activeAction && !s.run.queue.length && !s.run.idleWait)
-      s.settings.paused = true;
+    if (!s.run.activeAction && (!on(s,'action_queue')||!s.run.queue.length) && getClockStatus(s).kind==='none'){
+      s.settings.paused = true;s.run.automationOnly=false;
+    }
   }
 }
 export function tick(s, seconds) {
@@ -2108,7 +2142,7 @@ export function startEndless(s) {
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
 }
-import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.5.0';
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.5.1';
 
 export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
   return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{
