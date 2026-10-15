@@ -1,7 +1,7 @@
-import {getCatalog}from './engine.js?v=0.6.4';
-import {BOSS_MATERIALS}from './boss-materials.js?v=0.6.4';
-import {REGIONAL_MATERIALS}from './regional-content.js?v=0.6.4';
-import {WORK_MILESTONES}from './work-milestone-content.js?v=0.6.4';
+import {getCatalog}from './engine.js?v=0.6.5';
+import {BOSS_MATERIALS}from './boss-materials.js?v=0.6.5';
+import {REGIONAL_MATERIALS}from './regional-content.js?v=0.6.5';
+import {WORK_MILESTONES}from './work-milestone-content.js?v=0.6.5';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number=x=>Math.floor(Number(x)||0).toLocaleString('ja-JP');
 export const BAG_CATEGORIES=[['resources','資源・金貨'],['supplies','食料・錬金'],['equipment','装備'],['permanent','永久所持']];

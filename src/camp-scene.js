@@ -43,14 +43,16 @@ export function mountCampScene(host, { variant = "camp", focusY = 0.55 } = {}) {
   host.prepend(layer);
   host.classList.add("has-camp-art");
   const stage = layer.querySelector("svg");
+  const compact=variant==="compact",sceneWidth=compact?520:1536,sceneHeight=compact?400:1024;
+  if(compact)stage.setAttribute("viewBox","780 340 520 400");
   const resize = () => {
     const { width, height } = layer.getBoundingClientRect();
     if (!width || !height) return;
-    const scale = Math.max(width / 1536, height / 1024);
-    stage.style.width = `${1536 * scale}px`;
-    stage.style.height = `${1024 * scale}px`;
-    stage.style.left = `${(width - 1536 * scale) / 2}px`;
-    stage.style.top = `${(height - 1024 * scale) * focusY}px`;
+    const scale = Math.max(width / sceneWidth, height / sceneHeight);
+    stage.style.width = `${sceneWidth * scale}px`;
+    stage.style.height = `${sceneHeight * scale}px`;
+    stage.style.left = `${(width - sceneWidth * scale) / 2}px`;
+    stage.style.top = `${(height - sceneHeight * scale) * focusY}px`;
   };
   let visible = true;
   let active = true;

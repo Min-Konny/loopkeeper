@@ -1,12 +1,12 @@
-import {LEGACY_CATEGORIES}from './legacy-categories.js?v=0.6.4';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.4';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.4';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.4';
-import {hasUpgrade}from './free-features.js?v=0.6.4';
-import { getStartingResources } from './engine.js?v=0.6.4';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.4';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.4";
-import { CONTENT as C } from "./content.js?v=0.6.4";
+import {LEGACY_CATEGORIES}from './legacy-categories.js?v=0.6.5';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.5';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.5';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.5';
+import {hasUpgrade}from './free-features.js?v=0.6.5';
+import { getStartingResources } from './engine.js?v=0.6.5';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.5';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.5";
+import { CONTENT as C } from "./content.js?v=0.6.5";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -22,7 +22,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.4";
+} from "./engine.js?v=0.6.5";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
