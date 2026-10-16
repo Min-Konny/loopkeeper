@@ -1,5 +1,5 @@
-import { pixelCraftScene } from './pixel-craft-art.js?v=0.6.21';
-import { equipmentMaterial } from './visual-design.js?v=0.6.21';
+import { pixelCraftScene } from './pixel-craft-art.js?v=0.6.22';
+import { equipmentMaterial } from './visual-design.js?v=0.6.22';
 
 const r=(x,y,w,h,color)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${color}"/>`;
 const p=(points,color)=>`<polygon points="${points}" fill="${color}"/>`;
@@ -47,6 +47,5 @@ export function pixelWorkScene(skill,id,equipment={}){
  }
  let person=r(37,76,27,3,'#293f32')+r(44,65,5,11,'#33473e')+r(55,65,5,11,'#33473e')+r(42,49,19,17,armor.cloth)+r(44,50,4,14,'#aab894')+r(45,34,12,14,'#d7b98d')+r(43,32,15,5,'#87916b')+r(40,36,21,2,'#c4b880')+r(56,39,1,2,'#2a4037');
  if(equipment.armor)person+=r(44,51,14,10,armor.metal)+r(46,33,11,3,armor.metal);
- return `<div class="work-vignette work-${skill} pixel-work material-${mat.tier}" style="--tool-metal:${mat.metal};--work-cloth:${armor.cloth}" aria-hidden="true"><svg viewBox="0 0 170 90" shape-rendering="crispEdges">${back}<g class="pixel-target">${target}</g>${person}<g data-pixel-arm>${arm}</g><g data-pixel-effect opacity="0">${fx}</g></svg></div>`;
+ return `<div class="work-vignette work-${skill} pixel-work material-${mat.tier}" style="--tool-metal:${mat.metal};--work-cloth:${armor.cloth}" aria-hidden="true"><svg viewBox="0 0 170 90" shape-rendering="crispEdges">${back}<g class="pixel-target">${target}</g>${person}<g data-pixel-arm="">${arm}</g><g data-pixel-effect="" opacity="0">${fx}</g></svg></div>`;
 }
-
