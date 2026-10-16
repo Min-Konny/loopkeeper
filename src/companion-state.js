@@ -1,4 +1,4 @@
-import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.16';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.17';
 export const freshCompanion=()=>({woodCount:0,bonusWood:0,foxCooldown:0,foxHits:0,foxDamage:0,turtleCharges:2,turtleBlocks:0,turtlePrevented:0});
 export function synchronizeCompanions(s){
  if(s.version===1)return [];

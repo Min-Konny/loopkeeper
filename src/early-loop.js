@@ -1,4 +1,4 @@
-import {preparationDefinition}from './preparation-balance.js?v=0.6.16';
+import {preparationDefinition}from './preparation-balance.js?v=0.6.17';
 // Local W1–12 study only. Unstamped saves retain released rules.
 export const earlyLoop=s=>s?.version===2&&s.meta.earlyLoopVersion===1&&s.run.earlyLoopVersion===1;
 export const earlyJobMultiplier=id=>['fish_river','mine_coal','mine_silver','smelt_steel'].includes(id)?2:1;
@@ -18,7 +18,11 @@ export function earlyDefeatMarkup(s){
  const current=s.run.battleReports[0],previous=(s.meta.history||[]).find(h=>h.generation<s.meta.generation&&h.result?.earlyLoopVersion===1)?.result;
  const remaining=current.maxHp?Math.round(current.remainingHp/current.maxHp*100):0;
  let comparison='';if(previous?.wallWave===current.wave&&previous.enemyRemainingPercent!=null)comparison=`前回の同じ壁：敵HP ${previous.enemyRemainingPercent}% → 今回 ${remaining}%。`;
- const advice=current.foodHealing===0&&s.run.resources.food===0?'食料を用意するか、装備で戦闘を短くする。':s.run.deathReport?.damage>=s.run.deathReport?.beforeHit&&s.run.resources.food>0?'食料は残った。一撃を耐える防具・体力を先に整える。':'武器の更新と防御・救護の配分を見直す。';
+ const hasFood=s.run.resources.food>0,usedFood=current.foodHealing>0;
+ const advice=!hasFood
+  ? usedFood?'食料を使い切った。補充するか、防御・火力で消費を抑えよう。':'食料を用意するか、火力で戦闘を短くしよう。'
+  : usedFood?'食料は残った。食料で回復しても押し切られたため、防御・火力・救護の配分を見直そう。':'食料を使う前に倒れた。HP・防御や先に倒す火力を確保しよう。';
+
  const missing=[];if(current.wave===6){if((s.run.equipment.shield?.tier||0)<2)missing.push('鉄の盾');if((s.run.facilities.infirmary||0)<2)missing.push('救護所II');}if(current.wave===12){if((s.run.equipment.armor?.tier||0)<4)missing.push('銀の防具');if((s.run.equipment.shield?.tier||0)<4)missing.push('銀の盾');}
  return `<section class="defeat-report"><h3>次の再挑戦へ</h3><p>${comparison||'今回の壁：敵HP '+remaining+'%まで削った。'}</p><p>この人生の再挑戦報酬 ${(s.run.progression?.checkpointAward||0)+(s.run.progression?.attemptAward||0)+(s.run.progression?.routeAward||0)} pt。永続経験は保持。</p>${missing.length?'<p>この壁までに未完成：'+missing.join('・')+'。次の人生はこの準備を先に。</p>':''}<p>${advice}</p></section>`;
 }
