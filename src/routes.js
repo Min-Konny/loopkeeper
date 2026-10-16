@@ -1,7 +1,7 @@
-import {earlyRoutePoints}from './early-loop.js?v=0.6.15';
-import {repeatRouteValue}from './late-loop.js?v=0.6.15';import {rewardRepeatRoute}from './progression-rewards.js?v=0.6.15';
-import {FRONTIER_REGIONS}from './regional-content.js?v=0.6.15';
-import {initializeRegionalRewards,awardRegionalMaterial}from './regional-rewards.js?v=0.6.15';
+import {earlyRoutePoints}from './early-loop.js?v=0.6.16';
+import {repeatRouteValue}from './late-loop.js?v=0.6.16';import {rewardRepeatRoute}from './progression-rewards.js?v=0.6.16';
+import {FRONTIER_REGIONS}from './regional-content.js?v=0.6.16';
+import {initializeRegionalRewards,awardRegionalMaterial}from './regional-rewards.js?v=0.6.16';
 export const ROUTES=[
  {id:'forest',name:'風の森',danger:'通常・軽装飛行',hint:'弓の飛行特効。攻撃+2・木材作業10%短縮。',hp:130,attack:9,defense:2,trait:'flying',points:1,buff:{attack:2,loggingSpeed:.1}},
  {id:'quarry',name:'岩の峠',danger:'通常・重装',hint:'貫通・魔法が有効。防御+3。',hp:160,attack:8,defense:14,trait:'heavy',points:1,buff:{defense:3}},

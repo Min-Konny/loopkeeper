@@ -1,7 +1,9 @@
+import {preparationDefinition}from './preparation-balance.js?v=0.6.16';
 // Local W1–12 study only. Unstamped saves retain released rules.
 export const earlyLoop=s=>s?.version===2&&s.meta.earlyLoopVersion===1&&s.run.earlyLoopVersion===1;
 export const earlyJobMultiplier=id=>['fish_river','mine_coal','mine_silver','smelt_steel'].includes(id)?2:1;
 export function earlyDefinition(s,d,{paid=false}={}){
+ d=preparationDefinition(s,d);
  if(!d||!earlyLoop(s)||d.earlyLoopDefinition||(s.meta.earlyLoopBatching===false||d.id==='fish_river'&&s.meta.earlyLoopFishBatching===false)&&!paid)return d;
  const multiplier=earlyJobMultiplier(d.id);if(multiplier===1)return d;
  return {...d,earlyLoopDefinition:true,earlyLoopUnits:multiplier,duration:d.duration*multiplier,

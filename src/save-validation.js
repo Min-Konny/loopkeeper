@@ -1,19 +1,20 @@
-import {validWorkMilestones}from './work-milestones.js?v=0.6.15';
-import {validTrophies} from './boss-materials.js?v=0.6.15';
-import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.15';
-import {CONTRACTS,contractById}from './contracts.js?v=0.6.15';
-import {validRegionalRewards}from './regional-rewards.js?v=0.6.15';
-import {ROUTES,routeById}from './routes.js?v=0.6.15';
-import {farmResource,resourceCap}from './farm-content.js?v=0.6.15';
-import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.15';
-import {alchemyResource}from './magic-content.js?v=0.6.15';
-import {validPreset}from './build-presets.js?v=0.6.15';
-import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.15';
-import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.15';
-import { endlessEnemy } from './endless.js?v=0.6.15';
-import { validMaterialPriority } from './material-priority.js?v=0.6.15';
-import { validCondition } from './queue-conditions.js?v=0.6.15';
-import { CONTENT as C } from "./content.js?v=0.6.15";
+import {preparationRoute}from './preparation-balance.js?v=0.6.16';
+import {validWorkMilestones}from './work-milestones.js?v=0.6.16';
+import {validTrophies} from './boss-materials.js?v=0.6.16';
+import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.16';
+import {CONTRACTS,contractById}from './contracts.js?v=0.6.16';
+import {validRegionalRewards}from './regional-rewards.js?v=0.6.16';
+import {ROUTES,routeById}from './routes.js?v=0.6.16';
+import {farmResource,resourceCap}from './farm-content.js?v=0.6.16';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.16';
+import {alchemyResource}from './magic-content.js?v=0.6.16';
+import {validPreset}from './build-presets.js?v=0.6.16';
+import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.16';
+import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.16';
+import { endlessEnemy } from './endless.js?v=0.6.16';
+import { validMaterialPriority } from './material-priority.js?v=0.6.16';
+import { validCondition } from './queue-conditions.js?v=0.6.16';
+import { CONTENT as C } from "./content.js?v=0.6.16";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -100,11 +101,11 @@ export function validateSave(s) {
     if([r.activeAction,...Object.values(r.suspendedActions||{})].some(x=>x?.earlyLoopBatch!==undefined&&r.earlyLoopVersion!==1))return false;
     if(m.earlyLoopFishBatching!==undefined&&(typeof m.earlyLoopFishBatching!=='boolean'||m.earlyLoopVersion!==1))return false;
     if(m.earlyLoopBatching!==undefined&&(typeof m.earlyLoopBatching!=='boolean'||m.earlyLoopVersion!==1))return false;
-    if((m.preparationBalanceVersion!==undefined&&m.preparationBalanceVersion!==1)||(r.preparationBalanceVersion!==undefined&&(r.preparationBalanceVersion!==1||m.preparationBalanceVersion!==1)))return false;
+    if((m.preparationBalanceVersion!==undefined&&![1,2].includes(m.preparationBalanceVersion))||(r.preparationBalanceVersion!==undefined&&(![1,2].includes(r.preparationBalanceVersion)||r.preparationBalanceVersion!==m.preparationBalanceVersion)))return false;
     if((m.lateLoopVersion!==undefined&&m.lateLoopVersion!==1)||(r.lateLoopVersion!==undefined&&(r.lateLoopVersion!==1||m.lateLoopVersion!==1)))return false;
     if((m.earlyLoopVersion!==undefined&&m.earlyLoopVersion!==1)||(r.earlyLoopVersion!==undefined&&(r.earlyLoopVersion!==1||m.earlyLoopVersion!==1)))return false;
     if(m.repeatPoints!==undefined&&!integer(m.repeatPoints,0,Math.min(m.totalPoints,m.generation*(m.lateLoopVersion===1?8:m.earlyLoopVersion===1?6:4))))return false;
-    if(r.progression!==undefined){const p=r.progression;if(!object(p)||(p.routeAward!==undefined&&(r.lateLoopVersion!==1||!integer(p.routeAward,0,2)||p.routeAward>(r.routes?.cleared||[]).filter(id=>["observatory","ice"].includes(id)).length))||!integer(p.startBestWave,0,Math.min(goal,m.bestWave))||!(p.checkpointAward===null||integer(p.checkpointAward,0,r.earlyLoopVersion===1?4:3))||!(p.attemptAward===null||integer(p.attemptAward,0,r.earlyLoopVersion===1?2:1))||(p.checkpointAward||0)+(p.attemptAward||0)+(p.routeAward||0)>(m.repeatPoints||0))return false;if((p.checkpointAward||0)>0&&(p.startBestWave<(r.earlyLoopVersion===1?2:3)||r.wave<p.startBestWave)||(p.attemptAward||0)>0&&p.startBestWave<3)return false;}
+    if(r.progression!==undefined){const p=r.progression;if(!object(p)||(p.routeAward!==undefined&&(r.lateLoopVersion!==1||!integer(p.routeAward,0,2)||p.routeAward>(r.routes?.cleared||[]).filter(id=>["observatory","ice"].includes(id)).length))||!integer(p.startBestWave,0,Math.min(goal,m.bestWave))||!(p.checkpointAward===null||integer(p.checkpointAward,0,r.earlyLoopVersion===1?4:3))||!(p.attemptAward===null||integer(p.attemptAward,0,(r.earlyLoopVersion===1?2:1)+(r.preparationBalanceVersion===2?1:0)))||(p.checkpointAward||0)+(p.attemptAward||0)+(p.routeAward||0)>(m.repeatPoints||0))return false;if((p.checkpointAward||0)>0&&(p.startBestWave<(r.earlyLoopVersion===1?2:3)||r.wave<p.startBestWave)||(p.attemptAward||0)>0&&p.startBestWave<3)return false;}
     if(m.gearVersion!==undefined&&m.gearVersion!==1)return false;
     if((m.accessories!==undefined||m.accessorySets!==undefined)&&m.gearVersion!==1)return false;
     if(m.accessories!==undefined&&!validList(m.accessories,new Set(ACCESSORIES.map(x=>x.id)),ACCESSORIES.length))return false;
@@ -354,13 +355,14 @@ export function validateSave(s) {
       return false;
     if (r.status === "combat") {
       const e = r.enemy,
-        d = r.endless?.active ? endlessEnemy(r.wave+1,encountersForRun(s,C.encounters),goal) : encountersForRun(s,C.encounters)[r.wave];
+        d = r.endless?.active ? endlessEnemy(r.wave+1,encountersForRun(s,C.encounters),goal) : encountersForRun(s,C.encounters)[r.wave],
+        route = r.routes?.active ? preparationRoute(s,routeById(r.routes.active.id)) : null;
       if (
         !object(e) ||
         !d ||
         e.id !== d.id ||
         e.wave !== r.wave + 1 ||
-        (r.routes?.active&&(e.xpBudget!==0||e.maxHp!==routeById(r.routes.active.id).hp||e.attack!==routeById(r.routes.active.id).attack||e.defense>routeById(r.routes.active.id).defense||e.trait!==routeById(r.routes.active.id).trait||e.country!==null||e.invasion!==false||e.pressure!=null)) ||
+        (r.routes?.active&&(e.xpBudget!==0||e.maxHp!==route.hp||e.attack!==route.attack||e.defense>route.defense||e.trait!==route.trait||e.country!==null||e.invasion!==false||e.pressure!=null)) ||
         !number(e.hp, 0, e.maxHp) ||
         !number(e.maxHp, 1) ||
         !number(e.attack) ||

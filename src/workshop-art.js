@@ -1,5 +1,5 @@
-import { icon } from './icons.js?v=0.6.15';
-import { equipmentMaterial } from './visual-design.js?v=0.6.15';
+import { icon } from './icons.js?v=0.6.16';
+import { equipmentMaterial } from './visual-design.js?v=0.6.16';
 const art=new Map(),materials=new Map();
 const image=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
 export function materialShortage(required,available){return Number.isFinite(required)&&required>=0?Math.max(0,required-available):0;}
