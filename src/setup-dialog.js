@@ -4,8 +4,10 @@ export function updateSetupDialog(dialog, markup) {
   const list = dialog.querySelector(".setup-upgrades");
   if (dialog.dataset.setup === markup && list) return false;
   const scroll = list?.scrollTop || 0;
+  const outerScroll = dialog.scrollTop || 0;
   dialog.innerHTML = markup;
   dialog.dataset.setup = markup;
   dialog.querySelector(".setup-upgrades").scrollTop = scroll;
+  dialog.scrollTop = outerScroll;
   return true;
 }

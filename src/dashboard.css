@@ -720,3 +720,12 @@ body.effects-disabled .work-vignette::after{animation:none!important}
 .priority-list { max-height: 42dvh; overflow-y: auto; padding-left: 24px; }
 .priority-list li { display: flex; align-items: center; gap: 6px; margin: 7px 0; }
 .priority-list li span { flex: 1; }
+
+
+/* On short screens the footer must not squeeze the allocation list into one line. */
+@media (max-height:700px) {
+  #death-dialog.legacy-setup[open] { display:block; overflow-y:auto; overscroll-behavior:contain; }
+  #death-dialog.legacy-setup .setup-tabs { margin-top:12px; }
+  #death-dialog.legacy-setup .setup-upgrades { max-height:none; overflow-y:visible; margin-block:12px; }
+  #death-dialog.legacy-setup .setup-footer { margin-top:16px; }
+}
