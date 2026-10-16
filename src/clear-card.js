@@ -1,6 +1,6 @@
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.17';
-import { CHALLENGES, challengeResults } from './strategy.js?v=0.6.17';
-import { getCatalog } from './engine.js?v=0.6.17';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.18';
+import { CHALLENGES, challengeResults } from './strategy.js?v=0.6.18';
+import { getCatalog } from './engine.js?v=0.6.18';
 export function clearRecord(state, endless = false) {
   const { AUGMENTS } = getCatalog(state);
   if (endless) {

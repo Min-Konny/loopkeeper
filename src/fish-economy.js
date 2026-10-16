@@ -1,4 +1,4 @@
-import {investmentEffect}from './investments.js?v=0.6.17';
+import {investmentEffect}from './investments.js?v=0.6.18';
 // Explicit investments change sale income, never purchase prices or gathered XP.
 export const FISH_FACILITIES = [{
   id: 'smokehouse', facilityId: 'smokehouse', name: '燻製小屋', level: 1,

@@ -1,10 +1,12 @@
-import {enqueueTrainingLevel}from './engine.js?v=0.6.17';
-import {trophyShortage} from './boss-materials.js?v=0.6.17';
-import {hasUpgrade}from './free-features.js?v=0.6.17';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.17';
-import { getActionXp } from './engine.js?v=0.6.17';
-import * as old from "./legacy-planner.js?v=0.6.17";
-import { orderRecipeMaterials } from './engine.js?v=0.6.17';
+import {earlyDefinition}from './early-loop.js?v=0.6.18';
+import {getActionYields}from './engine.js?v=0.6.18';
+import {enqueueTrainingLevel}from './engine.js?v=0.6.18';
+import {trophyShortage} from './boss-materials.js?v=0.6.18';
+import {hasUpgrade}from './free-features.js?v=0.6.18';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.18';
+import { getActionXp } from './engine.js?v=0.6.18';
+import * as old from "./legacy-planner.js?v=0.6.18";
+import { orderRecipeMaterials } from './engine.js?v=0.6.18';
 import {
   isLegacy,
   getCatalog,
@@ -23,7 +25,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.6.17";
+} from "./engine.js?v=0.6.18";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -60,6 +62,15 @@ export function planCraft(s, id, count = 1) {
       steps.push({ id: x.id, count });
       n -= count;
     }
+  }
+  function output(x,saved=null){
+    const definition=saved?(saved.earlyLoopBatch===1?earlyDefinition(shadow,x,{paid:true}):{...x,earlyLoopDefinition:true}):x;
+    return getActionYields(shadow,definition);
+  }
+  function batchesFor(x,resource,short){
+    const saved=!paid.has(x.id)&&(s.run.activeAction?.id===x.id?s.run.activeAction:s.run.suspendedActions[x.id]);
+    const fresh=output(x)[resource];
+    return saved?1+Math.max(0,Math.ceil((short-(output(x,saved)[resource]||0))/fresh)):Math.ceil(short/fresh);
   }
   function craft(x, n, seen = new Set()) {
     if (seen.has(x.id)) throw Error("材料の循環。");
@@ -114,14 +125,14 @@ export function planCraft(s, id, count = 1) {
                   ? "市場で木材を納入。"
                   : "技能を上げてください。"),
           );
-        craft(p, Math.ceil(short / p.yields[r]), next);
+        craft(p, batchesFor(p,r,short), next);
       }
       inventory[r] = (inventory[r] || 0) - needed;
     }
     append(x, n);
     if (x.equipment) equipment[x.slot] = { id:x.id, ...x.equipment };
-    for (const [r, v] of Object.entries(x.yields || {}))
-      inventory[r] = (inventory[r] || 0) + v * n;
+    const fresh=output(x),first=saved?output(x,saved):fresh;
+    for (const r of Object.keys(fresh))inventory[r]=(inventory[r]||0)+(first[r]||0)+fresh[r]*(n-1);
   }
   try {
     craft(d, d.equipment || d.facility || d.endlessFacility || d.accessory ? 1 : count);
