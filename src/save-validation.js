@@ -1,19 +1,19 @@
-import {validWorkMilestones}from './work-milestones.js?v=0.6.11';
-import {validTrophies} from './boss-materials.js?v=0.6.11';
-import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.11';
-import {CONTRACTS,contractById}from './contracts.js?v=0.6.11';
-import {validRegionalRewards}from './regional-rewards.js?v=0.6.11';
-import {ROUTES,routeById}from './routes.js?v=0.6.11';
-import {farmResource,resourceCap}from './farm-content.js?v=0.6.11';
-import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.11';
-import {alchemyResource}from './magic-content.js?v=0.6.11';
-import {validPreset}from './build-presets.js?v=0.6.11';
-import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.11';
-import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.11';
-import { endlessEnemy } from './endless.js?v=0.6.11';
-import { validMaterialPriority } from './material-priority.js?v=0.6.11';
-import { validCondition } from './queue-conditions.js?v=0.6.11';
-import { CONTENT as C } from "./content.js?v=0.6.11";
+import {validWorkMilestones}from './work-milestones.js?v=0.6.12';
+import {validTrophies} from './boss-materials.js?v=0.6.12';
+import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.12';
+import {CONTRACTS,contractById}from './contracts.js?v=0.6.12';
+import {validRegionalRewards}from './regional-rewards.js?v=0.6.12';
+import {ROUTES,routeById}from './routes.js?v=0.6.12';
+import {farmResource,resourceCap}from './farm-content.js?v=0.6.12';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.12';
+import {alchemyResource}from './magic-content.js?v=0.6.12';
+import {validPreset}from './build-presets.js?v=0.6.12';
+import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.12';
+import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.12';
+import { endlessEnemy } from './endless.js?v=0.6.12';
+import { validMaterialPriority } from './material-priority.js?v=0.6.12';
+import { validCondition } from './queue-conditions.js?v=0.6.12';
+import { CONTENT as C } from "./content.js?v=0.6.12";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -211,7 +211,7 @@ export function validateSave(s) {
     )
       return false;
     if (r.training !== undefined && (!object(r.training) || !number(r.training.defense) || !number(r.training.vitality))) return false;
-    if (r.status === "legacy_setup" && !ledger(r.legacyDraft, m.totalPoints,free))
+    if (r.status === "legacy_setup" && (!ledger(r.legacyDraft, m.totalPoints,free) || (r.legacyDraft.disabledUpgrades!==undefined && !validList(r.legacyDraft.disabledUpgrades,upgradeIds,upgradeIds.size))))
       return false;
     if (r.status === "cleared" && r.wave !== goal) return false;
     if (

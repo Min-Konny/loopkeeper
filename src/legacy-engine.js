@@ -1,6 +1,6 @@
-import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.11';
-import { recordReward } from './reward-events.js?v=0.6.11';
-import { observesWork, completedWork } from './work-completion.js?v=0.6.11';
+import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.12';
+import { recordReward } from './reward-events.js?v=0.6.12';
+import { observesWork, completedWork } from './work-completion.js?v=0.6.12';
 // Original local simulation. All mutations stay in this module; no wall-clock or random input.
 export const FIRST_RAID_DELAY = 180;
 export const BASE_RAID_INTERVAL = 180;
@@ -357,31 +357,11 @@ function accelerationGate(state) {
   return '';
 }
 
-export function canPurchaseUpgrade(state, id) {
-  const upgrade = LEGACY_UPGRADES.find((entry) => entry.id === id);
-  if (!upgrade) return { ok: false, reason: 'その継承は存在しません。' };
-  if (state.meta.upgrades.includes(id)) return { ok: false, reason: 'すでに解放済みです。' };
-  if(id==='action_queue')return {ok:false,reason:queueUnlocked(state)?'すでに無料解放済みです。':'WAVE 1撃退で無料解放されます。'};
-  if (id === 'cycle_acceleration') {
-    const reason = accelerationGate(state);
-    if (reason) return { ok: false, reason };
-  }
-  if (state.meta.points < upgrade.cost) return { ok: false, reason: '継承ポイントが不足しています。初達成のクエストやボスの初撃破で獲得できます。' };
-  return { ok: true, reason: '' };
-}
-
-export function purchaseUpgrade(state, id) {
-  const allowed = canPurchaseUpgrade(state, id);
-  if (!allowed.ok) return allowed;
-  const upgrade = LEGACY_UPGRADES.find((entry) => entry.id === id);
-  state.meta.points -= upgrade.cost;
-  state.meta.upgrades.push(id);
-  if (HELPER_UPGRADE_IDS.has(id)) state.run.helpers[id] = 0;
-  addLog(state, `${upgrade.name}を解放した。次の世代にも受け継がれる。`, 'permanent');
-  return { ok: true, reason: '' };
-}
+export function canPurchaseUpgrade(){return {ok:false,reason:"継承ポイントの配分は次の転生時に行います。"};}
+export function purchaseUpgrade(state,id){return canPurchaseUpgrade(state,id);}
 
 export function toggleUpgrade(state, id) {
+  if(!["automation","worker"].includes(LEGACY_UPGRADES.find(u=>u.id===id)?.kind))return {ok:false,reason:"継承の構成変更は転生時に行います。"};
   if (!UPGRADE_IDS.has(id) || !(state.meta.upgrades.includes(id)||(id==='action_queue'&&queueUnlocked(state)))) return { ok: false, reason: '先に解放してください。' };
   if (state.settings.disabledUpgrades.includes(id)) state.settings.disabledUpgrades = state.settings.disabledUpgrades.filter((entry) => entry !== id);
   else state.settings.disabledUpgrades.push(id);
@@ -1098,4 +1078,4 @@ export function parseSave(text) {
   }
 }
 
-import { validMaterialPriority } from './material-priority.js?v=0.6.11';
+import { validMaterialPriority } from './material-priority.js?v=0.6.12';

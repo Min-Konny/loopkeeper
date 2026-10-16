@@ -1,16 +1,16 @@
-export {enqueueTrainingLevel,editQueuedTrainingLevel}from './mvp-engine.js?v=0.6.11';
+export {enqueueTrainingLevel,editQueuedTrainingLevel}from './mvp-engine.js?v=0.6.12';
 export const getActionYields = (s,d) => isLegacy(s) ? d.yields || {} : mvp.getActionYields(s,d);
 export const getPlayerStrike = s => isLegacy(s) ? {attack:getStats(s).attack,armor:(s.run.enemy || getNextEnemy(s)).defense,damage:Math.max(1,getStats(s).attack-(s.run.enemy || getNextEnemy(s)).defense)} : mvp.getPlayerStrike(s);
-export {startManualRepeat,canStartManualRepeat}from './mvp-engine.js?v=0.6.11';
-export { enqueueConditional } from './mvp-engine.js?v=0.6.11';
-import {earlyLoop,earlyDefinition}from './early-loop.js?v=0.6.11';
-import * as legacy from "./legacy-engine.js?v=0.6.11";
-import * as mvp from "./mvp-engine.js?v=0.6.11";
-import { validateSave } from "./save-validation.js?v=0.6.11";
-export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.6.11";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.6.11";
-export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.6.11";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.6.11";
+export {startManualRepeat,canStartManualRepeat}from './mvp-engine.js?v=0.6.12';
+export { enqueueConditional } from './mvp-engine.js?v=0.6.12';
+import {earlyLoop,earlyDefinition}from './early-loop.js?v=0.6.12';
+import * as legacy from "./legacy-engine.js?v=0.6.12";
+import * as mvp from "./mvp-engine.js?v=0.6.12";
+import { validateSave } from "./save-validation.js?v=0.6.12";
+export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.6.12";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.6.12";
+export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.6.12";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.6.12";
 export {
   SKILLS,
   getSkillProgress,
@@ -27,7 +27,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.6.11";
+} from "./mvp-engine.js?v=0.6.12";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
@@ -326,8 +326,8 @@ export const resetLegacyRankDraft=s=>isLegacy(s)?{ok:false,reason:'次の世代�
 
 export const cancelLegacyDraft=s=>isLegacy(s)?{ok:false,reason:'次の世代から利用できます。'}:mvp.cancelLegacyDraft(s);
 
-export {startRoute,withdrawRoute}from './mvp-engine.js?v=0.6.11';
+export {startRoute,withdrawRoute}from './mvp-engine.js?v=0.6.12';
 
-export {getReservedResources}from './mvp-engine.js?v=0.6.11';
+export {getReservedResources}from './mvp-engine.js?v=0.6.12';
 
 export const getClockStatus=s=>isLegacy(s)?{kind:s.run.activeAction?'work':'none',label:s.run.activeAction?.id||'作業なし'}:mvp.getClockStatus(s);

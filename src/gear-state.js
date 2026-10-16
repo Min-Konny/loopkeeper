@@ -1,5 +1,5 @@
-import {investmentEffect}from './investments.js?v=0.6.11';
-import {accessoryById,weaponById,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.11';
+import {investmentEffect}from './investments.js?v=0.6.12';
+import {accessoryById,weaponById,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.12';
 export const emptySets=()=>({preparation:Object.fromEntries(ACCESSORY_SLOTS.map(s=>[s,null])),combat:Object.fromEntries(ACCESSORY_SLOTS.map(s=>[s,null]))});
 export function initializeGear(s){
  if(s.version===1)return;

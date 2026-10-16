@@ -1,38 +1,38 @@
-import {lateLoop,lateEncounter,lateRelief}from './late-loop.js?v=0.6.11';
-import {earlyLoop,earlyDefinition,earlyEncounter,earlyJobMultiplier}from './early-loop.js?v=0.6.11';
-import {recordWorkMilestone}from './work-milestones.js?v=0.6.11';
-import {awardTrophy,trophyShortage,payTrophies,refundUnfinishedTrophies} from './boss-materials.js?v=0.6.11';
-import {EXTENDED_CAMPAIGN,FRONTIER_CAMPAIGN,CLASSIC_CAMPAIGN,campaignFinalWave,campaignIncludes,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.6.11';
-import {investmentEffect}from './investments.js?v=0.6.11';
-import {freshContracts,contractEffects}from './contracts.js?v=0.6.11';
-import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.6.11';
-import {freshFarm,advanceFarm}from './farm-state.js?v=0.6.11';import {farmResource,resourceCap}from './farm-content.js?v=0.6.11';
-import {companionById}from './companion-content.js?v=0.6.11';
-import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.6.11';
-import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.6.11';import {alchemyResource}from './magic-content.js?v=0.6.11';
-import {weaponById}from './gear-content.js?v=0.6.11';
-import {initializeGear,accessoryEffects,combatBuild,strikeModifier}from './gear-state.js?v=0.6.11';
-import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.6.11';
-import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.6.11';
-import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.6.11';
-import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.6.11';
-import { maximumTradeCount } from './maximum-trade.js?v=0.6.11';
-import { startingGrant } from './starting-resources.js?v=0.6.11';
-import { tradeSaleUnit } from './fish-economy.js?v=0.6.11';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.11';
-import { recordReward } from './reward-events.js?v=0.6.11';
-import { observesWork, completedWork } from './work-completion.js?v=0.6.11';
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.6.11';
-import { validCondition, goalSatisfied, isCombatTraining } from './queue-conditions.js?v=0.6.11';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.6.11';
-import { CONTENT as C } from "./content.js?v=0.6.11";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.6.11";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.6.11";
+import {lateLoop,lateEncounter,lateRelief}from './late-loop.js?v=0.6.12';
+import {earlyLoop,earlyDefinition,earlyEncounter,earlyJobMultiplier}from './early-loop.js?v=0.6.12';
+import {recordWorkMilestone}from './work-milestones.js?v=0.6.12';
+import {awardTrophy,trophyShortage,payTrophies,refundUnfinishedTrophies} from './boss-materials.js?v=0.6.12';
+import {EXTENDED_CAMPAIGN,FRONTIER_CAMPAIGN,CLASSIC_CAMPAIGN,campaignFinalWave,campaignIncludes,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.6.12';
+import {investmentEffect}from './investments.js?v=0.6.12';
+import {freshContracts,contractEffects}from './contracts.js?v=0.6.12';
+import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.6.12';
+import {freshFarm,advanceFarm}from './farm-state.js?v=0.6.12';import {farmResource,resourceCap}from './farm-content.js?v=0.6.12';
+import {companionById}from './companion-content.js?v=0.6.12';
+import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.6.12';
+import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.6.12';import {alchemyResource}from './magic-content.js?v=0.6.12';
+import {weaponById}from './gear-content.js?v=0.6.12';
+import {initializeGear,accessoryEffects,combatBuild,strikeModifier}from './gear-state.js?v=0.6.12';
+import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.6.12';
+import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.6.12';
+import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.6.12';
+import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.6.12';
+import { maximumTradeCount } from './maximum-trade.js?v=0.6.12';
+import { startingGrant } from './starting-resources.js?v=0.6.12';
+import { tradeSaleUnit } from './fish-economy.js?v=0.6.12';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.12';
+import { recordReward } from './reward-events.js?v=0.6.12';
+import { observesWork, completedWork } from './work-completion.js?v=0.6.12';
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.6.12';
+import { validCondition, goalSatisfied, isCombatTraining } from './queue-conditions.js?v=0.6.12';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.6.12';
+import { CONTENT as C } from "./content.js?v=0.6.12";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.6.12";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.6.12";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.6.11";
+} from "./legacy-engine.js?v=0.6.12";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -1549,10 +1549,10 @@ export function canPurchaseUpgrade(s, id) {
   const u = upgrades.get(id);
   if (!u) return fail("解放がありません。");
   if (
-    !["preparing", "legacy_setup"].includes(s.run.status) ||
+    s.run.status !== "legacy_setup" ||
     s.run.augments.offer.length
   )
-    return fail("準備中に購入してください。");
+    return fail("継承ポイントの配分は転生時に行います。");
   const owned =
       s.run.status === "legacy_setup"
         ? s.run.legacyDraft.upgrades
@@ -1572,7 +1572,7 @@ export function canPurchaseUpgrade(s, id) {
     s.meta.bestWave < 3
   )
     return fail(`初達成${g.completedQuests}件が必要。`);
-  if (g.requires?.some((x) => !owned.includes(x) && !hasUpgrade(s,x)))
+  if (g.requires?.some((x) => !owned.includes(x) && !(isFreeFeature(x)&&hasUpgrade(s,x))))
     return fail(`先に${g.requires.filter(x => !owned.includes(x)).map(x => upgrades.get(x).name).join("・")}を解放してください。`);
   const automationCount = owned.filter(x => ["automation", "worker"].includes(upgrades.get(x)?.kind)).length;
   if (g.automationCount && automationCount < g.automationCount)
@@ -1610,19 +1610,16 @@ export function refundUpgrade(s, id) {
   d.upgrades = d.upgrades.filter((x) => x !== id);
   return ok();
 }
-export function toggleUpgrade(s, id) {
-  if (upgrades.get(id)?.kind === "augment_reroll") return fail("リロール回数の追加は常に有効です。");
-  if (
-    !hasUpgrade(s,id) ||
-    s.run.status !== "preparing" ||
-    s.run.augments.offer.length
-  )
-    return fail("準備中に切り替えてください。");
-  s.settings.disabledUpgrades = s.settings.disabledUpgrades.includes(id)
-    ? s.settings.disabledUpgrades.filter((x) => x !== id)
-    : [...s.settings.disabledUpgrades, id];
-  s.run.hp = Math.min(s.run.hp, getStats(s).maxHp);
-  return ok();
+export function toggleUpgrade(s,id){
+ const u=upgrades.get(id);if(!u)return fail('解放がありません。');
+ if(u.kind==='augment_reroll')return fail('リロール回数の追加は常に有効です。');
+ const setup=s.run.status==='legacy_setup',operational=isFreeFeature(id)||['automation','worker'].includes(u.kind);
+ if(!setup&&!operational)return fail('継承の構成変更は転生時に行います。');
+ const owned=setup?s.run.legacyDraft.upgrades.includes(id)||hasUpgrade(s,id):hasUpgrade(s,id);
+ if(!owned||(!setup&&s.run.status!=='preparing')||s.run.augments.offer.length)return fail('操作できる状態ではありません。');
+ const target=setup?s.run.legacyDraft:s.settings;target.disabledUpgrades??=[...s.settings.disabledUpgrades];
+ target.disabledUpgrades=target.disabledUpgrades.includes(id)?target.disabledUpgrades.filter(x=>x!==id):[...target.disabledUpgrades,id];
+ return ok();
 }
 export function abandonRun(s) {
   if(s.run.routes?.active){s.settings.paused=true;withdrawRoute(s,"周回中止・帰還");}
@@ -1649,15 +1646,18 @@ export function restartRun(s) {
     upgrades: [...s.meta.upgrades],
     paidCosts: { ...s.meta.paidCosts },
     points: s.meta.points,
+    disabledUpgrades:[...s.settings.disabledUpgrades],
   };
   s.settings.paused = true;
   return ok();
 }
-export function getStartingResources(s){const ids=s.run.status==="legacy_setup"?s.run.legacyDraft.upgrades:s.meta.upgrades;return startingGrant(ids,s.settings.disabledUpgrades);}
+export function getStartingResources(s){const ids=s.run.status==="legacy_setup"?s.run.legacyDraft.upgrades:s.meta.upgrades;return startingGrant(ids,s.run.status==="legacy_setup"?(s.run.legacyDraft.disabledUpgrades??s.settings.disabledUpgrades):s.settings.disabledUpgrades);}
 export function confirmRun(s, {earlyLoopPrototype=false,lateLoopPrototype=false}={}) {
   if (s.run.status !== "legacy_setup") return fail("継承準備ではありません。");
   synchronizeFreeFeatures(s);
-  Object.assign(s.meta, s.run.legacyDraft);
+  const draft=s.run.legacyDraft;
+  Object.assign(s.meta,{upgrades:draft.upgrades,paidCosts:draft.paidCosts,points:draft.points});
+  s.settings.disabledUpgrades=[...(draft.disabledUpgrades??s.settings.disabledUpgrades)];
   if(lateLoopPrototype)s.meta.lateLoopVersion=1;
   if(earlyLoopPrototype){s.meta.earlyLoopVersion=1;delete s.meta.earlyLoopBatching;delete s.meta.earlyLoopFishBatching;}
   s.meta.generation++;
@@ -2206,6 +2206,7 @@ export function migrateLegacy(old) {
     upgrades: [...s.meta.upgrades],
     paidCosts: { ...s.meta.paidCosts },
     points: s.meta.points,
+    disabledUpgrades:[...s.settings.disabledUpgrades],
   };
   s.legacyMigration = true;
   return s;
@@ -2228,7 +2229,7 @@ export function startEndless(s) {
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
 }
-import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.6.11';
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.6.12';
 
 export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
   return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{
@@ -2245,18 +2246,19 @@ export function getLegacyRankStatus(s,key){
  const owned=Array.from({length:MAX_LEGACY_RANK},(_,i)=>rankId(def,i+1)).filter(id=>target.upgrades.includes(id));
  const rank=owned.length,nextRank=rank<MAX_LEGACY_RANK?rank+1:null,next=nextRank?upgrades.get(rankId(def,nextRank)):null;
  const paidTotal=owned.reduce((n,id)=>n+target.paidCosts[id],0);
- const activeEffect=owned.reduce((n,id)=>n+(s.settings.disabledUpgrades.includes(id)?0:upgrades.get(id).effect[def.stat]),0);
+ const disabled=s.run.status==='legacy_setup'?(target.disabledUpgrades??s.settings.disabledUpgrades):s.settings.disabledUpgrades;
+ const activeEffect=owned.reduce((n,id)=>n+(disabled.includes(id)?0:upgrades.get(id).effect[def.stat]),0);
  const totalEffect=owned.reduce((n,id)=>n+upgrades.get(id).effect[def.stat],0);
  const check=next?canPurchaseUpgrade(s,next.id):fail('初期実装はR5までです。');
- return {key,rank,nextRank,nextCost:next?.cost,nextIncrement:next?.effect[def.stat],nextTotal:totalEffect+(next?.effect[def.stat]||0),paidTotal,activeEffect,refundCost:rank?target.paidCosts[rankId(def,rank)]:0,canBuy:check.ok,reason:check.reason,canToggle:s.run.status==='preparing'&&!s.run.augments.offer.length,toggleLabel:owned.some(id=>s.settings.disabledUpgrades.includes(id))?'全段階を有効化':'停止'};
+ return {key,rank,nextRank,nextCost:next?.cost,nextIncrement:next?.effect[def.stat],nextTotal:totalEffect+(next?.effect[def.stat]||0),paidTotal,activeEffect,refundCost:rank?target.paidCosts[rankId(def,rank)]:0,canBuy:check.ok,reason:check.reason,canToggle:s.run.status==='legacy_setup'&&!s.run.augments.offer.length,toggleLabel:owned.some(id=>disabled.includes(id))?'全段階を有効化':'停止'};
 }
 export function purchaseLegacyRank(s,key){const r=getLegacyRankStatus(s,key),def=LEGACY_RANKS.find(x=>x.key===key);return r?.nextRank?purchaseUpgrade(s,rankId(def,r.nextRank)):fail('追加できるランクがありません。');}
 export function refundLegacyRank(s,key){const r=getLegacyRankStatus(s,key),def=LEGACY_RANKS.find(x=>x.key===key);return r?.rank?refundUpgrade(s,rankId(def,r.rank)):fail('返却できるランクがありません。');}
-export function toggleLegacyRank(s,key){const r=getLegacyRankStatus(s,key),def=LEGACY_RANKS.find(x=>x.key===key);if(!r?.rank||!r.canToggle)return fail('準備中に選択してください。');const owned=Array.from({length:r.rank},(_,i)=>rankId(def,i+1));const enable=owned.some(id=>s.settings.disabledUpgrades.includes(id));s.settings.disabledUpgrades=s.settings.disabledUpgrades.filter(id=>!owned.includes(id));if(!enable)s.settings.disabledUpgrades.push(...owned);s.run.hp=Math.min(s.run.hp,getStats(s).maxHp);return ok();}
+export function toggleLegacyRank(s,key){const r=getLegacyRankStatus(s,key),def=LEGACY_RANKS.find(x=>x.key===key);if(!r?.rank||!r.canToggle)return fail('継承の構成変更は転生時に行います。');const owned=Array.from({length:r.rank},(_,i)=>rankId(def,i+1)),d=s.run.legacyDraft;d.disabledUpgrades??=[...s.settings.disabledUpgrades];const enable=owned.some(id=>d.disabledUpgrades.includes(id));d.disabledUpgrades=d.disabledUpgrades.filter(id=>!owned.includes(id));if(!enable)d.disabledUpgrades.push(...owned);return ok();}
 
 export function resetLegacyRankDraft(s){if(s.run.status!=='legacy_setup')return fail('転生開始前だけ振り直せます。');let refunded=0;for(const def of LEGACY_RANKS)for(let n=MAX_LEGACY_RANK;n>=1;n--){const id=rankId(def,n);if(s.run.legacyDraft.upgrades.includes(id)){refunded+=s.run.legacyDraft.paidCosts[id];const result=refundUpgrade(s,id);if(!result.ok)return result;}}return {...ok(),refunded};}
 
-export function cancelLegacyDraft(s){if(s.run.status!=='legacy_setup')return fail('転生開始前だけ変更を取り消せます。');s.run.legacyDraft={upgrades:[...s.meta.upgrades],paidCosts:{...s.meta.paidCosts},points:s.meta.points};return ok();}
+export function cancelLegacyDraft(s){if(s.run.status!=='legacy_setup')return fail('転生開始前だけ変更を取り消せます。');s.run.legacyDraft={upgrades:[...s.meta.upgrades],paidCosts:{...s.meta.paidCosts},points:s.meta.points,disabledUpgrades:[...s.settings.disabledUpgrades]};return ok();}
 
 export function startRoute(s,id){const r=canEnterRoute(s,id);if(!r.ok)return r;initializeRoutes(s);const d=routeById(id),enemy={...getNextEnemy(s),name:d.name,hp:d.hp,maxHp:d.hp,attack:d.attack,defense:d.defense,trait:d.trait,...(d.campaign?{image:d.image,traitParams:['heavy','flying'].includes(d.trait)?{every:4,multiplier:1.6}:null}:{}),pressure:null,isBoss:false,invasion:false,country:null,gold:0,hide:0,combatXpBudget:0};s.run.routes.active={id,startedAt:s.run.elapsed};beginRaid(s,enemy);s.settings.paused=false;return {ok:true};}
 export function withdrawRoute(s,reason='撤退・帰還'){if(!s.run.routes?.active)return {ok:false,reason:'地域戦闘中ではありません。'};finishBattleReport(s,s.run.enemy,false);returnFromRoute(s,false,reason);return {ok:true};}

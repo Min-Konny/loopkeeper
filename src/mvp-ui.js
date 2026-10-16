@@ -1,12 +1,12 @@
-import {LEGACY_CATEGORIES}from './legacy-categories.js?v=0.6.11';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.11';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.11';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.11';
-import {hasUpgrade}from './free-features.js?v=0.6.11';
-import { getStartingResources } from './engine.js?v=0.6.11';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.11';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.11";
-import { CONTENT as C } from "./content.js?v=0.6.11";
+import {LEGACY_CATEGORIES}from './legacy-categories.js?v=0.6.12';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.12';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.12';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.12';
+import {hasUpgrade}from './free-features.js?v=0.6.12';
+import { getStartingResources } from './engine.js?v=0.6.12';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.12';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.12";
+import { CONTENT as C } from "./content.js?v=0.6.12";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -22,7 +22,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.11";
+} from "./engine.js?v=0.6.12";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -56,7 +56,7 @@ export function setupMarkup(s, category = "combat") {
       const child = LEGACY_UPGRADES.some(
         (x) => d.upgrades.includes(x.id) && x.unlock.requires?.includes(u.id),
       );
-      return `<div class="setup-upgrade"><span>${esc(u.name)}<small>${owned ? d.paidCosts[u.id] : u.cost} pt · ${esc(getUpgradeDescription(s, u))}</small>${!owned && !allowed.ok ? `<small class="setup-unlock-hint">${esc(allowed.reason)}</small>` : ""}</span>${owned ? button("外す", `data-refund="${u.id}" title="${child ? "先に上位の解放を外してください。" : "購入時のポイントを返却"}"`, child) : button("解放", `data-purchase="${u.id}" title="${esc(allowed.reason)}"`, !allowed.ok)}</div>`;
+      return `<div class="setup-upgrade"><span>${esc(u.name)}<small>${owned ? d.paidCosts[u.id] : u.cost} pt · ${esc(getUpgradeDescription(s, u))}</small>${!owned && !allowed.ok ? `<small class="setup-unlock-hint">${esc(allowed.reason)}</small>` : ""}</span>${owned ? (u.kind!=="augment_reroll"?button((s.run.legacyDraft.disabledUpgrades??s.settings.disabledUpgrades).includes(u.id)?"次の命で有効":"次の命で無効", `data-toggle-upgrade="${u.id}"`):"")+button("外す", `data-refund="${u.id}" title="${child ? "先に上位の解放を外してください。" : "購入時のポイントを返却"}"`, child) : button("解放", `data-purchase="${u.id}" title="${esc(allowed.reason)}"`, !allowed.ok)}</div>`;
     },
   ).join(
     "",
