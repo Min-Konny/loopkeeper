@@ -1062,8 +1062,7 @@ function syncBattleDialog() {
   if (routeReturned) dialog.addEventListener('close', () => requestAnimationFrame(() => {
     const result = document.querySelector('#content .route-result');
     if (result && !document.querySelector('dialog[open]:not(#expanded-work-dialog)')) {
-      result.focus({preventScroll:true});
-      result.scrollIntoView({block:'start',behavior:'instant'});
+      result.focus();
     }
   }), {once:true});
   if (dialog.open) dialog.close();
