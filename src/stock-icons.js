@@ -1,4 +1,4 @@
-import {icon} from './icons.js?v=0.6.27';
+import {icon} from './icons.js?v=0.6.28';
 // Use the established material icons; supply distinct silhouettes for newer goods.
 const shapes={
  eggs:'<path d="M18 15c0 4-3 7-6 7s-6-3-6-7S9 2 12 2s6 9 6 13Z"/><path d="m9 13 2-2 2 3 2-2"/>',
