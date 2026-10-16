@@ -1,12 +1,13 @@
-import {LEGACY_CATEGORIES}from './legacy-categories.js?v=0.6.26';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.26';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.26';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.26';
-import {hasUpgrade}from './free-features.js?v=0.6.26';
-import { getStartingResources } from './engine.js?v=0.6.26';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.26';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.26";
-import { CONTENT as C } from "./content.js?v=0.6.26";
+import {stockIcon as icon}from './stock-icons.js?v=0.6.27';
+import {LEGACY_CATEGORIES}from './legacy-categories.js?v=0.6.27';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.27';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.27';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.27';
+import {hasUpgrade}from './free-features.js?v=0.6.27';
+import { getStartingResources } from './engine.js?v=0.6.27';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.27';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.27";
+import { CONTENT as C } from "./content.js?v=0.6.27";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -22,7 +23,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.26";
+} from "./engine.js?v=0.6.27";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -49,18 +50,19 @@ export function setupMarkup(s, category = "combat") {
       },
     };
   const selected = setupCategories.find(c => c.id === category) || setupCategories[0];
-  return `<div class="setup-header"><h2 id="death-title">次の命への継承</h2><div class="setup-points">残り <strong>${d.points} pt</strong></div></div><div class="setup-tabs" role="tablist" aria-label="継承の分類">${setupCategories.map(c => `<button role="tab" id="setup-tab-${c.id}" aria-selected="${c.id === selected.id}" aria-controls="setup-upgrades" data-setup-category="${c.id}">${c.name}</button>`).join("")}</div><div class="setup-upgrades" id="setup-upgrades" role="tabpanel" aria-labelledby="setup-tab-${selected.id}">${selected.rankGroup?legacyRanksMarkup(s,true,selected.rankGroup):LEGACY_UPGRADES.filter(u => selected.kinds.includes(u.kind)&&!isFreeFeature(u.id)).map(
+  return `<div class="setup-header"><h2 id="death-title">次の命への継承</h2><div class="setup-points">残り <strong>${d.points} pt</strong></div></div><div class="setup-tabs" role="tablist" aria-label="継承の分類">${setupCategories.map(c => `<button role="tab" id="setup-tab-${c.id}" aria-selected="${c.id === selected.id}" aria-controls="setup-upgrades" tabindex="${c.id===selected.id?0:-1}" data-setup-category="${c.id}">${c.name}</button>`).join("")}</div><div class="setup-upgrades" id="setup-upgrades" role="tabpanel" aria-labelledby="setup-tab-${selected.id}">${selected.rankGroup?legacyRanksMarkup(s,true,selected.rankGroup):LEGACY_UPGRADES.filter(u => selected.kinds.includes(u.kind)&&!isFreeFeature(u.id)).map(
     (u) => {
       const owned = d.upgrades.includes(u.id),
         allowed = canPurchaseUpgrade(preview, u.id);
       const child = LEGACY_UPGRADES.some(
         (x) => d.upgrades.includes(x.id) && x.unlock.requires?.includes(u.id),
       );
-      return `<div class="setup-upgrade"><span>${esc(u.name)}<small>${owned ? d.paidCosts[u.id] : u.cost} pt · ${esc(getUpgradeDescription(s, u))}</small>${!owned && !allowed.ok ? `<small class="setup-unlock-hint">${esc(allowed.reason)}</small>` : ""}</span>${owned ? (u.kind!=="augment_reroll"?button((s.run.legacyDraft.disabledUpgrades??s.settings.disabledUpgrades).includes(u.id)?"次の命で有効":"次の命で無効", `data-toggle-upgrade="${u.id}"`):"")+button("外す", `data-refund="${u.id}" title="${child ? "先に上位の解放を外してください。" : "購入時のポイントを返却"}"`, child) : button("解放", `data-purchase="${u.id}" title="${esc(allowed.reason)}"`, !allowed.ok)}</div>`;
+      const parents=(u.unlock.requires||[]).map(id=>LEGACY_UPGRADES.find(x=>x.id===id)?.name||id);
+      return `<div class="setup-upgrade" data-upgrade-state="${owned?'owned':allowed.ok?'available':'locked'}"><span><b class="upgrade-state">${owned?'取得済み':allowed.ok?'取得可能':'条件不足'}</b>${parents.length?'<small class="upgrade-parent">'+parents.map(esc).join(' → ')+' →</small>':''}${esc(u.name)}<small>${owned ? d.paidCosts[u.id] : u.cost} pt · ${esc(getUpgradeDescription(s, u))}</small>${!owned && !allowed.ok ? `<small class="setup-unlock-hint">${esc(allowed.reason)}</small>` : ""}</span>${owned ? (u.kind!=="augment_reroll"?button((s.run.legacyDraft.disabledUpgrades??s.settings.disabledUpgrades).includes(u.id)?"次の命で有効":"次の命で無効", `data-toggle-upgrade="${u.id}"`):"")+button("外す", `data-refund="${u.id}" title="${child ? "先に上位の解放を外してください。" : "購入時のポイントを返却"}"`, child) : button("解放", `data-purchase="${u.id}" title="${esc(allowed.reason)}"`, !allowed.ok)}</div>`;
     },
   ).join(
     "",
-  )}${selected.free?freeFeatureMarkup(s,selected.free):''}</div>${challengesMarkup(s)}<div class="setup-footer"><p class="fine-print campaign-transition">次の人生は本編36波。現在の人生は本編${finalWaveForRun(s)}波の構成で、過去のクリア記録・獲得済み報酬は引き継ぎます。</p><p data-setup-save-error role="alert" class="danger-text"></p><section class="starting-grant"><strong>次の転生で受け取る資源</strong><div>${Object.keys(getStartingResources(s)).length ? Object.entries(getStartingResources(s)).map(([id,n])=>`<span>${esc(RESOURCES[id]?.name || id)} <b>${n}</b></span>`).join("") : "初期支給なし"}</div><small>転生を確定した時だけ支給。現在の手持ちは持ち越しません。</small></section>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button muted full-width" data-cancel-draft="1" data-focus="cancel-draft">今回の配分変更を取り消す</button><button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
+  )}${selected.free?freeFeatureMarkup(s,selected.free):''}</div>${challengesMarkup(s)}<div class="setup-footer"><details class="setup-info"><summary>引き継ぎについて</summary><p class="fine-print campaign-transition">次の人生は本編36波。現在の人生は本編${finalWaveForRun(s)}波の構成で、過去のクリア記録・獲得済み報酬は引き継ぎます。</p></details><p data-setup-save-error role="alert" class="danger-text"></p><details class="starting-grant"><summary>次の転生で受け取る資源</summary><div>${Object.keys(getStartingResources(s)).length ? Object.entries(getStartingResources(s)).map(([id,n])=>`<span>${esc(RESOURCES[id]?.name || id)} <b>${n}</b></span>`).join("") : "初期支給なし"}</div><small>転生を確定した時だけ支給。現在の手持ちは持ち越しません。</small></details>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button muted full-width" data-cancel-draft="1" data-focus="cancel-draft">今回の配分変更を取り消す</button><button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
 }
 // Keep the nearest unanswered request visible while working in another tab.
 export function diplomacyDeadlineMarkup(s) {
@@ -74,27 +76,14 @@ export function diplomacyDeadlineMarkup(s) {
   const clock = `${String(Math.floor(seconds/60)).padStart(2,"0")}:${String(seconds%60).padStart(2,"0")}`;
   return `<div class="diplomacy-notice deadline-notice ${seconds <= 30 ? "deadline-urgent" : ""}"><span class="deadline-copy"><strong>${esc(c.name)}から援助要請${pending.length > 1 ? ` · 他${pending.length-1}件` : ""}</strong><small>期限を過ぎると敵対</small></span><span class="deadline-clock"><small>返答期限まで</small><strong>${clock}</strong></span><button data-tab="diplomacy" data-focus="diplomacy-deadline">返答する →</button></div>`;
 }
-export function diplomacyMarkup(s, marketSide = "buy", marketCount = 1) {
-  return (
-    C.diplomacy
-      .filter((c) => s.run.countries[c.id].status !== "locked")
-      .map((c) => {
-        const r = s.run.countries[c.id],
-          pending = r.status === "pending";
-        return `<section class="diplomacy-card ${r.status}"><h3>${esc(c.name)} <small>${{ pending: "援助要請", allied: "交易中", hostile: "敵対待ち", defeated: "撃退済み" }[r.status]}</small></h3>${
-          pending
-            ? `<p class="diplomacy-deadline ${r.deadline - s.run.elapsed <= 30 ? "danger-text" : ""}">返答期限まで <strong>${Math.max(0, Math.ceil(r.deadline - s.run.elapsed))}秒</strong><small>期限を過ぎると敵対</small></p><div class="recipe-cost">${Object.entries(
-                c.cost,
-              )
-                .map(([id, n]) => `${esc(label(id))} ${n}`)
-                .join(
-                  " / ",
-                )}</div><div class="diplomacy-choices">${button("援助する", `data-aid="${c.id}"`, s.run.status !== "preparing" || Object.entries(c.cost).some(([id, n]) => s.run.resources[id] < n))}${button("迎え撃つ", `data-refuse="${c.id}"`, s.run.status !== "preparing")}</div><p class="fine-print">${c.id === "saphra" ? "援助：準備中15秒ごと金貨1。撃退：金貨24・攻撃+4。その周回の攻撃+10%、以後の撃退金貨+50%。" : "援助：鉱物購入15%割引。撃退：鋼6・銀4。"} 敵対すると次の敵のHP+15%・攻撃+10%${c.id === "mining_realm" ? "・防御+3" : ""}。</p>`
-            : `<p>${r.status === "allied" ? (c.id === "saphra" ? `交易収入 ${Math.floor(r.incomeTotal)}金貨` : "鉱物購入 −15%") : r.status === "hostile" ? "予定された襲撃に加勢します。" : (c.id === "saphra" ? "金貨24・攻撃+4を獲得。攻撃+10%・以後の撃退金貨+50%（この周回）。" : "鋼6・銀4を獲得（この周回）。")}</p>`
-        }</section>`;
-      })
-      .join("")
-  );
+export function diplomacyMarkup(s) {
+ return '<div class="diplomacy-countries">'+C.diplomacy.filter(c=>s.run.countries[c.id].status!=='locked').map(c=>{
+ const r=s.run.countries[c.id],pending=r.status==='pending',ready=s.run.status==='preparing',affordable=Object.entries(c.cost).every(([id,n])=>s.run.resources[id]>=n),status={pending:'返答待ち',allied:'同盟中',hostile:'敵対中',defeated:'撃退済み'}[r.status];
+ const aid=c.id==='saphra'?'準備中15秒ごとに金貨1':'鉱石採集が15%高速化',victory=c.id==='saphra'?'金貨24・攻撃+4。攻撃+10%・以後の撃退金貨+50%':'鉄塊6・獣皮4';
+ return '<section class="diplomacy-card country-card '+r.status+'"><div class="diplomacy-heading"><span class="country-emblem">'+icon(c.id==='saphra'?'flag':'pickaxe')+'</span><h3>'+esc(c.name)+'</h3><span class="diplomacy-status">'+status+'</span></div>'+(pending?
+ '<div class="diplomacy-deadline '+(r.deadline-s.run.elapsed<=30?'danger-text':'')+'">返答まで <strong>'+Math.max(0,Math.ceil(r.deadline-s.run.elapsed))+'秒</strong><small>期限後は敵対</small></div><div class="diplomacy-costs">'+Object.entries(c.cost).map(([id,n])=>'<span class="payment-item '+(s.run.resources[id]<n?'is-short':'')+'">'+icon(id)+'<span>'+esc(label(id))+'<b>'+n+'</b><small>所持 '+Math.floor(s.run.resources[id])+(s.run.resources[id]<n?' ・不足 '+Math.ceil(n-s.run.resources[id]):' ・支払い可')+'</small></span></span>').join('')+'</div><div class="diplomacy-choice-grid"><div><h4>援助して同盟</h4><p>'+aid+'</p>'+button('援助する', 'data-aid="'+c.id+'"',!ready||!affordable)+'<small>'+(!ready?'準備中に返答できます':!affordable?'支払い素材が不足しています':'上記の素材を支払います')+'</small></div><div><h4>拒否して迎え撃つ</h4><p>次の襲撃で敵軍が加勢</p>'+button('迎え撃つ','data-refuse="'+c.id+'"',!ready)+'</div></div><details class="diplomacy-details" data-detail-key="country-'+c.id+'"><summary data-focus="country-detail-'+c.id+'">敵軍の強化・撃退報酬</summary><p>敵軍はHP+15%・攻撃+10%'+(c.id==='mining_realm'?'・防御+3':'')+'。撃退：'+victory+'（この命）。</p></details>':
+ '<p class="diplomacy-result">'+(r.status==='allied'?(c.id==='saphra'?'交易収入 '+Math.floor(r.incomeTotal)+'金貨 ・ '+aid:aid):r.status==='hostile'?'予定された次の襲撃に加勢します。':victory+'（この命）。')+'</p>')+'</section>';
+ }).join('')+'</div>';
 }
 export function marketMarkup(s,marketSide="buy",marketCount=1){return (
     `<div class="market-heading"><h3>市場</h3><span>金貨 ${Number(s.run.resources.gold.toFixed(2))}</span></div>${
