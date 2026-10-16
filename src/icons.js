@@ -1,4 +1,6 @@
 const paths = {
+  bag: '<rect x="5" y="7" width="14" height="14" rx="3"/><path d="M9 7V5a3 3 0 0 1 6 0v2M8 12h8v6H8Z"/>',
+  queue: '<path d="M9 5h12M9 12h12M9 19h12M2 4l3 2-3 2V4Zm0 8h3m-3 7h3"/>',
   history: '<path d="M3 11a9 9 0 1 1 2.6 7.4M3 4v7h7M12 7v5l3 2"/>',
   people: '<circle cx="8" cy="7" r="3"/><path d="M2 21v-4a6 6 0 0 1 12 0v4M16 4a3 3 0 0 1 0 6m1 3a5 5 0 0 1 5 5v3"/>',
   settings: '<path d="m9 3-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3h6l1-3 3-1-1-3 2-2-2-2 1-3-3-1-1-3H9Z"/><circle cx="12" cy="12" r="3"/>',
