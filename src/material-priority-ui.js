@@ -1,7 +1,7 @@
-import {hasUpgrade}from './free-features.js?v=0.6.28';
-import { icon } from './icons.js?v=0.6.28';
-import { getCatalog, resourceKnown, getUnlocks, isLegacy, setMaterialPriority } from './engine.js?v=0.6.28';
-import { commitStoredGameEdit } from './save-storage.js?v=0.6.28';
+import {hasUpgrade}from './free-features.js?v=0.6.29';
+import { icon } from './icons.js?v=0.6.29';
+import { getCatalog, resourceKnown, getUnlocks, isLegacy, setMaterialPriority } from './engine.js?v=0.6.29';
+import { commitStoredGameEdit } from './save-storage.js?v=0.6.29';
 export function materialPriorityChoices(state) {
   return Object.entries(getCatalog(state).RESOURCES).filter(([id]) => isLegacy(state) || resourceKnown(state, id) && (id !== 'gold' || getUnlocks(state).facilities)).map(([id, resource]) => ({ id, name: resource.name }));
 }
