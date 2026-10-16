@@ -36,3 +36,20 @@
 .topbar .quick-actions .dashboard-button>.icon{width:22px;height:22px;flex:none}
 .topbar .quick-actions .dashboard-button>span:not(:empty){position:absolute;right:-3px;top:-4px;min-width:16px;padding:1px 3px;border-radius:8px;background:#d6ba7b;color:#20322a;font-size:10px;line-height:14px}
 .topbar .quick-actions .dashboard-button:focus-visible{outline:2px solid #e3c98e;outline-offset:2px}
+/* Desktop: give the artwork the card width, with three compact cards per row. */
+.action-grid:not(.is-simple) .action-summary>p{display:none}
+@media(min-width:691px){
+ #content .action-grid:not(.is-simple){grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ #content .action-grid:not(.is-simple) .gather-card>.action-card{position:relative;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto auto;gap:5px;padding:10px;flex:0 0 auto}
+ .action-grid:not(.is-simple) .action-summary{display:contents}
+ .action-grid:not(.is-simple) .action-summary .card-top{position:absolute;top:12px;right:10px}
+ .action-grid:not(.is-simple) .action-summary .action-name{grid-column:1;grid-row:1;margin:0;padding-right:65px;min-height:26px}
+ .action-grid:not(.is-simple) .action-summary .action-name h3{font-size:18px;line-height:1.35}
+ .action-grid:not(.is-simple) .action-portrait{grid-column:1;grid-row:2;justify-self:center;width:100%;height:clamp(96px,7vw,124px);aspect-ratio:auto;margin:0}
+ .action-grid:not(.is-simple) .action-summary .action-yield{grid-column:1;grid-row:3;margin:0;padding:0;font-size:13px}
+ .action-grid:not(.is-simple) .action-details{grid-column:1;grid-row:4}
+ #content .action-grid:not(.is-simple) .card-levels{margin:3px 0;padding:0;font-size:12px}
+ #content .action-grid:not(.is-simple) .run-growth{margin:2px 0;padding:0;font-size:12px}
+ .action-grid:not(.is-simple) .card-skill-track{margin-top:5px}
+}
+@media(min-width:1100px){#content .action-grid:not(.is-simple){grid-template-columns:repeat(3,minmax(0,1fr))}}
