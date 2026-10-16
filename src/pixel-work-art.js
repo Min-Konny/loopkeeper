@@ -1,16 +1,18 @@
-import { equipmentMaterial } from './visual-design.js?v=0.6.20';
+import { pixelCraftScene } from './pixel-craft-art.js?v=0.6.21';
+import { equipmentMaterial } from './visual-design.js?v=0.6.21';
 
 const r=(x,y,w,h,color)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${color}"/>`;
 const p=(points,color)=>`<polygon points="${points}" fill="${color}"/>`;
 const veins={quarry_stone:['#748276','#aeb19a'],mine_ore:['#796151','#d3a17a'],mine_coal:['#293e41','#617574'],mine_silver:['#6a7b85','#dfebdf'],mine_mithril:['#467878','#9ae0bc'],mine_diamond:['#729bb0','#d2f2ee'],mine_orichalcum:['#876345','#f2d486']};
 export function pixelWorkScene(skill,id,equipment={}){
- if(skill!=='mining'&&skill!=='combat'&&id!=='fish_river')return null;
+ if(!['logging','foraging','smithing','mining','combat'].includes(skill))return null;
  const mat=equipmentMaterial(skill==='combat'?equipment.weapon:equipment.tool),armor=equipmentMaterial(equipment.armor),shield=equipmentMaterial(equipment.shield);
  const fish=id==='fish_river',defense=id==='train_defense',vitality=id==='train_vitality';
  let back=r(0,0,170,90,'#233e3c')+r(0,57,170,33,'#506448'),target='',arm='',fx='';
  for(let i=0;i<12;i++)back+=p(`${i*16-6},60 ${i*16+3},${12+(i%4)*7} ${i*16+14},60`,'#355448')+r(i*16+3,46,2,16,'#5e6345');
  for(let i=0;i<38;i++)back+=r((i*31)%170,64+(i*13)%24,3,1,i%2?'#829064':'#354e39');
- if(skill==='mining'){
+ const craft=id==='fish_river'?null:pixelCraftScene(skill,id,mat);
+ if(craft){back+=craft.back;target=craft.target;arm=craft.arm;fx=craft.fx;}else if(skill==='mining'){
   const [base,light]=veins[id]||veins.quarry_stone;
   back=r(0,0,170,90,'#243b37')+p('0,0 170,0 170,78 125,65 91,76 41,64 0,77','#465a4a');
   for(let i=0;i<24;i++){const x=(i*37)%170,y=(i*19)%65;back+=p(`${x},${y+9} ${x+3},${y} ${x+15},${y+1} ${x+19},${y+10}`,'#5c6c54')+r(x+3,y,11,1,'#899278');}
@@ -47,3 +49,4 @@ export function pixelWorkScene(skill,id,equipment={}){
  if(equipment.armor)person+=r(44,51,14,10,armor.metal)+r(46,33,11,3,armor.metal);
  return `<div class="work-vignette work-${skill} pixel-work material-${mat.tier}" style="--tool-metal:${mat.metal};--work-cloth:${armor.cloth}" aria-hidden="true"><svg viewBox="0 0 170 90" shape-rendering="crispEdges">${back}<g class="pixel-target">${target}</g>${person}<g data-pixel-arm>${arm}</g><g data-pixel-effect opacity="0">${fx}</g></svg></div>`;
 }
+

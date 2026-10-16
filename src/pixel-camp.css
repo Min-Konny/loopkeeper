@@ -6,3 +6,5 @@
 .pixel-battle-scene{position:relative;isolation:isolate;background:#233f36!important;overflow:hidden}
 .pixel-battle-scene:before{content:"";position:absolute;inset:0;background:#112624b3;z-index:-1;pointer-events:none}
 .pixel-work svg{image-rendering:pixelated}.pixel-work [data-pixel-arm]{transition:none}
+
+.pixel-fighter{image-rendering:pixelated;object-fit:contain}

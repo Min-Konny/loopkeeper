@@ -1,9 +1,10 @@
-import { getPlayerStrike } from './engine.js?v=0.6.20';
-import {routeById}from './routes.js?v=0.6.20';
-import { equipmentMaterial } from './visual-design.js?v=0.6.20';
-import { battleSound } from "./presentation.js?v=0.6.20";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.20";
-import { icon } from "./icons.js?v=0.6.20";
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.21';
+import { getPlayerStrike } from './engine.js?v=0.6.21';
+import {routeById}from './routes.js?v=0.6.21';
+import { equipmentMaterial } from './visual-design.js?v=0.6.21';
+import { battleSound } from "./presentation.js?v=0.6.21";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.21";
+import { icon } from "./icons.js?v=0.6.21";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -12,7 +13,7 @@ const ratio = (value, maximum) => Math.max(0, Math.min(1, value / maximum));
 
 function portrait(side, symbol, sigil = "") {
   return `<div class="battle-portrait" aria-hidden="true">
-    <div class="battle-breath"><div class="battle-strike" data-battle="${side}-strike"><div class="battle-recoil" data-battle="${side}-recoil"><div class="battle-avatar">${side === "player" ? '<img class="fighter-illustration" src="./assets/guardian.svg" alt="">' : '<img class="fighter-illustration" data-battle="enemy-illustration" src="./assets/wolf.svg" alt="">'}${sigil}</div></div></div></div>
+    <div class="battle-breath"><div class="battle-strike" data-battle="${side}-strike"><div class="battle-recoil" data-battle="${side}-recoil"><div class="battle-avatar">${side === "player" ? '<img class="fighter-illustration pixel-fighter" data-battle="player-illustration" src="./assets/guardian.svg" alt="">' : '<img class="fighter-illustration pixel-fighter" data-battle="enemy-illustration" src="./assets/wolf.svg" alt="">'}${sigil}</div></div></div></div>
     <div class="battle-effects"><svg class="battle-shield-spark" data-battle="${side}-shield-spark" viewBox="0 0 80 90"><path d="M40 4 72 16v34Q68 72 40 85 12 72 8 50V16Z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M40 17v51M18 35h44" stroke="currentColor" stroke-width="2"/></svg><i class="battle-guard-ring" data-battle="${side}-guard-ring"></i><i class="battle-projectile" data-battle="${side}-projectile"></i><i class="battle-impact" data-battle="${side}-impact"></i><i class="battle-slash" data-battle="${side}-slash"></i><i class="battle-heal-ring" data-battle="${side}-heal-ring"></i>${Array.from({ length: 6 }, (_, index) => `<i class="battle-heal-particle" data-battle="${side}-particle-${index}"></i>`).join("")}</div>
   </div>`;
 }
@@ -383,7 +384,9 @@ export function renderBattle(dialog, state) {
         Math.min(enemy.wave - 1, 4)
       ];
   const regionArt=routeById(run.routes?.active?.id)?.image;
-  const portraitSrc = regionArt ? `./${regionArt}` : `./assets/${portraitId}.svg`;
+  const portraitSrc = pixelBattlePortrait(regionArt ? regionArt.split("/").pop().replace(".svg", "") : portraitId);
+  const playerSrc=pixelBattlePortrait("player",run.equipment);
+  if(el["player-illustration"].getAttribute("src")!==playerSrc)el["player-illustration"].setAttribute("src",playerSrc);
   if (el["enemy-illustration"].getAttribute("src") !== portraitSrc)
     el["enemy-illustration"].setAttribute("src", portraitSrc);
 
