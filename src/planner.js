@@ -1,12 +1,11 @@
-import {earlyDefinition}from './early-loop.js?v=0.6.18';
-import {getActionYields}from './engine.js?v=0.6.18';
-import {enqueueTrainingLevel}from './engine.js?v=0.6.18';
-import {trophyShortage} from './boss-materials.js?v=0.6.18';
-import {hasUpgrade}from './free-features.js?v=0.6.18';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.18';
-import { getActionXp } from './engine.js?v=0.6.18';
-import * as old from "./legacy-planner.js?v=0.6.18";
-import { orderRecipeMaterials } from './engine.js?v=0.6.18';
+import {getPlanningYields,getRequiredProductionBatches}from './engine.js?v=0.6.19';
+import {enqueueTrainingLevel}from './engine.js?v=0.6.19';
+import {trophyShortage} from './boss-materials.js?v=0.6.19';
+import {hasUpgrade}from './free-features.js?v=0.6.19';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.19';
+import { getActionXp } from './engine.js?v=0.6.19';
+import * as old from "./legacy-planner.js?v=0.6.19";
+import { orderRecipeMaterials } from './engine.js?v=0.6.19';
 import {
   isLegacy,
   getCatalog,
@@ -25,7 +24,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.6.18";
+} from "./engine.js?v=0.6.19";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -63,14 +62,10 @@ export function planCraft(s, id, count = 1) {
       n -= count;
     }
   }
-  function output(x,saved=null){
-    const definition=saved?(saved.earlyLoopBatch===1?earlyDefinition(shadow,x,{paid:true}):{...x,earlyLoopDefinition:true}):x;
-    return getActionYields(shadow,definition);
-  }
+  const output=(x,saved=null)=>getPlanningYields(shadow,x,saved);
   function batchesFor(x,resource,short){
     const saved=!paid.has(x.id)&&(s.run.activeAction?.id===x.id?s.run.activeAction:s.run.suspendedActions[x.id]);
-    const fresh=output(x)[resource];
-    return saved?1+Math.max(0,Math.ceil((short-(output(x,saved)[resource]||0))/fresh)):Math.ceil(short/fresh);
+    return getRequiredProductionBatches(shadow,x,resource,short,saved);
   }
   function craft(x, n, seen = new Set()) {
     if (seen.has(x.id)) throw Error("材料の循環。");

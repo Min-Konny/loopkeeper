@@ -1,5 +1,5 @@
-import { CONTENT } from './content.js?v=0.6.18';
-import { getSkillProgress } from './legacy-engine.js?v=0.6.18';
+import { CONTENT } from './content.js?v=0.6.19';
+import { getSkillProgress } from './legacy-engine.js?v=0.6.19';
 const definitions = [...CONTENT.actions, ...CONTENT.equipment, ...CONTENT.processing, ...CONTENT.facilities];
 export const isCombatTraining=id=>definitions.some(d=>d.id===id&&d.skill==='combat'&&['attack','defense','vitality'].includes(d.trainingStat));
 export function trainingProgress(s,id){const d=definitions.find(d=>d.id===id);if(!isCombatTraining(id))return null;const xp=['defense','vitality'].includes(d.trainingStat)?s.run.training?.[d.trainingStat]||0:s.run.skills.combat.xp;return getSkillProgress(xp);}
