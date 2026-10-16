@@ -1,0 +1,8 @@
+
+.pixel-camp-layer{position:absolute;inset:0;z-index:-2;overflow:hidden;pointer-events:none;background:#263e37;contain:paint}
+.pixel-camp-layer canvas{display:block;width:100%;height:100%;object-fit:cover;object-position:center;image-rendering:pixelated}
+#camp-scene-view.has-pixel-camp{aspect-ratio:2/1}#camp-scene-view .pixel-camp-layer{z-index:0}
+.pixel-camp-full{position:relative;isolation:isolate;aspect-ratio:2/1;width:100%;overflow:hidden;border-radius:7px}.pixel-camp-full .pixel-camp-layer{z-index:0}
+.pixel-battle-scene{position:relative;isolation:isolate;background:#233f36!important;overflow:hidden}
+.pixel-battle-scene:before{content:"";position:absolute;inset:0;background:#112624b3;z-index:-1;pointer-events:none}
+.pixel-work svg{image-rendering:pixelated}.pixel-work [data-pixel-arm]{transition:none}

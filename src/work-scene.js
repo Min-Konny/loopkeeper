@@ -1,10 +1,12 @@
-import { equipmentMaterial } from './visual-design.js?v=0.6.19';
-import { icon } from './icons.js?v=0.6.19';
-import { miningScene } from './mining-scene.js?v=0.6.19';
-import { actionTarget } from './action-target.js?v=0.6.19';
+import { pixelWorkScene } from './pixel-work-art.js?v=0.6.20';
+import { equipmentMaterial } from './visual-design.js?v=0.6.20';
+import { icon } from './icons.js?v=0.6.20';
+import { miningScene } from './mining-scene.js?v=0.6.20';
+import { actionTarget } from './action-target.js?v=0.6.20';
 
 // Decorative work scenes follow the actual selected skill; no separate timer or game state.
 export function workScene(skill, actionId, equipment = {}) {
+  const pixel=pixelWorkScene(skill,actionId,equipment);if(pixel)return pixel;
   const toolMaterial = equipmentMaterial(skill === 'combat' ? equipment.weapon : equipment.tool);
   const armorMaterial = equipmentMaterial(equipment.armor);
   const shieldMaterial = equipmentMaterial(equipment.shield);
@@ -30,6 +32,7 @@ export function workScene(skill, actionId, equipment = {}) {
 export function syncWorkAnimation(scene, action) {
   if (!scene || !action || !scene.getAnimations) return;
   const phase = Math.min(1, Math.max(0, action.progress / action.duration));
+  const arm=scene.querySelector?.('[data-pixel-arm]');if(arm){const hit=phase>=.65&&phase<.88;arm.setAttribute('transform',hit?'translate(3 4)':'translate(0 0)');scene.querySelector('[data-pixel-effect]')?.setAttribute('opacity',hit?'1':'0');return;}
   for (const animation of scene.getAnimations({subtree:true})) {
     if (!['work-swing','work-impact','work-chips'].includes(animation.animationName)) continue;
     const duration = animation.effect?.getTiming().duration;
