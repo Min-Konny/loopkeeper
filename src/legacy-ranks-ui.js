@@ -1,5 +1,5 @@
-import {legacyRankCategory}from './legacy-categories.js?v=0.6.25';
-import {LEGACY_RANKS}from './legacy-rank-definitions.js?v=0.6.25';import {getLegacyRankStatus}from './engine.js?v=0.6.25';import {icon}from './icons.js?v=0.6.25';
+import {legacyRankCategory}from './legacy-categories.js?v=0.6.26';
+import {LEGACY_RANKS}from './legacy-rank-definitions.js?v=0.6.26';import {getLegacyRankStatus}from './engine.js?v=0.6.26';import {icon}from './icons.js?v=0.6.26';
 export function legacyRanksMarkup(s,setup=false,group='all'){
  if(s.version===1)return '';
  if(group==='all')return legacyRanksMarkup(s,setup,'combat')+legacyRanksMarkup(s,false,'production')+legacyRanksMarkup(s,false,'trade');

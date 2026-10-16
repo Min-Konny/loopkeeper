@@ -262,6 +262,10 @@ return (time, model = {}) => {
  construction = model.construction || null;
  threat = Number(model.threat || 0);
  chopping = Boolean(model.chopping);
+ if(model.portraitFacility && PIXEL_FACILITIES[model.portraitFacility]){
+  if(model.portraitFacility==='workshop')workshop(time);else facility(model.portraitFacility,Number(facilities[model.portraitFacility]||1),time);
+  return;
+ }
  draw(time);
 };
 }
