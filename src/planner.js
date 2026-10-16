@@ -1,10 +1,10 @@
-import {enqueueTrainingLevel}from './engine.js?v=0.6.14';
-import {trophyShortage} from './boss-materials.js?v=0.6.14';
-import {hasUpgrade}from './free-features.js?v=0.6.14';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.14';
-import { getActionXp } from './engine.js?v=0.6.14';
-import * as old from "./legacy-planner.js?v=0.6.14";
-import { orderRecipeMaterials } from './engine.js?v=0.6.14';
+import {enqueueTrainingLevel}from './engine.js?v=0.6.15';
+import {trophyShortage} from './boss-materials.js?v=0.6.15';
+import {hasUpgrade}from './free-features.js?v=0.6.15';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.15';
+import { getActionXp } from './engine.js?v=0.6.15';
+import * as old from "./legacy-planner.js?v=0.6.15";
+import { orderRecipeMaterials } from './engine.js?v=0.6.15';
 import {
   isLegacy,
   getCatalog,
@@ -23,7 +23,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.6.14";
+} from "./engine.js?v=0.6.15";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
