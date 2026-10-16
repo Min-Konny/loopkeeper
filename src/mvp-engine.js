@@ -1,38 +1,39 @@
-import {lateLoop,lateEncounter,lateRelief}from './late-loop.js?v=0.6.13';
-import {earlyLoop,earlyDefinition,earlyEncounter,earlyJobMultiplier}from './early-loop.js?v=0.6.13';
-import {recordWorkMilestone}from './work-milestones.js?v=0.6.13';
-import {awardTrophy,trophyShortage,payTrophies,refundUnfinishedTrophies} from './boss-materials.js?v=0.6.13';
-import {EXTENDED_CAMPAIGN,FRONTIER_CAMPAIGN,CLASSIC_CAMPAIGN,campaignFinalWave,campaignIncludes,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.6.13';
-import {investmentEffect}from './investments.js?v=0.6.13';
-import {freshContracts,contractEffects}from './contracts.js?v=0.6.13';
-import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.6.13';
-import {freshFarm,advanceFarm}from './farm-state.js?v=0.6.13';import {farmResource,resourceCap}from './farm-content.js?v=0.6.13';
-import {companionById}from './companion-content.js?v=0.6.13';
-import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.6.13';
-import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.6.13';import {alchemyResource}from './magic-content.js?v=0.6.13';
-import {weaponById}from './gear-content.js?v=0.6.13';
-import {initializeGear,accessoryEffects,combatBuild,strikeModifier}from './gear-state.js?v=0.6.13';
-import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.6.13';
-import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.6.13';
-import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.6.13';
-import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.6.13';
-import { maximumTradeCount } from './maximum-trade.js?v=0.6.13';
-import { startingGrant } from './starting-resources.js?v=0.6.13';
-import { tradeSaleUnit } from './fish-economy.js?v=0.6.13';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.13';
-import { recordReward } from './reward-events.js?v=0.6.13';
-import { observesWork, completedWork } from './work-completion.js?v=0.6.13';
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.6.13';
-import { validCondition, goalSatisfied, isCombatTraining } from './queue-conditions.js?v=0.6.13';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.6.13';
-import { CONTENT as C } from "./content.js?v=0.6.13";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.6.13";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.6.13";
+import {preparationEnemyAttack,preparationCostFactor,preparationChannelDuration,preparationRoute}from './preparation-balance.js?v=0.6.14';
+import {lateLoop,lateEncounter,lateRelief}from './late-loop.js?v=0.6.14';
+import {earlyLoop,earlyDefinition,earlyEncounter,earlyJobMultiplier}from './early-loop.js?v=0.6.14';
+import {recordWorkMilestone}from './work-milestones.js?v=0.6.14';
+import {awardTrophy,trophyShortage,payTrophies,refundUnfinishedTrophies} from './boss-materials.js?v=0.6.14';
+import {EXTENDED_CAMPAIGN,FRONTIER_CAMPAIGN,CLASSIC_CAMPAIGN,campaignFinalWave,campaignIncludes,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.6.14';
+import {investmentEffect}from './investments.js?v=0.6.14';
+import {freshContracts,contractEffects}from './contracts.js?v=0.6.14';
+import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.6.14';
+import {freshFarm,advanceFarm}from './farm-state.js?v=0.6.14';import {farmResource,resourceCap}from './farm-content.js?v=0.6.14';
+import {companionById}from './companion-content.js?v=0.6.14';
+import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.6.14';
+import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.6.14';import {alchemyResource}from './magic-content.js?v=0.6.14';
+import {weaponById}from './gear-content.js?v=0.6.14';
+import {initializeGear,accessoryEffects,combatBuild,strikeModifier}from './gear-state.js?v=0.6.14';
+import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.6.14';
+import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.6.14';
+import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.6.14';
+import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.6.14';
+import { maximumTradeCount } from './maximum-trade.js?v=0.6.14';
+import { startingGrant } from './starting-resources.js?v=0.6.14';
+import { tradeSaleUnit } from './fish-economy.js?v=0.6.14';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.14';
+import { recordReward } from './reward-events.js?v=0.6.14';
+import { observesWork, completedWork } from './work-completion.js?v=0.6.14';
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.6.14';
+import { validCondition, goalSatisfied, isCombatTraining } from './queue-conditions.js?v=0.6.14';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.6.14';
+import { CONTENT as C } from "./content.js?v=0.6.14";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.6.14";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.6.14";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.6.13";
+} from "./legacy-engine.js?v=0.6.14";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -225,7 +226,7 @@ const log = (s, text, type = "info") => {
 const progressRates=new WeakMap();
 function freshRun(meta, settings, campaign=FRONTIER_CAMPAIGN) {
   return {
-    campaign,...(meta.earlyLoopVersion===1?{earlyLoopVersion:1}:{}),...(meta.lateLoopVersion===1?{lateLoopVersion:1}:{}),
+    campaign,...(meta.preparationBalanceVersion===1?{preparationBalanceVersion:1}:{}),...(meta.earlyLoopVersion===1?{earlyLoopVersion:1}:{}),...(meta.lateLoopVersion===1?{lateLoopVersion:1}:{}),
     trophyClaims:[],regionalClaims:[],
     strategy: { ...newStrategy(), eligible: meta.clears > 0 },
     battleReports: [],
@@ -315,7 +316,7 @@ function freshRun(meta, settings, campaign=FRONTIER_CAMPAIGN) {
     ),
   };
 }
-export function createGame({campaign=FRONTIER_CAMPAIGN,earlyLoopPrototype=false,earlyLoopBatching=true,earlyLoopFishBatching=true,lateLoopPrototype=false}={}) {
+export function createGame({campaign=FRONTIER_CAMPAIGN,earlyLoopPrototype=false,earlyLoopBatching=true,earlyLoopFishBatching=true,lateLoopPrototype=false,preparationBalancePrototype=false}={}) {
   if(!validCampaign(campaign))throw Error("Unknown campaign");
   const meta = {
     generation: 1,
@@ -332,6 +333,7 @@ export function createGame({campaign=FRONTIER_CAMPAIGN,earlyLoopPrototype=false,
     clears: 0,
     challengeBadges: [],
   };
+  if(preparationBalancePrototype)meta.preparationBalanceVersion=1;
   if(lateLoopPrototype)meta.lateLoopVersion=1;
   if(earlyLoopPrototype){meta.earlyLoopVersion=1;if(earlyLoopBatching===false)meta.earlyLoopBatching=false;if(earlyLoopFishBatching===false)meta.earlyLoopFishBatching=false;}
   const settings = {
@@ -487,7 +489,7 @@ export function getRecipeCost(s, d) {
       id,
       Math.max(
         1,
-        Math.ceil(n * (1 - (id === "gold" ? 0 : Math.min(0.5, discount)))),
+        Math.ceil(n * preparationCostFactor(s,d) * (1 - (id === "gold" ? 0 : Math.min(0.5, discount)))),
       ),
     ]),
   );
@@ -601,7 +603,7 @@ function batch(s, id, channel = "main", durationMultiplier = 1) {
     ...(trophyReceipt?{trophyReceipt}:{}),
     kind: d.cost ? "craft" : "gather",
     progress: 0,
-    duration: round(getActionDuration(s, d) * durationMultiplier),
+    duration: round(preparationChannelDuration(s,d,channel,getActionDuration(s,d)*durationMultiplier,lv(s,d.skill,true))),
     runXp:
       d.duration *
       2 *
@@ -1652,12 +1654,13 @@ export function restartRun(s) {
   return ok();
 }
 export function getStartingResources(s){const ids=s.run.status==="legacy_setup"?s.run.legacyDraft.upgrades:s.meta.upgrades;return startingGrant(ids,s.run.status==="legacy_setup"?(s.run.legacyDraft.disabledUpgrades??s.settings.disabledUpgrades):s.settings.disabledUpgrades);}
-export function confirmRun(s, {earlyLoopPrototype=false,lateLoopPrototype=false}={}) {
+export function confirmRun(s, {earlyLoopPrototype=false,lateLoopPrototype=false,preparationBalancePrototype=false}={}) {
   if (s.run.status !== "legacy_setup") return fail("継承準備ではありません。");
   synchronizeFreeFeatures(s);
   const draft=s.run.legacyDraft;
   Object.assign(s.meta,{upgrades:draft.upgrades,paidCosts:draft.paidCosts,points:draft.points});
   s.settings.disabledUpgrades=[...(draft.disabledUpgrades??s.settings.disabledUpgrades)];
+  if(preparationBalancePrototype)s.meta.preparationBalanceVersion=1;
   if(lateLoopPrototype)s.meta.lateLoopVersion=1;
   if(earlyLoopPrototype){s.meta.earlyLoopVersion=1;delete s.meta.earlyLoopBatching;delete s.meta.earlyLoopFishBatching;}
   s.meta.generation++;
@@ -1728,7 +1731,7 @@ export function getNextEnemy(s) {
     ...lateEncounter(s,earlyEncounter(s,e)),
     pressure: lateLoop(s)&&e.wave===30?"sunder":(earlyLoop(s)&&[7,8,13,14].includes(e.wave)||lateRelief(s,e.wave))?null:s.run.encounterDepth ? ({7:"rally", 10:"sunder", 13:"rally", 16:"sunder", 19:"rally"}[e.wave] || null) : null,
     hp: inv ? Math.ceil(e.hp * inv.hpMultiplier) : e.hp,
-    attack: inv ? Math.ceil(lateEncounter(s,e).attack * inv.attackMultiplier) : lateEncounter(s,earlyEncounter(s,e)).attack,
+    attack: inv ? Math.ceil(preparationEnemyAttack(s,e,lateEncounter(s,e).attack) * inv.attackMultiplier) : preparationEnemyAttack(s,e,lateEncounter(s,earlyEncounter(s,e)).attack),
     defense: e.defense + (inv?.defenseBonus || 0),
     maxHp: inv ? Math.ceil(e.hp * inv.hpMultiplier) : e.hp,
     isBoss: e.boss,
@@ -2229,7 +2232,7 @@ export function startEndless(s) {
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
 }
-import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.6.13';
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.6.14';
 
 export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
   return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{
@@ -2260,7 +2263,7 @@ export function resetLegacyRankDraft(s){if(s.run.status!=='legacy_setup')return 
 
 export function cancelLegacyDraft(s){if(s.run.status!=='legacy_setup')return fail('転生開始前だけ変更を取り消せます。');s.run.legacyDraft={upgrades:[...s.meta.upgrades],paidCosts:{...s.meta.paidCosts},points:s.meta.points,disabledUpgrades:[...s.settings.disabledUpgrades]};return ok();}
 
-export function startRoute(s,id){const r=canEnterRoute(s,id);if(!r.ok)return r;initializeRoutes(s);const d=routeById(id),enemy={...getNextEnemy(s),name:d.name,hp:d.hp,maxHp:d.hp,attack:d.attack,defense:d.defense,trait:d.trait,...(d.campaign?{image:d.image,traitParams:['heavy','flying'].includes(d.trait)?{every:4,multiplier:1.6}:null}:{}),pressure:null,isBoss:false,invasion:false,country:null,gold:0,hide:0,combatXpBudget:0};s.run.routes.active={id,startedAt:s.run.elapsed};beginRaid(s,enemy);s.settings.paused=false;return {ok:true};}
+export function startRoute(s,id){const r=canEnterRoute(s,id);if(!r.ok)return r;initializeRoutes(s);const d=preparationRoute(s,routeById(id)),enemy={...getNextEnemy(s),name:d.name,hp:d.hp,maxHp:d.hp,attack:d.attack,defense:d.defense,trait:d.trait,...(d.campaign?{image:d.image,traitParams:['heavy','flying'].includes(d.trait)?{every:4,multiplier:1.6}:null}:{}),pressure:null,isBoss:false,invasion:false,country:null,gold:0,hide:0,combatXpBudget:0};s.run.routes.active={id,startedAt:s.run.elapsed};beginRaid(s,enemy);s.settings.paused=false;return {ok:true};}
 export function withdrawRoute(s,reason='撤退・帰還'){if(!s.run.routes?.active)return {ok:false,reason:'地域戦闘中ではありません。'};finishBattleReport(s,s.run.enemy,false);returnFromRoute(s,false,reason);return {ok:true};}
 
 export const getReservedResources=s=>reserve(s);

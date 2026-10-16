@@ -1,4 +1,4 @@
-import {runSummary,runComparison}from './run-results.js?v=0.6.13';import {FREE_FEATURES}from './free-features.js?v=0.6.13';
+import {runSummary,runComparison}from './run-results.js?v=0.6.14';import {FREE_FEATURES}from './free-features.js?v=0.6.14';
 const time=n=>n==null?'未記録':Math.round(n)+'秒';
 const signed=n=>(n>0?'+':'')+Math.round(n);
 export function runResultMarkup(s){

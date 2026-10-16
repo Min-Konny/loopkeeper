@@ -1,9 +1,10 @@
-import {investmentEffect}from './investments.js?v=0.6.13';
-import {weaponById}from './gear-content.js?v=0.6.13';
-import {accessoryEffects}from './gear-state.js?v=0.6.13';
-import {contractEffects}from './contracts.js?v=0.6.13';
-import {routeEffects}from './routes.js?v=0.6.13';
-import {alchemyResource}from './magic-content.js?v=0.6.13';
+import {preparationSpellDamage}from './preparation-balance.js?v=0.6.14';
+import {investmentEffect}from './investments.js?v=0.6.14';
+import {weaponById}from './gear-content.js?v=0.6.14';
+import {accessoryEffects}from './gear-state.js?v=0.6.14';
+import {contractEffects}from './contracts.js?v=0.6.14';
+import {routeEffects}from './routes.js?v=0.6.14';
+import {alchemyResource}from './magic-content.js?v=0.6.14';
 export const freshMagic=()=>({mana:30,castTimer:0,burnTimer:0,burnTicks:0,burnPower:0,wardCooldown:0,casts:0,detonations:0,catalystsUsed:0,wardsUsed:0,burnDamage:0,spellDamage:0});
 export function initializeMagic(s){
  if(s.version===1)return;s.meta.magicVersion=1;for(const id of ['spark_catalyst','ward_essence'])s.run.resources[id]??=0;
@@ -26,7 +27,7 @@ export function advanceMagic(s,dt,damage){
  if(m.burnTicks>0){m.burnTimer+=dt;if(m.burnTimer>=1-1e-8){m.burnTimer=Math.max(0,m.burnTimer-1);m.burnTicks--;m.burnDamage+=damage(m.burnPower);}}
  if(s.run.enemy.hp<=0)return;if(!isCaster(s))return;
  const interval=spellInterval(s);m.castTimer=Math.min(interval,m.castTimer+dt);if(m.castTimer<interval-1e-8||m.mana<10-1e-8)return;
- m.castTimer=0;m.mana=Math.max(0,m.mana-10);m.casts++;m.spellDamage+=damage(30);if(s.run.enemy.hp<=0)return;
+ m.castTimer=0;m.mana=Math.max(0,m.mana-10);m.casts++;m.spellDamage+=damage(preparationSpellDamage(s,casterMultiplier(s)));if(s.run.enemy.hp<=0)return;
  if(has(s,'volatile_ink')&&m.burnTicks>0&&spend(s,'spark_catalyst')){const blast=m.burnTicks*m.burnPower*5;m.burnTicks=0;m.burnPower=0;m.burnTimer=0;m.detonations++;m.spellDamage+=damage(blast);}
  else{m.burnTicks=6;m.burnPower=3;m.burnTimer=0;}
 }
@@ -42,3 +43,6 @@ export function magicChoice(s,{type,id,value}){
  if(type==='use'&&['catalyst','ward'].includes(id)&&typeof value==='boolean'){s.settings.alchemyUse[id]=value;return {ok:true};}
  return {ok:false,reason:'錬金設定が不正です。'};
 }
+
+// Potential direct packet before the enemy remaining-HP clamp.
+export const fireballPower=s=>preparationSpellDamage(s,casterMultiplier(s))*casterMultiplier(s)*(1+investmentEffect(s,"spellPower")+(accessoryEffects(s,"combat").spellPower||0));

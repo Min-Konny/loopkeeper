@@ -1,7 +1,8 @@
-import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.13';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.13';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.13';
-import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.13';
+import {preparationBalance}from './preparation-balance.js?v=0.6.14';
+import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.14';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.14';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.14';
+import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.14';
 import {
   ACCELERATION,
   LEGACY_UPGRADES,
@@ -9,8 +10,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.6.13";
-import { icon } from "./icons.js?v=0.6.13";
+} from "./engine.js?v=0.6.14";
+import { icon } from "./icons.js?v=0.6.14";
 
 const escape = (value) =>
   String(value ?? "").replace(
@@ -52,7 +53,7 @@ export function getUpgradeDescription(state, upgrade) {
   const effect = upgrade.effect;
   if (upgrade.id === "auto_cook" && state.version !== 1) {
     const recipe = getCatalog(state).RECIPES.find(r => r.id === "cook_meal"), cost = getRecipeCost(state, recipe);
-    return `主作業と並行して、薬草${cost.herbs}・木材${cost.wood} → 食料${recipe.yields.food}。補充目標まで自動で作る。`;
+    return `主作業と並行して、薬草${cost.herbs}・木材${cost.wood} → 食料${recipe.yields.food}。${preparationBalance(state)?"ゆっくり備蓄を補充。急ぐときは本人が調理。":"補充目標まで自動で作る。"}`;
   }
   if (upgrade.kind === "combat")
     return effect.attack

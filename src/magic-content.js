@@ -1,4 +1,4 @@
-export const MAGIC_WEAPON={id:'ember_staff',name:'火種の杖',tier:2,slot:'weapon',skill:'smithing',unlockLevel:2,unlockBestWave:3,knownAfterBoss:null,duration:18,cost:{wood:14,ingot:2,herbs:8,gold:12},stats:{attack:2},xpCoefficient:1.05,combat:{type:'magic',rate:1,pierce:0},description:'物理攻撃は弱い。基礎間隔4秒、MP10で火種を自動詠唱。防御を無視する30ダメージと6秒の燃焼（毎秒3）。MP30、毎秒2回復。'};
+export const MAGIC_WEAPON={id:'ember_staff',name:'火種の杖',tier:2,slot:'weapon',skill:'smithing',unlockLevel:2,unlockBestWave:3,knownAfterBoss:null,duration:18,cost:{wood:14,ingot:2,herbs:8,gold:12},stats:{attack:2},xpCoefficient:1.05,combat:{type:'magic',rate:1,pierce:0},description:'物理攻撃は弱い。基礎間隔4秒、MP10で火種を自動詠唱。防御無視の火球（現在の威力は魔法欄に表示）と6秒の燃焼（毎秒3）。MP30、毎秒2回復。'};
 export const ALCHEMY_RESOURCES=[{id:'spark_catalyst',name:'火花触媒'},{id:'ward_essence',name:'護符液'}];
 export const ALCHEMY_RECIPES=[
  {id:'mix_spark',name:'火花触媒の調合',kind:'alchemy',skill:'smithing',unlockLevel:2,unlockBestWave:3,knownAfterBoss:null,duration:8,cost:{herbs:4,wood:1},yields:{spark_catalyst:3},xpCoefficient:1,description:'薬草4と木材1で触媒3。最大12。対応オーグメントの発動時に1消費。'},
