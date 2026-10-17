@@ -15,25 +15,28 @@
 #content .action-grid .gather-reservation{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:6px;margin:0;padding:8px;border:0;border-top:1px solid #61725370;background:#172a22;min-width:0;position:static}#content .gather-reservation label{min-width:0;flex:1 1 90px}#content .gather-reservation input{max-width:75px;box-sizing:border-box}#content .gather-reservation button{min-height:34px;white-space:normal;flex:1 1 auto}#content .gather-reservation .training-level-editor{flex:1 1 100%}
 #content .action-grid .lock-reason{font-size:12px;line-height:1.5;padding:6px 0;overflow-wrap:anywhere}#content .gather-card>.gather-detail-button{position:static;align-self:flex-end;margin:4px 8px;min-height:28px}
 /* Normal resources remain reachable in a compact two-row scroller. */
-#death-dialog.legacy-setup[open]{display:block;overflow-y:auto;overscroll-behavior:contain;text-align:left;scrollbar-gutter:stable}
-#death-dialog.legacy-setup .setup-tabs{margin:16px 0}
-#death-dialog.legacy-setup .setup-upgrades{display:block;max-height:none;overflow:visible;padding:0;margin:0;border:0}
+/* Keep points, categories and confirmation visible while allocation choices scroll. */
+#death-dialog.legacy-setup[open]{display:flex;flex-direction:column;gap:0;overflow:hidden;max-height:calc(100dvh - 32px);text-align:left}
+#death-dialog.legacy-setup>.setup-header,#death-dialog.legacy-setup>.setup-tabs,#death-dialog.legacy-setup>.setup-footer{flex-shrink:0}
+#death-dialog.legacy-setup .setup-tabs{margin:12px 0}
+#death-dialog.legacy-setup .setup-upgrades{display:block;flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;margin:0;padding:0 8px 0 0;border-block:1px solid var(--line)}
 #death-dialog.legacy-setup .upgrade-details{flex:1;min-width:0;text-align:left}
-#death-dialog.legacy-setup .rank-card{align-items:flex-start;gap:12px}
+#death-dialog.legacy-setup .rank-card{align-items:center;gap:12px}
 #death-dialog.legacy-setup .upgrade-details h3{font-size:16px;text-align:left}
-#death-dialog.legacy-setup .upgrade-details p{font-size:13px;line-height:1.65}
+#death-dialog.legacy-setup .upgrade-details p{font-size:13px;line-height:1.6;margin:6px 0}
 #death-dialog.legacy-setup .upgrade-details>small{font-size:12px;line-height:1.6}
 #death-dialog.legacy-setup .legacy-group-heading{margin:12px 0}
-#death-dialog.legacy-setup .legacy-group-heading h3{font-size:17px}
-#death-dialog.legacy-setup .legacy-group-heading p,#death-dialog.legacy-setup .fine-print{font-size:12px;line-height:1.6}
-#death-dialog.legacy-setup .legacy-upgrade-command{font-size:12px}
+#death-dialog.legacy-setup .legacy-group-heading h3{font-size:16px}
+#death-dialog.legacy-setup .legacy-group-heading p,#death-dialog.legacy-setup .fine-print{font-size:12px;line-height:1.5}
 #death-dialog.legacy-setup .legacy-upgrade-command button{font-size:13px;min-height:36px}
-#death-dialog.legacy-setup .setup-footer{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
+#death-dialog.legacy-setup .setup-footer{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 10px;margin-top:10px;padding:0}
 .setup-footer>.setup-info,.setup-footer>.starting-grant,.setup-footer>.fine-print,.setup-footer>[data-setup-save-error]{grid-column:1/-1;margin:0;padding:0}
-.setup-footer .setup-info>summary,.setup-footer .starting-grant>summary{font-size:13px;line-height:1.6;cursor:pointer;padding:6px 0;color:var(--gold)}
+.setup-footer .setup-info>summary,.setup-footer .starting-grant>summary{font-size:12px;line-height:1.4;cursor:pointer;padding:3px 0;color:var(--gold)}
 .setup-footer>.starting-grant{background:none;border:0;text-align:left}
-#death-dialog.legacy-setup .setup-footer>button{width:auto;margin:0;font-size:13px;min-height:44px}
-@media(max-width:560px){#death-dialog.legacy-setup .rank-card .legacy-upgrade-command{justify-content:flex-start;align-items:flex-start}#death-dialog.legacy-setup .setup-footer{grid-template-columns:1fr}.setup-footer>button{grid-column:1/-1}.rank-path{gap:3px}.rank-path span{padding:1px 4px}#death-dialog.legacy-setup .setup-tabs button{font-size:13px;min-height:40px}}
+#death-dialog.legacy-setup .setup-footer>button{width:auto;min-width:0;margin:0;font-size:13px;min-height:40px;white-space:normal;overflow-wrap:anywhere}
+@media(max-width:560px){#death-dialog.legacy-setup{padding:12px}#death-dialog.legacy-setup .setup-tabs{margin:8px 0;gap:4px}#death-dialog.legacy-setup .setup-tabs button{font-size:12px;min-height:34px;padding:5px}#death-dialog.legacy-setup .rank-card{flex-wrap:wrap}#death-dialog.legacy-setup .rank-card .upgrade-symbol{display:none}#death-dialog.legacy-setup .rank-card .legacy-upgrade-command{justify-content:flex-start;align-items:flex-start}#death-dialog.legacy-setup .setup-footer>button{font-size:12px}}
+@media(max-width:560px){#death-dialog.legacy-setup .setup-tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;scroll-padding:4px;padding-bottom:4px}#death-dialog.legacy-setup .setup-tabs button{flex:0 0 auto;min-width:76px;white-space:nowrap}}
+.rank-path{gap:3px}.rank-path span{padding:1px 4px}#death-dialog.legacy-setup .setup-tabs button{font-size:13px;min-height:40px}}
 .rank-path{display:flex;align-items:center;flex-wrap:wrap;gap:5px;font:12px/1.5 var(--sans);margin:6px 0;color:#8c9a88}.rank-path span{padding:1px 5px;border:1px solid #62715b;border-radius:3px}.rank-path .rank-owned{color:#c8e2ba;background:#426342}.rank-path .rank-next{color:#edcf88;border-color:#a68a4f}.rank-path i{font-style:normal}.rank-description,.legacy-free-guide{font-size:12px;line-height:1.6;margin:7px 0}.rank-description summary,.legacy-free-guide>summary{padding:5px 0;cursor:pointer;color:#cabb8c}.rank-description small{display:block}.legacy-upgrades .rank-card{align-items:flex-start}.legacy-upgrades .rank-card .upgrade-symbol{margin-top:5px}.rank-card .legacy-upgrade-command:empty{display:none}
 #content .action-grid:not(.is-simple) .gather-card>.action-card{flex:1 0 auto}
 #content .action-grid .gather-card>.gather-reservation{align-self:stretch;width:auto;margin-top:auto}
