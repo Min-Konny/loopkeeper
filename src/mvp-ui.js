@@ -1,13 +1,13 @@
-import {stockIcon as icon}from './stock-icons.js?v=0.6.31';
-import {LEGACY_CATEGORIES}from './legacy-categories.js?v=0.6.31';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.31';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.31';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.31';
-import {hasUpgrade}from './free-features.js?v=0.6.31';
-import { getStartingResources } from './engine.js?v=0.6.31';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.31';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.31";
-import { CONTENT as C } from "./content.js?v=0.6.31";
+import {stockIcon as icon}from './stock-icons.js?v=0.6.32';
+import {LEGACY_CATEGORIES}from './legacy-categories.js?v=0.6.32';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.32';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.32';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.32';
+import {hasUpgrade}from './free-features.js?v=0.6.32';
+import { getStartingResources } from './engine.js?v=0.6.32';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.32';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.32";
+import { CONTENT as C } from "./content.js?v=0.6.32";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -23,7 +23,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.31";
+} from "./engine.js?v=0.6.32";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -62,7 +62,7 @@ export function setupMarkup(s, category = "combat") {
     },
   ).join(
     "",
-  )}${selected.free?freeFeatureMarkup(s,selected.free):''}${challengesMarkup(s)}</div><div class="setup-footer"><details class="setup-info"><summary>引き継ぎについて</summary><p class="fine-print campaign-transition">次の人生は本編36波。現在の人生は本編${finalWaveForRun(s)}波の構成で、過去のクリア記録・獲得済み報酬は引き継ぎます。</p></details><p data-setup-save-error role="alert" class="danger-text"></p><details class="starting-grant"><summary>次の転生で受け取る資源</summary><div>${Object.keys(getStartingResources(s)).length ? Object.entries(getStartingResources(s)).map(([id,n])=>`<span>${esc(RESOURCES[id]?.name || id)} <b>${n}</b></span>`).join("") : "初期支給なし"}</div><small>転生を確定した時だけ支給。現在の手持ちは持ち越しません。</small></details>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}<button class="button muted full-width" data-cancel-draft="1" data-focus="cancel-draft">今回の配分変更を取り消す</button><button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
+  )}${selected.free?freeFeatureMarkup(s,selected.free):''}${challengesMarkup(s)}<section class="setup-notes" aria-label="次の命への引き継ぎ"><details class="setup-info"><summary>引き継ぎについて</summary><p class="fine-print campaign-transition">次の人生は本編36波。現在の人生は本編${finalWaveForRun(s)}波の構成で、過去のクリア記録・獲得済み報酬は引き継ぎます。</p></details><details class="starting-grant"><summary>次の転生で受け取る資源</summary><div>${Object.keys(getStartingResources(s)).length ? Object.entries(getStartingResources(s)).map(([id,n])=>`<span>${esc(RESOURCES[id]?.name || id)} <b>${n}</b></span>`).join("") : "初期支給なし"}</div><small>転生を確定した時だけ支給。現在の手持ちは持ち越しません。</small></details>${s.meta.templates.length ? '<p class="fine-print">保存手順は維持されます。返却した機能はこの周では使えません。</p>' : ""}</section></div><div class="setup-footer"><p data-setup-save-error role="alert" class="danger-text"></p><button class="button muted full-width" data-cancel-draft="1" data-focus="cancel-draft">今回の配分変更を取り消す</button><button class="button gold full-width" data-command="confirm-run">この構成で開始</button></div>`;
 }
 // Keep the nearest unanswered request visible while working in another tab.
 export function diplomacyDeadlineMarkup(s) {

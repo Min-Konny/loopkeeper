@@ -1,10 +1,10 @@
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.31';
-import { getPlayerStrike } from './engine.js?v=0.6.31';
-import {routeById}from './routes.js?v=0.6.31';
-import { equipmentMaterial } from './visual-design.js?v=0.6.31';
-import { battleSound } from "./presentation.js?v=0.6.31";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.31";
-import { icon } from "./icons.js?v=0.6.31";
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.32';
+import { getPlayerStrike } from './engine.js?v=0.6.32';
+import {routeById}from './routes.js?v=0.6.32';
+import { equipmentMaterial } from './visual-design.js?v=0.6.32';
+import { battleSound } from "./presentation.js?v=0.6.32";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.32";
+import { icon } from "./icons.js?v=0.6.32";
 
 const views = new WeakMap();
 const number = (value) =>

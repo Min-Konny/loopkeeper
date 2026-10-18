@@ -46,3 +46,9 @@
 @media(max-width:560px){.diplomacy-choice-grid{grid-template-columns:1fr}.diplomacy-choice-grid p{min-height:0}.country-card .diplomacy-heading{flex-wrap:wrap}.country-card .diplomacy-status{margin-left:auto}.country-card .diplomacy-heading h3{font-size:16px}.setup-upgrade{flex-wrap:wrap}.setup-upgrade>span{flex:1 1 100%}#resource-bar .stock-item{min-width:77px;padding:6px;gap:5px}.legacy-upgrades .upgrade-card{flex-wrap:wrap}.legacy-upgrade-command{flex-basis:100%;align-items:flex-end}.contract-grid{grid-template-columns:minmax(0,1fr)}}
 
 #resource-bar [data-resource="coal"]>.icon{color:#91998b;fill:#101c18}#resource-bar [data-resource="silver_ore"]>.icon,#resource-bar [data-resource="silver_ingot"]>.icon{color:#e5e9ec}#resource-bar [data-resource="mithril_ore"]>.icon,#resource-bar [data-resource="mithril_ingot"]>.icon{color:#8bd5de}#resource-bar [data-resource="orichalcum_ore"]>.icon,#resource-bar [data-resource="orichalcum_ingot"]>.icon{color:#eda18c}#resource-bar [data-resource="herbs"]>.icon{color:#b0d384}#resource-bar [data-resource="steel_ingot"]>.icon{color:#a9bfc7}#resource-bar [data-resource="ward_essence"]>.icon{color:#b8abe3}
+
+/* Supplementary inheritance notes scroll with choices, never displace controls. */
+#death-dialog.legacy-setup .setup-notes{border-top:1px solid var(--line);margin-top:12px;padding:10px 0;font-size:12px;text-align:left}
+#death-dialog.legacy-setup .setup-notes summary{padding:7px 0;color:var(--gold);cursor:pointer}
+#death-dialog.legacy-setup .setup-notes .starting-grant{margin:0;padding:0;border:0;background:none;text-align:left}
+#death-dialog.legacy-setup .setup-notes .fine-print,#death-dialog.legacy-setup .setup-notes small{font-size:12px;line-height:1.6}

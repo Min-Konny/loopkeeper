@@ -1,5 +1,5 @@
-import {equipmentMaterial} from './visual-design.js?v=0.6.31';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.31';
+import {equipmentMaterial} from './visual-design.js?v=0.6.32';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.32';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
