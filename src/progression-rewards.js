@@ -1,9 +1,9 @@
-import {preparationRevision}from './preparation-balance.js?v=0.6.33';
+import {preparationRevision}from './preparation-balance.js?v=0.6.34';
 // Rewards follow the previous frontier, so retreating to early waves cannot
 // repeatedly fund a mature build. No award is triggered by rebirth or loading.
-import {earlyLoop}from './early-loop.js?v=0.6.33';
-import {lateLoop,repeatRouteValue}from './late-loop.js?v=0.6.33';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.33';
+import {earlyLoop}from './early-loop.js?v=0.6.34';
+import {lateLoop,repeatRouteValue}from './late-loop.js?v=0.6.34';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.34';
 export const repeatCheckpointValue=wave=>Math.min(3,1+Math.floor(wave/6));
 export function createProgression(meta,finalWave=21){return {startBestWave:Math.min(finalWave,meta.bestWave),checkpointAward:null,attemptAward:null};}
 export function initializeProgression(s){

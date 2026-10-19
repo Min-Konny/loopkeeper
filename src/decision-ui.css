@@ -52,3 +52,14 @@
 #death-dialog.legacy-setup .setup-notes summary{padding:7px 0;color:var(--gold);cursor:pointer}
 #death-dialog.legacy-setup .setup-notes .starting-grant{margin:0;padding:0;border:0;background:none;text-align:left}
 #death-dialog.legacy-setup .setup-notes .fine-print,#death-dialog.legacy-setup .setup-notes small{font-size:12px;line-height:1.6}
+
+/* Keep a readable action name above queue controls on narrow touch screens. */
+@media(max-width:560px){
+  #info-dialog .queue-box .queue-list>li>span:nth-child(2){flex:1 0 calc(100% - 52px);min-width:0;font-size:13px;line-height:1.5}
+}
+@media(max-width:359px){
+  #info-dialog .queue-box .queue-list>li>.queue-entry-count,
+  #info-dialog .queue-box .queue-list>li>.training-level-editor,
+  #info-dialog .queue-box .queue-list>li>.queue-condition-label,
+  #info-dialog .queue-box .queue-list>li>.queue-single{flex-basis:100%;margin-left:0}
+}
