@@ -1,4 +1,4 @@
-import {equipmentMaterial} from './visual-design.js?v=0.6.36';
+import {equipmentMaterial} from './visual-design.js?v=0.6.37';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map();
 const ink='#233737',gold='#dab77a',skin='#d6b38b';
@@ -43,6 +43,7 @@ export function pixelBattlePortrait(kind,equipment={}){
  if(cache.has(key))return cache.get(key);
  const enemyGear={armor:safe==='raider'?null:{id:safe==='boss'?'orichalcum_armor':'iron_armor'},weapon:{id:'iron_sword'},shield:safe==='knight'?{id:'iron_shield'}:null};
  const art=safe==='player'?fighter(equipment):['boss','knight','raider'].includes(safe)?fighter(enemyGear,safe==='boss'):beast(safe);
- const url='data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 104" width="192" height="208" shape-rendering="crispEdges">${art}</svg>`);
+ const facingArt=safe==='boss'?`<g transform="translate(96 0) scale(-1 1)">${art}</g>`:art;
+ const url='data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 104" width="192" height="208" shape-rendering="crispEdges">${facingArt}</svg>`);
  if(cache.size>=96)cache.delete(cache.keys().next().value);cache.set(key,url);return url;
 }
