@@ -1,4 +1,4 @@
-import {weaponById}from './gear-content.js?v=0.6.32';
+import {weaponById}from './gear-content.js?v=0.6.33';
 /** Visibility is a display preference; it never cancels or forbids crafting. */
 export function getRecipeVisibility(state, recipe) {
   if (!recipe.equipment && !recipe.facility) return { hidden: false, manuallyHidden: false, equipped: false, inferior: false, inProgress: false };
