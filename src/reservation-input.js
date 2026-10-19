@@ -45,7 +45,7 @@ export function validateReservationInput(input) {
 // activation of their own buttons; a held key or IME confirmation never repeats it.
 export function installReservationKeyboard({ document, onInvalid }) {
   document.addEventListener('keydown', event => {
-    if (event.key !== 'Enter' || !isReservationInput(event.target) || event.isComposing) return;
+    if (event.key !== 'Enter' || !isReservationInput(event.target) || event.isComposing || event.keyCode === 229) return;
     event.preventDefault();
     if (event.repeat) return;
     if (!validateReservationInput(event.target)) { onInvalid(reservationInputError(event.target)); return; }

@@ -1,14 +1,14 @@
-import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.34';
-import {initializeWorkMilestones}from './work-milestones.js?v=0.6.34';
-import {initializeTrophies} from './boss-materials.js?v=0.6.34';
-import {initializeContracts}from './contracts.js?v=0.6.34';
-import {initializeRoutes}from './routes.js?v=0.6.34';
-import {initializeFarm}from './farm-state.js?v=0.6.34';
-import {synchronizeCompanions}from './companion-state.js?v=0.6.34';
-import {initializeMagic}from './magic-state.js?v=0.6.34';
-import {initializeGear}from './gear-state.js?v=0.6.34';
-import {initializeProgression}from './progression-rewards.js?v=0.6.34';
-import {initializeRunResults}from './run-results.js?v=0.6.34';
+import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.35';
+import {initializeWorkMilestones}from './work-milestones.js?v=0.6.35';
+import {initializeTrophies} from './boss-materials.js?v=0.6.35';
+import {initializeContracts}from './contracts.js?v=0.6.35';
+import {initializeRoutes}from './routes.js?v=0.6.35';
+import {initializeFarm}from './farm-state.js?v=0.6.35';
+import {synchronizeCompanions}from './companion-state.js?v=0.6.35';
+import {initializeMagic}from './magic-state.js?v=0.6.35';
+import {initializeGear}from './gear-state.js?v=0.6.35';
+import {initializeProgression}from './progression-rewards.js?v=0.6.35';
+import {initializeRunResults}from './run-results.js?v=0.6.35';
 export const FREE_FEATURES = [
  {id:'action_queue',name:'行動予約',wave:QUEUE_UNLOCK_WAVE},
  {id:'queue_templates',name:'手順テンプレート',wave:3},
