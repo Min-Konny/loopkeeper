@@ -1,5 +1,5 @@
-import {preparationRevision}from './preparation-balance.js?v=0.6.37';
-import {runSummary,runComparison}from './run-results.js?v=0.6.37';import {FREE_FEATURES}from './free-features.js?v=0.6.37';
+import {preparationRevision}from './preparation-balance.js?v=0.6.38';
+import {runSummary,runComparison}from './run-results.js?v=0.6.38';import {FREE_FEATURES}from './free-features.js?v=0.6.38';
 const time=n=>n==null?'未記録':Math.round(n)+'秒';
 const signed=n=>(n>0?'+':'')+Math.round(n);
 export function runResultMarkup(s){

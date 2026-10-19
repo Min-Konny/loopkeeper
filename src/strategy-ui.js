@@ -1,10 +1,10 @@
-import {finalWaveForRun,campaignForRun}from './campaign-rules.js?v=0.6.37';
-import {hasUpgrade}from './free-features.js?v=0.6.37';
-import { CONTENT } from './content.js?v=0.6.37';
-import { setTextIfChanged } from './dom-text.js?v=0.6.37';
-import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.6.37';
-import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.6.37';
-import { conditionLabel } from './queue-conditions.js?v=0.6.37';
+import {finalWaveForRun,campaignForRun}from './campaign-rules.js?v=0.6.38';
+import {hasUpgrade}from './free-features.js?v=0.6.38';
+import { CONTENT } from './content.js?v=0.6.38';
+import { setTextIfChanged } from './dom-text.js?v=0.6.38';
+import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.6.38';
+import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.6.38';
+import { conditionLabel } from './queue-conditions.js?v=0.6.38';
 const esc = x => String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Math.round(n).toLocaleString('ja-JP');
 const duration = n => {

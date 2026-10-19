@@ -63,3 +63,17 @@
   #info-dialog .queue-box .queue-list>li>.queue-condition-label,
   #info-dialog .queue-box .queue-list>li>.queue-single{flex-basis:100%;margin-left:0}
 }
+/* Keep every workshop category and both visibility controls in the flow. */
+@media(max-width:560px){
+ #expanded-work-dialog:has([data-craft-category]){display:block;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+ #expanded-work-dialog:has([data-craft-category])>:not(:last-child){margin-bottom:6px}
+ #expanded-work-dialog:has([data-craft-category])>.expanded-heading{position:sticky;top:-10px;z-index:3;background:var(--surface);padding:4px 0}
+ #expanded-work-dialog:has([data-craft-category])>.expanded-body{flex:none;display:block}
+ #expanded-work-dialog:has([data-craft-category]) .work-area{flex:none}
+ #expanded-work-dialog:has([data-craft-category]) #content{flex:none;height:auto;overflow:visible}
+ #expanded-work-dialog .catalog-filters:has(>[data-show-owned-accessories]){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin-bottom:6px}
+ #expanded-work-dialog .catalog-filters>.craft-category-tabs{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0}
+ #expanded-work-dialog .catalog-filters>.craft-category-tabs button{min-height:44px;padding:4px;font-size:12px;line-height:1.4}
+ #expanded-work-dialog .catalog-filters>[data-show-owned-accessories],#expanded-work-dialog .catalog-filters>.craft-filters .craft-visibility{width:100%;min-height:44px;box-sizing:border-box;padding:4px;font-size:12px;line-height:1.4}
+ #expanded-work-dialog .catalog-filters>.craft-filters{margin:0;min-width:0}
+}
