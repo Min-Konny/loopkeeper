@@ -1,10 +1,11 @@
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.35';
-import { getPlayerStrike } from './engine.js?v=0.6.35';
-import {routeById}from './routes.js?v=0.6.35';
-import { equipmentMaterial } from './visual-design.js?v=0.6.35';
-import { battleSound } from "./presentation.js?v=0.6.35";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.35";
-import { icon } from "./icons.js?v=0.6.35";
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.36';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.36';
+import { getPlayerStrike } from './engine.js?v=0.6.36';
+import {routeById}from './routes.js?v=0.6.36';
+import { equipmentMaterial } from './visual-design.js?v=0.6.36';
+import { battleSound } from "./presentation.js?v=0.6.36";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.36";
+import { icon } from "./icons.js?v=0.6.36";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -384,7 +385,9 @@ export function renderBattle(dialog, state) {
         Math.min(enemy.wave - 1, 4)
       ];
   const regionArt=routeById(run.routes?.active?.id)?.image;
-  const portraitSrc = pixelBattlePortrait(regionArt ? regionArt.split("/").pop().replace(".svg", "") : portraitId);
+  const portraitSrc = enemy.id === "forest_chief" && enemy.isBoss && !run.routes?.active
+    ? forestChiefPortrait()
+    : pixelBattlePortrait(regionArt ? regionArt.split("/").pop().replace(".svg", "") : portraitId);
   const playerSrc=pixelBattlePortrait("player",run.equipment);
   if(el["player-illustration"].getAttribute("src")!==playerSrc)el["player-illustration"].setAttribute("src",playerSrc);
   if (el["enemy-illustration"].getAttribute("src") !== portraitSrc)

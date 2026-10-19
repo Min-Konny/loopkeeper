@@ -1,4 +1,4 @@
-import { mountPixelCamp } from './pixel-camp-scene.js?v=0.6.35';
+import { mountPixelCamp } from './pixel-camp-scene.js?v=0.6.36';
 
 export function mountCampScene(host, {variant = 'camp'} = {}) {
  const scene=mountPixelCamp(host);
