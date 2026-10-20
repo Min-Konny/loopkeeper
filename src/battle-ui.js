@@ -1,11 +1,14 @@
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.48';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.48';
-import { getPlayerStrike } from './engine.js?v=0.6.48';
-import {routeById}from './routes.js?v=0.6.48';
-import { equipmentMaterial } from './visual-design.js?v=0.6.48';
-import { battleSound } from "./presentation.js?v=0.6.48";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.48";
-import { icon } from "./icons.js?v=0.6.48";
+import {totalFood}from './meals.js?v=0.6.49';
+import {mealEffectText}from './meal-ui.js?v=0.6.49';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.49';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.49';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.49';
+import { getPlayerStrike } from './engine.js?v=0.6.49';
+import {routeById}from './routes.js?v=0.6.49';
+import { equipmentMaterial } from './visual-design.js?v=0.6.49';
+import { battleSound } from "./presentation.js?v=0.6.49";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.49";
+import { icon } from "./icons.js?v=0.6.49";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -48,6 +51,7 @@ function createView(dialog) {
           <div class="battle-feedback-row" aria-hidden="true"><span class="battle-feedback" data-battle="enemy-damage-feedback"></span></div>
         </article>
       </div>
+      <p class="battle-pressure-note" data-battle="pressure-state"></p><p class="battle-meal-note" data-battle="meal-state"></p><div class="meal-buttons battle-meal-buttons"><button class="button small gold-outline" data-use-meal="fish_meal" data-battle="fish-button"></button><button class="button small gold-outline" data-use-meal="egg_meal" data-battle="egg-button"></button></div>
       <div class="battle-rhythm"><div><span>次の攻防</span><b data-battle="round-time"></b></div><div class="battle-round-track"><i data-battle="round-bar"></i></div></div>
       <div class="battle-facilities" aria-label="村の戦闘支援"><div class="battle-facility guardhouse" data-battle="guardhouse-sign" hidden><svg viewBox="0 0 60 48" aria-hidden="true"><path d="M12 43V12H18V7H26V12H34V7H42V12H48V43Z" fill="#69816a"/><path d="M24 43V26Q30 17 36 26V43" fill="#22382e"/><path d="M10 14H50M9 43H51" stroke="#c2c790" stroke-width="3"/><path d="M17 22H23M37 22H43" stroke="#e8d99b" stroke-width="4"/></svg><span>衛兵詰所<small data-battle="support-value"></small></span></div><div class="battle-facility archery" data-battle="archery-sign" hidden><svg viewBox="0 0 60 48" aria-hidden="true"><path d="M14 43V18h32v25Z" fill="#7f9275"/><path d="M8 19 30 4 52 19Z" fill="#5b8275"/><path d="M21 23q20 7 0 17V23m0 8h27m-5-5 5 5-5 5" fill="none" stroke="#e1c483" stroke-width="2"/></svg><span>弓塔<small data-battle="ranged-value"></small></span></div><div class="battle-facility infirmary" data-battle="infirmary-sign" hidden><svg viewBox="0 0 60 48" aria-hidden="true"><path d="M12 23H48V43H12Z" fill="#819d86"/><path d="M6 24 30 5 54 24Z" fill="#567e76"/><path d="M26 24H34V29H39V37H34V42H26V37H21V29H26Z" fill="#e1dfbd"/></svg><span>救護所<small data-battle="treatment-value"></small></span></div></div>
     </section>
@@ -397,7 +401,9 @@ export function renderBattle(dialog, state) {
   updateHealth(el, "enemy", enemy.hp, enemy.maxHp);
   setText(el["player-attack"], number(stats.attack));
   setText(el["player-defense"], number(stats.defense));
-  setText(el["enemy-attack"], number(enemy.attack));
+  setText(el["enemy-attack"], number(pressuredAttack(state,enemy)));
+  const pressure=battlePressure(state);el["pressure-state"].hidden=!pressure.active;setText(el["pressure-state"],pressure.graceRemaining>0?`長期戦：あと${Math.ceil(pressure.graceRemaining)}秒で敵の攻撃力が徐々に上昇`:`長期戦：敵攻撃×${pressure.multiplier.toFixed(2)}${pressure.slow?" · 警鐘台で強化速度−30%":""}`);
+  setText(el["meal-state"],mealEffectText(state));for(const [id,key,name]of [["fish_meal","fish-button","魚料理"],["egg_meal","egg-button","卵料理"]]){setText(el[key],`${name}を食べる（${run.resources[id]||0}）`);el[key].disabled=!(run.resources[id]>0);}
   setText(el["enemy-defense"], number(enemy.defense));
   setText(
     el.outgoing,
@@ -422,16 +428,16 @@ export function renderBattle(dialog, state) {
   const remaining = Math.max(0, 1.5 - run.combatTimer);
   setText(el["round-time"], `${remaining.toFixed(1)} 秒`);
   el["round-bar"].style.transform = `scaleX(${ratio(run.combatTimer, 1.5)})`;
-  setText(el.food, number(run.resources.food));
+  setText(el.food, number(totalFood(state)));
   setText(
     el["food-rule"],
-    run.resources.food > 0
+    totalFood(state) > 0
       ? state.version===2&&preview.charges>0 ? `救護を先に使用 · 必要なら1食で${getFoodHealing(state)}回復` : `低HP・致死予測で1食 · ${getFoodHealing(state)}回復`
       : state.version===2&&preview.charges>0 ? `食料なし · 低HP時の救護 残り${preview.charges}回` : "食料なし · 自動回復できません",
   );
   el["food-rule"].classList.toggle(
     "battle-food-empty",
-    run.resources.food === 0,
+    totalFood(state) === 0,
   );
   el["pause-icon"].hidden = paused;
   el["play-icon"].hidden = !paused;
@@ -449,7 +455,7 @@ export function renderBattle(dialog, state) {
   ) {
     const enemyLoss = previous.enemyHp - enemy.hp;
     const hpChange = run.hp - previous.hp;
-    const foodUsed = previous.food - run.resources.food;
+    const foodUsed = previous.food - totalFood(state);
     const treatmentUsed = Math.max(0, (previous.charges ?? preview.charges) - preview.charges);
     if (enemyLoss > 0 || hpChange !== 0 || foodUsed > 0 || treatmentUsed > 0) {
       clearFeedback(view);
@@ -489,7 +495,7 @@ export function renderBattle(dialog, state) {
     elapsed: run.elapsed,
     hp: run.hp,
     enemyHp: enemy.hp,
-    food: run.resources.food,
+    food: totalFood(state),
     charges: preview.charges,
   };
 }

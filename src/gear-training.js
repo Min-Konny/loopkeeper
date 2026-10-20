@@ -1,5 +1,5 @@
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.48';
-import * as E from './engine.js?v=0.6.48';import {combatBuild}from './gear-state.js?v=0.6.48';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.49';
+import * as E from './engine.js?v=0.6.49';import {combatBuild}from './gear-state.js?v=0.6.49';
 export function trainBuild(state,{wave=state.run.wave+1,seconds=45}={}){
  if(state.version===1||state.run.status!=='preparing'||state.run.augments.offer.length)return {ok:false,reason:'準備中に試し打ちできます。'};
  if(!Number.isInteger(wave)||wave<1||wave>Math.min(finalWaveForRun(state),state.meta.bestWave+1)||!Number.isFinite(seconds)||seconds<=0||seconds>60)return {ok:false,reason:'試し打ちの条件が不正です。'};

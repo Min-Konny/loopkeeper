@@ -58,6 +58,7 @@ const paths = {
   tool: '<path d="m14 3 1 5 4 1 3-3c1 6-3 9-7 8L6 22l-4-4 9-9c-1-4 1-7 6-8l-3 2Z"/>',
 };
 export function icon(name, className = "") {
+  if(name==="fish_meal")name="fish";if(name==="egg_meal")name="eggs";
   if (["silver_ore", "mithril_ore", "orichalcum_ore"].includes(name))
     name = "ore";
   if (

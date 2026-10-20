@@ -1,12 +1,13 @@
-import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.48';
-import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.48';
-import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.48';
-import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.48';
-import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.48';
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.48';
-import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.48';
-import { REINFORCEMENTS } from './endless.js?v=0.6.48';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.48';
+import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.49';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.49';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.49';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.49';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.49';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.49';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.49';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.49';
+import { REINFORCEMENTS } from './endless.js?v=0.6.49';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.49';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -3609,3 +3610,6 @@ CONTENT.equipment.push(...WEAPONS);CONTENT.processing.push(...ACCESSORY_RECIPES)
 WEAPONS.push(MAGIC_WEAPON);CONTENT.equipment.push(MAGIC_WEAPON);CONTENT.resources.push(...ALCHEMY_RESOURCES);CONTENT.processing.push(...ALCHEMY_RECIPES);CONTENT.augments.push(...MAGIC_AUGMENTS);
 
 CONTENT.resources.push(...FARM_RESOURCES);CONTENT.actions.push(FARM_ACTION);CONTENT.facilities.push(FARM_FACILITY);CONTENT.processing.push(FARM_RECIPE);CONTENT.workers.find(w=>w.id==='foraging_worker').resourceChoices.push('fodder');CONTENT.market.push({id:'buy_eggs',name:'卵を購入',direction:'buy',resource:'eggs',quantity:10,gold:30,discountEligible:false});
+
+CONTENT.resources.push(...MEAL_RESOURCES);CONTENT.facilities.push(PRESSURE_FACILITY);
+for(const m of MEALS){const recipe=CONTENT.processing.find(x=>x.id===m.recipe);recipe.yields={[m.id]:m.units};recipe.description=m.name+' '+m.units+'食。1食で通常の回復と'+m.label+'（90戦闘秒）。効果は1種類、同じ料理は時間更新。';}

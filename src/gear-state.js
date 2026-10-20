@@ -1,5 +1,6 @@
-import {investmentEffect}from './investments.js?v=0.6.48';
-import {accessoryById,weaponById,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.48';
+import {mealEffects}from './meals.js?v=0.6.49';
+import {investmentEffect}from './investments.js?v=0.6.49';
+import {accessoryById,weaponById,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.49';
 export const emptySets=()=>({preparation:Object.fromEntries(ACCESSORY_SLOTS.map(s=>[s,null])),combat:Object.fromEntries(ACCESSORY_SLOTS.map(s=>[s,null]))});
 export function initializeGear(s){
  if(s.version===1)return;
@@ -15,7 +16,7 @@ export function accessoryEffects(s,phase=s.run.status==='combat'?'combat':'prepa
 }
 export function combatBuild(s){
  const w=weaponById(s.run.equipment.weapon?.id)?.combat||{type:'melee',rate:1,pierce:0},a=accessoryEffects(s,'combat');
- const rate=Math.max(.6,Math.min(1.6,w.rate*(1+(a.haste||0)+investmentEffect(s,"haste"))));
+ const rate=Math.max(.6,Math.min(1.6,w.rate*(1+(a.haste||0)+(mealEffects(s).haste||0)+investmentEffect(s,"haste"))));
  return {...w,rate,interval:1.5/rate,critRate:Math.min(.5,(a.critRate||0)+investmentEffect(s,"critRate")),critMultiplier:Math.min(2.5,1.5+(a.critPower||0)+(w.type==='crossbow'?.25:0)),counter:a.counter||0};
 }
 export function strikeModifier(s,e,consume=false){

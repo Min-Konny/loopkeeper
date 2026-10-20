@@ -1,18 +1,22 @@
-export {getPlanningYields,getRequiredProductionBatches}from './mvp-engine.js?v=0.6.48';
-export {enqueueTrainingLevel,editQueuedTrainingLevel}from './mvp-engine.js?v=0.6.48';
+import {pressuredAttack as effectiveEnemyAttack}from './battle-pressure.js?v=0.6.49';
+import {initializeMeals}from './meals.js?v=0.6.49';
+export {totalFood as getTotalFood,mealStatus,setMealPreference,setAutoCookRecipe}from './meals.js?v=0.6.49';
+export {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.49';
+export {getPlanningYields,getRequiredProductionBatches}from './mvp-engine.js?v=0.6.49';
+export {enqueueTrainingLevel,editQueuedTrainingLevel}from './mvp-engine.js?v=0.6.49';
 export const getActionYields = (s,d) => isLegacy(s) ? d.yields || {} : mvp.getActionYields(s,d);
 export const getPlayerStrike = s => isLegacy(s) ? {attack:getStats(s).attack,armor:(s.run.enemy || getNextEnemy(s)).defense,damage:Math.max(1,getStats(s).attack-(s.run.enemy || getNextEnemy(s)).defense)} : mvp.getPlayerStrike(s);
-export {startManualRepeat,canStartManualRepeat}from './mvp-engine.js?v=0.6.48';
-export { enqueueConditional } from './mvp-engine.js?v=0.6.48';
-import {earlyLoop,earlyDefinition}from './early-loop.js?v=0.6.48';
-import * as legacy from "./legacy-engine.js?v=0.6.48";
-import * as mvp from "./mvp-engine.js?v=0.6.48";
-import { validateSave } from "./save-validation.js?v=0.6.48";
-import { CONTENT as C } from "./content.js?v=0.6.48";
-export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.6.48";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.6.48";
-export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.6.48";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.6.48";
+export {startManualRepeat,canStartManualRepeat}from './mvp-engine.js?v=0.6.49';
+export { enqueueConditional } from './mvp-engine.js?v=0.6.49';
+import {earlyLoop,earlyDefinition}from './early-loop.js?v=0.6.49';
+import * as legacy from "./legacy-engine.js?v=0.6.49";
+import * as mvp from "./mvp-engine.js?v=0.6.49";
+import { validateSave } from "./save-validation.js?v=0.6.49";
+import { CONTENT as C } from "./content.js?v=0.6.49";
+export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.6.49";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.6.49";
+export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.6.49";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.6.49";
 export {
   SKILLS,
   getSkillProgress,
@@ -29,7 +33,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.6.48";
+} from "./mvp-engine.js?v=0.6.49";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
@@ -72,6 +76,7 @@ export function parseSave(text) {
     if (raw.version === 1) return normalizeSingleReservations(legacy.parseSave(text));
     recoverGoldOverflow(raw);
     if (!validateSave(raw)) return null;
+    initializeMeals(raw);
     raw.run.training ||= {defense:0, vitality:mvp.getVitalityMigrationXp(raw.run.skills.combat.xp)};
     for (const id of Object.keys(mvp.RESOURCES)) raw.run.resources[id] ??= 0;
     raw.settings.pauseWhenHidden ??= false;
@@ -309,7 +314,7 @@ export function getCombatPreview(s) {
       ? 0.6
       : 1;
   const hits = multipliers.map((m) =>
-    Math.max(1, (e.attack * m * (e.pressure === "rally" ? 1 + Math.min(.3, Math.floor((nextRound - 1) / 4) * .05) : 1) - stats.defense * (e.pressure === "sunder" && nextRound % 4 === 0 ? .6 : 1)) * first),
+    Math.max(1, (effectiveEnemyAttack(s,e,nextRound*1.5) * m * (e.pressure === "rally" ? 1 + Math.min(.3, Math.floor((nextRound - 1) / 4) * .05) : 1) - stats.defense * (e.pressure === "sunder" && nextRound % 4 === 0 ? .6 : 1)) * first),
   );
   return {
     hits,
@@ -338,8 +343,10 @@ export const resetLegacyRankDraft=s=>isLegacy(s)?{ok:false,reason:'次の世代�
 
 export const cancelLegacyDraft=s=>isLegacy(s)?{ok:false,reason:'次の世代から利用できます。'}:mvp.cancelLegacyDraft(s);
 
-export {startRoute,withdrawRoute}from './mvp-engine.js?v=0.6.48';
+export {startRoute,withdrawRoute}from './mvp-engine.js?v=0.6.49';
 
-export {getReservedResources}from './mvp-engine.js?v=0.6.48';
+export {getReservedResources}from './mvp-engine.js?v=0.6.49';
 
 export const getClockStatus=s=>isLegacy(s)?{kind:s.run.activeAction?'work':'none',label:s.run.activeAction?.id||'作業なし'}:mvp.getClockStatus(s);
+
+export const useMeal=(s,id)=>isLegacy(s)?{ok:false,reason:"この人生では料理効果を利用できません。"}:mvp.useMeal(s,id);

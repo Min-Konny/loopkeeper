@@ -1,14 +1,15 @@
-import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.48';
-import {initializeWorkMilestones}from './work-milestones.js?v=0.6.48';
-import {initializeTrophies} from './boss-materials.js?v=0.6.48';
-import {initializeContracts}from './contracts.js?v=0.6.48';
-import {initializeRoutes}from './routes.js?v=0.6.48';
-import {initializeFarm}from './farm-state.js?v=0.6.48';
-import {synchronizeCompanions}from './companion-state.js?v=0.6.48';
-import {initializeMagic}from './magic-state.js?v=0.6.48';
-import {initializeGear}from './gear-state.js?v=0.6.48';
-import {initializeProgression}from './progression-rewards.js?v=0.6.48';
-import {initializeRunResults}from './run-results.js?v=0.6.48';
+import {initializeMeals}from './meals.js?v=0.6.49';
+import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.49';
+import {initializeWorkMilestones}from './work-milestones.js?v=0.6.49';
+import {initializeTrophies} from './boss-materials.js?v=0.6.49';
+import {initializeContracts}from './contracts.js?v=0.6.49';
+import {initializeRoutes}from './routes.js?v=0.6.49';
+import {initializeFarm}from './farm-state.js?v=0.6.49';
+import {synchronizeCompanions}from './companion-state.js?v=0.6.49';
+import {initializeMagic}from './magic-state.js?v=0.6.49';
+import {initializeGear}from './gear-state.js?v=0.6.49';
+import {initializeProgression}from './progression-rewards.js?v=0.6.49';
+import {initializeRunResults}from './run-results.js?v=0.6.49';
 export const FREE_FEATURES = [
  {id:'action_queue',name:'行動予約',wave:QUEUE_UNLOCK_WAVE},
  {id:'queue_templates',name:'手順テンプレート',wave:3},
@@ -39,7 +40,7 @@ export function synchronizeFreeFeatures(s){
  if(granted.has('acceleration_extension'))granted.add('cycle_acceleration');
  if(granted.has('queue_templates')||granted.has('stock_targets'))granted.add('action_queue');
  s.meta.freeFeatures=[...granted].sort();
- initializeTrophies(s);initializeWorkMilestones(s);initializeRunResults(s);initializeProgression(s);initializeGear(s);initializeMagic(s);initializeFarm(s);initializeRoutes(s);initializeContracts(s);const companionsAdded=synchronizeCompanions(s);s.meta.foundationVersion=1;
+ initializeMeals(s);initializeTrophies(s);initializeWorkMilestones(s);initializeRunResults(s);initializeProgression(s);initializeGear(s);initializeMagic(s);initializeFarm(s);initializeRoutes(s);initializeContracts(s);const companionsAdded=synchronizeCompanions(s);s.meta.foundationVersion=1;
  if(refunded)s.meta.featureRefundTotal=(s.meta.featureRefundTotal||0)+refunded;
  return {refunded,companionsAdded,changed:before!==JSON.stringify(s)};
 }

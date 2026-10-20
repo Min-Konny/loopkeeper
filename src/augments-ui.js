@@ -1,5 +1,6 @@
-import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus,getAugmentExclusionStatus } from "./engine.js?v=0.6.48";
-import { icon } from "./icons.js?v=0.6.48";
+import {totalFood}from './meals.js?v=0.6.49';
+import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus,getAugmentExclusionStatus } from "./engine.js?v=0.6.49";
+import { icon } from "./icons.js?v=0.6.49";
 
 const families = {
   economy: { name: "生産・投資", icon: "gold" },
@@ -33,7 +34,7 @@ export function augmentInsight(state, augment) {
   const { AUGMENTS, FACILITIES } = getCatalog(state);
   let readiness = '選ぶと有効';
   if (augment.facility) readiness = (state.run.facilities[augment.facility] || 0) >= (augment.facilityLevel || 1) ? '施設の準備OK' : `${FACILITIES[augment.facility]?.name || '対応施設'}${augment.facilityLevel ? ' Lv.' + augment.facilityLevel : ''}の建設が必要`;
-  if (augment.id === 'well_stocked' || augment.id === 'supply_lines') readiness = `食料 ${Math.floor(state.run.resources.food)}/20${augment.facility && !state.run.facilities[augment.facility] ? ' · 守備隊が必要' : ''}`;
+  if (augment.id === 'well_stocked' || augment.id === 'supply_lines') readiness = `食料 ${Math.floor(totalFood(state))}/20${augment.facility && !state.run.facilities[augment.facility] ? ' · 守備隊が必要' : ''}`;
   if (augment.id === 'construction_rush') readiness = (state.run.strategy?.constructionUntil || 0) > state.run.elapsed ? `採集加速 残り${Math.ceil(state.run.strategy.constructionUntil-state.run.elapsed)}秒` : '施設完成で90秒発動';
   if (augment.id === 'weapon_master') readiness = `次の戦闘の防御無視 ${state.run.strategy?.focus || 0}% / 30%`;
   if (augment.id === 'last_stand') readiness = state.run.nextWaveAt-state.run.elapsed <= 45 ? '追い込み時間中' : '襲撃45秒前から発動';

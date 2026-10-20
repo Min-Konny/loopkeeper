@@ -1,4 +1,5 @@
-import {preparationDefinition}from './preparation-balance.js?v=0.6.48';
+import {totalFood}from './meals.js?v=0.6.49';
+import {preparationDefinition}from './preparation-balance.js?v=0.6.49';
 // Local W1–12 study only. Unstamped saves retain released rules.
 export const earlyLoop=s=>s?.version===2&&s.meta.earlyLoopVersion===1&&s.run.earlyLoopVersion===1;
 export const earlyJobMultiplier=id=>['fish_river','mine_coal','mine_silver','smelt_steel'].includes(id)?2:1;
@@ -18,7 +19,7 @@ export function earlyDefeatMarkup(s){
  const current=s.run.battleReports[0],previous=(s.meta.history||[]).find(h=>h.generation<s.meta.generation&&h.result?.earlyLoopVersion===1)?.result;
  const remaining=current.maxHp?Math.round(current.remainingHp/current.maxHp*100):0;
  let comparison='';if(previous?.wallWave===current.wave&&previous.enemyRemainingPercent!=null)comparison=`前回の同じ壁：敵HP ${previous.enemyRemainingPercent}% → 今回 ${remaining}%。`;
- const hasFood=s.run.resources.food>0,usedFood=current.foodHealing>0;
+ const hasFood=totalFood(s)>0,usedFood=current.foodHealing>0;
  const advice=!hasFood
   ? usedFood?'食料を使い切った。補充するか、防御・火力で消費を抑えよう。':'食料を用意するか、火力で戦闘を短くしよう。'
   : usedFood?'食料は残った。食料で回復しても押し切られたため、防御・火力・救護の配分を見直そう。':'食料を使う前に倒れた。HP・防御や先に倒す火力を確保しよう。';
