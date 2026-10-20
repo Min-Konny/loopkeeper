@@ -1,12 +1,12 @@
-import {synchronizeFreeFeatures}from './free-features.js?v=0.6.40';
-import { createGame, parseSave, serializeGame } from './engine.js?v=0.6.40';
+import {synchronizeFreeFeatures}from './free-features.js?v=0.6.41';
+import { createGame, parseSave, serializeGame } from './engine.js?v=0.6.41';
 export const STORAGE_KEY = 'tomori-rebirth-v1';
 const BACKUP_KEY = `${STORAGE_KEY}-backups`;
 const ARCHIVE_KEY = `${STORAGE_KEY}-unreadable`;
 const RESET_KEY = `${STORAGE_KEY}-before-reset`;
 
 export function readResetBackup(storage) {
-  return decodeRecord(storage.getItem(RESET_KEY));
+  try { return decodeRecord(storage.getItem(RESET_KEY)); } catch { return null; }
 }
 
 // Commit storage before the caller replaces its live game. A failed write leaves
