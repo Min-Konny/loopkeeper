@@ -1,10 +1,10 @@
-import {preparationSpellDamage}from './preparation-balance.js?v=0.6.46';
-import {investmentEffect}from './investments.js?v=0.6.46';
-import {weaponById}from './gear-content.js?v=0.6.46';
-import {accessoryEffects}from './gear-state.js?v=0.6.46';
-import {contractEffects}from './contracts.js?v=0.6.46';
-import {routeEffects}from './routes.js?v=0.6.46';
-import {alchemyResource}from './magic-content.js?v=0.6.46';
+import {preparationSpellDamage}from './preparation-balance.js?v=0.6.47';
+import {investmentEffect}from './investments.js?v=0.6.47';
+import {weaponById}from './gear-content.js?v=0.6.47';
+import {accessoryEffects}from './gear-state.js?v=0.6.47';
+import {contractEffects}from './contracts.js?v=0.6.47';
+import {routeEffects}from './routes.js?v=0.6.47';
+import {alchemyResource}from './magic-content.js?v=0.6.47';
 export const freshMagic=()=>({mana:30,castTimer:0,burnTimer:0,burnTicks:0,burnPower:0,wardCooldown:0,casts:0,detonations:0,catalystsUsed:0,wardsUsed:0,burnDamage:0,spellDamage:0});
 export function initializeMagic(s){
  if(s.version===1)return;s.meta.magicVersion=1;for(const id of ['spark_catalyst','ward_essence'])s.run.resources[id]??=0;

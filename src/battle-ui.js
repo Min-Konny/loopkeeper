@@ -1,11 +1,11 @@
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.46';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.46';
-import { getPlayerStrike } from './engine.js?v=0.6.46';
-import {routeById}from './routes.js?v=0.6.46';
-import { equipmentMaterial } from './visual-design.js?v=0.6.46';
-import { battleSound } from "./presentation.js?v=0.6.46";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.46";
-import { icon } from "./icons.js?v=0.6.46";
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.47';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.47';
+import { getPlayerStrike } from './engine.js?v=0.6.47';
+import {routeById}from './routes.js?v=0.6.47';
+import { equipmentMaterial } from './visual-design.js?v=0.6.47';
+import { battleSound } from "./presentation.js?v=0.6.47";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.47";
+import { icon } from "./icons.js?v=0.6.47";
 
 const views = new WeakMap();
 const number = (value) =>

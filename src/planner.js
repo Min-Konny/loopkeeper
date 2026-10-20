@@ -1,11 +1,11 @@
-import {getPlanningYields,getRequiredProductionBatches}from './engine.js?v=0.6.46';
-import {enqueueTrainingLevel}from './engine.js?v=0.6.46';
-import {trophyShortage} from './boss-materials.js?v=0.6.46';
-import {hasUpgrade}from './free-features.js?v=0.6.46';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.46';
-import { getActionXp } from './engine.js?v=0.6.46';
-import * as old from "./legacy-planner.js?v=0.6.46";
-import { orderRecipeMaterials } from './engine.js?v=0.6.46';
+import {getPlanningYields,getRequiredProductionBatches}from './engine.js?v=0.6.47';
+import {enqueueTrainingLevel}from './engine.js?v=0.6.47';
+import {trophyShortage} from './boss-materials.js?v=0.6.47';
+import {hasUpgrade}from './free-features.js?v=0.6.47';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.47';
+import { getActionXp } from './engine.js?v=0.6.47';
+import * as old from "./legacy-planner.js?v=0.6.47";
+import { orderRecipeMaterials } from './engine.js?v=0.6.47';
 import {
   isLegacy,
   getCatalog,
@@ -24,7 +24,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.6.46";
+} from "./engine.js?v=0.6.47";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -34,6 +34,7 @@ export function planCraft(s, id, count = 1) {
   const d = RECIPES.find((x) => x.id === id);
   if (!d || !isKnown(s, d)) return fail("未発見の製作です。");
   if (s.run.status !== "preparing") return fail("準備中に予約してください。");
+  if(d.equipment&&s.run.ownedEquipment?.includes(id)&&s.run.activeAction?.id!==id&&!s.run.suspendedActions[id])return fail("所持済みです。状態・装備で切り替えられます。");
   const shadow=structuredClone(s);
   const inventory = { ...s.run.resources },
     steps = [];
@@ -86,6 +87,7 @@ export function planCraft(s, id, count = 1) {
       (s.run.activeAction?.id === x.id
         ? s.run.activeAction
         : s.run.suspendedActions[x.id]);
+    if(!saved&&x.equipment&&s.run.ownedEquipment?.includes(x.id)){equipment[x.slot]={id:x.id,...x.equipment};return;}
     if(!saved){const reason=trophyShortage(s,x.id);if(reason)throw Error(reason);}
     if (x.previousEquipmentId && !saved) {
       if ((equipment[x.slot]?.tier || 0) >= x.tier) return;
@@ -183,6 +185,7 @@ export function queueCraft(s, id, position = "end", count = 1) {
   }
   const d = RECIPES.find((x) => x.id === id);
   if (!d || !isKnown(s, d)) return fail("未発見です。");
+  if(d.equipment&&s.run.ownedEquipment?.includes(id)&&s.run.activeAction?.id!==id&&!s.run.suspendedActions[id])return fail("所持済みです。状態・装備で切り替えられます。");
   const previousDisabled = s.settings.disabledUpgrades;
   s.settings.disabledUpgrades = s.settings.disabledUpgrades.filter(
     (x) => x !== "action_queue",
@@ -222,7 +225,8 @@ export function queueWork(s, id, count = 1, position = "end") {
 export function blockedReservation(s) {
   const first = s.run.queue[0];
   if (isLegacy(s) || !hasUpgrade(s,"action_queue") || s.run.status !== 'preparing' || !first || s.run.activeAction?.kind === 'craft' || s.run.queueManaged && s.run.activeAction || s.settings.disabledUpgrades.includes('action_queue')) return null;
-  const check = first.kind === 'goal' ? resolveGoal(s, first.id) : canStartAction(s, first.id, true);
+  const owned=getCatalog(s).RECIPES.find(d=>d.id===first.id)?.equipment&&s.run.ownedEquipment?.includes(first.id);
+  const check = first.kind === 'goal'||owned ? resolveGoal(s, first.id) : canStartAction(s, first.id, true);
   return check.ok ? null : check;
 }
 
