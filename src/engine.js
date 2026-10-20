@@ -1,17 +1,18 @@
-export {getPlanningYields,getRequiredProductionBatches}from './mvp-engine.js?v=0.6.47';
-export {enqueueTrainingLevel,editQueuedTrainingLevel}from './mvp-engine.js?v=0.6.47';
+export {getPlanningYields,getRequiredProductionBatches}from './mvp-engine.js?v=0.6.48';
+export {enqueueTrainingLevel,editQueuedTrainingLevel}from './mvp-engine.js?v=0.6.48';
 export const getActionYields = (s,d) => isLegacy(s) ? d.yields || {} : mvp.getActionYields(s,d);
 export const getPlayerStrike = s => isLegacy(s) ? {attack:getStats(s).attack,armor:(s.run.enemy || getNextEnemy(s)).defense,damage:Math.max(1,getStats(s).attack-(s.run.enemy || getNextEnemy(s)).defense)} : mvp.getPlayerStrike(s);
-export {startManualRepeat,canStartManualRepeat}from './mvp-engine.js?v=0.6.47';
-export { enqueueConditional } from './mvp-engine.js?v=0.6.47';
-import {earlyLoop,earlyDefinition}from './early-loop.js?v=0.6.47';
-import * as legacy from "./legacy-engine.js?v=0.6.47";
-import * as mvp from "./mvp-engine.js?v=0.6.47";
-import { validateSave } from "./save-validation.js?v=0.6.47";
-export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.6.47";
-export { canConfigureWorker } from "./mvp-engine.js?v=0.6.47";
-export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.6.47";
-export { getTemplatePreview } from "./mvp-engine.js?v=0.6.47";
+export {startManualRepeat,canStartManualRepeat}from './mvp-engine.js?v=0.6.48';
+export { enqueueConditional } from './mvp-engine.js?v=0.6.48';
+import {earlyLoop,earlyDefinition}from './early-loop.js?v=0.6.48';
+import * as legacy from "./legacy-engine.js?v=0.6.48";
+import * as mvp from "./mvp-engine.js?v=0.6.48";
+import { validateSave } from "./save-validation.js?v=0.6.48";
+import { CONTENT as C } from "./content.js?v=0.6.48";
+export { getProductionSources, orderRecipeMaterials } from "./mvp-engine.js?v=0.6.48";
+export { canConfigureWorker } from "./mvp-engine.js?v=0.6.48";
+export { getAutoCookingStatus, getProcessingStatus, getTradeQuote, tradeResource } from "./mvp-engine.js?v=0.6.48";
+export { getTemplatePreview } from "./mvp-engine.js?v=0.6.48";
 export {
   SKILLS,
   getSkillProgress,
@@ -28,7 +29,7 @@ export {
   DIPLOMACY,
   BUYABLES,
   MILESTONES,
-} from "./mvp-engine.js?v=0.6.47";
+} from "./mvp-engine.js?v=0.6.48";
 export const isLegacy = (s) => s.version === 1;
 function normalizeSingleReservations(s) {
   if (!s) return null;
@@ -55,11 +56,21 @@ function normalizeSingleReservations(s) {
   }
   return s;
 }
+// Older runtimes could overflow gold receipts. Only finite positive overflows of
+// the wallet and known income totals are capped; every other field is validated.
+function recoverGoldOverflow(raw) {
+  if(raw.version!==2)return;
+  const cap=(owner,key)=>{if(owner&&Number.isFinite(owner[key])&&owner[key]>1e9)owner[key]=1e9;};
+  cap(raw.run?.resources,"gold");
+  for(const country of C.diplomacy)cap(raw.run?.countries?.[country.id],"incomeTotal");
+  cap(raw.run?.diplomacy,"incomeTotal");
+}
 export function parseSave(text) {
   if (typeof text !== "string" || text.length > 100000) return null;
   try {
     const raw = JSON.parse(text);
     if (raw.version === 1) return normalizeSingleReservations(legacy.parseSave(text));
+    recoverGoldOverflow(raw);
     if (!validateSave(raw)) return null;
     raw.run.training ||= {defense:0, vitality:mvp.getVitalityMigrationXp(raw.run.skills.combat.xp)};
     for (const id of Object.keys(mvp.RESOURCES)) raw.run.resources[id] ??= 0;
@@ -327,8 +338,8 @@ export const resetLegacyRankDraft=s=>isLegacy(s)?{ok:false,reason:'次の世代�
 
 export const cancelLegacyDraft=s=>isLegacy(s)?{ok:false,reason:'次の世代から利用できます。'}:mvp.cancelLegacyDraft(s);
 
-export {startRoute,withdrawRoute}from './mvp-engine.js?v=0.6.47';
+export {startRoute,withdrawRoute}from './mvp-engine.js?v=0.6.48';
 
-export {getReservedResources}from './mvp-engine.js?v=0.6.47';
+export {getReservedResources}from './mvp-engine.js?v=0.6.48';
 
 export const getClockStatus=s=>isLegacy(s)?{kind:s.run.activeAction?'work':'none',label:s.run.activeAction?.id||'作業なし'}:mvp.getClockStatus(s);

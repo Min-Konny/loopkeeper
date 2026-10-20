@@ -1,4 +1,4 @@
-import {changeGear}from './gear-state.js?v=0.6.47';import {RECIPES,getStats}from './engine.js?v=0.6.47';import {commitStoredGameEdit}from './save-storage.js?v=0.6.47';
+import {changeGear}from './gear-state.js?v=0.6.48';import {RECIPES,getStats}from './engine.js?v=0.6.48';import {commitStoredGameEdit}from './save-storage.js?v=0.6.48';
 export function editStoredGear(storage,current,choice,{isOwner=()=>false,now=Date.now()}={}){
  if(!isOwner())return {ok:false,reason:'別のタブでプレイ中です。'};
  const next=structuredClone(current),r=changeGear(next,choice,RECIPES);if(!r.ok)return r;next.run.hp=Math.min(next.run.hp,getStats(next).maxHp);

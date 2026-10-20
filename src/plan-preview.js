@@ -1,4 +1,4 @@
-import {icon} from './icons.js?v=0.6.47';
+import {icon} from './icons.js?v=0.6.48';
 const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function planPreviewMarkup(plan,recipe){
  if(!plan?.ok || plan.steps.length<=1)return '';
