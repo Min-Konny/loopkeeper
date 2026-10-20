@@ -1,14 +1,13 @@
-import {LEGACY_UPGRADES,canPurchaseUpgrade,getLegacyRankStatus}from './engine.js?v=0.6.43';
-import {LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.43';
-import {legacyRankCategory}from './legacy-categories.js?v=0.6.43';
+import {LEGACY_UPGRADES,canPurchaseUpgrade,getLegacyRankStatus}from './engine.js?v=0.6.44';
+import {LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.44';
+import {legacyRankCategory}from './legacy-categories.js?v=0.6.44';
+import {icon}from './icons.js?v=0.6.44';
 
-// Neighbouring branches have related roles. These are display positions, not prerequisites.
+// Related branches stay together within their existing domains.
 export const MAP_ORDER=['attack','maxHp','defense','haste','critRate','spellPower','castHaste','alchemySpeed','craftSpeed','gatherSpeed','returnSpeed','tradeSaleBonus'];
-export const MAP_SIZE=700,MAP_RADIUS=250;
 const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const groups={combat:'戦闘・魔法',investment:'生産・復帰',trade:'交易'};
 const glyph={owned:'✓',available:'○',insufficient:'!',locked:'―',max:'★'};
-export function mapPosition(index){const a=(-105+index*30)*Math.PI/180;return {x:350+MAP_RADIUS*Math.cos(a),y:350+MAP_RADIUS*Math.sin(a)};}
 
 export function inheritanceMapModel(s){
  if(s.version===1)return null;
@@ -25,28 +24,22 @@ export function inheritanceMapModel(s){
    return {id,rank:n,cost:upgrade.cost,owned,off,status,label,reason:owned?(off?'この段階は無効です。':'取得済みです。'):available.reason||'',effect:definition.label+' +'+format(definition.increment(n))};
   });
   const next=ranks.find(x=>!x.owned),status=next?.status||'max';
-  return {key,name:definition.name,category:legacyRankCategory(definition),currentRank:current.rank,activeEffect:definition.label+' +'+format(current.activeEffect),ranks,next,status,position:mapPosition(index)};
+  return {key,name:definition.name,category:legacyRankCategory(definition),currentRank:current.rank,activeEffect:definition.label+' +'+format(current.activeEffect),statLabel:definition.label,currentValue:format(current.activeEffect),nextValue:format(current.activeEffect+(current.nextIncrement||0)),canBuy:current.canBuy,canToggle:current.canToggle,toggleLabel:current.toggleLabel,refundCost:current.refundCost,reason:current.reason,icon:definition.icon,description:definition.description||'',ranks,next,status};
  });
  return {draft,points:source.points,branches};
 }
 
-function selector(scope,selected){return '<label class="inheritance-branch-picker">系統<select data-inheritance-branch data-inheritance-scope="'+scope+'" data-focus="'+scope+'-map-picker"><option value="">全体 · 12系統</option>'+['combat','investment','trade'].map(group=>'<optgroup label="'+groups[group]+'">'+MAP_ORDER.map(key=>LEGACY_RANKS.find(x=>x.key===key)).filter(d=>legacyRankCategory(d)===group).map(d=>'<option value="'+d.key+'" '+(d.key===selected?'selected':'')+'>'+d.name+'</option>').join('')+'</optgroup>').join('')+'</select></label>';}
 export function inheritanceMapMarkup(s,scope='live',options={}){
- const model=inheritanceMapModel(s);if(!model)return '';
- const selected=model.branches.find(x=>x.key===options.branch),heading=selected?selected.name:'継承 · 12系統';
- const toolbar='<div class="inheritance-map-tools">'+selector(scope,selected?.key||'')+'<div class="inheritance-map-actions">'+(selected?'<button type="button" data-inheritance-overview>全体</button>':'<button type="button" data-inheritance-center>中央</button>')+'</div></div>';
- let content;
- if(!selected){
-  const lines=model.branches.map(b=>'<line x1="350" y1="350" x2="'+b.position.x+'" y2="'+b.position.y+'"/>').join('');
-  const dots=model.branches.map(b=>b.ranks.map((r,i)=>{const t=(80+i*28)/MAP_RADIUS,x=350+(b.position.x-350)*t,y=350+(b.position.y-350)*t;return '<circle cx="'+x+'" cy="'+y+'" r="9" class="'+(r.owned?'map-dot-owned':'')+'"/>';}).join('')).join('');
-  content='<div class="inheritance-overview-canvas"><svg viewBox="0 0 700 700" aria-hidden="true" focusable="false">'+lines+dots+'</svg><div class="inheritance-map-center"><strong>継承</strong><span>'+model.points+' pt</span></div>'+model.branches.map(b=>'<button type="button" class="inheritance-branch-node map-state-'+b.status+'" style="left:'+b.position.x+'px;top:'+b.position.y+'px" data-inheritance-open="'+b.key+'" data-focus="'+scope+'-map-branch-'+b.key+'" aria-label="'+escape(b.name+'、R'+b.currentRank+'/5、'+(b.next?'次 '+b.next.cost+'ポイント、'+b.next.label:'最大段階')+'。段階を見る')+'"><strong>'+b.name+'</strong><span>R'+b.currentRank+'/5 · '+(b.next?'次 '+b.next.cost+'pt':'★ 最大')+'</span><span>'+glyph[b.status]+' '+(b.next?b.next.label:'最大段階')+'</span></button>').join('')+'</div>';
- }else{
-  content='<div class="inheritance-rank-track"><button type="button" class="inheritance-rank-root" data-inheritance-overview>継承<br><small>全体へ</small></button>'+selected.ranks.map(r=>'<button type="button" class="inheritance-rank-node map-state-'+r.status+'" data-inheritance-detail="'+selected.key+'" data-inheritance-rank="'+r.rank+'" data-focus="'+scope+'-map-rank-'+selected.key+'-'+r.rank+'" aria-label="'+escape(selected.name+' R'+r.rank+'、'+r.cost+'ポイント、'+r.effect+'、'+r.label+(r.reason?'、'+r.reason:'')+'。カード詳細へ')+'"><strong>R'+r.rank+' <small>'+r.cost+'pt</small></strong><span>'+escape(r.effect)+'</span><span>'+glyph[r.status]+' '+r.label+'</span><small>'+(r.status==='locked'?'前提条件あり':'カード詳細へ')+'</small></button>').join('')+'</div>';
- }
- const key=scope+'-inheritance-'+(selected?.key||'overview');
- return '<section class="inheritance-map" data-inheritance-scope="'+scope+'"><div class="inheritance-map-heading"><h3>'+heading+'</h3><span>'+model.points+' pt · '+(model.draft?'次の命の配分':'現在の配分・閲覧')+'</span></div>'+toolbar+'<div class="inheritance-map-viewport" data-inheritance-viewport="'+(selected?.key||'overview')+'" data-scroll-key="'+key+'" tabindex="0" role="region" aria-label="'+escape(heading+'。スクロールまたは矢印キーで移動')+'">'+content+'</div><p class="inheritance-map-caption">'+(selected?escape(selected.activeEffect)+' · ノードから既存カードへ':'枝を選ぶと5段階の費用と効果を表示')+'</p></section>';
+ const m=inheritanceMapModel(s);if(!m)return '';
+ const selected=options.branch,only=!!options.affordable,available=m.branches.filter(b=>b.next?.status==='available').length;
+ const command=b=>m.draft?(b.next?'<button type="button" class="map-allocate" data-buy-rank="'+b.key+'" data-focus="map-buy-'+b.key+'" '+(!b.canBuy?'disabled':'')+' aria-label="'+escape(b.name+'をR'+b.next.rank+'に割り振る、'+b.next.cost+'ポイント')+'">R'+b.next.rank+' に割り振る <strong>'+b.next.cost+' pt</strong></button>':'<span class="map-max">最大 R5</span>'):'<span class="map-live-only">次の命で配分</span>';
+ const branch=b=>{
+  const open=selected===b.key,stage=b.ranks.find(r=>r.rank===(options.stage||b.next?.rank||5))||b.ranks[0],definition=LEGACY_RANKS.find(d=>d.key===b.key),fmt=definition.format||String,total=fmt(b.ranks.filter(r=>r.rank<=stage.rank).reduce((sum,r)=>sum+definition.increment(r.rank),0));
+  const detail=open?'<div class="map-branch-detail"><div class="map-stage-picker" role="group" aria-label="'+escape(b.name+'の段階比較')+'">'+b.ranks.map(r=>'<button type="button" class="map-stage '+(stage.rank===r.rank?'selected':'')+'" data-inheritance-stage="'+r.rank+'" data-inheritance-key="'+b.key+'" data-focus="map-stage-'+b.key+'-'+r.rank+'" aria-pressed="'+(stage.rank===r.rank)+'" aria-label="R'+r.rank+'、'+r.cost+'ポイント、'+escape(r.label)+'"><strong>R'+r.rank+'</strong><span>'+r.cost+'pt</span><span>'+(r.owned?'取得済':'未取得')+'</span></button>').join('')+'</div><p class="map-stage-summary">R'+stage.rank+'：'+escape(stage.effect)+' · 全段階有効時 '+escape(total)+'<br>'+escape(stage.reason||stage.label)+'</p>'+(b.description?'<p class="map-description">'+escape(b.description)+'</p>':'')+(m.draft&&b.currentRank?'<div class="map-adjust"><button type="button" data-refund-rank="'+b.key+'" data-focus="map-refund-'+b.key+'">R'+b.currentRank+'を戻す · '+b.refundCost+'pt</button><button type="button" data-toggle-rank="'+b.key+'" data-focus="map-toggle-'+b.key+'" '+(!b.canToggle?'disabled':'')+'>'+escape(b.toggleLabel)+'</button></div>':'')+'</div>':'';
+  return '<article class="map-branch map-state-'+b.status+' '+(open?'map-branch-open':'')+'" data-map-branch="'+b.key+'"><div class="map-branch-top"><button type="button" class="map-branch-title" data-inheritance-open="'+b.key+'" data-focus="map-open-'+b.key+'" aria-expanded="'+open+'" aria-controls="'+scope+'-map-detail-'+b.key+'">'+icon(b.icon)+'<strong>'+b.name+'</strong><span>R'+b.currentRank+'/5 '+(open?'−':'+')+'</span></button><div class="map-effect"><span>'+escape(b.statLabel)+'</span><strong>'+escape(b.currentValue)+(b.next?' <span aria-hidden="true">→</span> '+escape(b.nextValue):'')+'</strong></div><div class="map-branch-action"><span class="map-status">'+glyph[b.status]+' '+escape(b.next?.label||'最大段階')+'</span>'+command(b)+'</div>'+(b.next&&b.status==='locked'?'<p class="map-unlock-reason">'+escape(b.next.reason)+'</p>':'')+'</div><div id="'+scope+'-map-detail-'+b.key+'">'+detail+'</div></article>';
+ };
+ const domains=[{key:'combat',name:'戦闘・魔法',icon:'sword'},{key:'investment',name:'生産・帰還',icon:'tool'},{key:'trade',name:'交易',icon:'gold'}];
+ return '<section class="inheritance-map" data-inheritance-scope="'+scope+'"><div class="map-control-bar"><button type="button" class="map-affordable-filter" data-inheritance-affordable aria-pressed="'+only+'" data-focus="map-affordable-'+scope+'">'+(m.draft?'取得可能 ':'次回の候補 ')+''+available+'系統'+(only?' · 表示中':'')+'</button><span>'+(m.draft?'現在 → 次の効果':'確定した配分 · 変更は次の命で')+'</span></div><div class="inheritance-map-root"><strong>継承</strong><span>'+m.points+' pt</span></div><div class="inheritance-domains">'+domains.map(d=>{const all=m.branches.filter(b=>b.category===d.key),visible=all.filter(b=>!only||b.status==='available'||b.key===selected);return '<section class="map-domain map-domain-'+d.key+'" aria-labelledby="'+scope+'-domain-'+d.key+'"><h3 id="'+scope+'-domain-'+d.key+'">'+icon(d.icon)+d.name+'<small>'+visible.length+'/'+all.length+'</small></h3><div class="map-domain-branches">'+(visible.map(branch).join('')||'<p class="map-empty">今取得できる系統はありません</p>')+'</div></section>';}).join('')+'</div></section>';
 }
-export function inheritanceMapReturnMarkup(s,scope,options={}){
- if(s.version===1||!options.detail)return '';const model=inheritanceMapModel(s),b=model.branches.find(x=>x.key===options.detail.key),r=b?.ranks.find(x=>x.rank===options.detail.rank);if(!r)return '';
- return '<div class="inheritance-map-return" data-inheritance-scope="'+scope+'"><button type="button" data-inheritance-back data-focus="'+scope+'-map-back">← マップへ</button><span class="inheritance-return-summary">'+escape(b.name+' R'+r.rank+' · '+r.cost+'pt · '+r.effect)+'</span><span class="inheritance-return-stage">R'+r.rank+' · '+r.cost+'pt</span></div>';
-}
+// Older card deep links no longer need a return bar: map details stay in place.
+export function inheritanceMapReturnMarkup(){return '';}
