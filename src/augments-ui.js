@@ -1,5 +1,5 @@
-import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus,getAugmentExclusionStatus } from "./engine.js?v=0.6.39";
-import { icon } from "./icons.js?v=0.6.39";
+import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus,getAugmentExclusionStatus } from "./engine.js?v=0.6.40";
+import { icon } from "./icons.js?v=0.6.40";
 
 const families = {
   economy: { name: "生産・投資", icon: "gold" },

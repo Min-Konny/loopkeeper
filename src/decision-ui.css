@@ -77,3 +77,13 @@
  #expanded-work-dialog .catalog-filters>[data-show-owned-accessories],#expanded-work-dialog .catalog-filters>.craft-filters .craft-visibility{width:100%;min-height:44px;box-sizing:border-box;padding:4px;font-size:12px;line-height:1.4}
  #expanded-work-dialog .catalog-filters>.craft-filters{margin:0;min-width:0}
 }
+
+/* Short mobile viewports must scroll the whole pane, not a collapsed work list. */
+@media(max-width:690px) and (max-height:500px){
+ #expanded-work-dialog{display:block;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+ #expanded-work-dialog>:not(:last-child){margin-bottom:6px}
+ #expanded-work-dialog>.expanded-heading{position:sticky;top:-10px;z-index:3;background:var(--surface);padding:4px 0}
+ #expanded-work-dialog>.expanded-body{flex:none;display:block}
+ #expanded-work-dialog .work-area{flex:none}
+ #expanded-work-dialog #content{flex:none;height:auto;overflow:visible}
+}
