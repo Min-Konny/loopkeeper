@@ -1,0 +1,35 @@
+import{campBuildings}from './camp-layout.js?v=0.6.50';
+import{loadCampArt,generatedWorkerAtlas,paintGeneratedCamp}from './generated-camp-art.js?v=0.6.50';
+import {mountPixelCamp}from './pixel-camp-scene.js?v=0.6.50';
+import {createPixelCampRenderer}from './pixel-camp-art.js?v=0.6.50';
+import {createCampActorAtlas}from './camp-actor-art.js?v=0.6.50';
+import {campSnapshot,lumberjackPose}from './camp-motion.js?v=0.6.50';
+
+const mounted=new WeakMap();let library;
+const loadLibrary=()=>library??=import('./vendor/phaser-3.90.0.esm.min.js').then(m=>m.default||m);
+/** Optional presentation only. The original renderer is retained on any failure. */
+export function mountPhaserCamp(host){
+ if(mounted.has(host))return mounted.get(host);
+ const fallback=mountPixelCamp(host),fallbackLayer=host.querySelector('.pixel-camp-layer'),layer=document.createElement('div');layer.className='pixel-camp-layer phaser-camp-layer';layer.hidden=true;layer.setAttribute('aria-hidden','true');host.append(layer);
+ const legend=document.createElement('details');legend.className='camp-facility-key';const summary=document.createElement('summary'),list=document.createElement('p');legend.append(summary,list);host.after(legend);
+ let staticArt=null,staticAtlas=null,artLoading=false;
+ function staticView(){if(!staticArt||!layer.hidden)return;const canvas=fallbackLayer.querySelector('canvas');paintGeneratedCamp(canvas,campSnapshot(model),staticArt);const c=canvas.getContext('2d');c.imageSmoothingEnabled=false;c.fillStyle='#102b1e99';c.beginPath();c.ellipse(126,203,12,3,0,0,Math.PI*2);c.fill();c.drawImage(staticAtlas,0,0,96,104,105,158.25,42,45.5);}
+ function ensureArt(){if(artLoading)return;artLoading=true;loadCampArt().then(art=>{staticArt=art;staticAtlas=generatedWorkerAtlas(art.worker);host.dataset.campArtwork='generated';staticView();}).catch(error=>{host.dataset.artworkFailure=error.message;});}
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');let model={facilities:{},construction:null,chopping:false,night:false,threat:0},active=false,visible=false,disposed=false,failed=false,loading=false,game=null,scene=null,dirty=true;
+ const running=()=>active&&visible&&!document.hidden&&!reduced.matches&&host.isConnected;
+ function fail(error){if(disposed)return;failed=true;host.dataset.campRenderer='fallback';host.dataset.campFailure=String(error?.message||'renderer stopped').slice(0,120);layer.hidden=true;fallbackLayer.hidden=false;try{game?.destroy(true);}catch{}game=null;scene=null;fallback.setActive(active&&!staticArt);}
+ function sync(){if(disposed)return;if(visible)ensureArt();const run=running();host.dataset.campMotion=run&&scene?'running':'stopped';if(scene){if(dirty)scene.refresh();fallback.setActive(false);layer.hidden=!active||reduced.matches;fallbackLayer.hidden=!layer.hidden;if(run){if(!game.loop.running)game.loop.wake();}else{game.loop.sleep();}}else{fallback.setActive(active&&!staticArt);if(run&&!loading&&!failed)boot();}staticView();}
+ async function boot(){loading=true;try{const P=await loadLibrary();if(disposed)return;
+  class CampScene extends P.Scene{
+   create(){this.backing=document.createElement('canvas');this.backing.width=480;this.backing.height=240;this.paint=createPixelCampRenderer(this.backing);this.textures.addCanvas('camp',this.backing);this.add.image(0,0,'camp').setOrigin(0);this.shadow=this.add.ellipse(126,203,24,6,0x102b1e,.6);const atlas=createCampActorAtlas(),texture=this.textures.addCanvas('woodcutter',atlas);for(let n=0;n<12;n++)texture.add(n,0,n*32,0,32,36);this.worker=this.add.sprite(126,202,'woodcutter',0).setOrigin(.5,1);this.smoke=Array.from({length:6},()=>this.add.rectangle(0,0,7,5,0xbac4ad).setAlpha(0));this.chips=Array.from({length:3},()=>this.add.rectangle(0,0,2,1,0xd4b47d).setAlpha(0));this.clock=0;scene=this;loadCampArt().then(art=>{if(!scene||failed)return;this.art=art;const a=generatedWorkerAtlas(art.worker),tex=this.textures.addCanvas('generated-woodcutter',a);for(let n=0;n<12;n++)tex.add(n,0,n*96,0,96,104);this.worker.setTexture('generated-woodcutter',0).setDisplaySize(42,45.5).setOrigin(.5,100/104);this.refresh();host.dataset.campArtwork='generated';}).catch(error=>{host.dataset.artworkFailure=error.message;});this.refresh();host.dataset.campRenderer='phaser';layer.hidden=false;fallbackLayer.hidden=true;fallback.setActive(false);if(!running())game.loop.sleep();}
+   refresh(){try{if(this.art)paintGeneratedCamp(this.backing,campSnapshot(model),this.art);else this.paint(0,campSnapshot(model));this.textures.get('camp').refresh();dirty=false;this.drawActors();}catch{fail();}}
+   drawActors(){const pose=lumberjackPose(this.clock,model.chopping);this.worker.setPosition(pose.x,pose.y).setFrame(pose.frame).setFlipX(pose.flip);this.worker.setDepth(pose.y);this.shadow.setPosition(pose.x,pose.y+1).setDepth(pose.y-1);for(let i=0;i<this.smoke.length;i++){const t=(this.clock*.18+i/6)%1;this.smoke[i].setVisible(!!model.facilities.workshop).setPosition((this.art?411:363)+Math.sin(t*5+i)*5,(this.art?96:77)-t*31).setAlpha((1-t)*.23).setScale(.6+t*1.4).setDepth(150);}for(let i=0;i<this.chips.length;i++)this.chips[i].setPosition(pose.x+16+i*3,pose.y-10-i*3).setAlpha(pose.chips?.8:0).setDepth(210);}
+   update(_time,delta){if(!running())return;try{this.clock+=Math.min(delta,100)/1000;this.drawActors();}catch{fail();}}
+  }
+  game=new P.Game({type:P.CANVAS,parent:layer,width:480,height:240,resolution:1,backgroundColor:'#263e37',banner:false,audio:{noAudio:true},input:{keyboard:false,mouse:false,touch:false},fps:{target:30,forceSetTimeOut:true},render:{antialias:false,pixelArt:true,roundPixels:true},scene:CampScene});
+  game.events.once(P.Core.Events.DESTROY,()=>{if(!disposed&&!failed)fail();});
+ }catch(error){fail(error);}}
+ function change(key,value){if(JSON.stringify(model[key])===JSON.stringify(value))return;model={...model,[key]:value};dirty=true;sync();}
+ const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;sync();});observer.observe(host);document.addEventListener('visibilitychange',sync);reduced.addEventListener('change',sync);
+ const api={setActive(v){active=!!v;sync();},setSettlement(v){fallback.setSettlement(v);const buildings=campBuildings(v);summary.textContent='施設 '+buildings.length+'種';list.textContent=buildings.map(b=>b.name+' Lv.'+b.level+(b.reinforcement?' +'+b.reinforcement:'')).join(' ・ ');host.dataset.facilityCount=String(buildings.length);change('facilities',{...v});},setConstruction(id,p){fallback.setConstruction(id,p);change('construction',id?{id,progress:Math.round(p*100)/100}:null);},setThreat(p){fallback.setThreat(p);change('threat',p);},setWork(id){fallback.setWork(id);change('chopping',!!id&&/wood|chop|fell|logging/i.test(id));},setNight(v){fallback.setNight(v);change('night',!!v);},destroy(){disposed=true;observer.disconnect();document.removeEventListener('visibilitychange',sync);reduced.removeEventListener('change',sync);game?.destroy(true);fallback.destroy();layer.remove();legend.remove();mounted.delete(host);}};mounted.set(host,api);host.dataset.campRenderer='fallback';return api;
+}

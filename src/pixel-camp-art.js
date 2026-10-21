@@ -6,7 +6,7 @@ export const PIXEL_FACILITIES = {
 };
 export function createPixelCampRenderer(canvas) {
 const c = canvas.getContext('2d', { alpha: false });
-let built = false, night = false, facilities = {}, construction = null, threat = 0, chopping = false;
+let dynamicActors = false, built = false, night = false, facilities = {}, construction = null, threat = 0, chopping = false;
 const rect = (x,y,w,h,color) => {c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),w,h);};
 // Scanline polygons keep diagonals on the same pixel grid as the painted details.
 const poly = (points,color) => {
@@ -220,7 +220,7 @@ function draw(t){
  crate(203,180);barrel(155,179);lantern(141,161,t);
  if(built)workshop(t);else{log(305,176);log(309,169);rect(343,168,24,7,'#5d654c');rect(346,166,19,2,'#8b9472');}
  // Axe work at the chopping block.
- rect(111,189,18,10,'#695139');rect(110,186,20,5,'#c1a46c');rect(114,187,11,2,'#846340');person(89,178,t,chopping);
+ rect(111,189,18,10,'#695139');rect(110,186,20,5,'#c1a46c');rect(114,187,11,2,'#846340');if(!dynamicActors)person(89,178,t,chopping);
  log(53,205);log(62,199);log(74,206);
  for(let i=0;i<15;i++)rect(103+noise(i+800)*29,198+noise(i+830)*8,2,1,i%2?'#ccae73':'#a08450');
  // Fire ring, layered pixel flames, sparks and ground light.
@@ -230,7 +230,7 @@ function draw(t){
  let f=Math.floor(t*7)%4;
  poly([[231,207],[229,201],[235,196-f],[235,189],[242,195],[245,184+f],[248,197],[253,200],[250,208]],'#d97a3c');poly([[234,207],[235,198],[240,200],[244,190+f],[247,203],[250,207]],'#f2bb5f');rect(239,201-f,5,8,'#ffe0a0');
  for(let i=0;i<6;i++){let p=(t*.36+i/6)%1;rect(238+Math.sin(p*6+i)*8,197-p*27,1,2,p<.7?'#f4cb7d':'#9e9966');}
- if(built){person(320+Math.floor(Math.sin(t*.35)*13),192,t);rect(312+Math.floor(Math.sin(t*.35)*13),201,14,4,'#b49560');}
+ if(built&&!dynamicActors){person(320+Math.floor(Math.sin(t*.35)*13),192,t);rect(312+Math.floor(Math.sin(t*.35)*13),201,14,4,'#b49560');}
  for(const id of ['henhouse','barricade'])if(facilities[id]>0)facility(id,facilities[id],t);
  if(construction && PIXEL_FACILITIES[construction.id]){
   const [x,y]=PIXEL_FACILITIES[construction.id],w=construction.id==='workshop'?96:46,h=construction.id==='workshop'?75:48;
@@ -256,6 +256,7 @@ function draw(t){
 }
 
 return (time, model = {}) => {
+ dynamicActors = Boolean(model.dynamicActors);
  facilities = model.facilities || {};
  built = Number(facilities.workshop || 0) > 0;
  night = Boolean(model.night);

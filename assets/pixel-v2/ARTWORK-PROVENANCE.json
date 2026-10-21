@@ -1,0 +1,77 @@
+{
+  "version": "0.6.50",
+  "method": "Original built-in OpenAI image generation; no assets copied from other games",
+  "sourcePixelsUnmodified": true,
+  "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
+  "histories": [
+    {
+      "method": "built-in image_gen__imagegen",
+      "createdAt": "2026-10-21T00:47:29.066Z",
+      "status": "camp screen milestone, not published",
+      "assets": [
+        {
+          "file": "forest-clearing-v1.png",
+          "prompt": "Use case: stylized-concept. Asset type: production pixel-art game background for an original medieval forest survival settlement called LoopKeeper. Create a polished wide 2:1 landscape game background, no text and no UI. Strict pixel art, crisp deliberately placed square pixels, limited 40-color palette of deep pine green, muted sage, warm ochre, weathered wood and soft amber; no anti-aliasing, no blur, no painted smooth gradients. Camera: consistent slightly elevated 3/4 orthographic view with horizontal ground, not isometric diamond, similar scale throughout. Composition: distant pale mountains and layered conifer silhouettes in top third; a sheltered forest clearing in bottom two thirds. Small canvas tent in center-left at x40% y68%, campfire at x49% y82%, old log pile at x26% y87%, chopping stump at x17% y73%. Warm late afternoon light from upper left. Forest frames both edges but leaves the clearing readable. IMPORTANT: reserve an empty compacted dirt foundation clearing on the RIGHT, x64% to91%, y42% to78%, for a separate workshop building sprite placed later. The workshop MUST NOT be drawn here. A coherent dirt path joins the foundation to tent and left logging area. No people, no creatures, no buildings other than the single small tent. Quality: richly authored environment pixel clusters, clean silhouettes, convincing trunks, stone and timber material shading, appealing game-ready scene; avoid noisy single-pixel confetti. Target logical pixel canvas 512x256 enlarged exactly2x to1024x512 or another exact integer enlargement. The scene must fill the full image edge to edge, no framing, no tilesheet, no border, no typography, no watermark. All content original, no recognizable existing game assets.",
+          "transparent": false,
+          "sha256": "4121c78f4cef7ec6cc614b50895afd3e6396fb78cd0b0e8c41db96bb972442f2",
+          "width": 1774,
+          "height": 887,
+          "pngColorType": 2,
+          "bytes": 3072771
+        },
+        {
+          "file": "workshop-v1.png",
+          "prompt": "Use case: stylized-concept. Asset type: isolated game building sprite for LoopKeeper. Input image1 is STYLE AND LIGHTING REFERENCE ONLY: the original forest clearing just generated. Create ONE beautifully authored medieval carpenter/smith workshop on a genuinely transparent alpha background. No ground landscape, no people, no trees, no UI, no text, no border. Match the reference's crisp rich pixel art, muted sage/pine greens, warm ochre wood, pale slate stone, amber interior light, sunlight from upper left, subtly elevated three-quarter orthographic view. Building is a small long timber hut, mossy shingle roof, compact stone chimney near right roof edge, woodbeam joints, open door with warm forge light, tools and timber stacked close to walls, stable horizontal stone footing. Camera sees front and a little of right wall and roof, no isometric diamond. Fully contained including roof and chimney, transparent generous small margin; ground contact at one consistent bottom baseline. No painted smoke: smoke will be animated separately. Crisp controlled pixel clusters, not smooth 3D render or watercolor. Main silhouette clear at small game size. Relative game scale: building will occupy about one quarter of a512px-wide scene, roughly128x100 logical pixels. Output a clean pixel sprite at exact integer enlargement, around1024px square with transparent margins, no anti-aliasing at edge, no fuzzy glow, no shadow outside the small stone footing. All artwork original.",
+          "transparent": true,
+          "reference": "forest-clearing-v1.png",
+          "sha256": "ab9debbdc2034811a7c9304fd968b667be11274203216c0d6b773c4c23a9547f",
+          "width": 1254,
+          "height": 1254,
+          "pngColorType": 6,
+          "bytes": 1466135
+        },
+        {
+          "file": "lumberjack-v2-sheet.png",
+          "prompt": "Use case: stylized-concept. Asset type: production animated lumberjack sprite sheet for original LoopKeeper pixel-art forest camp. Input images1 and2 are STYLE AND LIGHTING REFERENCES ONLY (forest clearing and workshop). Generate one sprite sheet with EXACTLY 12 fully separated frames arranged as EXACTLY 4 equal columns by3 equal rows on genuinely transparent alpha, no text or labels, no gridlines, no background. Every frame same young adult medieval woodsman: sage-green tunic, warm brown leather vest, muted ochre hood/cap, sturdy brown boots, silver axe with wooden handle, face lit from upper left, clean readable silhouette. Slight elevated3/4 view consistent with reference clearing, facing RIGHT in all frames, fullbody. Proportion realistically stylized about3.5 heads tall. Fine high-quality pixel clusters consistent with reference, NOT blobs, not smooth illustration. Row1: 4-frame walk cycle right, legs alternating planted contact/down/passing/up; same body width and head identity. Row2: 4-frame axe chopping sequence from lifted axe through swing to impact/follow-through. Row3: 4-frame walk right carrying ONE small log horizontally in arms, same walking leg cycle. Equal sized cells, each character perfectly centered horizontally with FEET ON THE SAME BASELINE within every cell, identical camera and scale, plenty of transparent separation. No duplicate stationary pose masquerading as walk; clear leg/arm differences between frames, feet never clipped. Axe never extends outside its own cell. Target sheet1024x768 (4x3 cells256x256); characters occupy about70% height of each cell. Game will render character about32logical pixels tall, so prioritize clear shapes and non-noisy shading. Strict crisp pixel art, no blur, no antialiasing, no drop-shadow rectangles, no letters, no watermark, no text. All art original.",
+          "editPrompt": "Edit the just-generated transparent 4-column by3-row lumberjack sprite sheet. Precise change ONLY in middle row, third column: remove the wooden chopping stump and flying wood splinters entirely, leaving transparent alpha where the stump and splinters were. Keep the character's axe in that same impact pose, keep his hands, legs, body and axe unchanged. Do not add anything else. Preserve all12 character poses, identical grid layout, positions, dimensions, lighting, palette and transparency. No text, no border. This is an animation sheet, so the environment stump must not appear in only one frame.",
+          "transparent": true,
+          "reference": "forest-clearing-v1.png + workshop-v1.png",
+          "sha256": "294af559a24bf02ebe02aa35c5919c366ca56f37d1843c3959d1f9e02d53ee0f",
+          "width": 1448,
+          "height": 1086,
+          "pngColorType": 6,
+          "bytes": 1151567
+        }
+      ],
+      "originalArtwork": true,
+      "noExternalGameArt": true,
+      "postprocessing": "No source pixel editing; game runtime reads sprite cells, alpha bounds and foot anchors."
+    },
+    {
+      "method": "built-in image_gen__imagegen",
+      "originalArtwork": true,
+      "file": "assets/pixel-v2/wolf-v1.png",
+      "prompt": "Use case: stylized-concept. Asset type: original game enemy sprite for LoopKeeper forest-camp wave combat. Input image1 is STYLE AND PALETTE reference only: original LoopKeeper forest camp screen. Create ONE full-body grey timber wolf facing LEFT, three-quarter side view with head slightly toward viewer, tense ready-to-pounce stance, ears alert, four paws grounded on one baseline, subtle warm amber light from upper left and cool sage shadows. Genuine transparent alpha background; no environment, no floor plane, no text/UI/border. High-quality deliberately authored pixel art with crisp square clusters, controlled pine/sage/grey/brown/ochre palette, clean readable silhouette, slightly darker outline, thoughtful fur tufts rather than noisy hair, no smooth painting/3D/photo/blur. Wolf should be formidable but natural, mouth just slightly open with restrained visible teeth, NOT monstrous/demonic. Keep entire body, tail and paws inside image with modest transparent margin. Intended displayed sprite about90x65 logical pixels: readable anatomy and stance at that scale, equal pixel density to the original camp worker. Landscape sprite composition around4:3 with wolf using most horizontal space. All original, no existing game artwork or distinctive copyrighted creature designs.",
+      "reference": "Original generated LoopKeeper camp screenshot, style and palette only",
+      "transparent": true,
+      "noOtherGameAssets": true,
+      "sha256": "b50a05550b3d63bf2ec0dd1a3ff725791ced6434b91c3f2aebb6feeb8ce77b0e",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 1079409
+    },
+    {
+      "method": "built-in image_gen__imagegen",
+      "file": "assets/pixel-v2/survivor-v1.png",
+      "prompt": "Use case: stylized-concept. Asset type: original LoopKeeper forest-wave battle adventurer sprite, transparent alpha. Create ONE full-body adult medieval forest survivor facing RIGHT in a three-quarter side view, ready stance holding a simple wooden spear with a small dull metal tip angled forward, NO shield. Muted sage-green cloth tunic, brown leather vest and bracers, simple ochre hood pushed back, sturdy boots, compact travelling pouch; no shiny metal armor, no crown, no magic. Match the deliberately authored high-quality pixel clusters of a detailed grey forest wolf sprite: clear anatomy, about4heads tall, warm upper-left amber sunlight, cool pine-green shadows, clean dark silhouette outline, restrained highlights, readable at about70x100 logicalpixels. Use fine consistent square pixel clusters, not huge block mannequin, not anime/chibi, not smooth painting/3D/photo, no blur/antialiasing. Feet fully visible and grounded on a single baseline. Entire spear and person contained inside image, modest transparent margins. No background, no ground, no environment, no frame, no text or labels. Original asset, no existing game designs. Pose must be immediately readable opposite a wolf: shoulders to right, spear tip to right, attentive face looking right, balanced bent knees.",
+      "originalArtwork": true,
+      "transparent": true,
+      "scope": "Early wolf combat with no armor/shield and starter spear only. Other gear retains existing gear-specific illustration.",
+      "noOtherGameAssets": true,
+      "sha256": "6771fe37f62b2722edc29f1cb979a4027a1a563c566c85add169fd34be071fea",
+      "width": 1103,
+      "height": 1426,
+      "bytes": 932427
+    }
+  ]
+}

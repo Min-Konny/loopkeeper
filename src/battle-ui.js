@@ -1,14 +1,16 @@
-import {totalFood}from './meals.js?v=0.6.49';
-import {mealEffectText}from './meal-ui.js?v=0.6.49';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.49';
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.49';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.49';
-import { getPlayerStrike } from './engine.js?v=0.6.49';
-import {routeById}from './routes.js?v=0.6.49';
-import { equipmentMaterial } from './visual-design.js?v=0.6.49';
-import { battleSound } from "./presentation.js?v=0.6.49";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.49";
-import { icon } from "./icons.js?v=0.6.49";
+import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.50';
+import{duelSnapshot}from './duel-motion.js?v=0.6.50';
+import {totalFood}from './meals.js?v=0.6.50';
+import {mealEffectText}from './meal-ui.js?v=0.6.50';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.50';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.50';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.50';
+import { getPlayerStrike } from './engine.js?v=0.6.50';
+import {routeById}from './routes.js?v=0.6.50';
+import { equipmentMaterial } from './visual-design.js?v=0.6.50';
+import { battleSound } from "./presentation.js?v=0.6.50";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.50";
+import { icon } from "./icons.js?v=0.6.50";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -90,6 +92,7 @@ function createView(dialog) {
   view.onVisibility = () => syncMotion(view);
   view.onReducedMotion = () => syncMotion(view);
   view.onClose = () => suspendBattle(dialog);
+  view.duel=mountPhaserDuel(dialog.querySelector('.battle-field'));
   views.set(dialog, view);
   return view;
 }
@@ -155,6 +158,7 @@ function syncMotion(view) {
 export function suspendBattle(dialog) {
   const view = views.get(dialog);
   if (!view) return;
+  view.duel?.suspend();
   view.suspended = true;
   view.previous = null;
   cancelAnimations(view);
@@ -169,6 +173,7 @@ export function suspendBattle(dialog) {
 }
 
 function animate(view, name, frames, duration = 400, delay = 0) {
+  if(view.duel?.ready&&/^(player|enemy)-(strike|recoil|impact|slash|projectile|guard-ring|shield-spark|particle|heal-ring)/.test(name))return;
   const element = view.elements[name];
   if (view.motionPaused || typeof element?.animate !== "function") return;
   view.animations.get(name)?.cancel();
@@ -393,6 +398,7 @@ export function renderBattle(dialog, state) {
     ? forestChiefPortrait()
     : pixelBattlePortrait(regionArt ? regionArt.split("/").pop().replace(".svg", "") : portraitId);
   const playerSrc=pixelBattlePortrait("player",run.equipment);
+  view.duel.update(duelSnapshot(state,key,playerSrc,portraitSrc,!regionArt&&portraitId==='wolf'));
   if(el["player-illustration"].getAttribute("src")!==playerSrc)el["player-illustration"].setAttribute("src",playerSrc);
   if (el["enemy-illustration"].getAttribute("src") !== portraitSrc)
     el["enemy-illustration"].setAttribute("src", portraitSrc);

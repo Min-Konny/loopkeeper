@@ -112,3 +112,5 @@
 #battle-dialog[data-chapter="6"] {--boss-tone:#abc0ed;}
 #battle-dialog[data-chapter="7"] {--boss-tone:#f2d38b;}
 @media(max-width:690px){#battle-dialog .boss-arrival strong {font-size:20px;}#battle-dialog .boss-arrival small {font-size:12px;}}
+
+#battle-dialog .battle-field{position:relative}.phaser-duel-layer{position:absolute;left:0;width:100%;z-index:2;pointer-events:none;overflow:hidden}.phaser-duel-layer canvas{display:block;width:100%!important;height:100%!important;image-rendering:pixelated}.phaser-duel-ready .battle-portrait{visibility:hidden}.phaser-duel-layer[hidden]{display:none!important}

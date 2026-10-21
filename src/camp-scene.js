@@ -1,7 +1,8 @@
-import { mountPixelCamp } from './pixel-camp-scene.js?v=0.6.49';
+import { mountPixelCamp } from './pixel-camp-scene.js?v=0.6.50';
+import {mountPhaserCamp}from './phaser-camp-scene.js?v=0.6.50';
 
 export function mountCampScene(host, {variant = 'camp'} = {}) {
- const scene=mountPixelCamp(host);
+ const scene=variant==='battle'?mountPixelCamp(host):mountPhaserCamp(host);
  if(variant==='battle'){host.classList.add('pixel-battle-scene');scene.setNight(true);}
  return scene;
 }

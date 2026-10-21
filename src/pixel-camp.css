@@ -67,3 +67,9 @@
  .craft-list>.workshop-card{grid-template-columns:64px minmax(0,1fr)}
  .craft-list .workshop-product,.craft-list .workshop-product img{width:64px;height:64px}
 }
+
+.phaser-camp-layer[hidden],.pixel-camp-layer[hidden]{display:none!important}.dependency-notices{position:fixed;bottom:2px;left:5px;font-size:9px;color:#aab49a;z-index:1}
+
+#pixel-village-full{position:relative;isolation:isolate;aspect-ratio:2/1;width:100%;overflow:hidden;border-radius:7px}#pixel-village-full .pixel-camp-layer{z-index:0}
+
+.camp-facility-key{font-size:10px;color:#c8c9ac;padding:5px 7px}.camp-facility-key p{line-height:1.8;margin:7px 0}.camp-facility-key summary{cursor:pointer}
