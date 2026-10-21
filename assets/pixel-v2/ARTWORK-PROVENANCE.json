@@ -1,5 +1,5 @@
 {
-  "version": "0.6.50",
+  "version": "0.6.51",
   "method": "Original built-in OpenAI image generation; no assets copied from other games",
   "sourcePixelsUnmodified": true,
   "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
@@ -73,5 +73,62 @@
       "height": 1426,
       "bytes": 932427
     }
-  ]
+  ],
+  "actionArtwork": {
+    "method": "built-in image_gen.imagegen",
+    "createdAt": "2026-10-21T03:15:37.461Z",
+    "originalArtwork": true,
+    "status": "validated release candidate",
+    "reference": "Existing original lumberjack-v2-sheet.png shown with view_image; reused unchanged for logging. Miner and smith style reference through conversation image; prop/tree original text generation.",
+    "assets": [
+      {
+        "file": "miner-v1-sheet.png",
+        "prompt": "Use case: stylized-concept. Production ORIGINAL pixel-art miner animation sprite sheet for LoopKeeper. Input image is STYLE/CHARACTER reference only, not an edit target: keep that medieval sage-green tunic, brown leather vest and boots, ochre cap, readable warm upper-left lighting and crisp pixel clusters. Create a miner holding a silver pickaxe, facing RIGHT, same full-body proportions and quality as reference. EXACTLY FOUR equal columns and TWO equal rows, eight clearly separated centered frames on genuine transparent alpha. Row1: ready pickaxe; raised overhead; forward/downward impact at waist height; follow-through. Row2: crouch collecting ore; stand holding small basket of ore; walking carrying basket leg-left; walking carrying basket leg-right. Fixed scale and foot baseline, same character across cells, pickaxe entirely within each cell. No rock/ground/background, no particles (game draws these separately), no shadow rectangles, no text/labels/grid. Crisp handcrafted square-pixel clusters with deliberate dark outline, warm leather, desaturated sage, charcoal shadows, silver pick; no smooth gradients, no blur, no antialiasing, no existing game imagery. Designed to be readable at 50px tall. Equal generous margins in every cell. Sheet landscape 2:1, four by two square cells. All content original.",
+        "transparent": true,
+        "selection": "Inspected with view_image and selected; original PNG and transparency retained",
+        "processing": "Original PNG preserved including alpha; only runtime atlas framing and nearest-neighbor canvas placement.",
+        "sha256": "9315c1dcf22039c74a4ffeebe57bc4b32fa52777d0d2f7c8ecabd38b30e8819f",
+        "bytes": 1022396,
+        "width": 1774,
+        "height": 887,
+        "pngColorType": 6
+      },
+      {
+        "file": "smith-v1-sheet.png",
+        "prompt": "Use case: stylized-concept. Asset type: ORIGINAL production pixel-art BLACKSMITH animation sprite sheet for LoopKeeper medieval forest settlement. Create EXACTLY FOUR equal columns and TWO equal rows (eight separate full-body poses), genuine transparent background. Consistent male worker with ochre cap, sage green sleeves, brown leather apron and boots, warm upper-left light, dark clean silhouette; rich crisp pixel clusters matching the visible earlier woodsman. Faces RIGHT. Row1: ready holding hammer low; hammer raised above head; hammer striking forward at waist height; follow-through bent slightly forward. Row2: holding a red-orange ingot with long tongs forward; holding tongs with hot blade forward; standing inspecting finished silver blade; walking carrying finished silver blade. No anvil, forge, landscape, ground, sparks, text, watermark or grid lines. Equal cell size, each full character and tool centered and entirely contained with margins, identical scale, feet at same baseline. Strict deliberate pixel-art style, no painterly blur, no smooth 3D. Readable at50pixels high. Palette desaturated pine/sage, warm leather ochre, amber forge highlights, restrained steel-gray. Landscape2:1 sheet. Everything original.",
+        "transparent": true,
+        "selection": "Inspected with view_image and selected; original PNG and transparency retained",
+        "processing": "Original PNG preserved including alpha; only runtime atlas framing and nearest-neighbor canvas placement.",
+        "sha256": "cb818400fb81b9d52972b301dae1e041c97041a4cf6d0153287cc53199859a19",
+        "bytes": 1055226,
+        "width": 1774,
+        "height": 887,
+        "pngColorType": 6
+      },
+      {
+        "file": "work-props-v1.png",
+        "prompt": "Use case: stylized-concept. Asset type: ORIGINAL pixel-art game prop atlas for LoopKeeper, two clearly separated equal square cells in a horizontal2:1 image, genuinely transparent background. LEFT CELL: a richly authored waist-high rugged dark slate mining boulder, subtle warm iron ore veins, small ore basket at its right foot, horizontal ground-contact baseline but NO ground landscape. RIGHT CELL: a compact medieval blacksmith anvil on a weathered timber block, open charcoal hearth slightly behind and to its right, leather bellows, coal and a few neatly stacked silver ingots. No flames or sparks painted outside hearth (game animates those). No characters, no text, no borders, no gridlines. Same slight elevated3/4 orthographic viewpoint, upper-left warm light, controlled charcoal/sage/slate/ochre palette matching a medieval pine-forest settlement. Crisp high-quality pixel clusters, clean dark outlines, clear small-size silhouettes, no blur or smooth gradients, no3D render. The two groups must NOT overlap and have generous transparent margins, complete in their separate equal cells. Props readable at70pixels wide. No existing game art, all original.",
+        "transparent": true,
+        "selection": "Inspected with view_image and selected; original PNG and transparency retained",
+        "processing": "Original PNG preserved including alpha; only runtime atlas framing and nearest-neighbor canvas placement.",
+        "sha256": "e0b74dec8a3ec512a02a057b9e72edccff28857c088e251892048c49249b8084",
+        "bytes": 1501839,
+        "width": 1774,
+        "height": 887,
+        "pngColorType": 6
+      },
+      {
+        "file": "logging-tree-v1.png",
+        "transparent": true,
+        "selection": "Inspected with view_image and selected; original PNG and transparency retained",
+        "processing": "Original PNG preserved including alpha; only runtime atlas framing and nearest-neighbor canvas placement.",
+        "sha256": "635677d901a1a47ceddbe7eb043a865ab996ba20cb951b5cf13f1e38644391fa",
+        "bytes": 992030,
+        "width": 941,
+        "height": 1672,
+        "pngColorType": 6
+      }
+    ],
+    "limits": "No third-party artwork. Existing camp/Phaser third-party notices retained; no new dependency."
+  }
 }

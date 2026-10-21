@@ -1,4 +1,4 @@
-import {INVESTMENT_BRANCHES}from './investments.js?v=0.6.50';
+import {INVESTMENT_BRANCHES}from './investments.js?v=0.6.51';
 export const LEGACY_RANKS=[
  {key:'attack',baseId:'inherited_blade',name:'継承の攻撃力',stat:'attack',label:'攻撃',icon:'sword',increment:r=>4*r},
  {key:'defense',baseId:'inherited_guard',name:'継承の防御力',stat:'defense',label:'防御',icon:'shield',increment:r=>4*r-1},

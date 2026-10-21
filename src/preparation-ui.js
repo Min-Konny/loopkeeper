@@ -1,6 +1,6 @@
-import {hasUpgrade}from './free-features.js?v=0.6.50';
-import { getCatalog, getRecipeCost, getSkillProgress, isKnown, getUnlocks, getAugmentStatus } from './engine.js?v=0.6.50';
-import { icon } from './icons.js?v=0.6.50';
+import {hasUpgrade}from './free-features.js?v=0.6.51';
+import { getCatalog, getRecipeCost, getSkillProgress, isKnown, getUnlocks, getAugmentStatus } from './engine.js?v=0.6.51';
+import { icon } from './icons.js?v=0.6.51';
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 export function getPreparation(state) {

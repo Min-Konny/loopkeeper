@@ -1,12 +1,13 @@
-import { pixelWorkScene } from './pixel-work-art.js?v=0.6.50';
-import { equipmentMaterial } from './visual-design.js?v=0.6.50';
-import { icon } from './icons.js?v=0.6.50';
-import { miningScene } from './mining-scene.js?v=0.6.50';
-import { actionTarget } from './action-target.js?v=0.6.50';
+import { pixelWorkScene } from './pixel-work-art.js?v=0.6.51';
+import { equipmentMaterial } from './visual-design.js?v=0.6.51';
+import { icon } from './icons.js?v=0.6.51';
+import { miningScene } from './mining-scene.js?v=0.6.51';
+import { actionTarget } from './action-target.js?v=0.6.51';
+import {enhanceWorkScene,syncGeneratedWork}from './generated-work-art.js?v=0.6.51';
 
 // Decorative work scenes follow the actual selected skill; no separate timer or game state.
 export function workScene(skill, actionId, equipment = {}) {
-  const pixel=pixelWorkScene(skill,actionId,equipment);if(pixel)return pixel;
+  const pixel=pixelWorkScene(skill,actionId,equipment);if(pixel)return enhanceWorkScene(pixel,skill,actionId);
   const toolMaterial = equipmentMaterial(skill === 'combat' ? equipment.weapon : equipment.tool);
   const armorMaterial = equipmentMaterial(equipment.armor);
   const shieldMaterial = equipmentMaterial(equipment.shield);
@@ -29,7 +30,9 @@ export function workScene(skill, actionId, equipment = {}) {
 }
 
 // The tool, target and chips share the real action progress, including resumed work.
-export function syncWorkAnimation(scene, action) {
+export function syncWorkAnimation(scene, action, options={}) {
+  if(syncGeneratedWork(scene,action,options))return;
+  if(options.animate===false)return;
   if (!scene || !action || !scene.getAnimations) return;
   const phase = Math.min(1, Math.max(0, action.progress / action.duration));
   const arm=scene.querySelector?.('[data-pixel-arm]');if(arm){const hit=phase>=.65&&phase<.88;arm.setAttribute('transform',hit?'translate(3 4)':'translate(0 0)');scene.querySelector('[data-pixel-effect]')?.setAttribute('opacity',hit?'1':'0');return;}

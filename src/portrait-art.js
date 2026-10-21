@@ -1,5 +1,6 @@
-import { workScene } from './work-scene.js?v=0.6.50';
-import { icon } from './icons.js?v=0.6.50';
+import { workScene } from './work-scene.js?v=0.6.51';
+import { icon } from './icons.js?v=0.6.51';
+import {workKind}from './work-motion.js?v=0.6.51';
 
 // Decorative SVGs render as images, outside the live work-animation DOM.
 // Stable URLs let the browser reuse decoded images across pane changes.
@@ -24,6 +25,7 @@ export function portraitSource(skill, actionId, equipment = {}, effectsEnabled =
   return remember(scenes, key, asImage(resolved));
 }
 export function portraitImage(skill, actionId, equipment, effectsEnabled) {
+  if(workKind(skill,actionId))return workScene(skill,actionId,equipment).replace('class="work-vignette','data-work-portrait class="portrait-vignette generated-work-portrait');
   const src = portraitSource(skill, actionId, equipment, effectsEnabled);
   return src ? `<img class="portrait-vignette" src="${src}" width="170" height="90" alt="" aria-hidden="true" decoding="async">` : '';
 }
