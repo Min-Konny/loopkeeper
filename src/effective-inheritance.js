@@ -1,5 +1,5 @@
-import{getCatalog,getActionDuration,getSkillProgress,isKnown,getLegacyRankStatus}from'./engine.js?v=0.6.51';
-import{LEGACY_RANKS,rankId}from'./legacy-rank-definitions.js?v=0.6.51';
+import{getCatalog,getActionDuration,getSkillProgress,isKnown,getLegacyRankStatus}from'./engine.js?v=0.6.52';
+import{LEGACY_RANKS,rankId}from'./legacy-rank-definitions.js?v=0.6.52';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function rankTiming(s,key){
  if(s.version!==2||!['gatherSpeed','craftSpeed','alchemySpeed'].includes(key))return null;
