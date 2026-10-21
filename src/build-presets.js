@@ -1,5 +1,5 @@
-import {ACCESSORIES,ACCESSORY_SLOTS,accessoryById}from './gear-content.js?v=0.6.53';import {initializeGear}from './gear-state.js?v=0.6.53';
-import {companionById}from './companion-content.js?v=0.6.53';import {selectCompanion}from './companion-state.js?v=0.6.53';
+import {ACCESSORIES,ACCESSORY_SLOTS,accessoryById}from './gear-content.js?v=0.6.54';import {initializeGear}from './gear-state.js?v=0.6.54';
+import {companionById}from './companion-content.js?v=0.6.54';import {selectCompanion}from './companion-state.js?v=0.6.54';
 export const EQUIPMENT_SLOTS=['weapon','armor','shield','tool'];export const PHASES=['preparation','combat'];
 const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 export function validPreset(p,recipes){return object(p)&&(!Object.hasOwn(p,'companion')||p.companion===null||typeof p.companion==='string'&&!!companionById(p.companion))&&Number.isInteger(p.id)&&p.id>0&&p.id<1e9&&typeof p.name==='string'&&p.name.trim()===p.name&&p.name.length>0&&p.name.length<=32&&!/[\u0000-\u001f]/.test(p.name)&&object(p.equipment)&&Object.keys(p.equipment).length===4&&EQUIPMENT_SLOTS.every(slot=>p.equipment[slot]===null||recipes.some(d=>d.id===p.equipment[slot]&&d.slot===slot))&&object(p.sets)&&Object.keys(p.sets).length===2&&PHASES.every(phase=>object(p.sets[phase])&&Object.keys(p.sets[phase]).length===4&&ACCESSORY_SLOTS.every(slot=>p.sets[phase][slot]===null||accessoryById(p.sets[phase][slot])?.slot===slot));}

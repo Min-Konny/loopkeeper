@@ -1,9 +1,9 @@
-import {preparationBalance}from './preparation-balance.js?v=0.6.53';
-import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.53';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.53';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.53';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.53';
-import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.53';
+import {preparationBalance}from './preparation-balance.js?v=0.6.54';
+import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.54';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.54';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.54';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.54';
+import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.54';
 import {
   ACCELERATION,
   LEGACY_UPGRADES,
@@ -11,8 +11,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.6.53";
-import { icon } from "./icons.js?v=0.6.53";
+} from "./engine.js?v=0.6.54";
+import { icon } from "./icons.js?v=0.6.54";
 
 const escape = (value) =>
   String(value ?? "").replace(

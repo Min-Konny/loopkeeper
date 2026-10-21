@@ -1,6 +1,6 @@
-import {totalFood}from './meals.js?v=0.6.53';
-import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus,getAugmentExclusionStatus } from "./engine.js?v=0.6.53";
-import { icon } from "./icons.js?v=0.6.53";
+import {totalFood}from './meals.js?v=0.6.54';
+import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus,getAugmentExclusionStatus } from "./engine.js?v=0.6.54";
+import { icon } from "./icons.js?v=0.6.54";
 
 const families = {
   economy: { name: "生産・投資", icon: "gold" },
