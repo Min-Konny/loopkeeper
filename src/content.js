@@ -1,13 +1,13 @@
-import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.52';
-import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.52';
-import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.52';
-import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.52';
-import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.52';
-import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.52';
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.52';
-import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.52';
-import { REINFORCEMENTS } from './endless.js?v=0.6.52';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.52';
+import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.53';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.53';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.53';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.53';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.53';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.53';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.53';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.53';
+import { REINFORCEMENTS } from './endless.js?v=0.6.53';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.53';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
