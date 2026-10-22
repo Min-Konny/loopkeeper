@@ -2852,7 +2852,7 @@ export const CONTENT = {
         "interval": 15,
         "goldPerFacilityLevel": 0.5
       },
-      "scope": "No battle income; max facility level sum is 18",
+      "scope": "Preparation only; 0.5 gold per regular facility level every 15 seconds; no sum-18 cap; endless reinforcement levels excluded; wallet capped at 1e9",
       "requiresPurchasedWorker": false,
       "goldAccumulation": "fractional_internal_floor_visible"
     },

@@ -1,0 +1,19 @@
+{
+  "contentVersion": "A2.1",
+  "scope": "Current version2 investment metadata; existing rates unchanged",
+  "augments": [
+    {
+      "id": "investment",
+      "name": "村への投資",
+      "family": "economy",
+      "pack": "economy_augments",
+      "values": {
+        "interval": 15,
+        "goldPerFacilityLevel": 0.5
+      },
+      "scope": "Preparation only; 0.5 gold per regular facility level every 15 seconds; no sum-18 cap; endless reinforcement levels excluded; wallet capped at 1e9",
+      "requiresPurchasedWorker": false,
+      "goldAccumulation": "fractional_internal_floor_visible"
+    }
+  ]
+}
