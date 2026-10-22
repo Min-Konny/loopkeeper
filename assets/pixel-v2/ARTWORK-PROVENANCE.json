@@ -1,5 +1,5 @@
 {
-  "version": "0.6.56",
+  "version": "0.6.57",
   "method": "Original built-in OpenAI image generation; no assets copied from other games",
   "sourcePixelsUnmodified": true,
   "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
@@ -228,6 +228,33 @@
           "sha256": "a083b935686a560dfdad4f134b08d1291ad4ce51620e9c4f596df00fe227fa80"
         }
       ]
+    },
+    {
+      "method": "Built-in image_gen; original PNG bytes preserved",
+      "createdAt": "2026-10-22T11:28:20.196Z",
+      "status": "Selected after built-in output inspection and native-renderer PC/390px/320px screenshots; original bytes and alpha retained",
+      "assets": [
+        {
+          "file": "forest-chief-v2.png",
+          "sha256": "273500f1fa86c108bfbf81889e2ecdfefbc8431898ae3e2452e0e0262d10317f",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 1998563,
+          "transparentPixels": 748415,
+          "visibleBounds": [
+            88,
+            34,
+            1510,
+            982
+          ],
+          "borderMaximum": 1,
+          "prompt": "Use case: stylized-concept. Asset type: one original transparent cutout enemy sprite for LOOPKEEPER, a dark forest pixel-art management RPG. Primary request: forest alpha wolf boss, a very large quadrupedal grey wolf facing LEFT in a three-quarter side battle stance, broad powerful chest and heavy shaggy pale neck ruff, lowered long muzzle, pointed ears, amber eyes, exposed long ivory fangs, raised ragged tail; sparse moss and bark caught along its back. No humanoid anatomy, armor, antlers, extra heads or weapon. Style: polished hand-clustered pixel art, approximately 160x160 logical pixel density, crisp stepped silhouette, limited slate grey, moss green, muted ivory and amber palette, warm upper-left light. Readable at 150px display size, coherent anatomy and all four paws grounded. Full body, all fur/tail/ears/feet fully inside canvas with generous transparent padding on all sides. Actual alpha transparent background, no painted checkerboard, ground plane, scene, text, frame, watermark, glow, particle cloud or blurred shadows. This is an original creature, not an existing franchise character. Single pose, one subject, not a sheet. IMPORTANT final cutout constraint: clean HARD alpha silhouette immediately outside the wolf, all pixels outside the body are 100% transparent. No ambient glow, no fuzzy brown/grey mist, no vignette or shadow halo at all. Include visible empty transparent padding at all four canvas borders. Coarse crisp pixel clusters, avoid high-resolution smooth painted gradients.",
+          "transparent": true,
+          "inspection": "Alpha values 0–254. Only nearly invisible alpha <= 2 reaches a border; visible alpha >=8 is inside padding. No cropping, alpha edits or resampling applied.",
+          "sourcePixelsUnmodified": true
+        }
+      ],
+      "noExternalGameArt": true
     }
   ],
   "actionArtwork": {

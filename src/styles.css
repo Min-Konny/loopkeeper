@@ -4904,4 +4904,8 @@ dialog h2 {
 
 #battle-dialog .fighter-illustration.generated-hero{object-fit:contain;object-position:center bottom;image-rendering:pixelated}
 
+/* Long encounter names remain readable at narrow widths and larger text sizes. */
+#battle-dialog .battle-fighter h3{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;height:auto}
+@media(max-width:650px){#battle-dialog .battle-fighter h3{display:block;min-height:3.2em;line-height:1.6;margin-bottom:.5rem}}
+
 @media(max-width:480px){#battle-dialog .battle-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.45rem}#battle-dialog .battle-heading>div{grid-column:1/-1;min-width:0}#battle-dialog .battle-heading h2{font-size:1.15rem;white-space:nowrap}#battle-dialog .battle-heading>.battle-state{justify-self:start}#battle-dialog .battle-heading>button{grid-column:2;grid-row:2;justify-self:end}}

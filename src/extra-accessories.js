@@ -1,4 +1,4 @@
-import {REGIONAL_ACCESSORIES}from './regional-content.js?v=0.6.56';
+import {REGIONAL_ACCESSORIES}from './regional-content.js?v=0.6.57';
 export const EXTRA_ACCESSORIES=[
  ...REGIONAL_ACCESSORIES,
  {id:'angler_pendant',name:'釣り人の首飾り',slot:'necklace',effect:{fishingSpeed:.15},description:'本人の釣り速度+15%。採集職人・料理・戦闘には効果なし。'},

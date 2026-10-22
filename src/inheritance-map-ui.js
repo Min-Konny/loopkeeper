@@ -1,4 +1,4 @@
-import {syncInheritanceConnections}from './inheritance-map-connections.js?v=0.6.56';
+import {syncInheritanceConnections}from './inheritance-map-connections.js?v=0.6.57';
 // Keep comparison and allocation in one view. Commands use main's existing stored transactions.
 export function createInheritanceMapUI({document,getCategory,setCategory,render}){
  const states=Object.fromEntries(['live','setup'].map(scope=>[scope,{branch:null,stage:null,affordable:false,returnCard:null,pending:null,scroll:0}]));

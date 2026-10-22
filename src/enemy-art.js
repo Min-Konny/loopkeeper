@@ -1,4 +1,5 @@
-// Original generated sprites; special encounters keep their existing authored art.
+// Original generated sprites; unknown encounters retain their authored fallback.
+const forestChiefSprite=new URL('../assets/pixel-v2/forest-chief-v2.png',import.meta.url).href;
 const sprites=Object.freeze(Object.fromEntries(['wolf','raider','knight','giant','boss','winged'].map(id=>[id,new URL(`../assets/pixel-v2/${id}-v1.png`,import.meta.url).href])));
 export const REGION_ART=Object.freeze({
  forest:{file:'winged-v1.png',kind:'winged'},forest_depth:{file:'winged-v1.png',kind:'winged'},
@@ -9,7 +10,7 @@ export const REGION_ART=Object.freeze({
  ice:{file:'ice-giant-v3.png',kind:'giant'},
 });
 export function generatedEnemySource(kind,{regional=false,forestChief=false,routeId=null}={}){
-  if(forestChief)return null;
+  if(forestChief&&!regional)return forestChiefSprite;
   if(regional){const region=Object.hasOwn(REGION_ART,routeId)?REGION_ART[routeId]:null;return region?new URL('../assets/pixel-v2/'+region.file,import.meta.url).href:null;}
   return Object.hasOwn(sprites,kind)?sprites[kind]:null;
 }

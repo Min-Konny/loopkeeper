@@ -1,5 +1,5 @@
-import {synchronizeFreeFeatures}from './free-features.js?v=0.6.56';
-import { createGame, parseSave, serializeGame } from './engine.js?v=0.6.56';
+import {synchronizeFreeFeatures}from './free-features.js?v=0.6.57';
+import { createGame, parseSave, serializeGame } from './engine.js?v=0.6.57';
 export const STORAGE_KEY = 'tomori-rebirth-v1';
 const BACKUP_KEY = `${STORAGE_KEY}-backups`;
 const ARCHIVE_KEY = `${STORAGE_KEY}-unreadable`;
