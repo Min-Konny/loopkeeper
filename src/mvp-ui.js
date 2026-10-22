@@ -1,14 +1,15 @@
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.54';
-import {stockIcon as icon}from './stock-icons.js?v=0.6.54';
-import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.54';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.54';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.54';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.54';
-import {hasUpgrade}from './free-features.js?v=0.6.54';
-import { getStartingResources } from './engine.js?v=0.6.54';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.54';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.54";
-import { CONTENT as C } from "./content.js?v=0.6.54";
+import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.55';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.55';
+import {stockIcon as icon}from './stock-icons.js?v=0.6.55';
+import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.55';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.55';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.55';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.55';
+import {hasUpgrade}from './free-features.js?v=0.6.55';
+import { getStartingResources } from './engine.js?v=0.6.55';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.55';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.55";
+import { CONTENT as C } from "./content.js?v=0.6.55";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -24,7 +25,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.54";
+} from "./engine.js?v=0.6.55";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -107,7 +108,7 @@ export function autoCookStatus(s) {
 export function autoCookingMarkup(s) {
   if (!s.meta.upgrades.includes("auto_cook")) return "";
   const status = getAutoCookingStatus(s), enabled = status.code !== "disabled";
-  return `<section class="auto-cooking-panel"><div class="auto-cooking-heading"><h3>自動調理 <small>薬草のスープ</small></h3><button data-toggle-upgrade="auto_cook" data-focus="auto-cooking-toggle" aria-label="自動調理を${enabled ? "OFF" : "ON"}にする" aria-pressed="${enabled}">${enabled ? "ON" : "OFF"}</button></div><div class="auto-cooking-controls"><strong>食料 ${Math.floor(status.food)}</strong><label>補充目標<input type="number" min="0" max="9999" value="${status.target}" data-target="foodTarget" data-focus="cooking-food-target"></label>${s.settings.paused && enabled && s.run.status === "preparing" && (status.code === "paused") ? '<button class="button small gold-outline" data-command="auto-cook-start" data-focus="auto-cook-start">調理を開始</button>' : ""}</div><p>${esc(autoCookStatus(s))}</p><small>${esc(getUpgradeDescription(s,{id:"auto_cook"}))} 素材集めは別途必要。</small></section>`;
+  return `<section class="auto-cooking-panel"><div class="auto-cooking-heading"><h3>自動調理 <small>${esc(cookingBatchText(s)||cookingChoiceText(s))}</small></h3><button data-toggle-upgrade="auto_cook" data-focus="auto-cooking-toggle" aria-label="自動調理を${enabled ? "OFF" : "ON"}にする" aria-pressed="${enabled}">${enabled ? "ON" : "OFF"}</button></div><div class="auto-cooking-controls"><strong>食料 ${Math.floor(status.food)}</strong><label>補充目標<input type="number" min="0" max="9999" value="${status.target}" data-target="foodTarget" data-focus="cooking-food-target"></label>${s.settings.paused && enabled && s.run.status === "preparing" && (status.code === "paused") ? '<button class="button small gold-outline" data-command="auto-cook-start" data-focus="auto-cook-start">調理を開始</button>' : ""}</div><p>${esc(autoCookStatus(s))}</p><small>${esc(getUpgradeDescription(s,{id:"auto_cook"}))} 素材集めは別途必要。</small></section>`;
 }
 function workerUpgradeMarkup(s, worker) {
   const next = worker.levels[s.run.workers[worker.id].level + 1];

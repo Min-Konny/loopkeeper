@@ -72,6 +72,58 @@
       "width": 1103,
       "height": 1426,
       "bytes": 932427
+    },
+    {
+      "method": "built-in image_gen__imagegen",
+      "createdAt": "2026-10-22T03:42:27.591Z",
+      "status": "0.6.55 release candidate; locally verified with authorized PC/mobile headless rendering",
+      "source": "Tool returned base64 PNG directly; saved byte-for-byte in project",
+      "assets": [
+        {
+          "file": "raider-v1.png",
+          "prompt": "Use case: stylized-concept. Create ONE original production game sprite: a wilderness raider enemy for LOOPKEEPER, a warm earthy medieval forest resource-management pixel-art game. Full body 3/4 side view facing LEFT toward player. Hooded human bandit in dusty burgundy cloak, dark leather armor, dull iron mask with eyes visible, holding one short battered axe low in front and small round wooden buckler, sturdy grounded stance, both feet visible. Anatomically coherent, expressive readable silhouette. High-quality hand-placed chunky pixel clusters, logical native density around 160x190 pixels, crisp hard pixel edges, no smooth painting, no antialiasing blur. Muted moss green shadows, charcoal outline, warm ochre upper-left rim lighting, desaturated burgundy; harmonious with richly detailed brown-gray wolf and forest camp pixel art. One single character centered, generous transparent margins, whole axe and feet contained. Genuine transparent background, no backdrop, no panel, no labels, no watermark, no other characters, no shadow floor ellipse. This is a new original character, no reference to any existing franchise.",
+          "transparent": true,
+          "width": 1151,
+          "height": 1367,
+          "bytes": 1278076,
+          "sha256": "ef7c984a46d025ffa11350b2b74b97e4aa7df0ce7958dd42c5f735c2a98f2af6",
+          "transparentPixels": 897675,
+          "solidPixels": 609752
+        },
+        {
+          "file": "knight-v1.png",
+          "prompt": "Use case: stylized-concept. ONE new original production enemy sprite for LOOPKEEPER, medieval forest pixel-art idle strategy. Full body armored knight enemy, 3/4 side view facing LEFT. Weathered desaturated steel plate and chainmail, enclosed angular helmet, muted moss-green surcoat, simple tattered dark red shoulder cloth, carrying a longsword forward and down and a steel kite shield close to body. Distinct upright noble but threatening silhouette, not a hooded bandit. Grounded stance both boots visible; armor logically articulated. Finely crafted chunky pixel clusters at logical native 160x190 density, crisp pixel edges and charcoal outline, warm ochre upper-left light, cool moss-gray shadows, harmonious with a detailed gray-brown wolf and burgundy raider in a forest pixel-art game. Strong readable shapes at 120px displayed size. Single complete character centered with generous transparent margins around sword, head and boots. Genuine transparent background. No floor, no backdrop, no writing, no logo, no watermark, no UI, no other characters. Do not copy an existing franchise.",
+          "transparent": true,
+          "width": 1150,
+          "height": 1367,
+          "bytes": 1247790,
+          "sha256": "c603891fe801b80deb4fbfc23dd6a855ba5a63dc9aed67cac4ae17d39ffe6cc4",
+          "transparentPixels": 975273,
+          "solidPixels": 549124
+        },
+        {
+          "file": "giant-v1.png",
+          "prompt": "Use case: stylized-concept. Create one new original full-body enemy sprite for LOOPKEEPER medieval forest pixel-art game: a towering mountain giant wearing primitive battered stone-and-iron shoulder armor and brown fur kilt, massive granite-gray skin, broad chest, two arms two legs, carrying a heavy timber club reinforced with iron bands lowered on left side. Small expressive head with heavy brow, no horns or crown, visually distinct from a knight and raider. 3/4 side view facing LEFT, both big feet visible in grounded wide stance, threatening weight, coherent anatomy. Expert chunky pixel-art cluster shading, crisp dark charcoal contour, warm ochre light from upper left, muted moss shadows and stone grays, logical native density around 170x190 pixels. Readable silhouette at small 120px game size, no painterly blur. Whole club and body contained in generous transparent margins. Genuine transparent background, one character only, no scenery, no floor ellipse, no labels or watermark, no existing franchise.",
+          "transparent": true,
+          "width": 1183,
+          "height": 1329,
+          "bytes": 1646179,
+          "sha256": "52daf4044be0d0bb46457562a5e7932a2390c996ad4fa4aeb6eaf156b122dfd0",
+          "transparentPixels": 670686,
+          "solidPixels": 833342
+        },
+        {
+          "file": "boss-v1.png",
+          "prompt": "Use case: stylized-concept. One new original production boss character sprite for LOOPKEEPER medieval forest pixel-art game. A formidable armored raider king: battered dark steel full plate, modest jagged ancient gold crown above an enclosed helmet, short weathered dark plum cloak with muted gold trim, holding a broad iron greatsword lowered diagonally toward LEFT, other gauntlet clenched. Full body 3/4 side view facing LEFT, both boots visible, muscular armored proportions, commanding grounded stance. No glowing magic, no oversized spikes. Distinct regal silhouette recognisable at 120px display size. Beautiful disciplined chunky pixel-art clusters, crisp charcoal outlines, native logical density 170x200, warm ochre upper-left light, cool moss shadows, earthy desaturated palette matching a detailed gray-brown wolf and burgundy bandit sprite. Single whole character including sword and crown within generous transparent margins. Genuinely transparent background, no floor or backdrop, no text, no logo, no watermark. Original design not derived from any franchise.",
+          "transparent": true,
+          "width": 1157,
+          "height": 1360,
+          "bytes": 1393451,
+          "sha256": "c6ee3805c04dba36059491a4f4062c8dfbc2eab09f81af9116ffbdb87766d280",
+          "transparentPixels": 909213,
+          "solidPixels": 603079
+        }
+      ]
     }
   ],
   "actionArtwork": {

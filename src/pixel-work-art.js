@@ -1,5 +1,5 @@
-import { pixelCraftScene } from './pixel-craft-art.js?v=0.6.54';
-import { equipmentMaterial } from './visual-design.js?v=0.6.54';
+import { pixelCraftScene } from './pixel-craft-art.js?v=0.6.55';
+import { equipmentMaterial } from './visual-design.js?v=0.6.55';
 
 const r=(x,y,w,h,color)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${color}"/>`;
 const p=(points,color)=>`<polygon points="${points}" fill="${color}"/>`;

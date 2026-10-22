@@ -1,16 +1,17 @@
-import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.54';
-import{duelSnapshot}from './duel-motion.js?v=0.6.54';
-import {totalFood}from './meals.js?v=0.6.54';
-import {mealEffectText}from './meal-ui.js?v=0.6.54';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.54';
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.54';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.54';
-import { getPlayerStrike } from './engine.js?v=0.6.54';
-import {routeById}from './routes.js?v=0.6.54';
-import { equipmentMaterial } from './visual-design.js?v=0.6.54';
-import { battleSound } from "./presentation.js?v=0.6.54";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.54";
-import { icon } from "./icons.js?v=0.6.54";
+import{generatedEnemySource}from './enemy-art.js?v=0.6.55';
+import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.55';
+import{duelSnapshot}from './duel-motion.js?v=0.6.55';
+import {totalFood}from './meals.js?v=0.6.55';
+import {mealEffectText}from './meal-ui.js?v=0.6.55';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.55';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.55';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.55';
+import { getPlayerStrike } from './engine.js?v=0.6.55';
+import {routeById}from './routes.js?v=0.6.55';
+import { equipmentMaterial } from './visual-design.js?v=0.6.55';
+import { battleSound } from "./presentation.js?v=0.6.55";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.55";
+import { icon } from "./icons.js?v=0.6.55";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -394,11 +395,19 @@ export function renderBattle(dialog, state) {
         Math.min(enemy.wave - 1, 4)
       ];
   const regionArt=routeById(run.routes?.active?.id)?.image;
-  const portraitSrc = enemy.id === "forest_chief" && enemy.isBoss && !run.routes?.active
+  const forestChief = enemy.id === "forest_chief" && enemy.isBoss && !run.routes?.active;
+  const fallbackSrc = forestChief
     ? forestChiefPortrait()
     : pixelBattlePortrait(regionArt ? regionArt.split("/").pop().replace(".svg", "") : portraitId);
   const playerSrc=pixelBattlePortrait("player",run.equipment);
-  view.duel.update(duelSnapshot(state,key,playerSrc,portraitSrc,!regionArt&&portraitId==='wolf'));
+  const generated=generatedEnemySource(portraitId,{regional:!!run.routes?.active,forestChief});
+  view.failedEnemyArt??=new Set();
+  const artSource=generated&&!view.failedEnemyArt.has(generated)?generated:null;
+  const portraitSrc=artSource||fallbackSrc;
+  view.duel.update(duelSnapshot(state,key,playerSrc,portraitSrc,!!artSource,portraitId));
+  const image=el['enemy-illustration'];
+  image.classList.toggle('generated-enemy',!!artSource);
+  image.onerror=()=>{if(artSource&&image.getAttribute('src')===artSource){view.failedEnemyArt.add(artSource);image.classList.remove('generated-enemy');image.setAttribute('src',fallbackSrc);view.duel.suspend();}};
   if(el["player-illustration"].getAttribute("src")!==playerSrc)el["player-illustration"].setAttribute("src",playerSrc);
   if (el["enemy-illustration"].getAttribute("src") !== portraitSrc)
     el["enemy-illustration"].setAttribute("src", portraitSrc);
