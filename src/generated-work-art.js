@@ -1,5 +1,5 @@
-import {alphaBounds}from './generated-camp-art.js?v=0.6.55';
-import {workKind,workPose}from './work-motion.js?v=0.6.55';
+import {alphaBounds}from './generated-camp-art.js?v=0.6.56';
+import {workKind,workPose}from './work-motion.js?v=0.6.56';
 const root=new URL('../assets/pixel-v2/',import.meta.url),mounted=new WeakMap();let pending;
 function image(name){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Work artwork unavailable: '+name));img.src=new URL(name,root).href;});}
 function atlas(img,rows){const cw=Math.floor(img.width/4),ch=Math.floor(img.height/rows),c=document.createElement('canvas');c.width=96*4*rows;c.height=104;const ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;for(let n=0;n<4*rows;n++){const x=n%4*cw,y=Math.floor(n/4)*ch,b=alphaBounds(img,x,y,cw,ch);ctx.drawImage(img,x,y,cw,ch,n*96,100-b.bottom*96/cw,96,ch*96/cw);}return c;}

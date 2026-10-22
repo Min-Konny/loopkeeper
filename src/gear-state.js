@@ -1,6 +1,6 @@
-import {mealEffects}from './meals.js?v=0.6.55';
-import {investmentEffect}from './investments.js?v=0.6.55';
-import {accessoryById,weaponById,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.55';
+import {mealEffects}from './meals.js?v=0.6.56';
+import {investmentEffect}from './investments.js?v=0.6.56';
+import {accessoryById,weaponById,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.56';
 export const emptySets=()=>({preparation:Object.fromEntries(ACCESSORY_SLOTS.map(s=>[s,null])),combat:Object.fromEntries(ACCESSORY_SLOTS.map(s=>[s,null]))});
 export function initializeGear(s){
  if(s.version===1)return;

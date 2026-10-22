@@ -1,5 +1,5 @@
 {
-  "version": "0.6.51",
+  "version": "0.6.56",
   "method": "Original built-in OpenAI image generation; no assets copied from other games",
   "sourcePixelsUnmodified": true,
   "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
@@ -122,6 +122,110 @@
           "sha256": "c6ee3805c04dba36059491a4f4062c8dfbc2eab09f81af9116ffbdb87766d280",
           "transparentPixels": 909213,
           "solidPixels": 603079
+        }
+      ]
+    },
+    {
+      "method": "Original built-in image_gen__imagegen",
+      "createdAt": "2026-10-22T10:47:35.075Z",
+      "status": "0.6.56 release candidate; assets selected and PC/mobile renderer verified",
+      "rejectedVariants": "Two ice-giant halo variants archived outside the candidate; third clean generation adopted.",
+      "assets": [
+        {
+          "key": "winged",
+          "file": "winged-v1.png",
+          "prompt": "Use case: stylized-concept. One original full-body production enemy sprite for LOOPKEEPER. A winged forest harpy, humanoid avian beast with moss-gray feathers, tawny chest, sharp owl-like face and amber eyes, two feathered wings spread upward in a compact V, two clawed legs reaching down. 3/4 side view facing LEFT toward the player. Aggressive readable silhouette; coherent anatomy, no human weapons. Expert chunky pixel-art clusters, charcoal outlines, warm ochre light from upper left, cool forest shadows, earthy desaturated palette matching detailed medieval forest camp, gray-brown wolf and burgundy armored raider sprites. Logical native density around 160x190 pixels, no blurry painting. One whole character centered; entire wing tips and claws inside generous transparent margins. Genuinely transparent background, no floor, text, logos or watermark; original design not copied from any franchise.",
+          "method": "built-in image_gen__imagegen",
+          "transparent": true,
+          "width": 1150,
+          "height": 1367,
+          "transparentPixels": 844932,
+          "solidEdgePixels": 0,
+          "sha256": "d9ddd34eed7416521fca8718d20123ec4e054ff51f50dbde9fed3712ac0d7b78"
+        },
+        {
+          "key": "river",
+          "file": "river-skirmisher-v1.png",
+          "prompt": "Use case: stylized-concept. One original production sprite for LOOPKEEPER: a river settlement skirmisher enemy. Full-body lean human raider wearing weathered muted teal-blue hooded shoulder cloth, brown leather vest, wrapped forearms and boots, holding two short iron knives with bent knees in a quick low stance. 3/4 side view facing LEFT. Water-worn rope belt and small river-stone charm, coherent anatomy, distinctive from a bulky armored knight. Rich disciplined chunky pixel-art cluster shading, crisp dark charcoal outline, warm ochre upper-left lighting, muted forest shadows, harmonious with detailed woodland camp and existing burgundy bandit pixel sprites. Clear readable silhouette at 100px game display, logical pixel density around160x190. Entire figure and both blades centered in the inner70percent of a transparent square canvas, generous empty margins on ALL sides; no cut off extremities. Actual transparent background. One enemy only, no terrain, text, logos or watermark; no existing franchise designs.",
+          "method": "built-in image_gen__imagegen",
+          "transparent": true,
+          "width": 1150,
+          "height": 1368,
+          "transparentPixels": 1165294,
+          "solidEdgePixels": 0,
+          "sha256": "3612ba06a7dcbad53bcdd372568b3feeb8f49ce0b1f24d16b182b20aa95e4632"
+        },
+        {
+          "key": "forge",
+          "file": "forge-sentinel-v1.png",
+          "prompt": "Use case: stylized-concept. One original production enemy sprite for LOOPKEEPER: an ash-forge armored sentinel. Full-body large human in thick soot-dark steel armor with worn bronze trim, closed angular helmet, dark rust-red apron skirt, a small orange forge glow visible through narrow helmet slots; wielding a heavy smith's warhammer lowered diagonally toward LEFT and a compact iron buckler. No huge flames, no lava monster. 3/4 side view facing LEFT, stable stance, both armored boots visible, coherent hands and armor joints. Excellent chunky pixel-art clusters and crisp dark charcoal contours, warm ochre upper-left illumination, restrained ember accent, desaturated earthy palette matching woodland camp and existing armored knight sprites. Readable at100px display size; logical native pixel density160x190, no painterly blur. Entire figure including hammer and boots in center70percent of canvas with generous transparent margins. Genuine transparent background, no terrain, text, logo, watermark, additional figures or existing franchise elements.",
+          "method": "built-in image_gen__imagegen",
+          "transparent": true,
+          "width": 1151,
+          "height": 1367,
+          "transparentPixels": 867524,
+          "solidEdgePixels": 0,
+          "sha256": "524b34a9fd44c56b928b9e6a34a01588a16cadfc23e61e097278cd708c68acea"
+        },
+        {
+          "key": "ice-v3",
+          "file": "ice-giant-v3.png",
+          "prompt": "Create ONE clean isolated pixel-art ice giant enemy sprite, genuinely transparent PNG background. No glow of ANY kind, no halo, no gradient, no ground shadow, no atmospheric effects. Just sharply outlined character pixels with transparent space around them. Blue-gray giant in white fur shoulder mantle and dark leather kilt, holding a simple frost-covered wooden club, standing facing LEFT in 3/4 view, whole body and feet visible. Original medieval woodland game art, chunky crisp pixel clusters and limited palette, clear dark outlines, restrained colors, no smooth painterly shading. Medium detail readable at100px. Character centered in inner60percent of canvas, broad blank transparent margins. No scenery, text, logos or watermark.",
+          "method": "built-in image_gen__imagegen",
+          "transparent": true,
+          "width": 1207,
+          "height": 1303,
+          "transparentPixels": 1013748,
+          "solidEdgePixels": 0,
+          "sha256": "2b84c546c7d5e3cc121510c3f43e5c0db9321808d3ef34cb1d66943fed077344"
+        },
+        {
+          "key": "hero-bow",
+          "file": "hero-iron-bow-v1.png",
+          "prompt": "Create ONE original full-body player hero sprite for LOOPKEEPER. Young adult human woodland survivor with short chestnut-brown hair and determined face, wearing a muted moss-green plain cloth tunic, brown belt, brown trousers, leather boots and simple forearm wraps. NO armor, NO helmet, NO shield. Holding a wooden longbow with simple iron fittings and one iron-tipped arrow, aiming to the RIGHT. Body in3/4 profile facing RIGHT, bow pointed RIGHT, coherent hands and taut bowstring, grounded stance both boots visible. Match high-quality chunky pixel art of detailed medieval forest game, crisp charcoal outlines, restrained ochre upper-left light and moss shadows, earthy palette. Readable at100px display, logical pixel density160x190. One entire figure including bow/arrow in inner65percent of canvas, generous transparent margins on all sides. Genuinely transparent background with absolutely no glow, haze, floor or background gradient. No extra weapons on back, no characters, labels, logos, watermark or franchise likeness.",
+          "method": "built-in image_gen__imagegen",
+          "transparent": true,
+          "width": 1151,
+          "height": 1367,
+          "transparentPixels": 1187200,
+          "solidEdgePixels": 0,
+          "sha256": "9f51010a103c844f6c405f4358f486e88edf81f51e2e53ad1efd21608e3c7518"
+        },
+        {
+          "key": "hero-crossbow",
+          "file": "hero-iron-crossbow-v1.png",
+          "prompt": "Create ONE original full-body player crossbowman sprite for LOOPKEEPER, same survivor identity: young adult human with short chestnut-brown hair, muted moss-green simple cloth tunic, brown belt/trousers, leather boots and forearm wraps. NO armor, helmet or shield. Holding a compact wooden-and-iron CROSSBOW horizontally with both hands and aiming RIGHT; short transverse bow limbs and visible iron bolt clearly distinguish it from a longbow or firearm. 3/4 profile facing RIGHT, stable feet, coherent fingers. High-quality chunky pixel-art clusters, crisp charcoal outlines, limited desaturated forest palette with restrained upper-left ochre light, no blur. Readable in small100px game view, logical160x190 pixels. Entire body and crossbow inside inner65percent of canvas with broad transparent padding. Genuine transparent background, no halo/glow/gradient/floor, no writing, logos, watermark, additional weapons or franchise references.",
+          "method": "built-in image_gen__imagegen",
+          "transparent": true,
+          "width": 1151,
+          "height": 1367,
+          "transparentPixels": 1248918,
+          "solidEdgePixels": 0,
+          "sha256": "c06b49852ade071fc8c6c08def5e88c66b30420f2b6a73839b8324cf5224e2bb"
+        },
+        {
+          "key": "hero-staff",
+          "file": "hero-ember-staff-v1.png",
+          "prompt": "One original full-body pixel-art player hero sprite for LOOPKEEPER: the same young human woodland survivor with short chestnut-brown hair, moss-green plain cloth tunic, brown trousers/belt, leather boots, NO armor, NO helmet or shield. Holds a long simple wooden ember staff with a small iron cage containing a tiny orange ember at its tip, directed toward RIGHT, free hand ready to cast. Body in3/4 profile facing RIGHT, both boots visible, grounded relaxed battle stance. No floating magic ring, no large flame, no glow halo. Finely crafted chunky pixel clusters with crisp charcoal outlines, warm upper-left light, desaturated earthy forest palette. Readable at100px, native logical density160x190. Entire staff and figure in inner65percent of canvas with generous transparent margins. Absolutely genuine transparent background, no gradients, ground, particles, text, logos, watermark, other characters or copied franchise style.",
+          "method": "built-in image_gen__imagegen",
+          "transparent": true,
+          "width": 1151,
+          "height": 1367,
+          "transparentPixels": 1187480,
+          "solidEdgePixels": 0,
+          "sha256": "89ae30b95b06f10986c2ae6c9994c11f318862f2f23c0207961406a550c26162"
+        },
+        {
+          "key": "hero-sword",
+          "file": "hero-iron-guard-v1.png",
+          "prompt": "One original full-body pixel-art player hero sprite for LOOPKEEPER, the same young human survivor with chestnut-brown hair, facing RIGHT in 3/4 profile. Wearing clean practical iron-gray plate-and-mail armor over muted moss-green cloth with brown boots and belt, plain iron helmet open enough to show face, holding a simple iron longsword toward RIGHT and a plain medium iron shield close to body. No crown, gold armor, cape or glowing weapon. Guarded grounded stance, both boots visible, coherent hands, full sword and shield clearly readable. Beautiful disciplined chunky pixel-art clusters, crisp dark charcoal contours, restrained ochre light from upper left, desaturated forest palette matching original medieval woodland camp and brown-haired green-clad starter survivor. Logical160x190 pixels, readable at100px display. Entire character and sword in inner65percent of canvas with broad empty transparent margins. Genuine transparent background with no halo, gradient, floor, text, logos, watermark or extra figures. Original non-franchise design.",
+          "method": "built-in image_gen__imagegen",
+          "transparent": true,
+          "width": 1151,
+          "height": 1367,
+          "transparentPixels": 1204813,
+          "solidEdgePixels": 0,
+          "sha256": "a083b935686a560dfdad4f134b08d1291ad4ce51620e9c4f596df00fe227fa80"
         }
       ]
     }
