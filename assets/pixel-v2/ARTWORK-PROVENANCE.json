@@ -1,5 +1,5 @@
 {
-  "version": "0.6.58",
+  "version": "0.6.59",
   "method": "Original built-in OpenAI image generation; no assets copied from other games",
   "sourcePixelsUnmodified": true,
   "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
@@ -665,6 +665,62 @@
         {
           "variant": "fishing-v1",
           "reason": "Pole crosses cell boundaries; excluded from product."
+        }
+      ],
+      "noExternalGameArt": true
+    },
+    {
+      "method": "Built-in image_gen",
+      "createdAt": "2026-10-23T22:57:25.152Z",
+      "status": "Adopted after native boss rendering, PC/390/320, low motion and fallback inspection",
+      "assets": [
+        {
+          "file": "ironfang-captain-v1.png",
+          "width": 1149,
+          "height": 1369,
+          "bytes": 1180152,
+          "sha256": "b58966d545b7ebcd17e7b524a276e5dedc37a45b9fd9a979198c2c0e53ef0eca",
+          "transparentPixels": 915035,
+          "visibleBounds": [
+            26,
+            44,
+            1123,
+            1332
+          ],
+          "visibleMargins": [
+            26,
+            44,
+            26,
+            37
+          ],
+          "prompt": "Use case: stylized-concept. Asset: one original transparent pixel-art enemy sprite for LOOPKEEPER forest management RPG. Ironfang Captain: disciplined burly human commander facing LEFT in three-quarter side battle stance, full body. Practical dark iron plate over chainmail, distinct slate blue-grey short shoulder cape, angular fang-shaped pale metal ridge on closed helmet, ONE straight one-handed sword held toward lower left in right hand and a compact iron kite shield on left arm, no crown. Weathered iron, subtle warm brass rivets and ivory fang ornament, brown leather boots and straps. Strong broad readable silhouette. Polished hand-clustered pixel art around160x190 logical detail, stepped hard outline, muted slate/olive/ivory/brown palette, warm upper-left light, consistent with high-quality fantasy forest pixel sprites. Every weapon/boot/helmet inside generous empty transparent canvas padding. Grounded feet. Actual alpha transparent background, no scenery, ground tile, aura, soft halo, shadows, border, lettering or watermark. Single pose and single subject, not sprite sheet. Entirely original, no existing game characters.",
+          "originalPixelsAndAlphaUnmodified": true,
+          "transparent": true,
+          "selection": "Inspected original pixel-art image with visible subject fully inside padding; only runtime framing, no offline pixel changes."
+        },
+        {
+          "file": "twinblade-raider-v1.png",
+          "width": 1149,
+          "height": 1369,
+          "bytes": 820709,
+          "sha256": "1c54918355169766498a70d0c1ede237c72e737ed1a7a29e6c6dacb31d89c616",
+          "transparentPixels": 1149972,
+          "visibleBounds": [
+            53,
+            156,
+            1094,
+            1230
+          ],
+          "visibleMargins": [
+            53,
+            156,
+            55,
+            139
+          ],
+          "prompt": "Use case: stylized-concept. One original transparent full-body pixel-art boss sprite for LOOPKEEPER, fantasy forest management RPG. Twinblade Raider: lean agile adult human bandit facing LEFT in a low alert three-quarter stance, ONE short curved steel blade in EACH HAND, exactly two hands and two blades. Worn dark olive and brown leather armor over muted charcoal tunic, distinctive rust-red scarf trailing only a little, leather half-mask, exposed alert eyes, brown boots, no shield, no plate helmet, no crown. Compact angular silhouette distinctly different from a broad iron commander. Blades point left and low, plausible grips and visible arms. Polished crisp hand-clustered pixel art around160x190 logical detail with muted slate/olive/brown/ivory and small red accent, warm upper-left light. Same art quality as detailed forest pixel sprites. Full body and both weapons entirely within GENEROUS TRANSPARENT PADDING ON ALL FOUR SIDES, feet grounded, do not crop. Real transparent alpha background, no scene, ground, aura, blur, glow, shadow halo, text, border or watermark. Single pose, not a sheet. Original independent design, no franchise character.",
+          "originalPixelsAndAlphaUnmodified": true,
+          "transparent": true,
+          "selection": "Inspected original pixel-art image with visible subject fully inside padding; only runtime framing, no offline pixel changes."
         }
       ],
       "noExternalGameArt": true
