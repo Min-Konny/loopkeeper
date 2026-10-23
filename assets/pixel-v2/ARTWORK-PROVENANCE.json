@@ -1,5 +1,5 @@
 {
-  "version": "0.6.57",
+  "version": "0.6.58",
   "method": "Original built-in OpenAI image generation; no assets copied from other games",
   "sourcePixelsUnmodified": true,
   "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
@@ -252,6 +252,419 @@
           "transparent": true,
           "inspection": "Alpha values 0–254. Only nearly invisible alpha <= 2 reaches a border; visible alpha >=8 is inside padding. No cropping, alpha edits or resampling applied.",
           "sourcePixelsUnmodified": true
+        }
+      ],
+      "noExternalGameArt": true
+    },
+    {
+      "method": "Built-in image_gen",
+      "createdAt": "2026-10-23T22:42:12.865Z",
+      "status": "Adopted after normal-size PC/390/320 screenshots, native work progress, low motion and image failure checks",
+      "assets": [
+        {
+          "file": "forager-v1-sheet.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 1958319,
+          "sha256": "0ade62b38a9ddc5e8802277d31fdf91cf0b5889c96800cb2bf8f464e5c981872",
+          "transparentPixels": 1010809,
+          "cells": [
+            {
+              "frame": 0,
+              "bounds": [
+                80,
+                32,
+                312,
+                461
+              ],
+              "margin": [
+                80,
+                32,
+                72,
+                51
+              ]
+            },
+            {
+              "frame": 1,
+              "bounds": [
+                29,
+                70,
+                321,
+                461
+              ],
+              "margin": [
+                29,
+                70,
+                63,
+                51
+              ]
+            },
+            {
+              "frame": 2,
+              "bounds": [
+                27,
+                164,
+                333,
+                461
+              ],
+              "margin": [
+                27,
+                164,
+                51,
+                51
+              ]
+            },
+            {
+              "frame": 3,
+              "bounds": [
+                35,
+                164,
+                339,
+                461
+              ],
+              "margin": [
+                35,
+                164,
+                45,
+                51
+              ]
+            },
+            {
+              "frame": 4,
+              "bounds": [
+                65,
+                41,
+                343,
+                444
+              ],
+              "margin": [
+                65,
+                41,
+                41,
+                68
+              ]
+            },
+            {
+              "frame": 5,
+              "bounds": [
+                76,
+                68,
+                320,
+                443
+              ],
+              "margin": [
+                76,
+                68,
+                64,
+                69
+              ]
+            },
+            {
+              "frame": 6,
+              "bounds": [
+                75,
+                7,
+                324,
+                443
+              ],
+              "margin": [
+                75,
+                7,
+                60,
+                69
+              ]
+            },
+            {
+              "frame": 7,
+              "bounds": [
+                75,
+                4,
+                310,
+                443
+              ],
+              "margin": [
+                75,
+                4,
+                74,
+                69
+              ]
+            }
+          ],
+          "prompt": "Use case: stylized-concept. Original game sprite sheet for LOOPKEEPER. EXACT 4 columns by 2 rows, eight equally sized transparent cells, no lines or labels. Same adult forest worker in each cell: small brown cap, short beard, olive tunic, brown belt, boots, sleeves rolled; faces RIGHT, full body, warm upper-left light. Polished crisp clustered pixel art matching a 96x104 logical character, muted olive/brown/ivory palette, clear outline. FORAGING animation row-major: (1) idle with empty wicker basket, (2) lean forward reach, (3) crouch with right hand extended toward herb, (4) pinch fresh green leaves, (5) bring leaves toward basket, (6) place herbs into basket, (7) rise holding small filled basket, (8) hold filled basket ready to carry. Each pose same character scale and feet on same horizontal baseline within its cell, keep every hand/basket/boot inside generous transparent padding. No large plant, landscape, ground tile, scenery, shadow halo, text, UI, grid, frame, watermark. Real alpha transparent background everywhere outside sprites. Independently original; no existing franchise.",
+          "originalPixelsAndAlphaUnmodified": true,
+          "selection": "Original transparent 4x2 sheet; runtime crops cells only and aligns shared-scale feet, no offline image processing."
+        },
+        {
+          "file": "fisher-v2-sheet.png",
+          "width": 1579,
+          "height": 996,
+          "bytes": 976008,
+          "sha256": "66fc68b22918111d689d2ab63d822806d8c7fd577e41c3071c6c14a6c0f3ee48",
+          "transparentPixels": 1132994,
+          "cells": [
+            {
+              "frame": 0,
+              "bounds": [
+                119,
+                81,
+                355,
+                466
+              ],
+              "margin": [
+                119,
+                81,
+                39,
+                32
+              ]
+            },
+            {
+              "frame": 1,
+              "bounds": [
+                95,
+                70,
+                305,
+                466
+              ],
+              "margin": [
+                95,
+                70,
+                89,
+                32
+              ]
+            },
+            {
+              "frame": 2,
+              "bounds": [
+                68,
+                88,
+                345,
+                466
+              ],
+              "margin": [
+                68,
+                88,
+                49,
+                32
+              ]
+            },
+            {
+              "frame": 3,
+              "bounds": [
+                70,
+                83,
+                306,
+                466
+              ],
+              "margin": [
+                70,
+                83,
+                88,
+                32
+              ]
+            },
+            {
+              "frame": 4,
+              "bounds": [
+                118,
+                68,
+                352,
+                444
+              ],
+              "margin": [
+                118,
+                68,
+                42,
+                54
+              ]
+            },
+            {
+              "frame": 5,
+              "bounds": [
+                87,
+                68,
+                292,
+                445
+              ],
+              "margin": [
+                87,
+                68,
+                102,
+                53
+              ]
+            },
+            {
+              "frame": 6,
+              "bounds": [
+                65,
+                62,
+                287,
+                444
+              ],
+              "margin": [
+                65,
+                62,
+                107,
+                54
+              ]
+            },
+            {
+              "frame": 7,
+              "bounds": [
+                59,
+                71,
+                255,
+                444
+              ],
+              "margin": [
+                59,
+                71,
+                139,
+                54
+              ]
+            }
+          ],
+          "prompt": "Use case: stylized-concept. Original transparent LOOPKEEPER fisherman sprite sheet. FOUR equal columns and TWO equal rows. Each of eight sprites MUST FIT ENTIRELY WITHIN ITS OWN RECTANGULAR CELL. Use a VERY SHORT SIMPLE ONE-PIECE WOODEN HAND POLE, no reel, rod no longer than the worker's torso, keep rod and short line close to body within the cell, no long arc or extension across cell boundary. Adult forest worker brown cap/short beard/olive tunic/rolled ivory sleeves/brown boots. Faces right, pixel art crisp clustered96x104 logical character; muted palette, warm upper-left light. Eight full-body poses row-major: 1 pole at waist ready, 2 lift compact pole, 3 point compact pole forward at waist, 4 hold waiting, 5 tug pole slightly upward, 6 pull inward, 7 show small silver fish held in right hand, 8 place fish in small basket near waist. Consistent body position, scale and foot baseline, large transparent gaps between cells and outside sheet. Transparent alpha background, NO scenery/floor/grid/text/UI/shadow/glow/halo. Do not draw curved lengthy fishing line. No overlapping sprites, no clipped limbs or equipment. Original independent art.",
+          "originalPixelsAndAlphaUnmodified": true,
+          "selection": "Original transparent 4x2 sheet; runtime crops cells only and aligns shared-scale feet, no offline image processing."
+        },
+        {
+          "file": "cook-v1-sheet.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 2071613,
+          "sha256": "bb685ff789545be76da589c94836492d614f26b634efadc7f475368531fba71c",
+          "transparentPixels": 898472,
+          "cells": [
+            {
+              "frame": 0,
+              "bounds": [
+                112,
+                26,
+                329,
+                492
+              ],
+              "margin": [
+                112,
+                26,
+                55,
+                20
+              ]
+            },
+            {
+              "frame": 1,
+              "bounds": [
+                59,
+                45,
+                339,
+                492
+              ],
+              "margin": [
+                59,
+                45,
+                45,
+                20
+              ]
+            },
+            {
+              "frame": 2,
+              "bounds": [
+                56,
+                25,
+                330,
+                492
+              ],
+              "margin": [
+                56,
+                25,
+                54,
+                20
+              ]
+            },
+            {
+              "frame": 3,
+              "bounds": [
+                56,
+                26,
+                288,
+                492
+              ],
+              "margin": [
+                56,
+                26,
+                96,
+                20
+              ]
+            },
+            {
+              "frame": 4,
+              "bounds": [
+                85,
+                19,
+                345,
+                484
+              ],
+              "margin": [
+                85,
+                19,
+                39,
+                28
+              ]
+            },
+            {
+              "frame": 5,
+              "bounds": [
+                76,
+                24,
+                371,
+                484
+              ],
+              "margin": [
+                76,
+                24,
+                13,
+                28
+              ]
+            },
+            {
+              "frame": 6,
+              "bounds": [
+                77,
+                19,
+                298,
+                484
+              ],
+              "margin": [
+                77,
+                19,
+                86,
+                28
+              ]
+            },
+            {
+              "frame": 7,
+              "bounds": [
+                77,
+                22,
+                315,
+                484
+              ],
+              "margin": [
+                77,
+                22,
+                69,
+                28
+              ]
+            }
+          ],
+          "prompt": "Use case: stylized-concept. Original transparent game animation sheet. EXACT FOUR COLUMNS by TWO ROWS of identical padded cells; eight full-body sprites. LOOPKEEPER cook, adult short-bearded forest villager, brown cap, olive tunic, ivory apron, rolled sleeves, boots, faces RIGHT. Warm upper-left lighting, muted olive/brown/ivory/soft-copper palette, crisp pixel clusters at roughly96x104 logical density matching existing pixel woodcutter/miner. Row-major cooking sequence: 1 hold small bowl of chopped herbs, 2 lean and tip ingredients to right, 3 grasp long wooden spoon at waist, 4 stir forward, 5 stir back with tiny wisp steam to right, 6 raise spoon to inspect, 7 hold a prepared bowl of soup, 8 present bowl at chest and relax. No hammer, pickaxe, sword, anvil or forge. Same character scale, foot baseline and position in all cells. All spoon/bowl/boots stay safely within own cell with transparent padding. No scenery, floor, background, table, stove, labels, frame, gridlines, halo or watermark. Actual alpha transparent outside sprites. Original art, no franchise characters.",
+          "originalPixelsAndAlphaUnmodified": true,
+          "selection": "Original transparent 4x2 sheet; runtime crops cells only and aligns shared-scale feet, no offline image processing."
+        }
+      ],
+      "rejected": [
+        {
+          "variant": "fishing-v1",
+          "reason": "Pole crosses cell boundaries; excluded from product."
         }
       ],
       "noExternalGameArt": true
