@@ -1,8 +1,8 @@
-import {getClockStatus} from './engine.js?v=0.6.60';
-import {preparationRoute} from './preparation-balance.js?v=0.6.60';
-import {earlyRoutePoints} from './early-loop.js?v=0.6.60';
-import {lateLoop,repeatRouteValue} from './late-loop.js?v=0.6.60';
-import {ROUTES,canEnterRoute,routeEffects} from './routes.js?v=0.6.60';
+import {getClockStatus} from './engine.js?v=0.6.61';
+import {preparationRoute} from './preparation-balance.js?v=0.6.61';
+import {earlyRoutePoints} from './early-loop.js?v=0.6.61';
+import {lateLoop,repeatRouteValue} from './late-loop.js?v=0.6.61';
+import {ROUTES,canEnterRoute,routeEffects} from './routes.js?v=0.6.61';
 
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const order=['forest','forest_depth','quarry','quarry_depth','marsh','marsh_depth','citadel','river','forge','observatory','ice'];

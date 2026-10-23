@@ -1,4 +1,4 @@
-import { createPixelCampRenderer } from './pixel-camp-art.js?v=0.6.60';
+import { createPixelCampRenderer } from './pixel-camp-art.js?v=0.6.61';
 
 const mounted = new WeakMap();
 /** Decorative view only: never reads or writes a save or advances the simulation. */

@@ -1,5 +1,5 @@
-import { mountPixelCamp } from './pixel-camp-scene.js?v=0.6.60';
-import {mountPhaserCamp}from './phaser-camp-scene.js?v=0.6.60';
+import { mountPixelCamp } from './pixel-camp-scene.js?v=0.6.61';
+import {mountPhaserCamp}from './phaser-camp-scene.js?v=0.6.61';
 
 export function mountCampScene(host, {variant = 'camp'} = {}) {
  const scene=variant==='battle'?mountPixelCamp(host):mountPhaserCamp(host);

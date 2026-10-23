@@ -1,11 +1,11 @@
-import { createAmbience } from './ambience.js?v=0.6.60';
-import { chapterOf } from './strategy.js?v=0.6.60';
-import { createMusicPlayer, getMusicMode } from './music.js?v=0.6.60';
-import { completionSoundKind, playWorkSound, preloadWorkSounds } from './work-audio.js?v=0.6.60';
-import { completedQueueEntries } from './visual-design.js?v=0.6.60';
-import { getCatalog } from "./engine.js?v=0.6.60";
-import { icon } from "./icons.js?v=0.6.60";
-import { availableDiscoveries } from './preparation-ui.js?v=0.6.60';
+import { createAmbience } from './ambience.js?v=0.6.61';
+import { chapterOf } from './strategy.js?v=0.6.61';
+import { createMusicPlayer, getMusicMode } from './music.js?v=0.6.61';
+import { completionSoundKind, playWorkSound, preloadWorkSounds } from './work-audio.js?v=0.6.61';
+import { completedQueueEntries } from './visual-design.js?v=0.6.61';
+import { getCatalog } from "./engine.js?v=0.6.61";
+import { icon } from "./icons.js?v=0.6.61";
+import { availableDiscoveries } from './preparation-ui.js?v=0.6.61';
 let audio;
 let ambience;
 let ambienceChapter = 0;
@@ -20,6 +20,13 @@ let queueEdited = false;
 let pendingDiscoveries = [];
 export function markQueueEdited() { queueEdited = true; }
 const transientAnimations = new Set();
+let staticPopTimer,staticPopNode;
+function finishCompletion(pop,frames,{duration,easing='ease-out',motion=true}){
+  if(motion){const animation=trackTransient(pop.animate(frames,{duration,easing}));animation.finished.catch(()=>{}).finally(()=>pop.remove());return;}
+  clearTimeout(staticPopTimer);staticPopNode?.remove();staticPopNode=pop;pop.classList.add('completion-static');
+  staticPopTimer=setTimeout(()=>{pop.remove();if(staticPopNode===pop)staticPopNode=null;},duration);
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeout(staticPopTimer);staticPopNode?.remove();staticPopNode=null;}});
 function trackTransient(animation) {
   transientAnimations.add(animation);
   animation.finished.catch(()=>{}).finally(()=>transientAnimations.delete(animation));
@@ -50,19 +57,23 @@ export function playCompletedWork(state, event, {owned=false, live=false}={}) {
   try { return playWorkSound(audio, kind, state.settings.soundVolume); }
   catch { return false; }
 }
-function productionFeedback(element, id, amount) {
+function productionFeedback(element, id, amount, label=id) {
   if (!element || document.querySelectorAll('.production-pop').length >= 6) return;
-  const rect = element.getBoundingClientRect();
-  if (rect.right <= 0 || rect.left >= innerWidth) return;
+  let rect = element.getBoundingClientRect();
+  const visible=r=>r.width>0&&r.height>0&&r.right>0&&r.left<innerWidth&&r.bottom>0&&r.top<innerHeight;
+  if(!visible(rect))rect=document.querySelector('#active-work')?.getBoundingClientRect();
+  if(!rect||!visible(rect))return;
   const pop = document.createElement('span');
   pop.className = 'production-pop';
   pop.innerHTML = icon(id);
   const text = document.createElement('b');
-  text.textContent = `+${Number(amount.toFixed(1))}`;
+  text.textContent = `${label} +${Number(amount.toFixed(1))}`;
   pop.append(text);
   pop.style.left = `${Math.min(innerWidth - 65, Math.max(5, rect.left + rect.width / 2 - 24))}px`;
   pop.style.top = `${rect.top + 8}px`;
   document.body.append(pop);
+  pop.style.left=`${Math.max(8,Math.min(innerWidth-pop.getBoundingClientRect().width-8,rect.left+rect.width/2-pop.getBoundingClientRect().width/2))}px`;
+  pop.style.top=`${Math.max(48,Math.min(innerHeight-40,rect.top+8))}px`;
   const animation = trackTransient(pop.animate([{ opacity: 0, transform: 'translateY(8px) scale(.8)' }, { opacity: 1, transform: 'translateY(-10px) scale(1)', offset: .2 }, { opacity: 0, transform: 'translateY(-42px) scale(1)' }], { duration: 1100, easing: 'ease-out' }));
   animation.finished.catch(() => {}).finally(() => pop.remove());
 }
@@ -80,7 +91,7 @@ function materialFlight(from, to, id, spent = false) {
   const animation = trackTransient(particle.animate([{opacity:0,transform:'translate(0,0) scale(.6)'},{opacity:1,transform:`translate(${dx * .45}px,${dy * .45 - 22}px) scale(1.15)`,offset:.45},{opacity:0,transform:`translate(${dx}px,${dy}px) scale(.5)`}],{duration:650,easing:'ease-in-out'}));
   animation.finished.catch(()=>{}).finally(()=>particle.remove());
 }
-function discoveryFeedback(discoveries) {
+function discoveryFeedback(discoveries,{motion=true}={}) {
   document.querySelector('.discovery-pop')?.remove();
   const pop = document.createElement('div');
   pop.className = 'completion-pop discovery-pop';
@@ -90,10 +101,9 @@ function discoveryFeedback(discoveries) {
   label.textContent = '新しい選択肢が解放';
   name.textContent = discoveries.slice(0,2).map(d=>d.name).join('・') + (discoveries.length > 2 ? ` ほか${discoveries.length - 2}件` : '');
   text.append(label,name);pop.append(text);document.body.append(pop);
-  const animation = trackTransient(pop.animate([{opacity:0,transform:'translate(-50%,12px) scale(.94)'},{opacity:1,transform:'translate(-50%,0) scale(1)',offset:.12},{opacity:1,transform:'translate(-50%,0) scale(1)',offset:.82},{opacity:0,transform:'translate(-50%,-8px) scale(1)'}],{duration:2600,easing:'ease-out'}));
-  animation.finished.catch(()=>{}).finally(()=>pop.remove());
+  finishCompletion(pop,[{opacity:0,transform:'translate(-50%,12px) scale(.94)'},{opacity:1,transform:'translate(-50%,0) scale(1)',offset:.12},{opacity:1,transform:'translate(-50%,0) scale(1)',offset:.82},{opacity:0,transform:'translate(-50%,-8px) scale(1)'}],{duration:2600,motion});
 }
-function completionFeedback(state, previous) {
+function completionFeedback(state, previous,{motion=true}={}) {
   const { RECIPES } = getCatalog(state);
   const equipment = Object.entries(state.run.equipment).find(([slot, item]) => item?.id && item.id !== previous.equipment[slot]);
   const facility = Object.entries(state.run.facilities).find(([id, level]) => level > (previous.facilities[id] || 0));
@@ -111,13 +121,12 @@ function completionFeedback(state, previous) {
   const name = document.createElement('strong');
   name.textContent = recipe.name;
   text.append(label, name); pop.append(text); document.body.append(pop);
-  const animation = trackTransient(pop.animate([
+  finishCompletion(pop,[
     {opacity:0,transform:'translate(-50%,14px) scale(.9)'},
     {opacity:1,transform:'translate(-50%,0) scale(1)',offset:.12},
     {opacity:1,transform:'translate(-50%,0) scale(1)',offset:.8},
     {opacity:0,transform:'translate(-50%,-12px) scale(1)'},
-  ], {duration:2300,easing:'ease-out'}));
-  animation.finished.catch(()=>{}).finally(()=>pop.remove());
+  ], {duration:2300,motion});
 }
 function queueFeedback(state, previous, next) {
   const advanced = !queueEdited && next.elapsed > previous.elapsed && next.xp > previous.xp;
@@ -162,16 +171,18 @@ export function updatePresentation(state) {
     const events = state.run.log.filter(entry => entry.id > previous.logSeq);
     const important = ['death', 'raid', 'victory', 'craft'].find(kind => events.some(entry => entry.type === kind));
     if (important && important !== 'craft') cue(important);
-    if (state.settings.effectsEnabled && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      if (pendingDiscoveries.length && !document.querySelector("dialog[open]")) { discoveryFeedback(pendingDiscoveries); pendingDiscoveries = []; }
-      completionFeedback(state, previous);
+    const motion=state.settings.effectsEnabled&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (pendingDiscoveries.length && !document.querySelector("dialog[open]")) { discoveryFeedback(pendingDiscoveries,{motion}); pendingDiscoveries = []; }
+    completionFeedback(state, previous,{motion});
+    if (motion) {
       queueFeedback(state,previous,next);
       for (const [id, amount] of Object.entries(next.resources)) {
         const element = document.querySelector(`.resource-bar .resource[data-resource="${id}"]`) || [...document.querySelectorAll('.resource-bar .resource')].find(el => el.title === id);
         if (amount < previous.resources[id] && state.run.status === 'preparing' && state.run.activeAction?.kind === 'craft' && next.batchKey !== previous.batchKey) materialFlight(element, document.querySelector('.work-vignette'), id, true);
         if (amount <= previous.resources[id]) continue;
         if (next.elapsed > previous.elapsed && state.run.status === 'preparing' && [...getCatalog(state).ACTIONS,...getCatalog(state).RECIPES].find(d=>d.id===previous.actionId)?.yields?.[id]) materialFlight(document.querySelector('.work-vignette'), element, id);
-        productionFeedback(element, id, amount - previous.resources[id]);
+        const resource=getCatalog(state).RESOURCES[id];
+        productionFeedback(element, id, amount - previous.resources[id],typeof resource==='string'?resource:resource?.name||id);
         element?.animate?.([{ boxShadow: 'inset 0 0 0 1px #d1b56b', backgroundColor: '#4b5030' }, { boxShadow: 'inset 0 0 0 1px transparent' }], { duration: 550 });
       }
       if (important === 'craft' || important === 'victory') document.querySelector('#active-work')?.animate?.([{ opacity: .65 }, { opacity: 1 }], { duration: 400 });

@@ -1,5 +1,5 @@
-import {alphaBounds}from './generated-camp-art.js?v=0.6.60';
-import {workKind,workPose}from './work-motion.js?v=0.6.60';
+import {alphaBounds}from './generated-camp-art.js?v=0.6.61';
+import {workKind,workPose}from './work-motion.js?v=0.6.61';
 const root=new URL('../assets/pixel-v2/',import.meta.url),mounted=new WeakMap();let pending;
 const sheets=Object.freeze({foraging:'forager-v1-sheet.png',fishing:'fisher-v2-sheet.png',cooking:'cook-v1-sheet.png'}),extras=new Map();let background;
 function image(name){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Work artwork unavailable: '+name));img.src=new URL(name,root).href;});}
