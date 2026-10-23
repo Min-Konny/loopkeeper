@@ -1,4 +1,4 @@
-import{requestEarlyRaid}from'./engine.js?v=0.6.59';import{commitStoredGameEdit,decodeRecord,STORAGE_KEY}from'./save-storage.js?v=0.6.59';
+import{requestEarlyRaid}from'./engine.js?v=0.6.60';import{commitStoredGameEdit,decodeRecord,STORAGE_KEY}from'./save-storage.js?v=0.6.60';
 export function editStoredEarlyRaid(storage,current,token,{isOwner=()=>false,pausedAfter=current.settings.paused,now=Date.now()}={}){
  if(!isOwner())return{ok:false,reason:'別のタブでプレイ中です。'};
  try{

@@ -4,6 +4,9 @@ const sprites=Object.freeze(Object.fromEntries(['wolf','raider','knight','giant'
 export const BOSS_ART=Object.freeze({
  ironfang_captain:{file:'ironfang-captain-v1.png',kind:'knight'},
  twinblade_raider:{file:'twinblade-raider-v1.png',kind:'raider'},
+ silver_bandit_king:{file:'silver-bandit-king-v1.png',kind:'boss'},
+ mountain_colossus:{file:'mountain-colossus-v1.png',kind:'giant'},
+ crystal_guardian:{file:'crystal-guardian-v1.png',kind:'knight'},
 });
 export const REGION_ART=Object.freeze({
  forest:{file:'winged-v1.png',kind:'winged'},forest_depth:{file:'winged-v1.png',kind:'winged'},

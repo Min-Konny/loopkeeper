@@ -1,18 +1,18 @@
-import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.59';
-import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.59';
-import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.59';
-import{duelSnapshot}from './duel-motion.js?v=0.6.59';
-import {totalFood}from './meals.js?v=0.6.59';
-import {mealEffectText}from './meal-ui.js?v=0.6.59';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.59';
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.59';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.59';
-import { getPlayerStrike } from './engine.js?v=0.6.59';
-import {routeById}from './routes.js?v=0.6.59';
-import { equipmentMaterial } from './visual-design.js?v=0.6.59';
-import { battleSound } from "./presentation.js?v=0.6.59";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.59";
-import { icon } from "./icons.js?v=0.6.59";
+import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.60';
+import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.60';
+import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.60';
+import{duelSnapshot}from './duel-motion.js?v=0.6.60';
+import {totalFood}from './meals.js?v=0.6.60';
+import {mealEffectText}from './meal-ui.js?v=0.6.60';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.60';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.60';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.60';
+import { getPlayerStrike } from './engine.js?v=0.6.60';
+import {routeById}from './routes.js?v=0.6.60';
+import { equipmentMaterial } from './visual-design.js?v=0.6.60';
+import { battleSound } from "./presentation.js?v=0.6.60";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.60";
+import { icon } from "./icons.js?v=0.6.60";
 
 const views = new WeakMap();
 const number = (value) =>

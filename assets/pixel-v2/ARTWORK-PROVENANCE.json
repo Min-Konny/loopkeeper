@@ -1,5 +1,5 @@
 {
-  "version": "0.6.59",
+  "version": "0.6.60",
   "method": "Original built-in OpenAI image generation; no assets copied from other games",
   "sourcePixelsUnmodified": true,
   "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
@@ -718,6 +718,86 @@
             139
           ],
           "prompt": "Use case: stylized-concept. One original transparent full-body pixel-art boss sprite for LOOPKEEPER, fantasy forest management RPG. Twinblade Raider: lean agile adult human bandit facing LEFT in a low alert three-quarter stance, ONE short curved steel blade in EACH HAND, exactly two hands and two blades. Worn dark olive and brown leather armor over muted charcoal tunic, distinctive rust-red scarf trailing only a little, leather half-mask, exposed alert eyes, brown boots, no shield, no plate helmet, no crown. Compact angular silhouette distinctly different from a broad iron commander. Blades point left and low, plausible grips and visible arms. Polished crisp hand-clustered pixel art around160x190 logical detail with muted slate/olive/brown/ivory and small red accent, warm upper-left light. Same art quality as detailed forest pixel sprites. Full body and both weapons entirely within GENEROUS TRANSPARENT PADDING ON ALL FOUR SIDES, feet grounded, do not crop. Real transparent alpha background, no scene, ground, aura, blur, glow, shadow halo, text, border or watermark. Single pose, not a sheet. Original independent design, no franchise character.",
+          "originalPixelsAndAlphaUnmodified": true,
+          "transparent": true,
+          "selection": "Inspected original pixel-art image with visible subject fully inside padding; only runtime framing, no offline pixel changes."
+        }
+      ],
+      "noExternalGameArt": true
+    },
+    {
+      "method": "Built-in image_gen",
+      "createdAt": "2026-10-23T23:09:49.936Z",
+      "status": "Adopted after native boss rendering, PC/390/320, low motion and fallback inspection",
+      "assets": [
+        {
+          "file": "silver-bandit-king-v1.png",
+          "width": 1149,
+          "height": 1368,
+          "bytes": 1502595,
+          "sha256": "3a8ab13a23416ba1d58286ec3b843ff673ac7d0241e23ab2e83e686daaa36a88",
+          "transparentPixels": 930228,
+          "visibleBounds": [
+            28,
+            51,
+            1122,
+            1318
+          ],
+          "visibleMargins": [
+            28,
+            51,
+            27,
+            50
+          ],
+          "prompt": "Use case: stylized-concept. One original transparent full-body pixel-art boss for LOOPKEEPER forest fantasy management RPG. Silver Bandit King: imposing human raider king facing LEFT in three-quarter battle stance, brilliant weathered SILVER plate armor with dark joints, a small jagged silver crown built into closed helm, muted plum/charcoal short royal mantle, straight broadsword in right hand toward lower-left, compact angular silver shield on left arm. Distinguish from blue-caped iron captain: pale silver armor, restrained violet cloth and silver crown, stern regal broad silhouette. Polished hand-clustered pixel art around160x190 logical density, crisp stepped contours, warm upper-left light, grey/ivory/olive/brown supporting palette, no neon. Full body, sword/shield/feet/crown entirely inside generous transparent padding on all sides. Actual transparent alpha outside subject. No scene, ground tile, cast shadow, aura, soft glow/halo, text, frame or watermark. Single pose, not a sheet. Original independent character, no franchise references.",
+          "originalPixelsAndAlphaUnmodified": true,
+          "transparent": true,
+          "selection": "Inspected original pixel-art image with visible subject fully inside padding; only runtime framing, no offline pixel changes."
+        },
+        {
+          "file": "mountain-colossus-v1.png",
+          "width": 1150,
+          "height": 1367,
+          "bytes": 1888931,
+          "sha256": "c902701f0438091dc5451a1d75d2c7c78bb1a7e758819ba4be712565d5e09aec",
+          "transparentPixels": 720763,
+          "visibleBounds": [
+            28,
+            144,
+            1137,
+            1316
+          ],
+          "visibleMargins": [
+            28,
+            144,
+            13,
+            51
+          ],
+          "prompt": "Use case: stylized-concept. Original transparent full-body boss sprite for LOOPKEEPER pixel forest RPG. Mountain Colossus: enormous broad-shouldered stone-skinned humanoid giant facing LEFT in three-quarter heavy battle stance, thick arms and short powerful legs, rugged granite skin and squared stony face, battered dark iron shoulder plates bound with brown leather, sparse muted moss, heavy TWO-HANDED STONE WAR MAUL held low toward the LEFT. Massive but anatomically coherent, imposing rounded broad outline, distinctly larger bulk than a human knight. No crown, no sword, no extra limbs, no glowing magic. Polished crisp hand-clustered pixel art at about160x190 logical detail; warm upper-left light, muted granite grey/olive/brown/ivory palette matching detailed fantasy forest sprites. Entire giant/hammer/boots within generous empty transparent padding on ALL sides. Alpha transparent background, no ground plane, scenery, cast shadow, aura, blur, halo, text, frame or watermark. Single pose, not a sheet. Original, no existing franchise.",
+          "originalPixelsAndAlphaUnmodified": true,
+          "transparent": true,
+          "selection": "Inspected original pixel-art image with visible subject fully inside padding; only runtime framing, no offline pixel changes."
+        },
+        {
+          "file": "crystal-guardian-v1.png",
+          "width": 1151,
+          "height": 1367,
+          "bytes": 1459046,
+          "sha256": "6e7bb2bec9f9ee038db1ee1462fa3a3e95199a2f3f476b0077a1183b158e2c66",
+          "transparentPixels": 1003383,
+          "visibleBounds": [
+            43,
+            56,
+            1125,
+            1323
+          ],
+          "visibleMargins": [
+            43,
+            56,
+            26,
+            44
+          ],
+          "prompt": "Use case: stylized-concept. One original transparent full-body boss sprite for LOOPKEEPER forest fantasy RPG. Crystal Guardian: tall armored sentinel whose body and shield are made of angular FACETED AZURE AND PALE VIOLET QUARTZ, slate iron joints, modest dark olive cloth at waist; narrow closed crystalline helmet, broad crystalline shoulders, ONE faceted crystal spear held diagonally down toward LEFT and a compact crystalline forearm shield. Faces LEFT in three-quarter grounded guard stance. Readable hard reflective facets with ivory edge highlights and cool blue-violet planes, no smooth glass blob, no neon aura or light rays. Distinguish clearly from silver human king and rocky giant. Polished crisp hand-clustered pixel art around160x190 logical detail, warm upper-left illumination mixed with cool quartz, muted slate/olive/brown supporting palette. Full body, spear tip, shield and feet completely within generous empty transparent padding on all sides. Real transparent alpha outside sprite. No scenery, floor, cast shadow, floating shards, particles, aura, soft glow/halo, text, frame, watermark. Single pose, not sheet, original independent design without franchise.",
           "originalPixelsAndAlphaUnmodified": true,
           "transparent": true,
           "selection": "Inspected original pixel-art image with visible subject fully inside padding; only runtime framing, no offline pixel changes."
