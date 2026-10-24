@@ -1,4 +1,4 @@
-import { drainRewards, discardRewards, createRewardBatcher } from './reward-events.js?v=0.6.77';
+import { drainRewards, discardRewards, createRewardBatcher } from './reward-events.js?v=0.6.78';
 const format=new Intl.NumberFormat('ja-JP',{maximumFractionDigits:6});
 export function rewardRows(state,batch) {
   return batch.entries.filter(entry=>entry.kind==='points' && entry.units>0).map(entry=>({label:'継承ポイント',amount:format.format(entry.units/1e6),kind:'points',skill:''}));
