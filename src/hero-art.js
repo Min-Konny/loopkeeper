@@ -1,5 +1,5 @@
-import {HERO_LAYOUT} from './hero-atlas-layout.js?v=0.6.62';
-import {spritePlacement} from './enemy-art.js?v=0.6.62';
+import {HERO_LAYOUT} from './hero-atlas-layout.js?v=0.6.63';
+import {spritePlacement} from './enemy-art.js?v=0.6.63';
 // Exact authored builds plus a common generated body for every other equipment combination.
 export const HERO_BUILDS=Object.freeze([
  {weapon:'iron_bow',armor:null,shield:null,file:'hero-iron-bow-v1.png'},

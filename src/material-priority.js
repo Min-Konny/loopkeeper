@@ -1,4 +1,4 @@
-import { CONTENT } from './content.js?v=0.6.62';
+import { CONTENT } from './content.js?v=0.6.63';
 const resources = new Set(CONTENT.resources.map(resource => resource.id));
 export function validMaterialPriority(priority) {
   return Array.isArray(priority) && priority.length <= resources.size && new Set(priority).size === priority.length && priority.every(id => resources.has(id));

@@ -90,3 +90,10 @@
 
 /* Death allocation categories must not hide their leading text in a horizontal strip. */
 @media(max-width:560px){#death-dialog.legacy-setup .setup-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;gap:4px;padding:0}#death-dialog.legacy-setup .setup-tabs button{min-width:0;width:100%;white-space:normal;overflow-wrap:anywhere;min-height:38px;line-height:1.4}}
+
+/* At high browser zoom, fixed controls must not collapse the allocation text. */
+@media(max-height:400px){
+ #death-dialog.legacy-setup[open]{display:block;overflow-y:auto;overscroll-behavior:contain}
+ #death-dialog.legacy-setup .setup-upgrades{display:block;flex:none;max-height:none;overflow:visible;scrollbar-gutter:auto;margin-block:12px}
+ #death-dialog.legacy-setup .setup-footer{margin-top:12px}
+}
