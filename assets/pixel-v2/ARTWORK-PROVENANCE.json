@@ -1,5 +1,5 @@
 {
-  "version": "0.6.64",
+  "version": "0.6.65",
   "method": "Original built-in OpenAI image generation; no assets copied from other games",
   "sourcePixelsUnmodified": true,
   "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
@@ -1006,6 +1006,134 @@
           ],
           "visibleAlphaThreshold": 160,
           "method": "built-in image_gen__imagegen"
+        }
+      ]
+    },
+    {
+      "version": "0.6.65",
+      "createdAt": "2026-10-24T01:27:55.992Z",
+      "method": "built-in image_gen__imagegen",
+      "status": "Local integration only, unpublished. Original source PNGs preserved.",
+      "assets": [
+        {
+          "id": "forge_master",
+          "name": "灰燼の炉主",
+          "wave": 30,
+          "file": "forge-master-v1.png",
+          "promptFile": "forge-master-prompt.txt",
+          "role": "Existing armor trait. New proposed silhouette: soot-black armored smith, leather apron, anvil-headed two-hand maul.",
+          "prompt": "Use case: stylized-concept. One original full-body ASHEN FORGE MASTER enemy sprite for LOOPKEEPER. Stocky armored human smith boss facing LEFT in three-quarter battle stance, soot-black riveted plate armor with copper trim, low angular closed furnace-visor helmet, rust-brown leather smith apron, large planted boots. Both hands grip ONE huge squared steel forge maul with an anvil-shaped head diagonally down LEFT. No crown, cape, shield or lava body. Carefully clustered fantasy pixel art, crisp stepped charcoal outlines and logical160x190 pixel density, desaturated iron/copper/brown palette, soft upper-left daylight. Small restrained ember details inside visor only. Readable at130px height against a medieval woodland settlement. Entire hammer, helmet and boots fully inside central75percent with at least8percent transparent padding every side. Genuinely transparent alpha outside hard character edges, no floor, cast shadow, halo, glow, sparks, fog, text, border or scenery. Original independent design, no recognizable franchise character, not smooth illustration or3D.",
+          "width": 1150,
+          "height": 1368,
+          "bytes": 1322787,
+          "sha256": "be6fa9bffac0f6f552881bddf0d1a25ed71102bcd339286c2c6fecdb12aaaf21",
+          "transparentPixels": 930744,
+          "visibleBounds": [
+            43,
+            169,
+            1122,
+            1261
+          ],
+          "visibleMargins": [
+            43,
+            169,
+            27,
+            106
+          ],
+          "pngColorType": 6,
+          "visibleAlphaThreshold": 160,
+          "rawAlphaBounds": [
+            0,
+            19,
+            1129,
+            1367
+          ],
+          "rawAlphaMargins": [
+            0,
+            19,
+            20,
+            0
+          ]
+        },
+        {
+          "id": "star_keeper",
+          "name": "星環の守護者",
+          "wave": 33,
+          "file": "star-keeper-v1.png",
+          "promptFile": "star-keeper-prompt.txt",
+          "role": "Existing heavy trait. New proposed silhouette: indigo/brass sentinel, physical armillary-sphere pole mace.",
+          "prompt": "Use case: stylized-concept. One original full-body STAR RING GUARDIAN enemy sprite candidate for LOOPKEEPER, a medieval forest settlement game. An imposing human-sized celestial armored sentinel facing LEFT in three-quarter grounded battle stance. Indigo-black layered plate armor with worn antique brass trim, enclosed low round helmet with small pointed crest and no crown, dark blue split tabard. Two hands hold ONE long heavy pole-mace diagonally toward LEFT, its compact head an intricate physical brass armillary sphere encircling a solid steel weight, blunt substantial weapon suitable for heavy strikes. Clearly a tangible mechanical ring mace, NOT an energy halo or staff of light. Broad squared shoulders, planted armored boots, coherent hands and joints. No wings, shield, cape, giant floating rings or magical aura. Rich carefully clustered fantasy pixel art, crisp stepped dark outlines, logical160x190 density, desaturated navy/steel/brass/ochre palette, soft upper-left daylight; readable silhouette at130px game height. Entire helmet, mace and both boots inside central75percent with at least8percent blank transparent padding all sides. Genuinely transparent alpha immediately outside hard figure edges, no environment, floor, cast shadow, glow, fog, particles, text, border or watermark. Original independent design, not existing franchise. Not smooth painted illustration or3D.",
+          "width": 1150,
+          "height": 1368,
+          "bytes": 1137298,
+          "sha256": "deb797a20c2b822e3c58aed7dbde2be9e4764012427197ac672ebaf552a94628",
+          "transparentPixels": 1049044,
+          "visibleBounds": [
+            38,
+            142,
+            1098,
+            1235
+          ],
+          "visibleMargins": [
+            38,
+            142,
+            51,
+            132
+          ],
+          "pngColorType": 6,
+          "visibleAlphaThreshold": 160,
+          "rawAlphaBounds": [
+            17,
+            17,
+            1135,
+            1367
+          ],
+          "rawAlphaMargins": [
+            17,
+            17,
+            14,
+            0
+          ]
+        },
+        {
+          "id": "ice_crown",
+          "name": "氷冠の王",
+          "wave": 36,
+          "file": "ice-crown-v1.png",
+          "promptFile": "ice-crown-prompt.txt",
+          "role": "Existing heavy trait. New proposed silhouette: ice crown, ivory fur collar, steel blue plate and poleaxe.",
+          "prompt": "Use case: stylized-concept. One original full-body ICE CROWN KING enemy sprite candidate for LOOPKEEPER, a medieval woodland survival settlement game. A formidable human armored northern monarch facing LEFT in three-quarter stable battle stance. Jagged angular ice-blue metal crown mounted on closed dark steel helm, broad pale fur collar, layered blue-grey steel armor, desaturated dark blue short mantle and navy waist cloth, armored boots planted apart. Both hands grip ONE long heavy frost-edged poleaxe lowered diagonally toward LEFT, large angular silver axe head with small restrained icy inlays. No shield or greatsword; distinguish from a red caped bronze king and from a bare-bodied ice giant with wooden club. Heavy clean silhouette, coherent hands, visible boots and entire weapon. Carefully clustered polished fantasy pixel art at logical160x190 density, crisp stepped charcoal contours and material shading; soft upper-left daylight. Limited muted slate-blue, steel, ivory-fur and leather-brown palette, not fluorescent cyan. Readable at130px game height. Entire crown, axe and boots within central75percent with at least8percent transparent padding on EVERY side. Genuinely transparent alpha everywhere outside hard character outline. NO emitted light, aura, halo, fog, snow particles, floor, cast shadow, scenery, lettering, border or watermark. Original independent design, no franchise elements, not smooth painting or3D.",
+          "width": 1151,
+          "height": 1367,
+          "bytes": 1262197,
+          "sha256": "c08ce83a4559ed084a15639b79713bc844840292a5621cf104fec5b177a47599",
+          "transparentPixels": 925501,
+          "visibleBounds": [
+            21,
+            96,
+            1099,
+            1251
+          ],
+          "visibleMargins": [
+            21,
+            96,
+            51,
+            115
+          ],
+          "pngColorType": 6,
+          "visibleAlphaThreshold": 160,
+          "rawAlphaBounds": [
+            0,
+            16,
+            1149,
+            1366
+          ],
+          "rawAlphaMargins": [
+            0,
+            16,
+            1,
+            0
+          ]
         }
       ]
     }

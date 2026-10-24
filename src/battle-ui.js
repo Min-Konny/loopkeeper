@@ -1,20 +1,21 @@
-import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.64';
-import {getCatalog} from './engine.js?v=0.6.64';
-import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.64';
-import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.64';
-import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.64';
-import{duelSnapshot}from './duel-motion.js?v=0.6.64';
-import {totalFood}from './meals.js?v=0.6.64';
-import {mealEffectText}from './meal-ui.js?v=0.6.64';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.64';
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.64';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.64';
-import { getPlayerStrike } from './engine.js?v=0.6.64';
-import {routeById}from './routes.js?v=0.6.64';
-import { equipmentMaterial } from './visual-design.js?v=0.6.64';
-import { battleSound } from "./presentation.js?v=0.6.64";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.64";
-import { icon } from "./icons.js?v=0.6.64";
+import{frameStaticPortrait}from './portrait-frame.js?v=0.6.65';
+import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.65';
+import {getCatalog} from './engine.js?v=0.6.65';
+import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.65';
+import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.65';
+import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.65';
+import{duelSnapshot}from './duel-motion.js?v=0.6.65';
+import {totalFood}from './meals.js?v=0.6.65';
+import {mealEffectText}from './meal-ui.js?v=0.6.65';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.65';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.65';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.65';
+import { getPlayerStrike } from './engine.js?v=0.6.65';
+import {routeById}from './routes.js?v=0.6.65';
+import { equipmentMaterial } from './visual-design.js?v=0.6.65';
+import { battleSound } from "./presentation.js?v=0.6.65";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.65";
+import { icon } from "./icons.js?v=0.6.65";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -413,16 +414,17 @@ export function renderBattle(dialog, state) {
   view.duel.update(duelSnapshot(state,key,playerSrc,portraitSrc,!!artSource,forestChief?'wolf':enemyVisualKind(portraitId,run.routes?.active?.id,!run.routes?.active&&enemy.isBoss?enemy.id:null),!!heroArt,playerVisualKind(run.equipment)));
   const image=el['enemy-illustration'];
   image.classList.toggle('generated-enemy',!!artSource);
-  image.onerror=()=>{if(artSource&&image.getAttribute('src')===artSource){view.failedEnemyArt.add(artSource);image.classList.remove('generated-enemy');image.setAttribute('src',fallbackSrc);view.duel.suspend();}};
+  image.onerror=()=>{if(artSource&&image.getAttribute('src')===artSource){view.failedEnemyArt.add(artSource);image.classList.remove('generated-enemy');image.setAttribute('src',fallbackSrc);frameStaticPortrait(image,false);view.duel.suspend();}};
   const equipmentText=Object.entries({weapon:'武器',armor:'鎧',shield:'盾'}).map(([slot,label])=>{const item=run.equipment[slot];return label+'：'+(item?(getCatalog(state).RECIPES.find(r=>r.id===item.id)?.name||item.id):'なし');}).join(' / ');
   setText(el['equipment-readout'],equipmentText);
   const playerImage=el['player-illustration'];
   playerImage.setAttribute('title',equipmentText);
   playerImage.classList.toggle('generated-hero',!!heroArt);
-  playerImage.onerror=()=>{if(heroArt&&playerImage.getAttribute('src')===heroArt){view.failedPlayerArt.add(heroArt);playerImage.classList.remove('generated-hero');playerImage.setAttribute('src',playerFallback);view.duel.suspend();}};
+  playerImage.onerror=()=>{if(heroArt&&playerImage.getAttribute('src')===heroArt){view.failedPlayerArt.add(heroArt);playerImage.classList.remove('generated-hero');playerImage.setAttribute('src',playerFallback);frameStaticPortrait(playerImage,false);view.duel.suspend();}};
   if(el["player-illustration"].getAttribute("src")!==playerSrc)el["player-illustration"].setAttribute("src",playerSrc);
   if (el["enemy-illustration"].getAttribute("src") !== portraitSrc)
     el["enemy-illustration"].setAttribute("src", portraitSrc);
+  frameStaticPortrait(playerImage,!!heroArt);frameStaticPortrait(image,!!artSource);
 
   updateHealth(el, "player", run.hp, stats.maxHp);
   updateHealth(el, "enemy", enemy.hp, enemy.maxHp);

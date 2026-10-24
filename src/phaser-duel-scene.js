@@ -1,7 +1,7 @@
-import{playerPose}from './hero-art.js?v=0.6.64';
-import{spritePlacement,enemyPose}from './enemy-art.js?v=0.6.64';
-import{alphaBounds}from './generated-camp-art.js?v=0.6.64';
-import{duelChanges,attackPose}from './duel-motion.js?v=0.6.64';
+import{playerPose}from './hero-art.js?v=0.6.65';
+import{enemyPose}from './enemy-art.js?v=0.6.65';
+import{createPortraitFrame}from './portrait-frame.js?v=0.6.65';
+import{duelChanges,attackPose}from './duel-motion.js?v=0.6.65';
 const mounted=new WeakMap();let library;const load=()=>library??=import('./vendor/phaser-3.90.0.esm.min.js').then(m=>m.default||m);
 export function mountPhaserDuel(field){
  if(!field?.closest||typeof document==='undefined'||typeof IntersectionObserver==='undefined'||typeof ResizeObserver==='undefined')return{ready:false,update(){},suspend(){}};
@@ -13,7 +13,7 @@ export function mountPhaserDuel(field){
  function fail(error){failed=true;field.dataset.duelFailure=String(error?.message||'renderer stopped').slice(0,120);scene=null;takeover();try{game?.destroy(true);}catch{}game=null;}
  function measure(){const f=field.getBoundingClientRect(),p=field.querySelector('.battle-player .battle-portrait').getBoundingClientRect(),e=field.querySelector('.battle-enemy .battle-portrait').getBoundingClientRect();if(!f.width||!p.height)return;const top=Math.min(p.top,e.top)-f.top,h=Math.max(p.height,e.height);layer.style.top=top+'px';layer.style.height=h+'px';geometry={player:{x:(p.left-f.left+p.width/2)/f.width*480,w:p.width/f.width*480,h:p.height/h*140},enemy:{x:(e.left-f.left+e.width/2)/f.width*480,w:e.width/f.width*480,h:e.height/h*140}};}
  function sync(){field.dataset.duelMotion=running()?'running':'stopped';measure();takeover();if(scene){if(running()){if(!game.loop.running)game.loop.wake();}else game.loop.sleep();}else if(enabled()&&visible&&!loading&&!failed)boot();}
- async function images(){if(!model?.supported)return;const key=model.playerSrc+'|'+model.enemySrc+'|'+model.playerGenerated;if(assetKey===key)return;assetKey=key;const urls=[model.playerSrc,model.enemySrc],loaded=await Promise.all(urls.map(src=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('portrait texture unavailable'));img.src=src;})));if(assetKey!==key||!scene)return;const frame=img=>{const canvas=document.createElement('canvas');canvas.width=192;canvas.height=208;const c=canvas.getContext('2d'),b=alphaBounds(img),p=spritePlacement(b);c.imageSmoothingEnabled=false;c.drawImage(img,b.x,b.y,b.width,b.height,p.x,p.y,p.width,p.height);return canvas;};scene.setImages([model.playerGenerated?frame(loaded[0]):loaded[0],frame(loaded[1])]);}
+ async function images(){if(!model?.supported)return;const key=model.playerSrc+'|'+model.enemySrc+'|'+model.playerGenerated;if(assetKey===key)return;assetKey=key;const urls=[model.playerSrc,model.enemySrc],loaded=await Promise.all(urls.map(src=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('portrait texture unavailable'));img.src=src;})));if(assetKey!==key||!scene)return;scene.setImages([model.playerGenerated?createPortraitFrame(loaded[0]):loaded[0],createPortraitFrame(loaded[1])]);}
  async function boot(){loading=true;try{const P=await load();class DuelScene extends P.Scene{
    create(){try{scene=this;this.clock=0;this.hitAt={player:-10,enemy:-10};this.actors={};this.shadows=[this.add.ellipse(0,133,48,5,0x0c211b,.42),this.add.ellipse(0,133,48,5,0x0c211b,.42)];this.fx=this.add.graphics();images().catch(fail);sync();}catch(error){fail(error);}}
    setImages(imgs){for(const [i,side]of ['player','enemy'].entries()){this.actors[side]?.destroy();if(this.textures.exists(side))this.textures.remove(side);if(imgs[i] instanceof HTMLCanvasElement)this.textures.addCanvas(side,imgs[i]);else this.textures.addImage(side,imgs[i]);this.actors[side]=this.add.image(0,140,side).setOrigin(.5,1);}this.fx.setDepth(10);this.draw();takeover();if(!running()&&game){game.step(performance.now(),0);game.loop.sleep();}}

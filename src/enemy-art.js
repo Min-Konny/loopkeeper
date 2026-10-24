@@ -10,6 +10,9 @@ export const BOSS_ART=Object.freeze({
  dawn_gate_king:{file:'dawn-gate-king-v2.png',kind:'boss'},
  dawn_last_sentinel:{file:'dawn-last-sentinel-v1.png',kind:'knight'},
  river_captain:{file:'river-captain-v1.png',kind:'raider'},
+ forge_master:{file:'forge-master-v1.png',kind:'knight'},
+ star_keeper:{file:'star-keeper-v1.png',kind:'boss'},
+ ice_crown:{file:'ice-crown-v1.png',kind:'boss'},
 });
 export const REGION_ART=Object.freeze({
  forest:{file:'winged-v1.png',kind:'winged'},forest_depth:{file:'winged-v1.png',kind:'winged'},
