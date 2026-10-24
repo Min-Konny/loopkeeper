@@ -26,7 +26,8 @@ export function advanceArcher(s,dt,damage){
  if(!memberJoined(s,'archer'))return;initializeParty(s);const p=s.run.party,b=memberStats(s,'archer');p.archerTimer=Math.min(4,p.archerTimer+dt);
  if(p.archerTimer+1e-8<b.interval)return;p.archerTimer=Math.max(0,p.archerTimer-b.interval);p.archerHits++;
  damage(b.attack*(s.run.enemy.trait==='flying'?1.35:1),b.pierce);
- if((b.weapon?.combat.markEvery||3)&&p.archerHits%(b.weapon?.combat.markEvery||3)===0)s.run.enemy.defense=Math.max((s.run.enemy.baseDefense??s.run.enemy.defense)*.7,s.run.enemy.defense-2);
+ const markEvery=b.weapon?(b.weapon.combat.markEvery||0):3;
+ if(markEvery&&p.archerHits%markEvery===0)s.run.enemy.defense=Math.max((s.run.enemy.baseDefense??s.run.enemy.defense)*.7,s.run.enemy.defense-2);
 }
 export function validParty(s){
  const p=s.run.party;if(p===undefined)return true;

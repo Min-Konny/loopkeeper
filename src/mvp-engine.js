@@ -98,7 +98,7 @@ export const RECIPES = [
   ...C.equipment.map((e) => ({
     ...e,
     equipment: { slot: e.slot, name: e.name, tier: e.tier, ...e.stats },
-    description: e.combat?.type==='magic'?`魔法使い専用。火球・燃焼の威力 ${e.combat.spellMultiplier||1}倍。魔術の訓練で魔力が上がります。`:['bow','crossbow'].includes(e.combat?.type)?'弓使い専用。'+e.description:e.description || statText(e.stats),
+    description: e.combat?.type==='magic'?`魔法使い専用。火球・燃焼の威力 ${e.combat.spellMultiplier||1}倍。魔術の訓練で魔力が上がります。`:e.combat?.type==='crossbow'?'弓使い専用。遅い一撃で敵防御を45%無視。飛行敵に与えるダメージ+35%。':e.combat?.type==='bow'?'弓使い専用。'+e.description:e.description || statText(e.stats),
   })),
   ...C.processing.map((p) => ({
     ...p,
