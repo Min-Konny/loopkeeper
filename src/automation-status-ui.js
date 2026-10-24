@@ -1,5 +1,5 @@
-import {CONTENT as C} from './content.js?v=0.6.61';
-import {RECIPES,LEGACY_UPGRADES,getAutoCookingStatus,getProcessingStatus,canConfigureWorker} from './engine.js?v=0.6.61';
+import {CONTENT as C} from './content.js?v=0.6.62';
+import {RECIPES,LEGACY_UPGRADES,getAutoCookingStatus,getProcessingStatus,canConfigureWorker} from './engine.js?v=0.6.62';
 
 export const escapeText=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const recipes=new Map(RECIPES.map(r=>[r.id,r]));

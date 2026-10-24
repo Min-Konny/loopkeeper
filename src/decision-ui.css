@@ -87,3 +87,6 @@
  #expanded-work-dialog .work-area{flex:none}
  #expanded-work-dialog #content{flex:none;height:auto;overflow:visible}
 }
+
+/* Death allocation categories must not hide their leading text in a horizontal strip. */
+@media(max-width:560px){#death-dialog.legacy-setup .setup-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:visible;gap:4px;padding:0}#death-dialog.legacy-setup .setup-tabs button{min-width:0;width:100%;white-space:normal;overflow-wrap:anywhere;min-height:38px;line-height:1.4}}

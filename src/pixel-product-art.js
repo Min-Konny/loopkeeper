@@ -1,7 +1,8 @@
-import {equipmentMaterial} from './visual-design.js?v=0.6.61';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.61';
+import {facilityFrame} from './facility-art.js?v=0.6.62';
+import {equipmentMaterial} from './visual-design.js?v=0.6.62';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.62';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
-const cache=new Map();
+const cache=new Map(),failedFacilitySheets=new Set();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
 const wrap=(art,box='0 0 64 64')=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${box}" width="128" height="128" shape-rendering="crispEdges">${art}</svg>`;
 function facilityArt(id,level){
@@ -54,4 +55,5 @@ export function pixelProductSource(recipe){
  }
  const result=url(svg);if(cache.size>=192)cache.delete(cache.keys().next().value);cache.set(key,result);return result;
 }
-export function pixelFacilityProduct(recipe){return `<div class="facility-product" aria-hidden="true"><img src="${pixelProductSource(recipe)}" width="128" height="128" alt="" decoding="async"></div>`;}
+export function pixelFacilityProduct(recipe){const id=recipe.facility?.id||recipe.facilityId||recipe.endlessFacility,level=recipe.facility?.level||recipe.level||(recipe.endlessFacility?5:1),f=facilityFrame(id,level);if(!f||failedFacilitySheets.has(f.src))return '<div class="facility-product" aria-hidden="true"><img src="'+pixelProductSource(recipe)+'" width="128" height="128" alt=""></div>';const b=f.frame,z=.9/Math.max(b.width,b.height),clip=[b.y/f.sheet.height*100,(f.sheet.width-b.x-b.width)/f.sheet.width*100,(f.sheet.height-b.y-b.height)/f.sheet.height*100,b.x/f.sheet.width*100].map(v=>v+'%').join(' ');return '<div class="facility-product" aria-hidden="true"><span class="facility-atlas-frame"><img data-facility-sheet data-facility-id="'+id+'" data-facility-level="'+level+'" src="'+f.src+'" style="width:'+(f.sheet.width*z*100)+'%;height:'+(f.sheet.height*z*100)+'%;left:'+((.5-b.width*z/2-b.x*z)*100)+'%;top:'+((.95-b.height*z-b.y*z)*100)+'%;clip-path:inset('+clip+')" alt="" decoding="async"></span></div>';}
+if(typeof document!=='undefined')document.addEventListener('error',event=>{const img=event.target;if(!img?.hasAttribute?.('data-facility-sheet'))return;failedFacilitySheets.add(img.getAttribute('src'));img.removeAttribute('data-facility-sheet');img.setAttribute('data-facility-fallback','');img.src=pixelProductSource({id:img.dataset.facilityId,facilityId:img.dataset.facilityId,level:Number(img.dataset.facilityLevel)});},true);

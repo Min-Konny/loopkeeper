@@ -1,0 +1,2 @@
+// Alpha-measured original sprite bounds preserve complete weapons and aspect ratio.
+export const HERO_LAYOUT={"width":1536,"height":1024,"frames":[{"x":82,"y":60,"width":354,"height":416},{"x":526,"y":60,"width":541,"height":416},{"x":1103,"y":18,"width":377,"height":459},{"x":73,"y":568,"width":408,"height":412},{"x":592,"y":537,"width":377,"height":444},{"x":1129,"y":569,"width":323,"height":411}]};

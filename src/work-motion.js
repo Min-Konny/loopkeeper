@@ -1,6 +1,7 @@
 // Presentation derives exclusively from the real paid batch progress. No timers or game writes.
 const clamp=n=>Math.min(1,Math.max(0,Number.isFinite(n)?n:0));
 export function workKind(skill,id=''){
+ if(skill==='combat'&&['train_combat','train_defense','train_vitality'].includes(id))return'training';
  if(skill==='foraging')return id==='fish_river'?'fishing':'foraging';
  if(skill==='smithing'&&/^cook_/.test(id))return'cooking';
  if(skill==='logging')return'logging';
@@ -10,6 +11,7 @@ export function workKind(skill,id=''){
 }
 export function workPose(kind,action,{animate=true}={}){
  const phase=animate?clamp(action?.progress/action?.duration):(['foraging','fishing','cooking'].includes(kind)?.4:.18);
+ if(kind==='training'){const group=action?.id==='train_defense'?4:action?.id==='train_vitality'?8:0;return{phase,frame:group+(animate?Math.min(3,Math.floor(phase*4)):0),x:84,stage:phase<.25?'ready':phase<.5?'prepare':phase<.75?'effort':'recover',impact:0};}
  if(kind==='foraging'){
   const frame=Math.min(7,Math.floor(phase*8));return{phase,frame,x:phase<.2?58+phase*40:phase>.8?66-(phase-.8)*40:66,stage:phase<.2?'approach':phase<.55?'gather':phase<.8?'collect':'carry',impact:animate&&phase>=.35&&phase<.55?1:0};
  }

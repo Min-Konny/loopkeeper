@@ -1,5 +1,5 @@
 {
-  "version": "0.6.60",
+  "version": "0.6.62",
   "method": "Original built-in OpenAI image generation; no assets copied from other games",
   "sourcePixelsUnmodified": true,
   "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
@@ -804,6 +804,94 @@
         }
       ],
       "noExternalGameArt": true
+    },
+    {
+      "method": "Built-in image_gen",
+      "createdAt": "2026-10-24T00:08:38.011Z",
+      "status": "Original assets visually selected and integrated. Per-release verification is recorded separately.",
+      "assets": [
+        {
+          "file": "hero-common-v2.png",
+          "prompt": "Use case: stylized-concept. ORIGINAL game sprite for LOOPKEEPER forest survival RPG. Single full-body common player survivor facing RIGHT in 3/4 idle battle stance, determined adult traveler, short dark brown hair, sage-green tunic, weathered brown leather vest, pale linen sleeves, leather belt, plain sturdy boots, modest shoulder satchel, NO helmet, NO crown, NO weapon, NO shield, NO metal armor. Both hands visible, empty relaxed ready stance, right forearm slightly forward at belt height. This is the equipment-neutral common character body, separate game UI identifies actual equipment. Polished deliberate medieval fantasy pixel art around140x180 logical density, crisp stepped outlines and clean clusters, warm light from upper-left, desaturated pine-green, ochre, warm leather and linen palette matching a detailed pine-forest camp. No blur or smooth3D. Complete head hands and boots entirely within generous transparent padding on all sides. Genuinely transparent background outside the hard silhouette. No halo, glow, fog, floor, ground shadow, scenery, text, watermark or frame. One original independent character.",
+          "width": 1106,
+          "height": 1422,
+          "pngColorType": 6,
+          "bytes": 817658,
+          "sha256": "c45a2354caa0b5eadc09e52377cd7fa61cfa08dcf5f588ed9f013d2b1f0cabcd",
+          "originalPixelsAndAlphaUnmodified": true,
+          "processing": "Runtime framing only. Facility frames follow measured alpha boundaries, not equal grid assumptions. No third-party image sources."
+        },
+        {
+          "file": "fishing-bank-v2.png",
+          "prompt": "Use case: stylized-concept. ORIGINAL high-quality pixel-art environment background for LOOPKEEPER forest survival game. A small peaceful fishing spot on the edge of the same medieval pine-forest camp: LEFT45% is a dry mossy earthy bank with scattered warm grey stones, low ferns and short grass, clear open flat standing space for a separately rendered fisherman near the lower-left third. RIGHT55% is a natural deep teal river with layered shallow-water stones, irregular curved shoreline, crisp small ripples, subtle sky reflections and reeds. Back edge has dense dark pines and a distant warm rocky ridge in soft afternoon light from upper-left. No people, no animals, no fishing rod, no boat, no buildings, no text. Wide17:9 composition, slightly elevated side-on view matching a detailed medieval forest camp, not an isometric map. Deliberate crisp pixel clusters at340x180 logical density, consistent stepped outlines, muted pine/sage/ochre/stone palette, convincing water and bank texture, no blur or smooth3D. Readable at170x90 pixels. Full opaque landscape, no transparency needed.",
+          "width": 1725,
+          "height": 912,
+          "pngColorType": 2,
+          "bytes": 3401167,
+          "sha256": "0cb53d5d52299386f1817b245057645de5c93cb6984583df91fdb5e4a8f89f02",
+          "originalPixelsAndAlphaUnmodified": true,
+          "processing": "Runtime framing only. Facility frames follow measured alpha boundaries, not equal grid assumptions. No third-party image sources."
+        },
+        {
+          "file": "facilities-a-v2.png",
+          "prompt": "Use case: stylized-concept. ORIGINAL transparent pixel-art building atlas for LOOPKEEPER pine-forest medieval settlement. EXACT5 COLUMNS x5 ROWS, 25 separate complete building sprites, equal square cells, no grid lines or labels. Each ROW is ONE building type, each COLUMN is upgrade LEVEL1,2,3,4,5 from LEFT to RIGHT. Row1 wooden WATCHTOWER with square lookout platform; row2 ARCHERY TOWER with bow slits, target and small arrow rack; row3 INFIRMARY cottage with plain cream medical banner and herb baskets (no red-cross symbol); row4 MARKET stalls with striped muted sage/ochre awnings and crates; row5 GUARDHOUSE with timber gate and plain shield emblem. Clearly different silhouettes per row. Levels progress from modest rough timber to larger reinforced timber/stone architecture: level2 adds bracing/side shed, level3 stone lower walls and tiled roof, level4 larger side wing or second platform, level5 fortified finished architecture. Each sprite remains completely inside its own cell with at least12% transparent margin; no overlaps between cells. ALL feet/contact points at same cell baseline. Same slightly elevated3/4 orthographic viewpoint, warm upper-left daylight, crisp deliberate pixel clusters at about100x100 logical pixels PER CELL, rich but restrained pine-green, weathered timber-brown, warm stone, charcoal outlines. Match a richly detailed natural pine-forest campsite, NOT flat icons or smooth3D. No ground tiles, scenery, people, smoke, glow, shadows, text, numbers, watermark or borders. Genuinely transparent alpha around every building. Square overall sheet.",
+          "width": 1254,
+          "height": 1254,
+          "pngColorType": 6,
+          "bytes": 2667588,
+          "sha256": "a7da6cd376d6548d4d3e9b06fa37588cb264b733c8a027182fee61cd1f678607",
+          "originalPixelsAndAlphaUnmodified": true,
+          "processing": "Runtime framing only. Facility frames follow measured alpha boundaries, not equal grid assumptions. No third-party image sources."
+        },
+        {
+          "file": "facilities-b-v2.png",
+          "prompt": "Use case: stylized-concept. ORIGINAL transparent pixel-art building atlas for LOOPKEEPER pine-forest medieval settlement. EXACT5 COLUMNS x5 ROWS, 25 separate complete building sprites, equal square cells, no grid lines or labels. Each ROW is ONE building type, each COLUMN is upgrade LEVEL1,2,3,4,5 from LEFT to RIGHT. Row1 SMOKEHOUSE: small timber smoking shed with chimney and hanging food racks, NO visible smoke. Row2 HENHOUSE: low chicken coop with fenced run, roost and egg basket. Row3 BARRICADE: wide row of pointed timber defensive stakes becoming reinforced timber/stone wall with gate, compact wide silhouette. Row4 BELL SIGNAL POST: freestanding timber belfry holding a visible bronze bell, later larger stone-and-timber belfry, no church. Row5 BLACKSMITH WORKSHOP: forge shed with chimney, roof, outside anvil, stacked ingots and bellows, no visible fire or smoke. Distinct silhouettes per row. Each level clearly upgrades architecture from modest rough timber, added bracing/side shed at2, stone lower walls/tiled roof at3, larger annex or second roof at4, fortified mature structure at5. All complete subjects stay inside CENTRAL70% of their own equal cell with generous fully transparent margin; DO NOT FILL cells or touch neighboring cells. Same ground contact baseline per cell. Slightly elevated3/4 orthographic viewpoint, upper-left warm daylight, crisp deliberate pixel clusters at about90x90 logical pixels PER CELL, detailed weathered wood, pine/sage roofs, warm stone and charcoal outlines matching a richly detailed natural pine-forest campsite. Not flat icons or smooth3D. No ground tiles, scenery, people, words, numbers, shadows, glow, watermark, borders or gridlines. Genuinely transparent alpha between ALL buildings. Square overall sheet.",
+          "width": 1254,
+          "height": 1254,
+          "pngColorType": 6,
+          "bytes": 2120652,
+          "sha256": "3ae19a28faf5373236ad6bccad1e71fc78f68df7a69e718d1b88400abcc01539",
+          "originalPixelsAndAlphaUnmodified": true,
+          "processing": "Runtime framing only. Facility frames follow measured alpha boundaries, not equal grid assumptions. No third-party image sources."
+        },
+        {
+          "file": "training-v2-sheet.png",
+          "prompt": "Use case: stylized-concept. ORIGINAL production transparent pixel-art TRAINING animation atlas for LOOPKEEPER. EXACT FOUR equal COLUMNS and THREE equal ROWS =12 separate complete full-body poses. Same adult male survivor in sage tunic, linen sleeves, brown leather vest and boots, short brown hair, facing RIGHT, warm upper-left light, polished crisp pixel clusters matching richly textured medieval pine-forest game. Row1 SWORD PRACTICE: cell1 ready holding plain wooden practice sword, cell2 sword raised high behind shoulder, cell3 sword swung forward/down, cell4 follow-through returning to guard. Row2 SHIELD PRACTICE: cell1 standing with round wooden shield low, cell2 shield raised forward, cell3 braced crouching behind shield, cell4 recovered guard. Row3 STRENGTH TRAINING: cell1 crouching over a heavy rough stone, cell2 lifting stone to waist, cell3 holding stone at chest, cell4 lowering stone. All12 characters fully inside their own cells with generous transparent margins and same physical scale and consistent ground-contact baseline. No other people, targets, landscape, ground plane, cast shadows, text, gridlines, frames or watermark. Every cell has actual transparent background. Clean dark outlines, muted pine/ochre/leather/linen colors, readable at60px character height. Deliberate stepped pixel art, no blur or smooth3D. Whole atlas4:3 aspect ratio, equal square cells. Independent original design, no franchise reference.",
+          "width": 1448,
+          "height": 1086,
+          "pngColorType": 6,
+          "bytes": 1235443,
+          "sha256": "97057c0c246f36288777fce66cae3b293708d9c3e389f132f9c8d50b2a18261b",
+          "originalPixelsAndAlphaUnmodified": true,
+          "processing": "Runtime framing only. Facility frames follow measured alpha boundaries, not equal grid assumptions. No third-party image sources."
+        },
+        {
+          "file": "hero-families-v2-sheet.png",
+          "prompt": "Use case: stylized-concept. ORIGINAL production pixel-art character equipment-family atlas for LOOPKEEPER. EXACT THREE equal COLUMNS and TWO equal ROWS, six separate complete full-body sprites with generous transparent margin in every cell, same baseline and scale. SAME adult male common survivor as a medieval pine-forest game: short brown hair, sage tunic, pale linen sleeves, brown leather vest and boots, facing RIGHT in3/4 battle-ready stance. Row1 LEFT: holding short straight steel sword ready in front, CENTER: holding long wooden spear with steel tip angled right, RIGHT: holding a simple recurve bow with quiver, arrow nocked toward right. Row2 LEFT: holding a compact crossbow in both hands pointed right, CENTER: holding a wooden staff with small amber stone (NO glow or aura), RIGHT: empty hands raised in unarmed guarded stance. No shields or metal armor; this is a common equipment-neutral traveler, weapon families distinguish poses while exact gear is shown by game UI. Carefully stepped crisp dark outlines and deliberate pixel clusters around100x130 logical character density per cell, warm upper-left natural light, muted pine/ochre/leather/steel palette. Entire head, weapons and boots contained within each cell with AT LEAST10% transparent padding, no overlap between cells. Genuinely transparent background, no ground, shadows, fog, halo, scenery, lettering, watermark, borders or gridlines. Original independent character designs, not franchise references. Whole sheet3:2 aspect ratio.",
+          "width": 1536,
+          "height": 1024,
+          "pngColorType": 6,
+          "bytes": 2000938,
+          "sha256": "0b662cf15d53a3dc8e98dace69fdea9daba4c81306fbdc16b60c172f954cb4a7",
+          "originalPixelsAndAlphaUnmodified": true,
+          "processing": "Runtime framing only. Facility frames follow measured alpha boundaries, not equal grid assumptions. No third-party image sources."
+        },
+        {
+          "file": "work-environment-v2.png",
+          "prompt": "Original production pixel-art environment prop atlas for LOOPKEEPER forest settlement. EXACT3 equal square cells side by side, one horizontal3:1 sheet, transparent background. LEFT CELL: a low dense clump of medicinal woodland herbs, small ferns, sage leaves and tiny cream flowers growing from a small irregular dark soil root base; no ground tile. CENTER CELL: a low wild food berry patch with muted red/brown berries, edible leaves and small mushrooms around roots, irregular natural silhouette. RIGHT CELL: a compact outdoor cooking hearth of rough warm stones, a dark iron cauldron hanging from a simple low wooden tripod, small orange coals under the pot, a small wooden prep board and plain bowl beside it. No smoke or steam, game adds those. Rich crisp hand-clustered pixel art, each prop readable at50px wide, same slightly elevated3/4 side viewpoint as a medieval pine-forest camp, warm upper-left daylight, muted pine/sage/earth/charcoal/ochre palette, clean dark stepped edges. Every complete group centered entirely within its own equal cell with generous empty transparent padding, no overlap. Independent original game assets. No people, writing, watermark, borders, grid lines, ground plane, scenery or decorative effects. Actual transparent alpha everywhere outside the three prop groups.",
+          "method": "Built-in image_gen",
+          "originalPixelsAndAlphaUnmodified": true,
+          "width": 2172,
+          "height": 724,
+          "pngColorType": 6,
+          "bytes": 1529765,
+          "sha256": "d8b9cf67b1c7e260c45effc9ca2bacd87e55ff2b344d2529928c31d2aa2d6aab",
+          "processing": "Original PNG preserved; runtime atlas framing only."
+        }
+      ],
+      "scope": "Common hero with weapon-family poses and exact gear labels; authored river bank; ten facility types including all38 real stages; three paid-progress training sequences; generated combat backdrop and support facility icons.",
+      "noExternalGameArt": true,
+      "noNewDependencies": true
     }
   ],
   "actionArtwork": {

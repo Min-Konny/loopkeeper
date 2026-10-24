@@ -1,20 +1,21 @@
-import{campBuildings}from './camp-layout.js?v=0.6.61';
-import{loadCampArt,generatedWorkerAtlas,paintGeneratedCamp}from './generated-camp-art.js?v=0.6.61';
-import {mountPixelCamp}from './pixel-camp-scene.js?v=0.6.61';
-import {createPixelCampRenderer}from './pixel-camp-art.js?v=0.6.61';
-import {createCampActorAtlas}from './camp-actor-art.js?v=0.6.61';
-import {campSnapshot,lumberjackPose}from './camp-motion.js?v=0.6.61';
+import{campBuildings}from './camp-layout.js?v=0.6.62';
+import{loadCampArt,generatedWorkerAtlas,paintGeneratedCamp}from './generated-camp-art.js?v=0.6.62';
+import {mountPixelCamp}from './pixel-camp-scene.js?v=0.6.62';
+import {createPixelCampRenderer}from './pixel-camp-art.js?v=0.6.62';
+import {createCampActorAtlas}from './camp-actor-art.js?v=0.6.62';
+import {campSnapshot,lumberjackPose}from './camp-motion.js?v=0.6.62';
 
 const mounted=new WeakMap();let library;
 const loadLibrary=()=>library??=import('./vendor/phaser-3.90.0.esm.min.js').then(m=>m.default||m);
 /** Optional presentation only. The original renderer is retained on any failure. */
 export function mountPhaserCamp(host){
  if(mounted.has(host))return mounted.get(host);
+ host.dataset.campArtwork='loading';
  const fallback=mountPixelCamp(host),fallbackLayer=host.querySelector('.pixel-camp-layer'),layer=document.createElement('div');layer.className='pixel-camp-layer phaser-camp-layer';layer.hidden=true;layer.setAttribute('aria-hidden','true');host.append(layer);
  const legend=document.createElement('details');legend.className='camp-facility-key';const summary=document.createElement('summary'),list=document.createElement('p');legend.append(summary,list);host.after(legend);
  let staticArt=null,staticAtlas=null,artLoading=false;
  function staticView(){if(!staticArt||!layer.hidden)return;const canvas=fallbackLayer.querySelector('canvas');paintGeneratedCamp(canvas,campSnapshot(model),staticArt);const c=canvas.getContext('2d');c.imageSmoothingEnabled=false;c.fillStyle='#102b1e99';c.beginPath();c.ellipse(126,203,12,3,0,0,Math.PI*2);c.fill();c.drawImage(staticAtlas,0,0,96,104,105,158.25,42,45.5);}
- function ensureArt(){if(artLoading)return;artLoading=true;loadCampArt().then(art=>{staticArt=art;staticAtlas=generatedWorkerAtlas(art.worker);host.dataset.campArtwork='generated';staticView();}).catch(error=>{host.dataset.artworkFailure=error.message;});}
+ function ensureArt(){if(artLoading)return;artLoading=true;loadCampArt().then(art=>{staticArt=art;staticAtlas=generatedWorkerAtlas(art.worker);host.dataset.campArtwork='generated';staticView();}).catch(error=>{host.dataset.artworkFailure=error.message;host.dataset.campArtwork='fallback';});}
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');let model={facilities:{},construction:null,chopping:false,night:false,threat:0},active=false,visible=false,disposed=false,failed=false,loading=false,game=null,scene=null,dirty=true;
  const running=()=>active&&visible&&!document.hidden&&!reduced.matches&&host.isConnected;
  function fail(error){if(disposed)return;failed=true;host.dataset.campRenderer='fallback';host.dataset.campFailure=String(error?.message||'renderer stopped').slice(0,120);layer.hidden=true;fallbackLayer.hidden=false;try{game?.destroy(true);}catch{}game=null;scene=null;fallback.setActive(active&&!staticArt);}

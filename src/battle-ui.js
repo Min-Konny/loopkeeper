@@ -1,18 +1,20 @@
-import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.61';
-import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.61';
-import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.61';
-import{duelSnapshot}from './duel-motion.js?v=0.6.61';
-import {totalFood}from './meals.js?v=0.6.61';
-import {mealEffectText}from './meal-ui.js?v=0.6.61';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.61';
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.61';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.61';
-import { getPlayerStrike } from './engine.js?v=0.6.61';
-import {routeById}from './routes.js?v=0.6.61';
-import { equipmentMaterial } from './visual-design.js?v=0.6.61';
-import { battleSound } from "./presentation.js?v=0.6.61";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.61";
-import { icon } from "./icons.js?v=0.6.61";
+import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.62';
+import {getCatalog} from './engine.js?v=0.6.62';
+import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.62';
+import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.62';
+import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.62';
+import{duelSnapshot}from './duel-motion.js?v=0.6.62';
+import {totalFood}from './meals.js?v=0.6.62';
+import {mealEffectText}from './meal-ui.js?v=0.6.62';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.62';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.62';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.62';
+import { getPlayerStrike } from './engine.js?v=0.6.62';
+import {routeById}from './routes.js?v=0.6.62';
+import { equipmentMaterial } from './visual-design.js?v=0.6.62';
+import { battleSound } from "./presentation.js?v=0.6.62";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.62";
+import { icon } from "./icons.js?v=0.6.62";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -55,9 +57,9 @@ function createView(dialog) {
           <div class="battle-feedback-row" aria-hidden="true"><span class="battle-feedback" data-battle="enemy-damage-feedback"></span></div>
         </article>
       </div>
-      <p class="battle-pressure-note" data-battle="pressure-state"></p><p class="battle-meal-note" data-battle="meal-state"></p><div class="meal-buttons battle-meal-buttons"><button class="button small gold-outline" data-use-meal="fish_meal" data-battle="fish-button"></button><button class="button small gold-outline" data-use-meal="egg_meal" data-battle="egg-button"></button></div>
+      <p class="battle-equipment-note" data-battle="equipment-readout"></p><p class="battle-pressure-note" data-battle="pressure-state"></p><p class="battle-meal-note" data-battle="meal-state"></p><div class="meal-buttons battle-meal-buttons"><button class="button small gold-outline" data-use-meal="fish_meal" data-battle="fish-button"></button><button class="button small gold-outline" data-use-meal="egg_meal" data-battle="egg-button"></button></div>
       <div class="battle-rhythm"><div><span>次の攻防</span><b data-battle="round-time"></b></div><div class="battle-round-track"><i data-battle="round-bar"></i></div></div>
-      <div class="battle-facilities" aria-label="村の戦闘支援"><div class="battle-facility guardhouse" data-battle="guardhouse-sign" hidden><svg viewBox="0 0 60 48" aria-hidden="true"><path d="M12 43V12H18V7H26V12H34V7H42V12H48V43Z" fill="#69816a"/><path d="M24 43V26Q30 17 36 26V43" fill="#22382e"/><path d="M10 14H50M9 43H51" stroke="#c2c790" stroke-width="3"/><path d="M17 22H23M37 22H43" stroke="#e8d99b" stroke-width="4"/></svg><span>衛兵詰所<small data-battle="support-value"></small></span></div><div class="battle-facility archery" data-battle="archery-sign" hidden><svg viewBox="0 0 60 48" aria-hidden="true"><path d="M14 43V18h32v25Z" fill="#7f9275"/><path d="M8 19 30 4 52 19Z" fill="#5b8275"/><path d="M21 23q20 7 0 17V23m0 8h27m-5-5 5 5-5 5" fill="none" stroke="#e1c483" stroke-width="2"/></svg><span>弓塔<small data-battle="ranged-value"></small></span></div><div class="battle-facility infirmary" data-battle="infirmary-sign" hidden><svg viewBox="0 0 60 48" aria-hidden="true"><path d="M12 23H48V43H12Z" fill="#819d86"/><path d="M6 24 30 5 54 24Z" fill="#567e76"/><path d="M26 24H34V29H39V37H34V42H26V37H21V29H26Z" fill="#e1dfbd"/></svg><span>救護所<small data-battle="treatment-value"></small></span></div></div>
+      <div class="battle-facilities" aria-label="村の戦闘支援"><div class="battle-facility guardhouse" data-battle="guardhouse-sign" hidden><span class="battle-facility-art" data-battle="guardhouse-art"></span><span>衛兵詰所<small data-battle="support-value"></small></span></div><div class="battle-facility archery" data-battle="archery-sign" hidden><span class="battle-facility-art" data-battle="archery-art"></span><span>弓塔<small data-battle="ranged-value"></small></span></div><div class="battle-facility infirmary" data-battle="infirmary-sign" hidden><span class="battle-facility-art" data-battle="infirmary-art"></span><span>救護所<small data-battle="treatment-value"></small></span></div></div>
     </section>
     <section class="battle-supplies" aria-label="戦闘中の回復">
       <span class="battle-food-icon" data-battle="food-icon">${icon("food")}</span>
@@ -412,7 +414,10 @@ export function renderBattle(dialog, state) {
   const image=el['enemy-illustration'];
   image.classList.toggle('generated-enemy',!!artSource);
   image.onerror=()=>{if(artSource&&image.getAttribute('src')===artSource){view.failedEnemyArt.add(artSource);image.classList.remove('generated-enemy');image.setAttribute('src',fallbackSrc);view.duel.suspend();}};
+  const equipmentText=Object.entries({weapon:'武器',armor:'鎧',shield:'盾'}).map(([slot,label])=>{const item=run.equipment[slot];return label+'：'+(item?(getCatalog(state).RECIPES.find(r=>r.id===item.id)?.name||item.id):'なし');}).join(' / ');
+  setText(el['equipment-readout'],equipmentText);
   const playerImage=el['player-illustration'];
+  playerImage.setAttribute('title',equipmentText);
   playerImage.classList.toggle('generated-hero',!!heroArt);
   playerImage.onerror=()=>{if(heroArt&&playerImage.getAttribute('src')===heroArt){view.failedPlayerArt.add(heroArt);playerImage.classList.remove('generated-hero');playerImage.setAttribute('src',playerFallback);view.duel.suspend();}};
   if(el["player-illustration"].getAttribute("src")!==playerSrc)el["player-illustration"].setAttribute("src",playerSrc);
@@ -436,6 +441,7 @@ export function renderBattle(dialog, state) {
   );
   const preview = getCombatPreview(state);
   if(el['magic-readout']){const m=run.magicState,visible=state.version===2&&m&&(run.equipment.weapon?.id==='ember_staff'||run.resources.spark_catalyst||run.resources.ward_essence);el['magic-readout'].hidden=!visible;if(visible)setText(el['magic-readout'],'MP '+Math.floor(m.mana)+'/30 ・ 詠唱 '+m.casts+' / 爆発 '+m.detonations+' ・ 触媒 '+(run.resources.spark_catalyst||0)+' / 護符液 '+(run.resources.ward_essence||0));}
+  for(const [key,id]of [['guardhouse','guardhouse'],['archery','archery_tower'],['infirmary','infirmary']]){const art=el[key+'-art'],level=run.facilities[id]||0;if(art&&art.getAttribute('data-level')!==String(level)){art.setAttribute('data-level',String(level));art.innerHTML=level?pixelFacilityProduct({facilityId:id,level}):'';}}
   el['guardhouse-sign'].hidden = stats.support <= 0;
   el['archery-sign'].hidden = (stats.ranged || 0) <= 0;
   setText(el['ranged-value'], `${number((stats.ranged || 0)*(enemy.trait==='flying'?2.5:1))}${enemy.trait==='flying'?' · 対空':''}`);
