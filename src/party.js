@@ -1,5 +1,6 @@
-import {getSkillProgress} from './legacy-engine.js?v=0.6.76';
-import {weaponById} from './gear-content.js?v=0.6.76';
+import {specialistAug}from './specialist-content.js?v=0.6.77';
+import {getSkillProgress} from './legacy-engine.js?v=0.6.77';
+import {weaponById} from './gear-content.js?v=0.6.77';
 export const PARTY=[{id:'archer',name:'弓使い',wave:3,image:'party-archer-v1.png',action:'train_archery'},{id:'mage',name:'魔法使い',wave:6,image:'party-mage-v1.png',action:'train_magic'}];
 export const memberFor=id=>{const type=weaponById(id)?.combat?.type;return type==='magic'?'mage':['bow','crossbow'].includes(type)?'archer':null;};
 export const memberJoined=(s,id)=>s.version===2&&s.meta.bestWave>=(PARTY.find(x=>x.id===id)?.wave??Infinity);
@@ -19,8 +20,8 @@ export const partyWeapon=(s,id)=>weaponById(s.run.party?.equipment?.[id]);
 export function memberStats(s,id){
  const level=getSkillProgress(s.run.skills[id==='archer'?'archery':'sorcery']?.xp||0).level,w=partyWeapon(s,id);
  const permanent=getSkillProgress(s.meta.skills[id==='archer'?'archery':'sorcery']?.xp||0,true).level;
- if(id==='archer')return {level,attack:8+(level-1)*2+(permanent-1)*.35+(w?.stats.attack||0),interval:1.5/(w?.combat.rate||1.25),pierce:w?.combat.pierce||0,weapon:w};
- return {level,attack:18+(level-1)*3+(permanent-1)*.5,interval:4,weapon:w};
+ if(id==='archer')return {level,attack:(8+(level-1)*2+(permanent-1)*.35+(w?.stats.attack||0))*(specialistAug(s,'heavy_arrows')?1.25:1)*(specialistAug(s,'archer_drill')?1.1:1),interval:1.5/(w?.combat.rate||1.25)*(specialistAug(s,'heavy_arrows')?1.15:1),pierce:w?.combat.pierce||0,weapon:w};
+ return {level,attack:(18+(level-1)*3+(permanent-1)*.5)*(specialistAug(s,"arcane_curriculum")?1.1:1)*(specialistAug(s,"mana_cycle")?.9:1),interval:4,weapon:w};
 }
 export function advanceArcher(s,dt,damage){
  if(!memberJoined(s,'archer'))return;initializeParty(s);const p=s.run.party,b=memberStats(s,'archer');p.archerTimer=Math.min(4,p.archerTimer+dt);

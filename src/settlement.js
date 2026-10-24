@@ -1,4 +1,5 @@
-import {JOBS,OUTPOSTS,outpostId} from './settlement-content.js?v=0.6.76';
+import {specialistAug}from './specialist-content.js?v=0.6.77';
+import {JOBS,OUTPOSTS,outpostId} from './settlement-content.js?v=0.6.77';
 export const populationCapacity=s=>2+(s.run.facilities.housing||0);
 export function population(s){
  if(s.run.population)return s.run.population;
@@ -21,7 +22,7 @@ export function allocatePopulation(s,id,count){
  if(assigned(s)-staffing(s,id)+count>populationCapacity(s))return {ok:false,reason:'人口上限です。別の仕事から外すか、住宅を増築してください。'};
  initializeSettlement(s);s.run.population.assigned[id]=count;return {ok:true};
 }
-export function outpostRate(s,id){const p=OUTPOSTS.find(p=>p.id===id);return p?60/p.interval*(1+.25*Math.max(0,(s.run.facilities[outpostId(id)]||1)-1)):0;}
+export function outpostRate(s,id){const p=OUTPOSTS.find(p=>p.id===id);return p?60/p.interval*(1+.25*Math.max(0,(s.run.facilities[outpostId(id)]||1)-1))*(specialistAug(s,'settled_outposts')?1.25:1):0;}
 export function advanceOutposts(s,dt){
  initializeSettlement(s);
  for(const p of OUTPOSTS){const key=outpostId(p.id),n=staffing(s,key);if(!n||!s.run.routes?.cleared.includes(p.id))continue;

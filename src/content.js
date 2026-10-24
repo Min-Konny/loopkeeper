@@ -1,16 +1,17 @@
-import {PARTY_ACTIONS,PARTY_WEAPONS}from './party-content.js?v=0.6.76';
-import {HOUSING,OUTPOST_BUILDINGS,EXPEDITIONS}from './settlement-content.js?v=0.6.76';
-import {WORKER_RANK_UPGRADES,WORKER_NAMES,workerLevel,workerRankDescription}from './worker-legacy.js?v=0.6.76';
-import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.76';
-import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.76';
-import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.76';
-import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.76';
-import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.76';
-import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.76';
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.76';
-import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.76';
-import { REINFORCEMENTS } from './endless.js?v=0.6.76';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.76';
+import {SPECIALIST_FACILITIES,SPECIALIST_AUGMENTS}from './specialist-content.js?v=0.6.77';
+import {PARTY_ACTIONS,PARTY_WEAPONS}from './party-content.js?v=0.6.77';
+import {HOUSING,OUTPOST_BUILDINGS,EXPEDITIONS}from './settlement-content.js?v=0.6.77';
+import {WORKER_RANK_UPGRADES,WORKER_NAMES,workerLevel,workerRankDescription}from './worker-legacy.js?v=0.6.77';
+import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.77';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.77';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.77';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.77';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.77';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.77';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.77';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.77';
+import { REINFORCEMENTS } from './endless.js?v=0.6.77';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.77';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -3630,7 +3631,7 @@ for(const base of CONTENT.facilities.filter(f=>f.facilityId==='workshop')){
  CONTENT.facilities.push({...base,id:level===1?'training_yard':`training_yard_level_${level}`,facilityId:'training_yard',name:'訓練場',
  cost:{...base.cost,wood:Math.ceil(base.cost.wood*1.2),stone:Math.ceil(base.cost.stone*1.2),hide:level*4},
  requires:level===1?[]:[level===2?'training_yard':`training_yard_level_${level-1}`],
- effect:{trainingSpeed:level*.15},description:`攻撃・防御・体力の訓練速度 +${level*15}%` });
+ effect:{trainingSpeed:level*.15},description:`全戦闘訓練速度 +${level*15}%` });
 }
 
 // Gatherers supplement early manual work; later upgrades can carry production.
@@ -3666,3 +3667,6 @@ CONTENT.actions.find(d=>d.id==='train_archery').skill='archery';CONTENT.actions.
 
 CONTENT.processing.find(d=>d.id==='cook_fish').unlockLevel=1;
 CONTENT.processing.push({id:'cook_simple',name:'野営の煮込み',skill:'cooking',kind:'cooking',duration:8,cost:{herbs:3,wood:1},yields:{food:3},unlockLevel:1,xpCoefficient:1,description:'救護所用の食料を作る。'});
+
+CONTENT.facilities.push(...SPECIALIST_FACILITIES);
+CONTENT.augments.push(...SPECIALIST_AUGMENTS);

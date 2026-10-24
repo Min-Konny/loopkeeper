@@ -1,0 +1,221 @@
+[
+  {
+    "policy": "martial",
+    "seed": 1,
+    "generation": 22,
+    "wave": 36,
+    "simulatedHours": 16.03,
+    "facilities": {
+      "infirmary": 5,
+      "barricade": 5,
+      "market": 1,
+      "watchtower": 5,
+      "training_yard": 5,
+      "archery_range": 3,
+      "arcane_study": 3
+    },
+    "augments": [
+      "shield_master",
+      "mana_cycle",
+      "heavy_arrows",
+      "warrior"
+    ]
+  },
+  {
+    "policy": "martial",
+    "seed": 42,
+    "generation": 22,
+    "wave": 36,
+    "simulatedHours": 16.02,
+    "facilities": {
+      "infirmary": 5,
+      "barricade": 5,
+      "market": 1,
+      "watchtower": 5,
+      "training_yard": 5,
+      "archery_range": 3,
+      "arcane_study": 3
+    },
+    "augments": [
+      "shield_master",
+      "drill",
+      "warrior",
+      "last_stand"
+    ]
+  },
+  {
+    "policy": "martial",
+    "seed": 12345,
+    "generation": 22,
+    "wave": 36,
+    "simulatedHours": 16.43,
+    "facilities": {
+      "infirmary": 5,
+      "barricade": 5,
+      "market": 1,
+      "watchtower": 5,
+      "training_yard": 5,
+      "archery_range": 3,
+      "arcane_study": 3
+    },
+    "augments": [
+      "shield_master",
+      "executioner",
+      "heavy_arrows",
+      "drill"
+    ]
+  },
+  {
+    "policy": "fortress",
+    "seed": 1,
+    "generation": 19,
+    "wave": 36,
+    "simulatedHours": 12.86,
+    "facilities": {
+      "infirmary": 4,
+      "barricade": 5,
+      "market": 1,
+      "watchtower": 5,
+      "training_yard": 3,
+      "archery_tower": 5,
+      "laboratory": 3,
+      "guardhouse": 5
+    },
+    "augments": [
+      "measured_doses",
+      "supply_lines",
+      "triage",
+      "guard"
+    ]
+  },
+  {
+    "policy": "fortress",
+    "seed": 42,
+    "generation": 20,
+    "wave": 36,
+    "simulatedHours": 14.73,
+    "facilities": {
+      "infirmary": 5,
+      "barricade": 5,
+      "market": 1,
+      "watchtower": 5,
+      "training_yard": 4,
+      "archery_tower": 5,
+      "laboratory": 3,
+      "guardhouse": 5
+    },
+    "augments": [
+      "measured_doses",
+      "guard",
+      "piercing_volley",
+      "provisions"
+    ]
+  },
+  {
+    "policy": "fortress",
+    "seed": 12345,
+    "generation": 19,
+    "wave": 36,
+    "simulatedHours": 12.12,
+    "facilities": {
+      "infirmary": 4,
+      "barricade": 5,
+      "market": 1,
+      "watchtower": 5,
+      "training_yard": 3,
+      "laboratory": 3,
+      "archery_tower": 5,
+      "guardhouse": 5
+    },
+    "augments": [
+      "measured_doses",
+      "wall_readiness",
+      "triage",
+      "piercing_volley"
+    ]
+  },
+  {
+    "policy": "economic",
+    "seed": 1,
+    "generation": 20,
+    "wave": 36,
+    "simulatedHours": 13.48,
+    "facilities": {
+      "infirmary": 5,
+      "market": 1,
+      "watchtower": 5,
+      "barricade": 5,
+      "workshop": 5,
+      "archery_tower": 5,
+      "training_yard": 5,
+      "housing": 3,
+      "workhouse": 3,
+      "kitchen": 3,
+      "guardhouse": 5,
+      "outpost_forest": 1,
+      "outpost_quarry": 1
+    },
+    "augments": [
+      "frugal_building",
+      "salvage",
+      "steady_commissions",
+      "hands_on"
+    ]
+  },
+  {
+    "policy": "economic",
+    "seed": 42,
+    "generation": 18,
+    "wave": 36,
+    "simulatedHours": 10.35,
+    "facilities": {
+      "infirmary": 5,
+      "market": 1,
+      "watchtower": 5,
+      "barricade": 5,
+      "workshop": 5,
+      "housing": 3,
+      "workhouse": 3,
+      "outpost_forest": 1,
+      "kitchen": 3,
+      "guardhouse": 5,
+      "outpost_quarry": 1,
+      "archery_tower": 5,
+      "training_yard": 5
+    },
+    "augments": [
+      "investment",
+      "artisan_guild",
+      "steady_commissions",
+      "settled_outposts"
+    ]
+  },
+  {
+    "policy": "economic",
+    "seed": 12345,
+    "generation": 18,
+    "wave": 36,
+    "simulatedHours": 10.19,
+    "facilities": {
+      "infirmary": 5,
+      "market": 1,
+      "watchtower": 5,
+      "barricade": 5,
+      "workshop": 5,
+      "housing": 3,
+      "workhouse": 3,
+      "outpost_forest": 1,
+      "kitchen": 3,
+      "guardhouse": 5,
+      "outpost_quarry": 1,
+      "archery_tower": 5,
+      "training_yard": 5
+    },
+    "augments": [
+      "artisan_guild",
+      "investment",
+      "settled_outposts",
+      "paid_repairs"
+    ]
+  }
+]

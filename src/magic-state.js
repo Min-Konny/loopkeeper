@@ -1,11 +1,12 @@
-import {memberJoined,partyWeapon,memberStats}from './party.js?v=0.6.76';
-import {preparationSpellDamage}from './preparation-balance.js?v=0.6.76';
-import {investmentEffect}from './investments.js?v=0.6.76';
-import {weaponById}from './gear-content.js?v=0.6.76';
-import {accessoryEffects}from './gear-state.js?v=0.6.76';
-import {contractEffects}from './contracts.js?v=0.6.76';
-import {routeEffects}from './routes.js?v=0.6.76';
-import {alchemyResource}from './magic-content.js?v=0.6.76';
+import {specialistAug}from './specialist-content.js?v=0.6.77';
+import {memberJoined,partyWeapon,memberStats}from './party.js?v=0.6.77';
+import {preparationSpellDamage}from './preparation-balance.js?v=0.6.77';
+import {investmentEffect}from './investments.js?v=0.6.77';
+import {weaponById}from './gear-content.js?v=0.6.77';
+import {accessoryEffects}from './gear-state.js?v=0.6.77';
+import {contractEffects}from './contracts.js?v=0.6.77';
+import {routeEffects}from './routes.js?v=0.6.77';
+import {alchemyResource}from './magic-content.js?v=0.6.77';
 export const freshMagic=()=>({mana:30,castTimer:0,burnTimer:0,burnTicks:0,burnPower:0,wardCooldown:0,casts:0,detonations:0,catalystsUsed:0,wardsUsed:0,burnDamage:0,spellDamage:0});
 export function initializeMagic(s){
  if(s.version===1)return;s.meta.magicVersion=1;for(const id of ['spark_catalyst','ward_essence'])s.run.resources[id]??=0;
@@ -22,7 +23,7 @@ export function physicalIgnition(s,e,critical){
  if(m.burnTicks*m.burnPower>=6||!spend(s,'spark_catalyst'))return;
  m.burnTicks=3;m.burnPower=2;m.burnTimer=0;
 }
-export const manaRegeneration=s=>2+(routeEffects(s).manaRegen||0)+(contractEffects(s).manaRegen||0)+(accessoryEffects(s,"combat").manaRegen||0);
+export const manaRegeneration=s=>2+(specialistAug(s,"mana_cycle")?.5:0)+(routeEffects(s).manaRegen||0)+(contractEffects(s).manaRegen||0)+(accessoryEffects(s,"combat").manaRegen||0);
 export const spellInterval=s=>4/(1+investmentEffect(s,"castHaste"));
 export function advanceMagic(s,dt,damage){
  initializeMagic(s);const m=s.run.magicState;m.mana=Math.min(30,m.mana+manaRegeneration(s)*dt);m.wardCooldown=Math.max(0,m.wardCooldown-dt);

@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-24",
+  "source": "OpenAI built-in imagegen",
+  "original": true,
+  "assets": [
+    "specialist-kitchen-v1.png",
+    "specialist-laboratory-v1.png",
+    "specialist-workhouse-v1.png",
+    "specialist-archery_range-v1.png",
+    "specialist-arcane_study-v1.png"
+  ],
+  "brief": "Original richly detailed medieval woodland pixel-art specialist buildings, isolated transparent backgrounds; no third-party game assets used."
+}

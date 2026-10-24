@@ -11,6 +11,7 @@ import {LEGACY_RANKS,rankId} from '../src/legacy-rank-definitions.js';
 const options={earlyLoopPrototype:true,lateLoopPrototype:true,preparationBalancePrototype:true};
 const arg=process.argv.slice(2),policy=arg[0]||'martial',seed=+(arg[1]||1),maxRuns=+(process.env.RUNS||40);
 // Only the offer RNG seed is controlled; no inventory, XP, rewards, or enemy values are assigned.
+const specialists=arg.includes('--specialists');
 const output=process.env.BALANCE_OUTPUT||'output/balance77';fs.mkdirSync(output,{recursive:true});
 const s=E.createGame(options),runs=[],ledger=[];let ticks=0,steps=0,category='',timeByCategory={},waveMetrics=[],lastWave=0;
 const level=(id)=>E.getSkillProgress(s.run.skills[id].xp).level;
@@ -26,6 +27,7 @@ function buy(){if(s.run.status!=='legacy_setup')return;
  for(let rank=1;rank<=5;rank++){for(const key of preferences){const d=LEGACY_RANKS.find(x=>x.key===key),id=rankId(d,rank);if(E.canPurchaseUpgrade(s,id).ok){E.purchaseUpgrade(s,id);ledger.push([s.meta.generation,0,'inherit',id]);}}if(rank===1)for(const id of [pack,'auto_cook',...(policy==='economic'?['lumber_worker','mining_worker']:[])])if(E.canPurchaseUpgrade(s,id).ok)E.purchaseUpgrade(s,id);}
 }
 const augPreferences={martial:['weapon_master','warrior','drill','executioner','food_warrior','field_training','volatile_ink','potion_focus','last_stand','shield_master'],fortress:['supply_lines','piercing_volley','triage','guard','thorn_wall','healing_patrol','provisions','wall_readiness','ward_distillation'],economic:['investment','construction_rush','joint_procurement','artisan_guild','forestry','frugal_building','hands_on','paid_repairs','salvage','well_stocked']};
+if(specialists){augPreferences.martial.unshift('archer_drill','arcane_curriculum','heavy_arrows','mana_cycle');augPreferences.fortress.unshift('measured_doses');augPreferences.economic.unshift('steady_commissions','camp_cuisine','settled_outposts');}
 function choose(){let pick=augPreferences[policy].find(id=>s.run.augments.offer.includes(id));if(!pick&&E.rerollAugments(s).ok)pick=augPreferences[policy].find(id=>s.run.augments.offer.includes(id));pick||=s.run.augments.offer[0];assert.ok(E.chooseAugment(s,pick).ok);ledger.push([s.meta.generation,s.run.elapsed,'augment',pick]);}
 function facility(id,target){const current=s.run.facilities[id]||0;if(current>=target)return false;return goal(current===0?id:id+'_level_'+(current+1));}
 function train(){category='training';const list=policy==='martial'?['combat','archery','combat','vitality','sorcery','defense']:policy==='fortress'?['vitality','defense','combat','vitality','archery','sorcery']:['vitality','combat','defense','archery','sorcery'];const id=list[steps%list.length];const action={combat:'train_combat',vitality:'train_vitality',defense:'train_defense',archery:'train_archery',sorcery:'train_magic'}[id];return batch(E.isKnown(s,action)?action:'train_combat');}
@@ -45,6 +47,7 @@ function prepare(){steps++;const stats=E.getStats(s),wave=s.run.wave,remaining=s
  }
  category='supplies';if(s.run.resources.herb_soup<potionCapacity(s)&&goal('cook_meal'))return;
  category='facilities';
+ if(specialists&&wave>=3){const ids=policy==='martial'?['archery_range','arcane_study']:policy==='fortress'?['laboratory']:['workhouse','kitchen','housing'];for(const id of ids)if(facility(id,Math.min(3,1+Math.floor(wave/9))))return;}
  const cap=Math.min(5,1+Math.floor(wave/4));
  const facilities=policy==='martial'?['infirmary','training_yard','barricade','market','watchtower']:policy==='fortress'?['infirmary','barricade','archery_tower','guardhouse','market','watchtower','training_yard']:['infirmary','market','workshop','watchtower','guardhouse','barricade','archery_tower','training_yard'];
  for(const f of facilities)if(facility(f,f==='market'?1:cap))return;
@@ -60,4 +63,4 @@ for(let n=0;n<maxRuns;n++){
  console.log(policy,seed,'generation',s.meta.generation,'wave',s.run.wave,'pts',s.meta.totalPoints,'hp',E.getStats(s).maxHp);
  if(s.run.status==='cleared'){fs.writeFileSync(`${output}/${policy}-${seed}-clear.json`,E.serializeGame(s));break;}if(guard>=200000)throw Error('operations exhausted');E.restartRun(s);buy();E.confirmRun(s,options);
 }
-const result={policy,seed,cleared:s.run.status==='cleared',ticks,simulatedSeconds:ticks*.25,runs,ledger};fs.writeFileSync(`${output}/${policy}-${seed}.json`,JSON.stringify(result,null,2));if(!result.cleared)process.exitCode=1;
+const result={policy,seed,specialists,cleared:s.run.status==='cleared',ticks,simulatedSeconds:ticks*.25,runs,ledger};fs.writeFileSync(`${output}/${policy}-${seed}.json`,JSON.stringify(result,null,2));if(!result.cleared)process.exitCode=1;
