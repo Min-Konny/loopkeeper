@@ -1,2 +1,2 @@
-import {startRoute,withdrawRoute}from './mvp-engine.js?v=0.6.71';import {commitStoredGameEdit}from './save-storage.js?v=0.6.71';
+import {startRoute,withdrawRoute}from './mvp-engine.js?v=0.6.72';import {commitStoredGameEdit}from './save-storage.js?v=0.6.72';
 export function editStoredRoute(storage,current,id,{withdraw=false,isOwner=()=>false,now=Date.now()}={}){if(!isOwner())return {ok:false,reason:'別のタブでプレイ中です。'};const next=structuredClone(current),r=withdraw?withdrawRoute(next):startRoute(next,id);if(!r.ok)return r;if(!isOwner())return {ok:false,reason:'操作権が移ったため中止しました。'};try{return {ok:true,state:commitStoredGameEdit(storage,current,next,{now})};}catch{return {ok:false,reason:'保存できなかったため地域の変更を中止しました。'};}}

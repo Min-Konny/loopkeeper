@@ -1,9 +1,9 @@
-import {preparationBalance}from './preparation-balance.js?v=0.6.71';
-import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.71';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.71';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.71';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.71';
-import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.71';
+import {preparationBalance}from './preparation-balance.js?v=0.6.72';
+import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.72';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.72';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.72';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.72';
+import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.72';
 import {
   ACCELERATION,
   LEGACY_UPGRADES,
@@ -11,8 +11,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.6.71";
-import { icon } from "./icons.js?v=0.6.71";
+} from "./engine.js?v=0.6.72";
+import { icon } from "./icons.js?v=0.6.72";
 
 const escape = (value) =>
   String(value ?? "").replace(
@@ -37,12 +37,12 @@ const symbols = {
 const descriptions = {
   action_queue: "素材集めから製作まで予約。最大8件。",
   auto_cook: "材料を使い、食料を並行して調理。",
-  lumber_worker: "準備中、6秒ごとに木材 +1。",
-  mining_worker: "準備中、7秒ごとに石材 +1。",
+  lumber_worker: "準備中、12秒ごとに木材 +1。",
+  mining_worker: "準備中、14秒ごとに石材 +1。",
   economy_augments: "基本候補に収入・投資の4種類を追加。最高6・9波で建設連鎖や備蓄など計8種類まで増える。",
   martial_augments: "基本候補に賞金・鍛錬の4種類を追加。最高6・9波で追い込みや追撃など計8種類まで増える。",
   fortress_augments: "基本候補に初撃・救護の2種類を追加。最高6・9波で兵糧・破甲・反撃など計6種類まで増える。",
-  foraging_worker: "準備中、8秒ごとに薬草または食料を集める。",
+  foraging_worker: "準備中、16秒ごとに薬草または食料を集める。",
   processing_worker: "材料を使い、指定した金属を並行して加工。",
   queue_templates: "手順の保存・呼出と、在庫数・Lvを目標にする条件付き予約。",
   stock_targets: "主作業が空いたとき、指定した在庫を補充。",

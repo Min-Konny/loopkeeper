@@ -1,13 +1,13 @@
-import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.71';
-import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.71';
-import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.71';
-import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.71';
-import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.71';
-import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.71';
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.71';
-import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.71';
-import { REINFORCEMENTS } from './endless.js?v=0.6.71';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.71';
+import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.72';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.72';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.72';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.72';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.72';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.72';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.72';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.72';
+import { REINFORCEMENTS } from './endless.js?v=0.6.72';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.72';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -3612,7 +3612,7 @@ WEAPONS.push(MAGIC_WEAPON);CONTENT.equipment.push(MAGIC_WEAPON);CONTENT.resource
 CONTENT.resources.push(...FARM_RESOURCES);CONTENT.actions.push(FARM_ACTION);CONTENT.facilities.push(FARM_FACILITY);CONTENT.processing.push(FARM_RECIPE);CONTENT.workers.find(w=>w.id==='foraging_worker').resourceChoices.push('fodder');CONTENT.market.push({id:'buy_eggs',name:'卵を購入',direction:'buy',resource:'eggs',quantity:10,gold:30,discountEligible:false});
 
 CONTENT.resources.push(...MEAL_RESOURCES);CONTENT.facilities.push(PRESSURE_FACILITY);
-for(const m of MEALS){const recipe=CONTENT.processing.find(x=>x.id===m.recipe);recipe.yields={[m.id]:m.units};recipe.description=m.name+' '+m.units+'食。1食で通常の回復と'+m.label+'（90戦闘秒）。効果は1種類、同じ料理は時間更新。';}
+for(const m of MEALS){const recipe=CONTENT.processing.find(x=>x.id===m.recipe);recipe.yields={[m.id]:m.units};recipe.description=m.name+' '+m.units+'食。1食で'+m.label+'（90戦闘秒）。効果は1種類、同じ料理は時間更新。';}
 
 // Separate battle supplies from ordinary food; existing food stocks stay food.
 CONTENT.resources.push({id:'herb_soup',name:'薬草のスープ'});
@@ -3627,4 +3627,17 @@ for(const base of CONTENT.facilities.filter(f=>f.facilityId==='workshop')){
  cost:{...base.cost,wood:Math.ceil(base.cost.wood*1.2),stone:Math.ceil(base.cost.stone*1.2),hide:level*4},
  requires:level===1?[]:[level===2?'training_yard':`training_yard_level_${level-1}`],
  effect:{trainingSpeed:level*.15},description:`攻撃・防御・体力の訓練速度 +${level*15}%` });
+}
+
+// Gatherers supplement early manual work; later upgrades can carry production.
+for(const [id,intervals] of Object.entries({lumber_worker:[12,8,5],mining_worker:[14,10,7],foraging_worker:[16,10,7]})){
+ const worker=CONTENT.workers.find(w=>w.id===id);
+ worker.levels.forEach((level,index)=>{level.interval=intervals[index];});
+}
+
+CONTENT.actions.push({id:'repair_work',name:'修繕の仕事',skill:'smithing',duration:20,yields:{gold:2},unlockLevel:1,knownAfterBoss:null,xpCoefficient:.25});
+// No gold prerequisite for the first trading post; all other village investments compete for income.
+for(const facility of CONTENT.facilities){
+ if(facility.facilityId==='market'&&facility.level===1){facility.cost={...facility.cost};delete facility.cost.gold;continue;}
+ facility.cost={...facility.cost,gold:Math.ceil((facility.cost.gold||facility.level*4)*1.5)};
 }

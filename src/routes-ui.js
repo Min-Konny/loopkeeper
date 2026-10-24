@@ -1,8 +1,8 @@
-import {getClockStatus} from './engine.js?v=0.6.71';
-import {preparationRoute} from './preparation-balance.js?v=0.6.71';
-import {earlyRoutePoints} from './early-loop.js?v=0.6.71';
-import {lateLoop,repeatRouteValue} from './late-loop.js?v=0.6.71';
-import {ROUTES,canEnterRoute,routeEffects} from './routes.js?v=0.6.71';
+import {getClockStatus} from './engine.js?v=0.6.72';
+import {preparationRoute} from './preparation-balance.js?v=0.6.72';
+import {earlyRoutePoints} from './early-loop.js?v=0.6.72';
+import {lateLoop,repeatRouteValue} from './late-loop.js?v=0.6.72';
+import {ROUTES,canEnterRoute,routeEffects,routeGoldReward} from './routes.js?v=0.6.72';
 
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const order=['forest','forest_depth','quarry','quarry_depth','marsh','marsh_depth','citadel','river','forge','observatory','ice'];
@@ -27,7 +27,7 @@ function card(s,{definition:d,entry}) {
     +'<header><h4>'+esc(d.name)+'</h4><span class="route-danger">'+esc(d.danger)+'</span></header>'
     +'<p class="route-requirement">'+esc(requirement(d))+'</p>'
     +'<p class="route-main-reward">'+esc(routeBuffText(d.buff))+' <small>この命</small></p>'
-    +'<p class="route-extra-reward">'+esc(pointReward(s,d))+(d.material?'／'+esc(d.materialName)+' +1/命':'')+'</p>'
+    +'<p class="route-extra-reward">'+esc(pointReward(s,d))+'／金貨 +'+routeGoldReward(d.id)+(d.material?'／'+esc(d.materialName)+' +1/命':'')+'</p>'
     +(!entry.ok?'<p class="route-blocked">'+esc(entry.reason)+'</p>':'')
     +'<div class="route-card-actions"><details class="route-details" data-detail-key="route-detail-'+d.id+'"><summary data-focus="route-detail-'+d.id+'">敵・攻略の詳細</summary><p>HP '+d.hp+' / 攻撃 '+d.attack+' / 防御 '+d.defense+'</p><p>'+esc(d.hint)+'</p></details>'
     +'<button class="button small" data-route="'+d.id+'" data-focus="route-start-'+d.id+'" '+(entry.ok?'':'disabled')+' aria-label="'+esc(d.name)+'へ出発">出発</button></div></article>';
@@ -36,7 +36,7 @@ function result(s) {
   const last=s.run.routes?.last;if(!last)return '';
   const d=ROUTES.find(x=>x.id===last.id),clock=getClockStatus(s);
   const next=s.settings.paused?'時間停止中。次の道や作業を選べます。':clock.kind==='work'?'作業を再開：'+clock.label:clock.kind==='automation'||clock.kind==='wait'?'時間進行中：'+clock.label:'行動がないため時間停止中。次の道や作業を選べます。';
-  return '<div class="route-result" role="status" tabindex="-1" data-focus="route-result"><strong>帰還：'+esc(d?.name)+' — '+esc(last.reason)+'</strong><span>'+Number(last.seconds).toFixed(1)+'秒／継承 +'+last.points+'pt'+(last.won&&d?.material?'／'+esc(d.materialName)+' +1':'')+'</span><p>'+esc(next)+'</p></div>';
+  return '<div class="route-result" role="status" tabindex="-1" data-focus="route-result"><strong>帰還：'+esc(d?.name)+' — '+esc(last.reason)+'</strong><span>'+Number(last.seconds).toFixed(1)+'秒／継承 +'+last.points+'pt'+(last.won?'／金貨 +'+routeGoldReward(last.id):'')+(last.won&&d?.material?'／'+esc(d.materialName)+' +1':'')+'</span><p>'+esc(next)+'</p></div>';
 }
 export function routesMarkup(s,showCompleted=false) {
   if(s.version===1||s.meta.bestWave<3)return '';
