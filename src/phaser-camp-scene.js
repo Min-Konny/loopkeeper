@@ -1,9 +1,9 @@
-import{campBuildings}from './camp-layout.js?v=0.6.67';
-import{loadCampArt,generatedWorkerAtlas,paintGeneratedCamp}from './generated-camp-art.js?v=0.6.67';
-import {mountPixelCamp}from './pixel-camp-scene.js?v=0.6.67';
-import {createPixelCampRenderer}from './pixel-camp-art.js?v=0.6.67';
-import {createCampActorAtlas}from './camp-actor-art.js?v=0.6.67';
-import {campSnapshot,lumberjackPose}from './camp-motion.js?v=0.6.67';
+import{campBuildings}from './camp-layout.js?v=0.6.68';
+import{loadCampArt,generatedWorkerAtlas,paintGeneratedCamp}from './generated-camp-art.js?v=0.6.68';
+import {mountPixelCamp}from './pixel-camp-scene.js?v=0.6.68';
+import {createPixelCampRenderer}from './pixel-camp-art.js?v=0.6.68';
+import {createCampActorAtlas}from './camp-actor-art.js?v=0.6.68';
+import {campSnapshot,lumberjackPose}from './camp-motion.js?v=0.6.68';
 
 const mounted=new WeakMap();let library;
 const loadLibrary=()=>library??=import('./vendor/phaser-3.90.0.esm.min.js').then(m=>m.default||m);
@@ -11,7 +11,7 @@ const loadLibrary=()=>library??=import('./vendor/phaser-3.90.0.esm.min.js').then
 export function mountPhaserCamp(host){
  if(mounted.has(host))return mounted.get(host);
  host.dataset.campArtwork='loading';
- const fallback=mountPixelCamp(host),fallbackLayer=host.querySelector('.pixel-camp-layer'),layer=document.createElement('div');layer.className='pixel-camp-layer phaser-camp-layer';layer.hidden=true;layer.setAttribute('aria-hidden','true');host.append(layer);
+ const fallback=mountPixelCamp(host),fallbackLayer=host.querySelector('.pixel-camp-layer'),layer=document.createElement('div');layer.className='pixel-camp-layer phaser-camp-layer';layer.hidden=true;layer.style.visibility='hidden';layer.setAttribute('aria-hidden','true');host.append(layer);
  const legend=document.createElement('details');legend.className='camp-facility-key';const summary=document.createElement('summary'),list=document.createElement('p');legend.append(summary,list);host.after(legend);
  let staticArt=null,staticAtlas=null,artLoading=false;
  function staticView(){if(!staticArt||!layer.hidden)return;const canvas=fallbackLayer.querySelector('canvas');paintGeneratedCamp(canvas,campSnapshot(model),staticArt);const c=canvas.getContext('2d');c.imageSmoothingEnabled=false;c.fillStyle='#102b1e99';c.beginPath();c.ellipse(126,203,12,3,0,0,Math.PI*2);c.fill();c.drawImage(staticAtlas,0,0,96,104,105,158.25,42,45.5);}
@@ -22,7 +22,7 @@ export function mountPhaserCamp(host){
  function sync(){if(disposed)return;if(visible)ensureArt();const run=running();host.dataset.campMotion=run&&scene?'running':'stopped';if(scene){if(dirty)scene.refresh();fallback.setActive(false);layer.hidden=!active||reduced.matches;fallbackLayer.hidden=!layer.hidden;if(run){if(!game.loop.running)game.loop.wake();}else{game.loop.sleep();}}else{fallback.setActive(active&&!staticArt);if(run&&!loading&&!failed)boot();}staticView();}
  async function boot(){loading=true;try{const P=await loadLibrary();if(disposed)return;
   class CampScene extends P.Scene{
-   create(){this.backing=document.createElement('canvas');this.backing.width=480;this.backing.height=240;this.paint=createPixelCampRenderer(this.backing);this.textures.addCanvas('camp',this.backing);this.add.image(0,0,'camp').setOrigin(0);this.shadow=this.add.ellipse(126,203,24,6,0x102b1e,.6);const atlas=createCampActorAtlas(),texture=this.textures.addCanvas('woodcutter',atlas);for(let n=0;n<12;n++)texture.add(n,0,n*32,0,32,36);this.worker=this.add.sprite(126,202,'woodcutter',0).setOrigin(.5,1);this.smoke=Array.from({length:6},()=>this.add.rectangle(0,0,7,5,0xbac4ad).setAlpha(0));this.chips=Array.from({length:3},()=>this.add.rectangle(0,0,2,1,0xd4b47d).setAlpha(0));this.clock=0;scene=this;loadCampArt().then(art=>{if(!scene||failed)return;this.art=art;const a=generatedWorkerAtlas(art.worker),tex=this.textures.addCanvas('generated-woodcutter',a);for(let n=0;n<12;n++)tex.add(n,0,n*96,0,96,104);this.worker.setTexture('generated-woodcutter',0).setDisplaySize(42,45.5).setOrigin(.5,100/104);this.refresh();host.dataset.campArtwork='generated';}).catch(error=>{host.dataset.artworkFailure=error.message;});this.refresh();host.dataset.campRenderer='phaser';layer.hidden=false;fallbackLayer.hidden=true;fallback.setActive(false);if(!running())game.loop.sleep();}
+   create(){this.backing=document.createElement('canvas');this.backing.width=480;this.backing.height=240;this.paint=createPixelCampRenderer(this.backing);this.textures.addCanvas('camp',this.backing);this.add.image(0,0,'camp').setOrigin(0);this.shadow=this.add.ellipse(126,203,24,6,0x102b1e,.6);const atlas=createCampActorAtlas(),texture=this.textures.addCanvas('woodcutter',atlas);for(let n=0;n<12;n++)texture.add(n,0,n*32,0,32,36);this.worker=this.add.sprite(126,202,'woodcutter',0).setOrigin(.5,1);this.smoke=Array.from({length:6},()=>this.add.rectangle(0,0,7,5,0xbac4ad).setAlpha(0));this.chips=Array.from({length:3},()=>this.add.rectangle(0,0,2,1,0xd4b47d).setAlpha(0));this.clock=0;scene=this;loadCampArt().then(art=>{if(!scene||failed)return;this.art=art;const a=generatedWorkerAtlas(art.worker),tex=this.textures.addCanvas('generated-woodcutter',a);for(let n=0;n<12;n++)tex.add(n,0,n*96,0,96,104);this.worker.setTexture('generated-woodcutter',0).setDisplaySize(42,45.5).setOrigin(.5,100/104);this.refresh();host.dataset.campArtwork='generated';layer.style.visibility='';}).catch(error=>{if(disposed)return;host.dataset.artworkFailure=error.message;host.dataset.campArtwork='fallback';layer.style.visibility='';});this.refresh();host.dataset.campRenderer='phaser';layer.hidden=false;fallbackLayer.hidden=true;fallback.setActive(false);if(!running())game.loop.sleep();}
    refresh(){try{if(this.art)paintGeneratedCamp(this.backing,campSnapshot(model),this.art);else this.paint(0,campSnapshot(model));this.textures.get('camp').refresh();dirty=false;this.drawActors();}catch{fail();}}
    drawActors(){const pose=lumberjackPose(this.clock,model.chopping);this.worker.setPosition(pose.x,pose.y).setFrame(pose.frame).setFlipX(pose.flip);this.worker.setDepth(pose.y);this.shadow.setPosition(pose.x,pose.y+1).setDepth(pose.y-1);for(let i=0;i<this.smoke.length;i++){const t=(this.clock*.18+i/6)%1;this.smoke[i].setVisible(!!model.facilities.workshop).setPosition((this.art?411:363)+Math.sin(t*5+i)*5,(this.art?96:77)-t*31).setAlpha((1-t)*.23).setScale(.6+t*1.4).setDepth(150);}for(let i=0;i<this.chips.length;i++)this.chips[i].setPosition(pose.x+16+i*3,pose.y-10-i*3).setAlpha(pose.chips?.8:0).setDepth(210);}
    update(_time,delta){if(!running())return;try{this.clock+=Math.min(delta,100)/1000;this.drawActors();}catch{fail();}}

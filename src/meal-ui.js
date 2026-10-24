@@ -1,6 +1,6 @@
-import{MEALS}from './meal-content.js?v=0.6.67';
-import{mealStatus,totalFood}from './meals.js?v=0.6.67';
-import{automationStatusMarkup,cookingChoiceText,cookingBatchText,escapeText as esc}from './automation-status-ui.js?v=0.6.67';
+import{MEALS}from './meal-content.js?v=0.6.68';
+import{mealStatus,totalFood}from './meals.js?v=0.6.68';
+import{automationStatusMarkup,cookingChoiceText,cookingBatchText,escapeText as esc}from './automation-status-ui.js?v=0.6.68';
 const option=(id,label,value)=>`<option value="${id}" ${id===value?'selected':''}>${esc(label)}</option>`;
 export function mealEffectText(s){const m=mealStatus(s);return m?`${m.name}：${m.label} · 残り${Math.ceil(m.remaining)}戦闘秒`:'食事効果なし';}
 export function mealMarkup(s){

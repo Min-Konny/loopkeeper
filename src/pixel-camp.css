@@ -108,3 +108,16 @@
 [data-camp-artwork=loading] .pixel-camp-layer,[data-battle-backdrop=loading]>.pixel-camp-layer{background-image:url('../assets/pixel-v2/forest-clearing-v1.png');background-size:cover;background-position:center}[data-camp-artwork=loading] .pixel-camp-layer canvas,[data-battle-backdrop=loading]>.pixel-camp-layer canvas{visibility:hidden}
 
 .work-vignette[data-work-artwork=loading]{background:#22352b url('../assets/pixel-v2/forest-clearing-v1.png') center/cover}.work-vignette[data-generated-work=fishing][data-work-artwork=loading]{background-image:url('../assets/pixel-v2/fishing-bank-v2.png')}.work-vignette[data-work-artwork=loading] [data-work-fallback]{visibility:hidden}
+
+/* Reserve the scene while new artwork loads; old art is for actual failures only. */
+[data-camp-artwork="loading"] > .pixel-camp-layer,
+[data-battle-backdrop="loading"] > .pixel-camp-layer { visibility: hidden; }
+
+/* Keep the work scene footprint, without flashing the legacy SVG during loading. */
+[data-work-artwork="loading"] [data-work-fallback] { visibility: hidden; }
+/* Both renderers occupy the same reserved footprint, even while decoding. */
+.generated-work-portrait > svg,
+.generated-work-portrait > [data-work-canvas] {
+  position: absolute;
+  inset: 0;
+}

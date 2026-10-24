@@ -1,15 +1,15 @@
-import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.67';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.67';
-import {stockIcon as icon}from './stock-icons.js?v=0.6.67';
-import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.67';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.67';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.67';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.67';
-import {hasUpgrade}from './free-features.js?v=0.6.67';
-import { getStartingResources } from './engine.js?v=0.6.67';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.67';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.67";
-import { CONTENT as C } from "./content.js?v=0.6.67";
+import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.68';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.68';
+import {stockIcon as icon}from './stock-icons.js?v=0.6.68';
+import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.68';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.68';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.68';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.68';
+import {hasUpgrade}from './free-features.js?v=0.6.68';
+import { getStartingResources } from './engine.js?v=0.6.68';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.68';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.68";
+import { CONTENT as C } from "./content.js?v=0.6.68";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -25,7 +25,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.67";
+} from "./engine.js?v=0.6.68";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,

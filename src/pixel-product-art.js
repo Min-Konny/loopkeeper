@@ -1,6 +1,6 @@
-import {facilityFrame} from './facility-art.js?v=0.6.67';
-import {equipmentMaterial} from './visual-design.js?v=0.6.67';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.67';
+import {facilityFrame} from './facility-art.js?v=0.6.68';
+import {equipmentMaterial} from './visual-design.js?v=0.6.68';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.68';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map(),failedFacilitySheets=new Set();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
