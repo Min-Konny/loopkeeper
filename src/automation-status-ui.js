@@ -1,5 +1,6 @@
-import {CONTENT as C} from './content.js?v=0.6.74';
-import {RECIPES,LEGACY_UPGRADES,getAutoCookingStatus,getProcessingStatus,canConfigureWorker} from './engine.js?v=0.6.74';
+import {staffing}from './settlement.js?v=0.6.75';
+import {CONTENT as C} from './content.js?v=0.6.75';
+import {RECIPES,LEGACY_UPGRADES,getAutoCookingStatus,getProcessingStatus,canConfigureWorker} from './engine.js?v=0.6.75';
 
 export const escapeText=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const recipes=new Map(RECIPES.map(r=>[r.id,r]));
@@ -21,6 +22,7 @@ export function automationRows(s){
     const worker=s.run.workers[w.id],batch=worker.batch;
     let code='ready',text='次の作業を待っています';
     if(s.settings.disabledUpgrades.includes(w.id)){code='disabled';text='OFF';}
+    else if(!staffing(s,w.id)){code='unstaffed';text='人員未配置 · 人員画面で配置してください';}
     else if(s.run.status!=='preparing'){code='inactive';text='準備中のみ作業';}
     else if(batch){code=s.settings.paused?'paused':'working';text=`${s.settings.paused?'一時停止中':'稼働中'} · 残り${remaining(batch)}ゲーム秒`;}
     else {const allowed=canConfigureWorker(s,w.id,worker.target);if(!allowed.ok){code='unavailable';text=allowed.reason;}else if(s.settings.paused){code='paused';text='時間停止中';}}

@@ -1,14 +1,15 @@
-import {WORKER_RANK_UPGRADES,WORKER_NAMES,workerLevel,workerRankDescription}from './worker-legacy.js?v=0.6.74';
-import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.74';
-import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.74';
-import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.74';
-import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.74';
-import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.74';
-import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.74';
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.74';
-import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.74';
-import { REINFORCEMENTS } from './endless.js?v=0.6.74';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.74';
+import {HOUSING,OUTPOST_BUILDINGS,EXPEDITIONS}from './settlement-content.js?v=0.6.75';
+import {WORKER_RANK_UPGRADES,WORKER_NAMES,workerLevel,workerRankDescription}from './worker-legacy.js?v=0.6.75';
+import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.75';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.75';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.75';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.75';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.75';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.75';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.75';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.75';
+import { REINFORCEMENTS } from './endless.js?v=0.6.75';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.75';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -3651,3 +3652,6 @@ for(const [id,cost]of Object.entries({cook_fish:{fish:6,herbs:3,wood:2},egg_stew
 
 CONTENT.legacy.push(...WORKER_RANK_UPGRADES);
 for(const w of CONTENT.workers){w.levels=Array.from({length:20},(_,i)=>workerLevel(w.id,i+1));const base=CONTENT.legacy.find(u=>u.id===w.id);base.description=workerRankDescription(w.id,1);base.name=WORKER_NAMES[w.id]+'を雇う';}
+
+CONTENT.facilities.push(...HOUSING,...OUTPOST_BUILDINGS);
+CONTENT.processing.push(...EXPEDITIONS);

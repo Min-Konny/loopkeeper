@@ -1,11 +1,11 @@
-import {getPlanningYields,getRequiredProductionBatches}from './engine.js?v=0.6.74';
-import {enqueueTrainingLevel}from './engine.js?v=0.6.74';
-import {trophyShortage} from './boss-materials.js?v=0.6.74';
-import {hasUpgrade}from './free-features.js?v=0.6.74';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.74';
-import { getActionXp } from './engine.js?v=0.6.74';
-import * as old from "./legacy-planner.js?v=0.6.74";
-import { orderRecipeMaterials } from './engine.js?v=0.6.74';
+import {getPlanningYields,getRequiredProductionBatches}from './engine.js?v=0.6.75';
+import {enqueueTrainingLevel}from './engine.js?v=0.6.75';
+import {trophyShortage} from './boss-materials.js?v=0.6.75';
+import {hasUpgrade}from './free-features.js?v=0.6.75';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.75';
+import { getActionXp } from './engine.js?v=0.6.75';
+import * as old from "./legacy-planner.js?v=0.6.75";
+import { orderRecipeMaterials } from './engine.js?v=0.6.75';
 import {
   isLegacy,
   getCatalog,
@@ -24,7 +24,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.6.74";
+} from "./engine.js?v=0.6.75";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");
@@ -35,6 +35,12 @@ export function planCraft(s, id, count = 1) {
   if (!d || !isKnown(s, d)) return fail("未発見の製作です。");
   if (s.run.status !== "preparing") return fail("準備中に予約してください。");
   if(d.equipment&&s.run.ownedEquipment?.includes(id)&&s.run.activeAction?.id!==id&&!s.run.suspendedActions[id])return fail("所持済みです。状態・装備で切り替えられます。");
+  if(d.expedition){
+    if(!s.meta.routeClears?.includes(d.expedition))return fail('一度突破した拠点のみ再開拓を予約できます。');
+    const foundation='outpost_'+d.expedition;
+    const plan=s.run.facilities[foundation]?{ok:true,steps:[],seconds:0,summary:''}:planCraft(s,foundation,1);
+    return plan.ok?{...plan,summary:(plan.summary?plan.summary+' → ':'')+'守護敵（最大30秒・襲撃が近い時は保留）',seconds:plan.seconds+30}:plan;
+  }
   const shadow=structuredClone(s);
   const inventory = { ...s.run.resources },
     steps = [];
@@ -132,7 +138,7 @@ export function planCraft(s, id, count = 1) {
     for (const r of Object.keys(fresh))inventory[r]=(inventory[r]||0)+(first[r]||0)+fresh[r]*(n-1);
   }
   try {
-    craft(d, d.equipment || d.facility || d.endlessFacility || d.accessory ? 1 : count);
+    craft(d, d.equipment || d.facility || d.endlessFacility || d.accessory || d.expedition ? 1 : count);
     return {
       ok: true,
       reason: "",
@@ -163,7 +169,7 @@ export function prioritizeAddedReservations(s, previousLength) {
 }
 export function queueAction(s, id, count, position = "end") {
   const d = getCatalog(s).RECIPES.find(r => r.id === id);
-  const existing = (d?.equipment || d?.facility) ? s.run.queue.findIndex(q => q.id === id) : -1;
+  const existing = (d?.equipment || d?.facility || d?.expedition) ? s.run.queue.findIndex(q => q.id === id) : -1;
   if (position === "front" && existing >= 0) {
     if (!hasUpgrade(s,"action_queue") || s.run.status !== "preparing") return fail("準備中に予約してください。");
     const paidGoalId = !isLegacy(s) && s.run.activeAction?.kind === "craft" ? s.run.activeAction.goalId : undefined;
@@ -190,12 +196,12 @@ export function queueCraft(s, id, position = "end", count = 1) {
   s.settings.disabledUpgrades = s.settings.disabledUpgrades.filter(
     (x) => x !== "action_queue",
   );
-  const result = queueAction(s, id, d.equipment || d.facility || d.endlessFacility || d.accessory ? 1 : count, position);
+  const result = queueAction(s, id, d.equipment || d.facility || d.endlessFacility || d.accessory || d.expedition ? 1 : count, position);
   if (!result.ok) {
     s.settings.disabledUpgrades = previousDisabled;
     return fail(result.reason);
   }
-  return { ok: true, reason: "", moved: result.moved, steps: [{ id, count: d.equipment || d.facility || d.endlessFacility || d.accessory ? 1 : count }] };
+  return { ok: true, reason: "", moved: result.moved, steps: [{ id, count: d.equipment || d.facility || d.endlessFacility || d.accessory || d.expedition ? 1 : count }] };
 }
 
 

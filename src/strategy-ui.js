@@ -1,10 +1,10 @@
-import {finalWaveForRun,campaignForRun}from './campaign-rules.js?v=0.6.74';
-import {hasUpgrade}from './free-features.js?v=0.6.74';
-import { CONTENT } from './content.js?v=0.6.74';
-import { setTextIfChanged } from './dom-text.js?v=0.6.74';
-import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.6.74';
-import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.6.74';
-import { conditionLabel } from './queue-conditions.js?v=0.6.74';
+import {finalWaveForRun,campaignForRun}from './campaign-rules.js?v=0.6.75';
+import {hasUpgrade}from './free-features.js?v=0.6.75';
+import { CONTENT } from './content.js?v=0.6.75';
+import { setTextIfChanged } from './dom-text.js?v=0.6.75';
+import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.6.75';
+import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.6.75';
+import { conditionLabel } from './queue-conditions.js?v=0.6.75';
 const esc = x => String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Math.round(n).toLocaleString('ja-JP');
 const duration = n => {
@@ -85,7 +85,7 @@ export function conditionalRequest() {
 }
 export function conditionalMarkup(s) {
   if (s.version !== 2 || !hasUpgrade(s,"queue_templates")) return '';
-  const actions = [...CONTENT.actions,...CONTENT.processing].filter(d=>(d.unlockBestWave || 0)<=s.meta.bestWave && (!d.knownAfterBoss || CONTENT.encounters.find(e=>e.id===d.knownAfterBoss)?.wave<=s.meta.bestWave));
+  const actions = [...CONTENT.actions,...CONTENT.processing].filter(d=>!d.expedition&&(d.unlockBestWave || 0)<=s.meta.bestWave && (!d.knownAfterBoss || CONTENT.encounters.find(e=>e.id===d.knownAfterBoss)?.wave<=s.meta.bestWave));
   if (!actions.some(d=>d.id===draft.action)) draft.action = actions[0]?.id;
   const action = actions.find(d=>d.id===draft.action);
   draftLevel = getSkillProgress(["defense","vitality"].includes(action?.trainingStat) ? s.run.training?.[action.trainingStat] || 0 : s.run.skills[action?.skill]?.xp || 0).level;

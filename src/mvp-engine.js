@@ -1,44 +1,46 @@
-import {workerRank,workerRankId}from './worker-legacy.js?v=0.6.74';
-import {applyGatheringMaterialSaving}from './gathering-materials.js?v=0.6.74';
-import {mealByRecipe}from './meal-content.js?v=0.6.74';
-import {initializeMeals,totalFood,battleFood,mealEffects,consumeFood,consumeAutomaticFood,serveBattleMeal,advanceMeal}from './meals.js?v=0.6.74';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.74';
-import {preparationEnemyAttack,preparationCostFactor,preparationChannelDuration,preparationRoute}from './preparation-balance.js?v=0.6.74';
-import {lateLoop,lateEncounter,lateRelief}from './late-loop.js?v=0.6.74';
-import {earlyLoop,earlyDefinition,earlyEncounter,earlyJobMultiplier}from './early-loop.js?v=0.6.74';
-import {recordWorkMilestone}from './work-milestones.js?v=0.6.74';
-import {awardTrophy,trophyShortage,payTrophies,refundUnfinishedTrophies} from './boss-materials.js?v=0.6.74';
-import {EXTENDED_CAMPAIGN,FRONTIER_CAMPAIGN,CLASSIC_CAMPAIGN,campaignFinalWave,campaignIncludes,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.6.74';
-import {investmentEffect}from './investments.js?v=0.6.74';
-import {freshContracts,contractEffects}from './contracts.js?v=0.6.74';
-import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.6.74';
-import {freshFarm,advanceFarm}from './farm-state.js?v=0.6.74';import {farmResource,resourceCap}from './farm-content.js?v=0.6.74';
-import {companionById}from './companion-content.js?v=0.6.74';
-import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.6.74';
-import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.6.74';import {alchemyResource}from './magic-content.js?v=0.6.74';
-import {weaponById}from './gear-content.js?v=0.6.74';
-import {initializeGear,accessoryEffects,combatBuild,strikeModifier,changeGear}from './gear-state.js?v=0.6.74';
-import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.6.74';
-import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.6.74';
-import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.6.74';
-import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.6.74';
-import { maximumTradeCount } from './maximum-trade.js?v=0.6.74';
-import { startingGrant } from './starting-resources.js?v=0.6.74';
-import { tradeSaleUnit } from './fish-economy.js?v=0.6.74';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.74';
-import { recordReward } from './reward-events.js?v=0.6.74';
-import { observesWork, completedWork } from './work-completion.js?v=0.6.74';
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.6.74';
-import { validCondition, goalSatisfied, isCombatTraining } from './queue-conditions.js?v=0.6.74';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.6.74';
-import { CONTENT as C } from "./content.js?v=0.6.74";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.6.74";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.6.74";
+import {initializeSettlement,staffing,advanceOutposts}from './settlement.js?v=0.6.75';
+import {OUTPOSTS,outpostId,outpostRecipe}from './settlement-content.js?v=0.6.75';
+import {workerRank,workerRankId}from './worker-legacy.js?v=0.6.75';
+import {applyGatheringMaterialSaving}from './gathering-materials.js?v=0.6.75';
+import {mealByRecipe}from './meal-content.js?v=0.6.75';
+import {initializeMeals,totalFood,battleFood,mealEffects,consumeFood,consumeAutomaticFood,serveBattleMeal,advanceMeal}from './meals.js?v=0.6.75';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.75';
+import {preparationEnemyAttack,preparationCostFactor,preparationChannelDuration,preparationRoute}from './preparation-balance.js?v=0.6.75';
+import {lateLoop,lateEncounter,lateRelief}from './late-loop.js?v=0.6.75';
+import {earlyLoop,earlyDefinition,earlyEncounter,earlyJobMultiplier}from './early-loop.js?v=0.6.75';
+import {recordWorkMilestone}from './work-milestones.js?v=0.6.75';
+import {awardTrophy,trophyShortage,payTrophies,refundUnfinishedTrophies} from './boss-materials.js?v=0.6.75';
+import {EXTENDED_CAMPAIGN,FRONTIER_CAMPAIGN,CLASSIC_CAMPAIGN,campaignFinalWave,campaignIncludes,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.6.75';
+import {investmentEffect}from './investments.js?v=0.6.75';
+import {freshContracts,contractEffects}from './contracts.js?v=0.6.75';
+import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.6.75';
+import {freshFarm,advanceFarm}from './farm-state.js?v=0.6.75';import {farmResource,resourceCap}from './farm-content.js?v=0.6.75';
+import {companionById}from './companion-content.js?v=0.6.75';
+import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.6.75';
+import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.6.75';import {alchemyResource}from './magic-content.js?v=0.6.75';
+import {weaponById}from './gear-content.js?v=0.6.75';
+import {initializeGear,accessoryEffects,combatBuild,strikeModifier,changeGear}from './gear-state.js?v=0.6.75';
+import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.6.75';
+import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.6.75';
+import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.6.75';
+import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.6.75';
+import { maximumTradeCount } from './maximum-trade.js?v=0.6.75';
+import { startingGrant } from './starting-resources.js?v=0.6.75';
+import { tradeSaleUnit } from './fish-economy.js?v=0.6.75';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.75';
+import { recordReward } from './reward-events.js?v=0.6.75';
+import { observesWork, completedWork } from './work-completion.js?v=0.6.75';
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.6.75';
+import { validCondition, goalSatisfied, isCombatTraining } from './queue-conditions.js?v=0.6.75';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.6.75';
+import { CONTENT as C } from "./content.js?v=0.6.75";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.6.75";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.6.75";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.6.74";
+} from "./legacy-engine.js?v=0.6.75";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -375,7 +377,7 @@ export function createGame({campaign=FRONTIER_CAMPAIGN,earlyLoopPrototype=false,
 export function isKnown(s, d) {
   if (typeof d === "string") d = defs.get(d);
   return (
-    !!d && campaignIncludes(s,d.campaign) && (!d.endlessFacility || s.run.endless?.active) &&
+    !!d && (!d.expedition||s.meta.routeClears?.includes(d.expedition)) && campaignIncludes(s,d.campaign) && (!d.endlessFacility || s.run.endless?.active) &&
     s.meta.bestWave >=
       (typeof d.knownAfterBoss === "string"
         ? (C.encounters.find((e) => e.id === d.knownAfterBoss)?.wave ?? 999)
@@ -566,6 +568,9 @@ export function canStartAction(s, id, ignoreActive = false) {
     return fail("オーグメントを選んでください。");
   if (s.run.suspendedActions[id]?.trophyReceipt?.version===0) return ok();
   if (!isKnown(s, d)) return fail("先のボスを撃退すると発見できます。");
+  if(d.outpost){const gate=outpostBuildGate(s,d);if(!gate.ok)return gate;}
+  if(d.expedition)return fail('再開拓は行動予約から実行してください。');
+
   if (!ignoreActive && s.run.activeAction?.id === id)
     return fail("作業中です。");
   if (s.run.suspendedActions[id]) return ok();
@@ -847,6 +852,14 @@ export function resolveGoal(s, id, visiting = new Set()) {
   if (visiting.has(id)) return fail("材料の循環があります。");
   if (s.run.suspendedActions[id]?.trophyReceipt?.version===0)return {...ok(),id};
   if (!isKnown(s, d)) return fail("未発見です。");
+  if(d.outpost){const gate=outpostBuildGate(s,d);if(!gate.ok)return gate;}
+  if(d.expedition){
+    if(s.run.routes?.cleared.includes(d.expedition))return {...ok(),done:true};
+    if(!s.meta.routeClears?.includes(d.expedition))return fail('初回は開拓工事の後、守護敵に挑戦してください。');
+    const gate=outpostBuildGate(s,{outpost:d.expedition,level:1});if(!gate.ok)return gate;
+    if(!(s.run.facilities[outpostId(d.expedition)]>=1))return resolveGoal(s,outpostRecipe(d.expedition),new Set([...visiting,id]));
+    return {...ok(),route:d.expedition,waiting:s.run.nextWaveAt-s.run.elapsed<30};
+  }
   if (s.run.suspendedActions[id]) return { ...ok(), id };
   if(d.accessory&&s.meta.accessories?.includes(d.accessory))return {...ok(),done:true};
   const missingTrophy=trophyShortage(s,id);if(missingTrophy)return fail(missingTrophy);
@@ -907,16 +920,18 @@ export function enqueueAction(
 ) {
   if (!on(s, "action_queue")) return fail("行動予約を解放してください。");
   if (!isKnown(s, id)) return fail("未発見です。");
+  if(defs.get(id)?.expedition&&!s.meta.routeClears?.includes(defs.get(id).expedition))return fail("一度突破した拠点のみ再開拓を予約できます。");
   if (!Number.isInteger(count) || count < 1 || count > 99)
     return fail("回数は1〜99の整数で指定してください。");
   if (s.run.queue.length >= 8)
     return fail("行動予約が8件でいっぱいです。不要な予約を削除してください。");
   if (s.run.status !== "preparing") return fail("準備中に予約してください。");
-  if (defs.get(id)?.equipment || defs.get(id)?.facility || defs.get(id)?.endlessFacility || defs.get(id)?.accessory) {
+  if (defs.get(id)?.equipment || defs.get(id)?.facility || defs.get(id)?.endlessFacility || defs.get(id)?.accessory || defs.get(id)?.expedition) {
     if (s.run.queue.some(q => q.id === id)) return fail("既に予約しています。");
     count = 1;
   }
   if(defs.get(id)?.equipment&&s.run.ownedEquipment?.includes(id)&&s.run.activeAction?.id!==id&&!s.run.suspendedActions[id])return fail("所持済みです。状態・装備で切り替えられます。");
+  if(defs.get(id)?.expedition)kind="goal";
   delete s.run.manualRepeat;
   s.run.queue.push({ id, count, kind, goalId: ++s.run.queueSeq });
   if (s.run.queue.length === 1 && s.run.activeAction?.kind !== "craft") {
@@ -968,7 +983,7 @@ export function editQueuedAction(s, i, n) {
   s.settings.paused = true;
   detach(s);
   const d = defs.get(s.run.queue[i].id);
-  s.run.queue[i].count = d?.equipment || d?.facility || d?.endlessFacility || d?.accessory ? 1 : n;
+  s.run.queue[i].count = d?.equipment || d?.facility || d?.endlessFacility || d?.accessory || d?.expedition ? 1 : n;
   return ok();
 }
 export function moveQueuedAction(s, i, dir) {
@@ -1004,7 +1019,7 @@ export function getQueueStatus(s) {
       q.kind === "goal" || defs.get(q.id)?.equipment && s.run.ownedEquipment?.includes(q.id) ? resolveGoal(s, q.id) : canStartAction(s, q.id, true);
   return {
     active: r.ok && !s.settings.paused,
-    reason: r.ok
+    reason: r.waiting ? "襲撃が近いため再開拓を保留中" : r.ok
       ? s.settings.paused
         ? "一時停止中。"
         : "予約を実行。"
@@ -1052,6 +1067,13 @@ function driveQueue(s) {
       return;
     }
     s.run.blockedReason = "";
+    if(r.route){
+      if(r.waiting){s.run.idleWait=true;return;}
+      const result=startRoute(s,r.route);
+      if(!result.ok){s.settings.paused=true;s.run.blockedReason=result.reason;return;}
+      s.run.routes.active.queueGoal=q.goalId;
+      return;
+    }
     if(r.equipId){const switched=changeGear(s,{type:"equipment",id:r.equipId},RECIPES);if(!switched.ok){s.settings.paused=true;s.run.blockedReason=switched.reason;return;}continue;}
     begin(s, r.id);
     s.run.activeAction.goalId = q.goalId;
@@ -1179,6 +1201,7 @@ export function getProcessingStatus(s) {
   const result = (code, text) => ({...base, code, text});
   if (!s.meta.upgrades.includes("processing_worker")) return result("locked", "未雇用");
   if (!on(s, "processing_worker")) return result("disabled", "OFF");
+  if (!staffing(s,"processing_worker")) return result("unstaffed", "人員未配置 · 人員画面で配置してください");
   if (s.run.status !== "preparing") return result("inactive", "準備中のみ加工");
   if (worker.batch) return result(s.settings.paused ? "paused" : "processing", `${defs.get(worker.batch.id).name} · ${s.settings.paused ? "一時停止中" : "加工中"}`);
   const allowed = canConfigureWorker(s,"processing_worker",worker.target);
@@ -1189,6 +1212,7 @@ export function getProcessingStatus(s) {
   return result(s.settings.paused ? "paused" : "ready", s.settings.paused ? "時間停止中 · 開始すると加工" : "加工待ち");
 }
 function helpers(s, dt) {
+  initializeSettlement(s);
   const reserved = reserve(s);
   const funded = (d) =>
     Object.entries(getRecipeCost(s, d)).every(
@@ -1214,7 +1238,7 @@ function helpers(s, dt) {
     }
   }
   for (const w of C.workers) {
-    if (!on(s, w.id)) continue;
+    if (!on(s, w.id) || !staffing(s,w.id)) continue;
     const rw = s.run.workers[w.id],
       level = w.levels[rw.level];
     if (
@@ -2028,14 +2052,18 @@ function prepareCampClock(s){
   return true;
 }
 function returnFromRoute(s,won,reason){
+  const queueGoal=s.run.routes.active?.queueGoal;
   const points=finishRoute(s,won,reason);
+  if(queueGoal){s.run.queue=s.run.queue.filter(q=>q.goalId!==queueGoal);s.run.queueManaged=false;
+    if(!won){s.settings.paused=true;s.run.blockedReason='再開拓を中止：'+reason+'。装備や回復を整えて再予約できます。';}
+  }
   // A live fight returns to runnable camp work; an explicit pause remains a pause.
   if(!s.settings.paused)prepareCampClock(s);
   return points;
 }
 function step(s, dt) {
   if(s.run.status==='combat'){s.run.idleWait=false;advanceMeal(s,dt);}
-  if(s.run.status==='preparing'&&!prepareCampClock(s))return;
+  if(s.run.status==='preparing'){if(!prepareCampClock(s))return;if(s.run.status==='combat')return;}
   advanceFarm(s,dt,reserve(s));
   s.run.elapsed = round(s.run.elapsed + dt);
   if(s.run.routes?.active&&s.run.elapsed-s.run.routes.active.startedAt>=30){withdrawRoute(s,"時間切れ・帰還");return;}
@@ -2062,7 +2090,7 @@ function step(s, dt) {
     return;
   }
   driveQueue(s);
-  if (s.settings.paused) return;
+  if (s.settings.paused || s.run.status!=="preparing") return;
   if (!s.run.activeAction && on(s, "stock_targets")) {
     for (const t of s.settings.stockTargets) {
       if (s.run.resources[t.id] >= t.count) continue;
@@ -2111,6 +2139,7 @@ function step(s, dt) {
     }
   }
   helpers(s, dt);
+  advanceOutposts(s,dt);
   income(s, dt);
   if (s.run.facilities.infirmary) {
     s.run.healTimer = round(s.run.healTimer + dt);
@@ -2127,6 +2156,7 @@ function step(s, dt) {
   if(manualRepeatStopped)return;
   if (!s.run.activeAction) {
     driveQueue(s);
+    if(s.run.status!=="preparing")return;
     if (!s.run.activeAction && on(s, "stock_targets")) {
       for (const t of s.settings.stockTargets) {
         if (s.run.resources[t.id] >= t.count) continue;
@@ -2245,7 +2275,7 @@ export function startEndless(s) {
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
 }
-import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.6.74';
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.6.75';
 
 export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
   return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{
@@ -2295,4 +2325,13 @@ export function requestEarlyRaid(s,token){
  const check=canEarlyRaid(s);if(!check.ok)return check;
  if(token?.generation!==s.meta.generation||token?.campaign!==campaignForRun(s)||token?.wave!==s.run.wave+1||token?.scheduledAt!==s.run.nextWaveAt)return fail('準備状態が変わりました。もう一度確認してください。');
  beginRaid(s);return ok();
+}
+
+function outpostBuildGate(s,d){
+ const region=routeById(d.outpost);
+ if(!region||s.run.wave<(region.wave||3)||s.run.endless?.active)return fail('この命でWAVE'+(region?.wave||3)+'突破後に開拓できます。');
+ if(region.campaign&&s.run.campaign!==region.campaign)return fail('この地域は次の36波の人生で開放されます。');
+ if(region.parent&&!s.run.routes?.cleared.includes(region.parent))return fail('先に入口の拠点を開拓してください。');
+ if(d.level>1&&!s.run.routes?.cleared.includes(d.outpost))return fail('守護敵を突破すると拠点を増築できます。');
+ return ok();
 }

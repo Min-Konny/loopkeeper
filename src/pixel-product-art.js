@@ -1,6 +1,6 @@
-import {facilityFrame} from './facility-art.js?v=0.6.74';
-import {equipmentMaterial} from './visual-design.js?v=0.6.74';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.74';
+import {facilityFrame} from './facility-art.js?v=0.6.75';
+import {equipmentMaterial} from './visual-design.js?v=0.6.75';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.75';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map(),failedFacilitySheets=new Set();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
@@ -17,6 +17,13 @@ export function pixelProductSource(recipe){
  if(cache.has(key))return cache.get(key);
  let svg;
  if(facility==='training_yard')svg=wrap(r(9,48,46,6,'#68796b')+r(18,22,5,26,'#a67d4e')+r(10,27,23,5,'#cbb98c')+r(15,14,11,12,'#cbb98c')+r(38,22,5,26,'#a67d4e')+r(31,27,20,5,'#cbb98c')+r(35,14,11,12,'#cbb98c'));
+ else if(facility==='housing'){
+  let a=r(5,55,54,4,'#40594d')+r(12,29,40,25,'#b7a27b')+r(12,30,3,24,'#655345')+r(49,30,3,24,'#655345');
+  for(let y=0;y<6;y++)a+=r(7+y*3,26-y*3,50-y*6,3,y%2?'#795d48':'#96734e');
+  a+=r(28,37,10,17,'#39433c')+r(30,39,6,15,'#6f5842')+r(34,45,2,2,'#ddc175')+r(17,35,8,8,'#4b605c')+r(18,36,5,5,'#e5c77d')+r(40,35,6,8,'#4b605c')+r(41,36,4,5,'#e5c77d');
+  for(let n=1;n<level;n++)a+=r(13+n*8,49,4,3,'#d8ba78');
+  a+=r(43,9,5,13,'#706a5f')+r(42,8,7,3,'#8d8673');svg=wrap(a);
+ }
  else if(PIXEL_FACILITIES[facility])svg=facilityArt(facility,level);
  else{
   const m=equipmentMaterial({id}),metal=m.metal,shade=m.cloth,light=m.glow,gold='#d5b578',wood='#a67d4e',dark='#304b42';

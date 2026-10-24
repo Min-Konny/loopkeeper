@@ -1,12 +1,12 @@
-import { CONTENT } from './content.js?v=0.6.74';
-import { getSkillProgress } from './legacy-engine.js?v=0.6.74';
+import { CONTENT } from './content.js?v=0.6.75';
+import { getSkillProgress } from './legacy-engine.js?v=0.6.75';
 const definitions = [...CONTENT.actions, ...CONTENT.equipment, ...CONTENT.processing, ...CONTENT.facilities];
 export const isCombatTraining=id=>definitions.some(d=>d.id===id&&d.skill==='combat'&&['attack','defense','vitality'].includes(d.trainingStat));
 export function trainingProgress(s,id){const d=definitions.find(d=>d.id===id);if(!isCombatTraining(id))return null;const xp=['defense','vitality'].includes(d.trainingStat)?s.run.training?.[d.trainingStat]||0:s.run.skills.combat.xp;return getSkillProgress(xp);}
 export function validCondition(q) {
   const c = q.until, d = definitions.find(d => d.id === q.id);
   if (!c) return c === undefined;
-  if (!d || d.slot || d.facilityId || !['stock', 'level', 'unlock'].includes(c.type) || typeof c.pauseAfter !== 'boolean') return false;
+  if (!d || d.expedition || d.slot || d.facilityId || !['stock', 'level', 'unlock'].includes(c.type) || typeof c.pauseAfter !== 'boolean') return false;
   if (c.type === 'stock') return !!d.yields?.[c.resource] && Number.isInteger(c.target) && c.target > 0 && c.target <= 9999;
   if (c.type === 'level') return Number.isInteger(c.target) && c.target > 1 && c.target <= 100;
   const recipe = CONTENT.equipment.find(r => r.id === c.recipe);

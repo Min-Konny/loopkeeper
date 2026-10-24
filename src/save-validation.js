@@ -1,22 +1,23 @@
-import {validMeals}from './meals.js?v=0.6.74';
-import {MEALS,mealByRecipe}from './meal-content.js?v=0.6.74';
-import {preparationRoute}from './preparation-balance.js?v=0.6.74';
-import {validWorkMilestones}from './work-milestones.js?v=0.6.74';
-import {validTrophies} from './boss-materials.js?v=0.6.74';
-import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.74';
-import {CONTRACTS,contractById}from './contracts.js?v=0.6.74';
-import {validRegionalRewards}from './regional-rewards.js?v=0.6.74';
-import {ROUTES,routeById}from './routes.js?v=0.6.74';
-import {farmResource,resourceCap}from './farm-content.js?v=0.6.74';
-import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.74';
-import {alchemyResource}from './magic-content.js?v=0.6.74';
-import {validPreset}from './build-presets.js?v=0.6.74';
-import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.74';
-import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.74';
-import { endlessEnemy } from './endless.js?v=0.6.74';
-import { validMaterialPriority } from './material-priority.js?v=0.6.74';
-import { validCondition } from './queue-conditions.js?v=0.6.74';
-import { CONTENT as C } from "./content.js?v=0.6.74";
+import {validPopulation}from './settlement.js?v=0.6.75';
+import {validMeals}from './meals.js?v=0.6.75';
+import {MEALS,mealByRecipe}from './meal-content.js?v=0.6.75';
+import {preparationRoute}from './preparation-balance.js?v=0.6.75';
+import {validWorkMilestones}from './work-milestones.js?v=0.6.75';
+import {validTrophies} from './boss-materials.js?v=0.6.75';
+import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.75';
+import {CONTRACTS,contractById}from './contracts.js?v=0.6.75';
+import {validRegionalRewards}from './regional-rewards.js?v=0.6.75';
+import {ROUTES,routeById}from './routes.js?v=0.6.75';
+import {farmResource,resourceCap}from './farm-content.js?v=0.6.75';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.75';
+import {alchemyResource}from './magic-content.js?v=0.6.75';
+import {validPreset}from './build-presets.js?v=0.6.75';
+import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.75';
+import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.75';
+import { endlessEnemy } from './endless.js?v=0.6.75';
+import { validMaterialPriority } from './material-priority.js?v=0.6.75';
+import { validCondition } from './queue-conditions.js?v=0.6.75';
+import { CONTENT as C } from "./content.js?v=0.6.75";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -43,14 +44,14 @@ const validList = (x, set, max = 100) =>
 const validGoal = (x) =>
   object(x) &&
   defs.has(x.id) &&
-  integer(x.count, 1, 99) &&
+  integer(x.count, 1, 99) && (!defs.get(x.id)?.expedition || x.count===1&&x.kind==='goal'&&!x.until) &&
   ["goal", "action"].includes(x.kind) && validCondition(x);
 function validBatch(x) {
   return (
     object(x) && (x.earlyLoopBatch===undefined||x.earlyLoopBatch===1) &&
     (x.mealOutputVersion===undefined||[1,2].includes(x.mealOutputVersion)&&!!mealByRecipe(x.id)) &&
     (x.paidCost === undefined || object(x.paidCost) && Object.entries(x.paidCost).every(([id,n]) => C.resources.some(r => r.id === id) && number(n))) &&
-    defs.has(x.id) &&
+    defs.has(x.id) && !defs.get(x.id).expedition &&
     integer(x.instanceId, 1) &&
     ["main", "auto_cook", "processing_worker"].includes(x.channel) &&
     ["craft", "gather"].includes(x.kind) &&
@@ -126,6 +127,7 @@ export function validateSave(s) {
     if(r.enemy?.report&&['playerHits','criticalHits'].some(k=>r.enemy.report[k]!==undefined&&!integer(r.enemy.report[k])))return false;
     if((r.contracts!==undefined||m.contractVersion!==undefined)&&m.contractVersion!==1)return false;
     if(m.contractVersion===1){const x=r.contracts,ids=new Set(CONTRACTS.map(d=>d.id));if(!object(x)||!validList(x.completed,ids,2)||new Set(x.completed.map(id=>contractById(id).country)).size!==x.completed.length||x.completed.some(id=>m.bestWave<contractById(id).gate||r.wave<1)||!(x.active===null||contractById(x.active)&&m.bestWave>=contractById(x.active).gate&&r.wave>=1&&!x.completed.some(id=>contractById(id).country===contractById(x.active).country)))return false;}
+    if(!validPopulation(s))return false;
     if((r.routes!==undefined||m.routeClears!==undefined)&&m.routeVersion!==1)return false;
     if(m.routeVersion!==undefined&&m.routeVersion!==1)return false;
     if(m.routeVersion===1){const ids=new Set(ROUTES.map(x=>x.id)),x=r.routes;if(!validList(m.routeClears,ids,ROUTES.length)||(m.routeClears.length>0&&m.bestWave<3)||!object(x)||!validList(x.cleared,ids,ROUTES.length)||x.cleared.some(id=>!m.routeClears.includes(id)||routeById(id).campaign&&(r.campaign!==routeById(id).campaign||r.wave<routeById(id).wave))||!(x.active===null||object(x.active)&&routeById(x.active.id)&&(!routeById(x.active.id).campaign||r.campaign===routeById(x.active.id).campaign&&r.wave>=routeById(x.active.id).wave)&&!x.cleared.includes(x.active.id)&&r.wave>=3&&number(x.active.startedAt,0,r.elapsed)&&r.elapsed-x.active.startedAt<=30.1&&r.status==='combat')||!(x.last===null||object(x.last)&&routeById(x.last.id)&&typeof x.last.won==='boolean'&&typeof x.last.reason==='string'&&number(x.last.seconds,0,30.1)&&integer(x.last.points,0,4)))return false;}
