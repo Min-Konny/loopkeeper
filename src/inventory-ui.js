@@ -1,9 +1,9 @@
-import {getCatalog}from './engine.js?v=0.6.70';
-import {BOSS_MATERIALS}from './boss-materials.js?v=0.6.70';import {REGIONAL_MATERIALS}from './regional-content.js?v=0.6.70';import {WORK_MILESTONES}from './work-milestone-content.js?v=0.6.70';import {COMPANIONS}from './companion-content.js?v=0.6.70';
+import {getCatalog}from './engine.js?v=0.6.71';
+import {BOSS_MATERIALS}from './boss-materials.js?v=0.6.71';import {REGIONAL_MATERIALS}from './regional-content.js?v=0.6.71';import {WORK_MILESTONES}from './work-milestone-content.js?v=0.6.71';import {COMPANIONS}from './companion-content.js?v=0.6.71';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number=x=>Math.floor(Number(x)||0).toLocaleString('ja-JP');
 export const BAG_CATEGORIES=[['all','すべて'],['resources','素材・金貨'],['supplies','食料・魚・錬金'],['equipment','装備'],['permanent','永久所持']];
-const supplies=new Set(['food','fish_meal','egg_meal','fish','eggs','fodder','spark_catalyst','ward_essence']);
+const supplies=new Set(['food','herb_soup','fish_meal','egg_meal','fish','eggs','fodder','spark_catalyst','ward_essence']);
 export function inventoryGroups(s,visibleIds=Object.keys(getCatalog(s).RESOURCES),{showZero=false}={}){
  const {RESOURCES,RECIPES}=getCatalog(s),groups=[['resources','素材・金貨'],['supplies','食料・魚・錬金'],['equipment','この人生の装備'],['materials','特殊素材（永久保持）'],['accessories','永久アクセサリー'],['companions','相棒']].map(([id,name])=>({id,name,category:['materials','accessories','companions'].includes(id)?'permanent':id,entries:[]})),add=(group,e)=>groups.find(g=>g.id===group).entries.push(e);
  for(const [id,d]of Object.entries(RESOURCES)){const count=s.run.resources[id]||0;if(count>0||(showZero&&visibleIds.includes(id)))add(supplies.has(id)?'supplies':'resources',{id,name:d.name,count});}

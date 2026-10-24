@@ -1,6 +1,7 @@
-import {FACILITY_LAYOUT} from './facility-atlas-layout.js?v=0.6.70';
+import {FACILITY_LAYOUT} from './facility-atlas-layout.js?v=0.6.71';
 // Original generated sheets: row is facility, column is its real built stage.
 export const FACILITY_SHEETS=Object.freeze({
+ training_yard:['training-yard-v1.png',0],
  watchtower:['facilities-a-v2.png',0],archery_tower:['facilities-a-v2.png',1],infirmary:['facilities-a-v2.png',2],market:['facilities-a-v2.png',3],guardhouse:['facilities-a-v2.png',4],
  smokehouse:['facilities-b-v2.png',0],henhouse:['facilities-b-v2.png',1],barricade:['facilities-b-v2.png',2],signal_post:['facilities-b-v2.png',3],workshop:['facilities-b-v2.png',4],
 });

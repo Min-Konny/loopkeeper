@@ -1,21 +1,21 @@
-import{frameStaticPortrait}from './portrait-frame.js?v=0.6.70';
-import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.70';
-import {getCatalog} from './engine.js?v=0.6.70';
-import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.70';
-import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.70';
-import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.70';
-import{duelSnapshot}from './duel-motion.js?v=0.6.70';
-import {totalFood}from './meals.js?v=0.6.70';
-import {mealEffectText}from './meal-ui.js?v=0.6.70';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.70';
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.70';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.70';
-import { getPlayerStrike } from './engine.js?v=0.6.70';
-import {routeById}from './routes.js?v=0.6.70';
-import { equipmentMaterial } from './visual-design.js?v=0.6.70';
-import { battleSound } from "./presentation.js?v=0.6.70";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.70";
-import { icon } from "./icons.js?v=0.6.70";
+import{frameStaticPortrait}from './portrait-frame.js?v=0.6.71';
+import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.71';
+import {getCatalog} from './engine.js?v=0.6.71';
+import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.71';
+import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.71';
+import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.71';
+import{duelSnapshot}from './duel-motion.js?v=0.6.71';
+import {battleFood}from './meals.js?v=0.6.71';
+import {mealEffectText}from './meal-ui.js?v=0.6.71';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.71';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.71';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.71';
+import { getPlayerStrike } from './engine.js?v=0.6.71';
+import {routeById}from './routes.js?v=0.6.71';
+import { equipmentMaterial } from './visual-design.js?v=0.6.71';
+import { battleSound } from "./presentation.js?v=0.6.71";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.71";
+import { icon } from "./icons.js?v=0.6.71";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -458,16 +458,17 @@ export function renderBattle(dialog, state) {
   const remaining = Math.max(0, 1.5 - run.combatTimer);
   setText(el["round-time"], `${remaining.toFixed(1)} 秒`);
   el["round-bar"].style.transform = `scaleX(${ratio(run.combatTimer, 1.5)})`;
-  setText(el.food, number(totalFood(state)));
+  setText(el.food.previousElementSibling,state.version===2?'薬草のスープ':'食料');
+  setText(el.food, number((state.version===2?battleFood(state):state.run.resources.food)));
   setText(
     el["food-rule"],
-    totalFood(state) > 0
-      ? state.version===2&&preview.charges>0 ? `救護を先に使用 · 必要なら1食で${getFoodHealing(state)}回復` : `低HP・致死予測で1食 · ${getFoodHealing(state)}回復`
-      : state.version===2&&preview.charges>0 ? `食料なし · 低HP時の救護 残り${preview.charges}回` : "食料なし · 自動回復できません",
+    (state.version===2?battleFood(state):state.run.resources.food) > 0
+      ? state.version===2&&preview.charges>0 ? `救護を先に使用 · 必要ならスープ1杯で${getFoodHealing(state)}回復` : `低HP・致死予測でスープ1杯 · ${getFoodHealing(state)}回復`
+      : state.version===2&&preview.charges>0 ? `スープなし · 低HP時の救護 残り${preview.charges}回` : "スープなし · 自動回復できません",
   );
   el["food-rule"].classList.toggle(
     "battle-food-empty",
-    totalFood(state) === 0,
+    (state.version===2?battleFood(state):state.run.resources.food) === 0,
   );
   el["pause-icon"].hidden = paused;
   el["play-icon"].hidden = !paused;
@@ -485,7 +486,7 @@ export function renderBattle(dialog, state) {
   ) {
     const enemyLoss = previous.enemyHp - enemy.hp;
     const hpChange = run.hp - previous.hp;
-    const foodUsed = previous.food - totalFood(state);
+    const foodUsed = previous.food - (state.version===2?battleFood(state):state.run.resources.food);
     const treatmentUsed = Math.max(0, (previous.charges ?? preview.charges) - preview.charges);
     if (enemyLoss > 0 || hpChange !== 0 || foodUsed > 0 || treatmentUsed > 0) {
       clearFeedback(view);
@@ -509,7 +510,7 @@ export function renderBattle(dialog, state) {
         heal(view);
         battleSound("heal");
         if (hpChange <= 0)
-          feedback(view, "player", "heal", `食料 −${number(foodUsed)}`);
+          feedback(view, "player", "heal", `スープ −${number(foodUsed)}`);
       }
       if (treatmentUsed > 0) {
         heal(view);
@@ -525,7 +526,7 @@ export function renderBattle(dialog, state) {
     elapsed: run.elapsed,
     hp: run.hp,
     enemyHp: enemy.hp,
-    food: totalFood(state),
+    food: (state.version===2?battleFood(state):state.run.resources.food),
     charges: preview.charges,
   };
 }

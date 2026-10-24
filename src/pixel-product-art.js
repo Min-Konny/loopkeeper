@@ -1,6 +1,6 @@
-import {facilityFrame} from './facility-art.js?v=0.6.70';
-import {equipmentMaterial} from './visual-design.js?v=0.6.70';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.70';
+import {facilityFrame} from './facility-art.js?v=0.6.71';
+import {equipmentMaterial} from './visual-design.js?v=0.6.71';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.71';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map(),failedFacilitySheets=new Set();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
@@ -16,7 +16,8 @@ export function pixelProductSource(recipe){
  const key=[id,facility,level,recipe.slot||recipe.equipment?.slot,recipe.kind].join(':');
  if(cache.has(key))return cache.get(key);
  let svg;
- if(PIXEL_FACILITIES[facility])svg=facilityArt(facility,level);
+ if(facility==='training_yard')svg=wrap(r(9,48,46,6,'#68796b')+r(18,22,5,26,'#a67d4e')+r(10,27,23,5,'#cbb98c')+r(15,14,11,12,'#cbb98c')+r(38,22,5,26,'#a67d4e')+r(31,27,20,5,'#cbb98c')+r(35,14,11,12,'#cbb98c'));
+ else if(PIXEL_FACILITIES[facility])svg=facilityArt(facility,level);
  else{
   const m=equipmentMaterial({id}),metal=m.metal,shade=m.cloth,light=m.glow,gold='#d5b578',wood='#a67d4e',dark='#304b42';
   const slot=recipe.slot||recipe.equipment?.slot;let a=r(9,56,46,3,'#182c26');

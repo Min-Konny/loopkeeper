@@ -1,7 +1,7 @@
-import {getCatalog}from './engine.js?v=0.6.70';
+import {getCatalog}from './engine.js?v=0.6.71';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export {BAG_CATEGORIES,inventoryMarkup}from './inventory-ui.js?v=0.6.70';
-export function compactResourceIds(state){return ['food','gold'].filter(id=>Object.hasOwn(state.run.resources,id));}
+export {BAG_CATEGORIES,inventoryMarkup}from './inventory-ui.js?v=0.6.71';
+export function compactResourceIds(state){return ['food','herb_soup','gold'].filter(id=>Object.hasOwn(state.run.resources,id));}
 export function queueStopStatus(s,issue,{manualReason=''}={}){
  if(s.run.status!=='preparing'||!s.settings.paused||!s.run.queue.length)return null;
  const disabled=s.settings.disabledUpgrades.includes('action_queue'),head=s.run.queue[0],d=[...getCatalog(s).ACTIONS,...getCatalog(s).RECIPES].find(x=>x.id===head.id);

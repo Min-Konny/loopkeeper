@@ -1,22 +1,22 @@
-import {validMeals}from './meals.js?v=0.6.70';
-import {MEALS,mealByRecipe}from './meal-content.js?v=0.6.70';
-import {preparationRoute}from './preparation-balance.js?v=0.6.70';
-import {validWorkMilestones}from './work-milestones.js?v=0.6.70';
-import {validTrophies} from './boss-materials.js?v=0.6.70';
-import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.70';
-import {CONTRACTS,contractById}from './contracts.js?v=0.6.70';
-import {validRegionalRewards}from './regional-rewards.js?v=0.6.70';
-import {ROUTES,routeById}from './routes.js?v=0.6.70';
-import {farmResource,resourceCap}from './farm-content.js?v=0.6.70';
-import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.70';
-import {alchemyResource}from './magic-content.js?v=0.6.70';
-import {validPreset}from './build-presets.js?v=0.6.70';
-import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.70';
-import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.70';
-import { endlessEnemy } from './endless.js?v=0.6.70';
-import { validMaterialPriority } from './material-priority.js?v=0.6.70';
-import { validCondition } from './queue-conditions.js?v=0.6.70';
-import { CONTENT as C } from "./content.js?v=0.6.70";
+import {validMeals}from './meals.js?v=0.6.71';
+import {MEALS,mealByRecipe}from './meal-content.js?v=0.6.71';
+import {preparationRoute}from './preparation-balance.js?v=0.6.71';
+import {validWorkMilestones}from './work-milestones.js?v=0.6.71';
+import {validTrophies} from './boss-materials.js?v=0.6.71';
+import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.71';
+import {CONTRACTS,contractById}from './contracts.js?v=0.6.71';
+import {validRegionalRewards}from './regional-rewards.js?v=0.6.71';
+import {ROUTES,routeById}from './routes.js?v=0.6.71';
+import {farmResource,resourceCap}from './farm-content.js?v=0.6.71';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.71';
+import {alchemyResource}from './magic-content.js?v=0.6.71';
+import {validPreset}from './build-presets.js?v=0.6.71';
+import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.71';
+import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.71';
+import { endlessEnemy } from './endless.js?v=0.6.71';
+import { validMaterialPriority } from './material-priority.js?v=0.6.71';
+import { validCondition } from './queue-conditions.js?v=0.6.71';
+import { CONTENT as C } from "./content.js?v=0.6.71";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -202,7 +202,7 @@ export function validateSave(s) {
       ) ||
       !validSkills(r.skills) ||
       !object(r.resources) ||
-      !C.resources.every((x) => number(r.resources[x.id]) || MEALS.some(m=>m.id===x.id)&&r.resources[x.id]===undefined&&r.mealVersion===undefined || farmResource(x.id)&&r.resources[x.id]===undefined&&m.farmVersion===undefined || alchemyResource(x.id)&&r.resources[x.id]===undefined&&m.magicVersion===undefined || x.id === "fish" && r.resources.fish === undefined && ["A1","A2"].includes(s.contentVersion))
+      !C.resources.every((x) => number(r.resources[x.id]) || x.id==='herb_soup'&&r.resources[x.id]===undefined || MEALS.some(m=>m.id===x.id)&&r.resources[x.id]===undefined&&r.mealVersion===undefined || farmResource(x.id)&&r.resources[x.id]===undefined&&m.farmVersion===undefined || alchemyResource(x.id)&&r.resources[x.id]===undefined&&m.magicVersion===undefined || x.id === "fish" && r.resources.fish === undefined && ["A1","A2"].includes(s.contentVersion))
     )
       return false;
     if (

@@ -1,13 +1,13 @@
-import {CONTENT as C} from './content.js?v=0.6.70';
-import {RECIPES,LEGACY_UPGRADES,getAutoCookingStatus,getProcessingStatus,canConfigureWorker} from './engine.js?v=0.6.70';
+import {CONTENT as C} from './content.js?v=0.6.71';
+import {RECIPES,LEGACY_UPGRADES,getAutoCookingStatus,getProcessingStatus,canConfigureWorker} from './engine.js?v=0.6.71';
 
 export const escapeText=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const recipes=new Map(RECIPES.map(r=>[r.id,r]));
 export function cookingChoiceText(s){
-  if(s.settings.autoCookRecipe==='auto'||!s.settings.autoCookRecipe)return s.settings.farmAutoCook?'おまかせ（解放・技能・材料が揃えば卵、他はスープ）':'おまかせ（スープ）';
-  return recipes.get(s.settings.autoCookRecipe)?.name||'未選択';
+  if(s.settings.autoCookRecipe==='auto'||!s.settings.autoCookRecipe)return s.settings.farmAutoCook?'おまかせ（解放・技能・材料が揃えば卵、他は薬草の煮込み）':'おまかせ（薬草の煮込み）';
+  return s.settings.autoCookRecipe==='rations'||s.settings.autoCookRecipe==='cook_meal'?'薬草の煮込み（救護所用食料）':(recipes.get(s.settings.autoCookRecipe)?.name||'未選択')+' → 救護所用食料';
 }
-export function cookingBatchText(s){return s.run.autoCraft?recipes.get(s.run.autoCraft.id)?.name||'調理中の料理':null;}
+export function cookingBatchText(s){return s.run.autoCraft?s.run.autoCraft.id==='cook_meal'?'薬草の煮込み（救護所用食料）':(recipes.get(s.run.autoCraft.id)?.name||'調理中の料理')+' → 救護所用食料':null;}
 const remaining=batch=>Math.max(0,batch.duration-batch.progress).toFixed(1);
 function statusText(status){return status.batch?`${status.text} · 残り${remaining(status.batch)}ゲーム秒`:status.text;}
 export function automationRows(s){

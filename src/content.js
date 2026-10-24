@@ -1,13 +1,13 @@
-import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.70';
-import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.70';
-import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.70';
-import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.70';
-import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.70';
-import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.70';
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.70';
-import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.70';
-import { REINFORCEMENTS } from './endless.js?v=0.6.70';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.70';
+import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.71';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.71';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.71';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.71';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.71';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.71';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.71';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.71';
+import { REINFORCEMENTS } from './endless.js?v=0.6.71';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.71';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -3613,3 +3613,18 @@ CONTENT.resources.push(...FARM_RESOURCES);CONTENT.actions.push(FARM_ACTION);CONT
 
 CONTENT.resources.push(...MEAL_RESOURCES);CONTENT.facilities.push(PRESSURE_FACILITY);
 for(const m of MEALS){const recipe=CONTENT.processing.find(x=>x.id===m.recipe);recipe.yields={[m.id]:m.units};recipe.description=m.name+' '+m.units+'食。1食で通常の回復と'+m.label+'（90戦闘秒）。効果は1種類、同じ料理は時間更新。';}
+
+// Separate battle supplies from ordinary food; existing food stocks stay food.
+CONTENT.resources.push({id:'herb_soup',name:'薬草のスープ'});
+const soupRecipe=CONTENT.processing.find(r=>r.id==='cook_meal');
+soupRecipe.yields={herb_soup:3};
+soupRecipe.description='戦闘回復用の薬草のスープ3杯。工房で製作・予約できます。';
+
+// Training investment competes with the workshop at the same progression gates.
+for(const base of CONTENT.facilities.filter(f=>f.facilityId==='workshop')){
+ const level=base.level;
+ CONTENT.facilities.push({...base,id:level===1?'training_yard':`training_yard_level_${level}`,facilityId:'training_yard',name:'訓練場',
+ cost:{...base.cost,wood:Math.ceil(base.cost.wood*1.2),stone:Math.ceil(base.cost.stone*1.2),hide:level*4},
+ requires:level===1?[]:[level===2?'training_yard':`training_yard_level_${level-1}`],
+ effect:{trainingSpeed:level*.15},description:`攻撃・防御・体力の訓練速度 +${level*15}%` });
+}

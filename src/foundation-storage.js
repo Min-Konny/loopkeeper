@@ -1,4 +1,4 @@
-import {synchronizeFreeFeatures}from './free-features.js?v=0.6.70';import {commitStoredGameEdit}from './save-storage.js?v=0.6.70';
+import {synchronizeFreeFeatures}from './free-features.js?v=0.6.71';import {commitStoredGameEdit}from './save-storage.js?v=0.6.71';
 export function migrateStoredFoundation(storage,current,{isOwner=()=>false,now=Date.now()}={}){
  if(!isOwner())return {ok:false,state:current,reason:'別タブが所有しています。'};
  const next=structuredClone(current);let result;
