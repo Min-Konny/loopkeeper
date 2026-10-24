@@ -1,9 +1,9 @@
-import{campBuildings}from './camp-layout.js?v=0.6.78';
-import{loadCampArt,generatedWorkerAtlas,paintGeneratedCamp}from './generated-camp-art.js?v=0.6.78';
-import {mountPixelCamp}from './pixel-camp-scene.js?v=0.6.78';
-import {createPixelCampRenderer}from './pixel-camp-art.js?v=0.6.78';
-import {createCampActorAtlas}from './camp-actor-art.js?v=0.6.78';
-import {campSnapshot,lumberjackPose}from './camp-motion.js?v=0.6.78';
+import{campBuildings}from './camp-layout.js?v=0.6.79';
+import{loadCampArt,generatedWorkerAtlas,paintGeneratedCamp}from './generated-camp-art.js?v=0.6.79';
+import {mountPixelCamp}from './pixel-camp-scene.js?v=0.6.79';
+import {createPixelCampRenderer}from './pixel-camp-art.js?v=0.6.79';
+import {createCampActorAtlas}from './camp-actor-art.js?v=0.6.79';
+import {campSnapshot,lumberjackPose}from './camp-motion.js?v=0.6.79';
 
 const mounted=new WeakMap();let library;
 const loadLibrary=()=>library??=import('./vendor/phaser-3.90.0.esm.min.js').then(m=>m.default||m);
