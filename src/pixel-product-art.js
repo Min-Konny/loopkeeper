@@ -1,6 +1,6 @@
-import {facilityFrame} from './facility-art.js?v=0.6.75';
-import {equipmentMaterial} from './visual-design.js?v=0.6.75';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.75';
+import {facilityFrame} from './facility-art.js?v=0.6.76';
+import {equipmentMaterial} from './visual-design.js?v=0.6.76';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.76';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map(),failedFacilitySheets=new Set();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
@@ -13,6 +13,7 @@ function facilityArt(id,level){
 }
 export function pixelProductSource(recipe){
  const id=recipe.id||'',facility=recipe.facility?.id||recipe.facilityId||recipe.endlessFacility,level=recipe.facility?.level||recipe.level||(recipe.endlessFacility?5:1);
+ if(facility==='housing')return './assets/pixel-v2/housing-v1.png';
  const key=[id,facility,level,recipe.slot||recipe.equipment?.slot,recipe.kind].join(':');
  if(cache.has(key))return cache.get(key);
  let svg;
@@ -28,7 +29,10 @@ export function pixelProductSource(recipe){
  else{
   const m=equipmentMaterial({id}),metal=m.metal,shade=m.cloth,light=m.glow,gold='#d5b578',wood='#a67d4e',dark='#304b42';
   const slot=recipe.slot||recipe.equipment?.slot;let a=r(9,56,46,3,'#182c26');
-  if(/crossbow/.test(id)){
+  if(id==='cook_meal'||/^mix_/.test(id)){
+   const liquid=id==='cook_meal'?'#c96672':id==='mix_spark'?'#e3ae64':'#9a8ace';
+   a+=r(25,7,14,7,'#a98558')+r(27,14,10,10,'#adcec3')+r(21,24,22,6,'#adcec3')+r(15,30,34,23,'#75978b')+r(19,35,26,16,liquid)+r(21,51,22,5,'#55796c')+r(19,31,3,14,'#d1e5c8')+r(25,38,14,9,'#e1d3a5')+r(30,35,4,15,liquid)+r(25,40,14,4,liquid);
+  }else if(/crossbow/.test(id)){
    a+=r(30,15,6,40,wood)+r(13,24,39,5,metal)+r(10,19,5,8,metal)+r(49,19,5,8,metal)+r(13,20,39,1,gold)+r(32,8,2,35,light)+r(29,7,8,4,metal)+r(26,41,14,3,gold);
   }else if(/bow/.test(id)){
    for(let i=0;i<5;i++){a+=r(22+i*3,10+i*5,4,7,metal)+r(34-i*3,34+i*5,4,7,metal);}

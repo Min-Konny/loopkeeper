@@ -1,23 +1,25 @@
-import {validPopulation}from './settlement.js?v=0.6.75';
-import {validMeals}from './meals.js?v=0.6.75';
-import {MEALS,mealByRecipe}from './meal-content.js?v=0.6.75';
-import {preparationRoute}from './preparation-balance.js?v=0.6.75';
-import {validWorkMilestones}from './work-milestones.js?v=0.6.75';
-import {validTrophies} from './boss-materials.js?v=0.6.75';
-import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.75';
-import {CONTRACTS,contractById}from './contracts.js?v=0.6.75';
-import {validRegionalRewards}from './regional-rewards.js?v=0.6.75';
-import {ROUTES,routeById}from './routes.js?v=0.6.75';
-import {farmResource,resourceCap}from './farm-content.js?v=0.6.75';
-import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.75';
-import {alchemyResource}from './magic-content.js?v=0.6.75';
-import {validPreset}from './build-presets.js?v=0.6.75';
-import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.75';
-import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.75';
-import { endlessEnemy } from './endless.js?v=0.6.75';
-import { validMaterialPriority } from './material-priority.js?v=0.6.75';
-import { validCondition } from './queue-conditions.js?v=0.6.75';
-import { CONTENT as C } from "./content.js?v=0.6.75";
+import {EXTRA_SKILLS}from './new-skills.js?v=0.6.76';
+import {validParty}from './party.js?v=0.6.76';
+import {validPopulation}from './settlement.js?v=0.6.76';
+import {validMeals}from './meals.js?v=0.6.76';
+import {MEALS,mealByRecipe}from './meal-content.js?v=0.6.76';
+import {preparationRoute}from './preparation-balance.js?v=0.6.76';
+import {validWorkMilestones}from './work-milestones.js?v=0.6.76';
+import {validTrophies} from './boss-materials.js?v=0.6.76';
+import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.76';
+import {CONTRACTS,contractById}from './contracts.js?v=0.6.76';
+import {validRegionalRewards}from './regional-rewards.js?v=0.6.76';
+import {ROUTES,routeById}from './routes.js?v=0.6.76';
+import {farmResource,resourceCap}from './farm-content.js?v=0.6.76';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.76';
+import {alchemyResource}from './magic-content.js?v=0.6.76';
+import {validPreset}from './build-presets.js?v=0.6.76';
+import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.76';
+import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.76';
+import { endlessEnemy } from './endless.js?v=0.6.76';
+import { validMaterialPriority } from './material-priority.js?v=0.6.76';
+import { validCondition } from './queue-conditions.js?v=0.6.76';
+import { CONTENT as C } from "./content.js?v=0.6.76";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -38,7 +40,7 @@ const defs = new Map(
 const skillIds = ["logging", "mining", "foraging", "smithing", "combat"];
 const upgradeIds = new Set(C.legacy.map((x) => x.id));
 const validSkills = (x) =>
-  object(x) && skillIds.every((id) => object(x[id]) && number(x[id].xp));
+  object(x) && EXTRA_SKILLS.every(d=>x[d.id]===undefined||object(x[d.id])&&number(x[d.id].xp)) && skillIds.every((id) => object(x[id]) && number(x[id].xp));
 const validList = (x, set, max = 100) =>
   unique(x) && x.length <= max && x.every((id) => set.has(id));
 const validGoal = (x) =>
@@ -219,6 +221,7 @@ export function validateSave(s) {
       !number(r.simRemainder, 0, 60)
     )
       return false;
+    if(!validParty(s))return false;
     if (r.training !== undefined && (!object(r.training) || !number(r.training.defense) || !number(r.training.vitality))) return false;
     if (r.status === "legacy_setup" && (!ledger(r.legacyDraft, m.totalPoints,free) || (r.legacyDraft.disabledUpgrades!==undefined && !validList(r.legacyDraft.disabledUpgrades,upgradeIds,upgradeIds.size))))
       return false;
@@ -327,7 +330,7 @@ export function validateSave(s) {
     if (r.encounterDepth !== undefined && typeof r.encounterDepth !== "boolean") return false;
     if (m.challengeBadges !== undefined && !validList(m.challengeBadges, new Set(['independent','architect','champion']), 3)) return false;
     if (r.strategy !== undefined && (!object(r.strategy) || !['constructionUntil','focus','playerDamage','facilityDamage'].every(k => number(r.strategy[k])) || r.strategy.focus > 30 || typeof r.strategy.eligible !== 'boolean' || typeof r.strategy.aidUsed !== 'boolean')) return false;
-    const validReport = x => object(x) && (x.magic===undefined||number(x.magic)) && (x.magicState===undefined||validMagicState(x.magicState)) && (x.pet===undefined||number(x.pet)) && (x.companion===undefined||validCompanionState(x.companion)&&(x.companion.id===null||!!companionById(x.companion.id))) && ['player','guards','tower','counter','prevented','foodHealing','treatmentHealing','damageTaken','rounds','wave'].every(k => number(x[k]));
+    const validReport = x => object(x) && (x.archer===undefined||number(x.archer)) && (x.magic===undefined||number(x.magic)) && (x.magicState===undefined||validMagicState(x.magicState)) && (x.pet===undefined||number(x.pet)) && (x.companion===undefined||validCompanionState(x.companion)&&(x.companion.id===null||!!companionById(x.companion.id))) && ['player','guards','tower','counter','prevented','foodHealing','treatmentHealing','damageTaken','rounds','wave'].every(k => number(x[k]));
     if (r.battleReports !== undefined && (!Array.isArray(r.battleReports) || r.battleReports.length > 8 || r.battleReports.some(x => !validReport(x) || typeof x.enemy !== 'string' || x.enemy.length > 100 || typeof x.won !== 'boolean' || !number(x.remainingHp) || !number(x.maxHp)))) return false;
     if (r.enemy?.report !== undefined && !validReport(r.enemy.report)) return false;
     if (r.enemy?.baseDefense !== undefined && !number(r.enemy.baseDefense)) return false;

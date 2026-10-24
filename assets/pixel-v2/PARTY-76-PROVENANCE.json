@@ -1,0 +1,27 @@
+{
+  "mode": "builtin image_gen",
+  "date": "2026-10-24",
+  "original": true,
+  "assets": [
+    {
+      "file": "party-archer-v1.png",
+      "brief": "Detailed full-body green hooded ranger facing right, bow, transparent background, crisp pixel-art style."
+    },
+    {
+      "file": "party-mage-v1.png",
+      "brief": "Detailed full-body indigo robed mage facing right, amber-blue magic staff, transparent background."
+    },
+    {
+      "file": "housing-v1.png",
+      "brief": "Detailed medieval timber and stone cottage, mossy roof, warm windows, plants, isometric pixel art, transparent background."
+    },
+    {
+      "file": "outpost-v1.png",
+      "brief": "Detailed frontier watchtower and supply hut, crates, logs, foliage, isometric pixel art, transparent background."
+    },
+    {
+      "file": "alchemy-work-v1.png",
+      "brief": "Medieval alchemist pouring healing potion at an oak workbench with flasks, herbs and alembic. Detailed horizontal pixel-art vignette, transparent background."
+    }
+  ]
+}

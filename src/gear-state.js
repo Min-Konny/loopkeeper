@@ -1,6 +1,7 @@
-import {mealEffects}from './meals.js?v=0.6.75';
-import {investmentEffect}from './investments.js?v=0.6.75';
-import {accessoryById,weaponById,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.75';
+import {memberJoined,memberFor,equipParty}from './party.js?v=0.6.76';
+import {mealEffects}from './meals.js?v=0.6.76';
+import {investmentEffect}from './investments.js?v=0.6.76';
+import {accessoryById,weaponById,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.76';
 export const emptySets=()=>({preparation:Object.fromEntries(ACCESSORY_SLOTS.map(s=>[s,null])),combat:Object.fromEntries(ACCESSORY_SLOTS.map(s=>[s,null]))});
 export function initializeGear(s){
  if(s.version===1)return;
@@ -30,7 +31,7 @@ export function changeGear(s,{type,id,phase,slot},recipes){
  initializeGear(s);
  if(type==='weapon'||type==='equipment'){
   const d=recipes.find(x=>x.id===id&&x.equipment&&(type==='equipment'||x.slot==='weapon'));if(!d||!s.run.ownedEquipment.includes(id))return {ok:false,reason:'この命で所持する武器ではありません。'};
-  s.run.equipment[d.slot]={id:d.id,...d.equipment};return {ok:true};
+  const who=memberFor(id);if(who&&!memberJoined(s,who))return {ok:false,reason:'対応する仲間がまだ加入していません。'};if(!equipParty(s,d))s.run.equipment[d.slot]={id:d.id,...d.equipment};return {ok:true};
  }
  if(type!=='accessory'||!['preparation','combat'].includes(phase)||!ACCESSORY_SLOTS.includes(slot))return {ok:false,reason:'構成が不正です。'};
  if(id!==null&&(!s.meta.accessories.includes(id)||accessoryById(id)?.slot!==slot))return {ok:false,reason:'この部位の所持品ではありません。'};

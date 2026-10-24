@@ -1,10 +1,10 @@
-import {finalWaveForRun,campaignForRun}from './campaign-rules.js?v=0.6.75';
-import {hasUpgrade}from './free-features.js?v=0.6.75';
-import { CONTENT } from './content.js?v=0.6.75';
-import { setTextIfChanged } from './dom-text.js?v=0.6.75';
-import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.6.75';
-import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.6.75';
-import { conditionLabel } from './queue-conditions.js?v=0.6.75';
+import {finalWaveForRun,campaignForRun}from './campaign-rules.js?v=0.6.76';
+import {hasUpgrade}from './free-features.js?v=0.6.76';
+import { CONTENT } from './content.js?v=0.6.76';
+import { setTextIfChanged } from './dom-text.js?v=0.6.76';
+import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.6.76';
+import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.6.76';
+import { conditionLabel } from './queue-conditions.js?v=0.6.76';
 const esc = x => String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Math.round(n).toLocaleString('ja-JP');
 const duration = n => {
@@ -15,8 +15,8 @@ export function reportMarkup(s) {
   const reports = s.run.battleReports || [];
   if (!reports.length) return '';
   return `<details data-detail-key="battle-recaps" class="strategy-details battle-recaps"><summary>戦闘の振り返り · 第${reports[0].wave}波 ${reports[0].won ? '撃退' : '敗北'}</summary>${reports.map(r=>{
-    const total = r.player+r.guards+r.tower+r.counter+(r.magic||0)+(r.pet||0);
-    return `<article class="battle-recap"><h4>第${r.wave}波 · ${esc(r.enemy)}</h4><div class="damage-segments" aria-label="与えたダメージの内訳">${[['player','本人'],['guards','守備隊'],['tower','弓塔'],['counter','反撃'],...((r.magic||0)>0?[['magic','魔法と燃焼']]:[]),...((r.pet||0)>0?[['pet','相棒の追撃']]:[])].map(([k,label])=>`<i class="source-${k}" style="flex:${total ? r[k]/total : 0}" title="${label} ${number(r[k])}"></i>`).join('')}</div><dl>${[['player','本人の攻撃'],['guards','守備隊'],['tower','弓塔'],['counter','反撃'],...((r.magic||0)>0?[['magic','魔法と燃焼']]:[]),['prevented','防いだダメージ'],['damageTaken','受けたダメージ'],['foodHealing','食料の回復'],['treatmentHealing','救護所の回復']].map(([k,label])=>`<div><dt>${label}</dt><dd>${number(r[k])}</dd></div>`).join('')}</dl>${!r.won ? `<p>敵の残りHP ${number(r.remainingHp)} / ${number(r.maxHp)}（${Math.ceil(r.remainingHp/r.maxHp*100)}%）</p>`:''}</article>`;
+    const total = r.player+r.guards+r.tower+r.counter+(r.magic||0)+(r.pet||0)+(r.archer||0);
+    return `<article class="battle-recap"><h4>第${r.wave}波 · ${esc(r.enemy)}</h4><div class="damage-segments" aria-label="与えたダメージの内訳">${[['player','前衛'],...((r.archer||0)>0?[["archer","弓使い"]]:[]),['guards','守備隊'],['tower','弓塔'],['counter','反撃'],...((r.magic||0)>0?[['magic','魔法と燃焼']]:[]),...((r.pet||0)>0?[['pet','相棒の追撃']]:[])].map(([k,label])=>`<i class="source-${k}" style="flex:${total ? r[k]/total : 0}" title="${label} ${number(r[k])}"></i>`).join('')}</div><dl>${[['player','前衛の攻撃'],...((r.archer||0)>0?[["archer","弓使い"]]:[]),['guards','守備隊'],['tower','弓塔'],['counter','反撃'],...((r.magic||0)>0?[['magic','魔法と燃焼']]:[]),['prevented','防いだダメージ'],['damageTaken','受けたダメージ'],['foodHealing','食料の回復'],['treatmentHealing','救護所の回復']].map(([k,label])=>`<div><dt>${label}</dt><dd>${number(r[k])}</dd></div>`).join('')}</dl>${!r.won ? `<p>敵の残りHP ${number(r.remainingHp)} / ${number(r.maxHp)}（${Math.ceil(r.remainingHp/r.maxHp*100)}%）</p>`:''}</article>`;
   }).join('')}</details>`;
 }
 const traitHints = {flying:'飛行：弓塔が有効。本人の攻撃でも対処可能。',combo:'連撃：防御を高めて一撃ずつ軽減。体力と回復でも耐えられる。',heavy:'強打：4回ごとに大技。最大HP・防御・短期決戦で備える。',armor:'装甲：高い攻撃力、破甲の斉射、研ぎ澄ます一撃が有効。'};

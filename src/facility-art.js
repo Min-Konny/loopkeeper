@@ -1,4 +1,4 @@
-import {FACILITY_LAYOUT} from './facility-atlas-layout.js?v=0.6.75';
+import {FACILITY_LAYOUT} from './facility-atlas-layout.js?v=0.6.76';
 // Original generated sheets: row is facility, column is its real built stage.
 export const FACILITY_SHEETS=Object.freeze({
  training_yard:['training-yard-v1.png',0],

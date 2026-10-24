@@ -3,8 +3,8 @@ export function craftCategory(d){
  if(d.facility||d.endlessFacility)return 'village';
  if(d.accessory)return 'accessory';
  if(d.equipment)return ['armor','shield'].includes(d.equipment.slot)?'armor':d.equipment.slot;
- if(d.kind==='alchemy')return 'alchemy';
- if(d.yields?.food)return 'food';
+ if(d.skill==='alchemy'||d.kind==='alchemy')return 'alchemy';
+ if(d.skill==='cooking'||d.yields?.food)return 'food';
  return 'processing';
 }
 export function readUiPreference(storage,key,values,fallback){try{const x=storage.getItem(key);return values.includes(x)?x:fallback;}catch{return fallback;}}

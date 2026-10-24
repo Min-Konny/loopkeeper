@@ -5,6 +5,9 @@ export function completionSoundKind(event) {
 export function workSoundKind(actionId, skill) {
   if (actionId === 'train_defense') return 'shield';
   if (actionId === 'train_vitality') return 'weight';
+  if (skill === 'archery') return 'swing';
+  if (skill === 'alchemy') return 'cook';
+  if (skill === 'commerce') return 'wood';
   if (skill === 'combat') return 'swing';
   if (actionId?.includes('fish') && !actionId?.includes('cook')) return 'fish';
   if (/cook|meal|stew|soup/.test(actionId || '')) return 'cook';

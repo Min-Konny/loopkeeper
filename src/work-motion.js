@@ -1,6 +1,8 @@
 // Presentation derives exclusively from the real paid batch progress. No timers or game writes.
 const clamp=n=>Math.min(1,Math.max(0,Number.isFinite(n)?n:0));
 export function workKind(skill,id=''){
+ if(skill==='cooking')return'cooking';
+ if(skill==='alchemy'||skill==='commerce')return'smithing';
  if(skill==='combat'&&['train_combat','train_defense','train_vitality'].includes(id))return'training';
  if(skill==='foraging')return id==='fish_river'?'fishing':'foraging';
  if(skill==='smithing'&&/^cook_/.test(id))return'cooking';

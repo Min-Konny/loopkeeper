@@ -1,21 +1,22 @@
-import{frameStaticPortrait}from './portrait-frame.js?v=0.6.75';
-import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.75';
-import {getCatalog} from './engine.js?v=0.6.75';
-import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.75';
-import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.75';
-import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.75';
-import{duelSnapshot}from './duel-motion.js?v=0.6.75';
-import {battleFood,potionCapacity}from './meals.js?v=0.6.75';
-import {mealEffectText}from './meal-ui.js?v=0.6.75';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.75';
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.75';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.75';
-import { getPlayerStrike } from './engine.js?v=0.6.75';
-import {routeById}from './routes.js?v=0.6.75';
-import { equipmentMaterial } from './visual-design.js?v=0.6.75';
-import { battleSound } from "./presentation.js?v=0.6.75";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.75";
-import { icon } from "./icons.js?v=0.6.75";
+import {mountBattleParty,updateBattleParty}from './party-ui.js?v=0.6.76';
+import{frameStaticPortrait}from './portrait-frame.js?v=0.6.76';
+import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.76';
+import {getCatalog} from './engine.js?v=0.6.76';
+import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.76';
+import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.76';
+import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.76';
+import{duelSnapshot}from './duel-motion.js?v=0.6.76';
+import {battleFood,potionCapacity}from './meals.js?v=0.6.76';
+import {mealEffectText}from './meal-ui.js?v=0.6.76';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.76';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.76';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.76';
+import { getPlayerStrike } from './engine.js?v=0.6.76';
+import {routeById}from './routes.js?v=0.6.76';
+import { equipmentMaterial } from './visual-design.js?v=0.6.76';
+import { battleSound } from "./presentation.js?v=0.6.76";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.76";
+import { icon } from "./icons.js?v=0.6.76";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -40,7 +41,7 @@ function createView(dialog) {
       <div class="battle-field"><div class="boss-arrival" data-battle="boss-arrival" aria-hidden="true"><small>強敵襲来</small><strong data-battle="boss-arrival-name"></strong></div>
         <article class="battle-fighter battle-player" data-battle="player-card">
           ${portrait("player", "shield", `<span class="battle-sigil">${icon("flame")}</span>`)}
-          <h3>灯守</h3>
+          <div class="battle-party" data-battle="party"></div><h3>灯守</h3>
           <div class="battle-health-value"><strong data-battle="player-hp"></strong><span>/ <span data-battle="player-max"></span></span></div>
           <div class="battle-health-track" data-battle="player-health" role="progressbar" aria-label="灯守の体力" aria-valuemin="0"><i data-battle="player-bar"></i></div>
           <div class="battle-attributes"><span>${icon("sword")}攻撃 <b data-battle="player-attack"></b></span><span>${icon("shield")}防御 <b data-battle="player-defense"></b></span></div>
@@ -97,6 +98,7 @@ function createView(dialog) {
   view.onVisibility = () => syncMotion(view);
   view.onReducedMotion = () => syncMotion(view);
   view.onClose = () => suspendBattle(dialog);
+  mountBattleParty(dialog.querySelector('[data-battle="party"]'));
   view.duel=mountPhaserDuel(dialog.querySelector('.battle-field'));
   views.set(dialog, view);
   return view;
@@ -377,6 +379,7 @@ export function renderBattle(dialog, state) {
   listenForMotionChanges(view);
   syncMotion(view);
   dialog.classList.toggle("battle-is-paused", paused);
+  updateBattleParty(el.party,state,!paused&&state.settings.effectsEnabled!==false);
   dialog.classList.toggle("battle-is-boss",!!enemy.isBoss);
   setText(el['boss-arrival-name'],enemy.name);
   if (view.arrivalPending && !view.motionPaused) {
@@ -442,7 +445,7 @@ export function renderBattle(dialog, state) {
         : ""),
   );
   const preview = getCombatPreview(state);
-  if(el['magic-readout']){const m=run.magicState,visible=state.version===2&&m&&(run.equipment.weapon?.id==='ember_staff'||run.resources.spark_catalyst||run.resources.ward_essence);el['magic-readout'].hidden=!visible;if(visible)setText(el['magic-readout'],'MP '+Math.floor(m.mana)+'/30 ・ 詠唱 '+m.casts+' / 爆発 '+m.detonations+' ・ 触媒 '+(run.resources.spark_catalyst||0)+' / 護符液 '+(run.resources.ward_essence||0));}
+  if(el['magic-readout']){const m=run.magicState,visible=state.version===2&&m&&(state.meta.bestWave>=6||run.resources.spark_catalyst||run.resources.ward_essence);el['magic-readout'].hidden=!visible;if(visible)setText(el['magic-readout'],'MP '+Math.floor(m.mana)+'/30 ・ 詠唱 '+m.casts+' / 爆発 '+m.detonations+' ・ 触媒 '+(run.resources.spark_catalyst||0)+' / 護符液 '+(run.resources.ward_essence||0));}
   for(const [key,id]of [['guardhouse','guardhouse'],['archery','archery_tower'],['infirmary','infirmary']]){const art=el[key+'-art'],level=run.facilities[id]||0;if(art&&art.getAttribute('data-level')!==String(level)){art.setAttribute('data-level',String(level));art.innerHTML=level?pixelFacilityProduct({facilityId:id,level}):'';}}
   el['guardhouse-sign'].hidden = stats.support <= 0;
   el['archery-sign'].hidden = (stats.ranged || 0) <= 0;
