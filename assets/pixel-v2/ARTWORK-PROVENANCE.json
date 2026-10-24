@@ -1,5 +1,5 @@
 {
-  "version": "0.6.66",
+  "version": "0.6.67",
   "method": "Original built-in OpenAI image generation; no assets copied from other games",
   "sourcePixelsUnmodified": true,
   "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
@@ -1187,6 +1187,37 @@
           ],
           "pngColorType": 6,
           "prompt": "Use case: stylized-concept. Asset type: original LOOPKEEPER production character sprite sheet. Exactly SIX full-body sprites in exactly3equal columns by2equal rows, each in an equal separate cell, genuinely transparent background. SAME familiar young adult brown-haired human hero in every cell, green tunic under worn grey IRON BREASTPLATE, iron shoulder and forearm guards, leather belt, brown trousers and boots, NO helmet, face visible. EVERY sprite also has ONE clearly visible grey IRON SHIELD with small brass central boss and dark rim. All face RIGHT in three-quarter battle stance, same body height, feet at same cell baseline. Row1 left: straight sword in right hand toward RIGHT, iron shield on left forearm held forward, shield must not hide sword blade. Row1 middle: iron-pointed spear in right hand toward RIGHT with forearm iron shield close to torso. Row1 right: bow drawn RIGHT using both hands; shield carried visibly strapped on the LEFT-back hip behind arms, never obstruct bowstring. Row2 left: crossbow aimed RIGHT with both hands; iron shield visibly strapped behind LEFT shoulder/hip, separate from crossbow. Row2 middle: wooden staff with amber gem in right hand, iron shield on left forearm. Row2 right: no weapon, guarding with iron shield on left forearm. Different weapons must remain recognizable. Crisp carefully clustered medieval forest fantasy pixel art at about120x150logical density, stepped dark outlines, muted iron-grey/pine-green/earth-brown/ochre palette, warm upper-left light, realistic stylized anatomy. Entire sprite including weapon tip and both boots fully contained in central75percent of each cell, transparent gaps on ALL sides and no overlap. Exactly3x2 layout, no labels or gridlines, no scenery, floor, cast shadow, halo, fog, gradient, text, watermark, border or recognizable franchise designs. Rich readable detail at100px game height, not smooth illustration or3D.",
+          "sourcePixelsUnmodified": true
+        }
+      ]
+    },
+    {
+      "version": "0.6.67",
+      "createdAt": "2026-10-24T03:12:11.962Z",
+      "method": "built-in image_gen__imagegen",
+      "status": "Local only, common hero plus iron shield without iron armor. Unsupported armor remains the generated common base; not falsely iron plate.",
+      "assets": [
+        {
+          "file": "hero-iron-shield-v2-sheet.png",
+          "width": 1374,
+          "height": 1145,
+          "bytes": 1321926,
+          "sha256": "f3bcc1fdef47ce8e86a087dd1e6545662448826d886624e947e3abfc1197e56d",
+          "transparentPixels": 1003869,
+          "visibleBounds": [
+            0,
+            0,
+            1356,
+            1144
+          ],
+          "visibleMargins": [
+            0,
+            0,
+            17,
+            0
+          ],
+          "pngColorType": 6,
+          "prompt": "Use case: stylized-concept. Original LOOPKEEPER production character sprite sheet, exactly SIX full-body sprites in3equal columns by2equal rows on genuinely transparent background. SAME young adult brown-haired hero in each cell, familiar green tunic with off-white sleeves, brown leather vest/belt, plain brown trousers and leather boots. IMPORTANT: NO METAL ARMOR on body, no breastplate, pauldrons, metal knee pads or helmet. ONLY metal equipment besides weapon is ONE IRON SHIELD per sprite, muted grey oval steel with dark rim and small warm brass central boss. All face RIGHT in three-quarter grounded combat stance, same body height and same feet baseline within equal cells. Row1left: straight sword toward RIGHT in right hand, iron shield on left forearm; row1middle: spear angled RIGHT in right hand with shield close to left torso; row1right: bow drawn RIGHT with both hands and shield visibly strapped at left-back hip, not blocking bowstring. Row2left: crossbow aimed RIGHT with both hands and shield visibly strapped behind left shoulder/hip; row2middle: wooden amber-gem staff in right hand and iron shield on left forearm; row2right: NO weapon, guarding with left-forearm iron shield and right fist. Every weapon distinct and intact, coherent hands. Keep spear and sword COMPACT enough to fit INSIDE their cell without crossing into adjacent cells. Entire head, spear/arrow/staff tip, shield and both boots with at least7percent EMPTY TRANSPARENT margins in EVERY cell. No sprite overlap and no object crosses any row/column boundary. Crisp rich pixel clusters, dark stepped outlines, logical120x150density, muted pine-green/earth-brown/steel/ochre palette and warm upper-left daylight, matching polished medieval woodland game art. Not smooth illustration or3D. No scenery, floor, cast shadow, gradients, glow, fog, halo, gridlines, text, labels, watermark or franchise elements. Original independent artwork.",
           "sourcePixelsUnmodified": true
         }
       ]
