@@ -1,22 +1,23 @@
-import {mountBattleParty,updateBattleParty}from './party-ui.js?v=0.6.79';
-import{frameStaticPortrait}from './portrait-frame.js?v=0.6.79';
-import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.79';
-import {getCatalog} from './engine.js?v=0.6.79';
-import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.79';
-import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.79';
-import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.79';
-import{duelSnapshot}from './duel-motion.js?v=0.6.79';
-import {battleFood,potionCapacity}from './meals.js?v=0.6.79';
-import {mealEffectText}from './meal-ui.js?v=0.6.79';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.79';
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.79';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.79';
-import { getPlayerStrike } from './engine.js?v=0.6.79';
-import {routeById}from './routes.js?v=0.6.79';
-import { equipmentMaterial } from './visual-design.js?v=0.6.79';
-import { battleSound } from "./presentation.js?v=0.6.79";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.79";
-import { icon } from "./icons.js?v=0.6.79";
+import{enchantmentById}from './enchantments.js?v=0.6.80';
+import {mountBattleParty,updateBattleParty}from './party-ui.js?v=0.6.80';
+import{frameStaticPortrait}from './portrait-frame.js?v=0.6.80';
+import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.80';
+import {getCatalog} from './engine.js?v=0.6.80';
+import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.80';
+import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.80';
+import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.80';
+import{duelSnapshot}from './duel-motion.js?v=0.6.80';
+import {battleFood,potionCapacity}from './meals.js?v=0.6.80';
+import {mealEffectText}from './meal-ui.js?v=0.6.80';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.80';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.80';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.80';
+import { getPlayerStrike } from './engine.js?v=0.6.80';
+import {routeById}from './routes.js?v=0.6.80';
+import { equipmentMaterial } from './visual-design.js?v=0.6.80';
+import { battleSound } from "./presentation.js?v=0.6.80";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.80";
+import { icon } from "./icons.js?v=0.6.80";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -435,7 +436,7 @@ export function renderBattle(dialog, state) {
   setText(el["player-defense"], number(stats.defense));
   setText(el["enemy-attack"], number(pressuredAttack(state,enemy)));
   const pressure=battlePressure(state);el["pressure-state"].hidden=!pressure.active;setText(el["pressure-state"],pressure.graceRemaining>0?`長期戦：あと${Math.ceil(pressure.graceRemaining)}秒で敵の攻撃力が徐々に上昇`:`長期戦：敵攻撃×${pressure.multiplier.toFixed(2)}${pressure.slow?" · 警鐘台で強化速度−30%":""}`);
-  setText(el["meal-state"],mealEffectText(state));for(const [id,key,name]of [["fish_meal","fish-button","魚料理"],["egg_meal","egg-button","卵料理"]]){setText(el[key],`${name}を食べる（${run.resources[id]||0}）`);el[key].disabled=!(run.resources[id]>0);}
+  setText(el["meal-state"],mealEffectText(state)+(run.enchantment?.active?" · "+enchantmentById(run.enchantment.active.id).name+" 発動中":""));for(const [id,key,name]of [["fish_meal","fish-button","魚料理"],["egg_meal","egg-button","卵料理"]]){setText(el[key],`${name}を食べる（${run.resources[id]||0}）`);el[key].disabled=!(run.resources[id]>0);}
   setText(el["enemy-defense"], number(enemy.defense));
   setText(
     el.outgoing,

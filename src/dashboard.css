@@ -734,3 +734,6 @@ body.effects-disabled .work-vignette::after{animation:none!important}
 #content, [data-scroll-key], #expanded-work-dialog {
   overflow-anchor: none;
 }
+
+.enchantment-panel .meal-settings{grid-template-columns:minmax(0,1fr)}
+.enchantment-panel select{width:100%;min-width:0}

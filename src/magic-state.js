@@ -1,15 +1,16 @@
-import {specialistAug}from './specialist-content.js?v=0.6.79';
-import {memberJoined,partyWeapon,memberStats}from './party.js?v=0.6.79';
-import {preparationSpellDamage}from './preparation-balance.js?v=0.6.79';
-import {investmentEffect}from './investments.js?v=0.6.79';
-import {weaponById}from './gear-content.js?v=0.6.79';
-import {accessoryEffects}from './gear-state.js?v=0.6.79';
-import {contractEffects}from './contracts.js?v=0.6.79';
-import {routeEffects}from './routes.js?v=0.6.79';
-import {alchemyResource}from './magic-content.js?v=0.6.79';
+import{initializeEnchantments,selectEnchantment}from './enchantments.js?v=0.6.80';
+import {specialistAug}from './specialist-content.js?v=0.6.80';
+import {memberJoined,partyWeapon,memberStats}from './party.js?v=0.6.80';
+import {preparationSpellDamage}from './preparation-balance.js?v=0.6.80';
+import {investmentEffect}from './investments.js?v=0.6.80';
+import {weaponById}from './gear-content.js?v=0.6.80';
+import {accessoryEffects}from './gear-state.js?v=0.6.80';
+import {contractEffects}from './contracts.js?v=0.6.80';
+import {routeEffects}from './routes.js?v=0.6.80';
+import {alchemyResource}from './magic-content.js?v=0.6.80';
 export const freshMagic=()=>({mana:30,castTimer:0,burnTimer:0,burnTicks:0,burnPower:0,wardCooldown:0,casts:0,detonations:0,catalystsUsed:0,wardsUsed:0,burnDamage:0,spellDamage:0});
 export function initializeMagic(s){
- if(s.version===1)return;s.meta.magicVersion=1;for(const id of ['spark_catalyst','ward_essence'])s.run.resources[id]??=0;
+ if(s.version===1)return;initializeEnchantments(s);s.meta.magicVersion=1;for(const id of ['spark_catalyst','ward_essence'])s.run.resources[id]??=0;
  s.run.magicState??=freshMagic();s.settings.alchemyUse??={catalyst:true,ward:true};
 }
 export const isCaster=s=>s.run.party?memberJoined(s,'mage'):weaponById(s.run.equipment.weapon?.id)?.combat?.type==='magic';
@@ -43,6 +44,7 @@ export function wardPacket(s,hits,maxHp){
 }
 export function magicChoice(s,{type,id,value}){
  if(s.version===1||s.run.status!=='preparing'||s.run.augments.offer.length)return {ok:false,reason:'準備中に設定してください。'};initializeMagic(s);
+ if(type==='enchantment')return selectEnchantment(s,id);
  if(type==='use'&&['catalyst','ward'].includes(id)&&typeof value==='boolean'){s.settings.alchemyUse[id]=value;return {ok:true};}
  return {ok:false,reason:'錬金設定が不正です。'};
 }

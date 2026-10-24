@@ -1,17 +1,18 @@
-import {SPECIALIST_FACILITIES,SPECIALIST_AUGMENTS}from './specialist-content.js?v=0.6.79';
-import {PARTY_ACTIONS,PARTY_WEAPONS}from './party-content.js?v=0.6.79';
-import {HOUSING,OUTPOST_BUILDINGS,EXPEDITIONS}from './settlement-content.js?v=0.6.79';
-import {WORKER_RANK_UPGRADES,WORKER_NAMES,workerLevel,workerRankDescription}from './worker-legacy.js?v=0.6.79';
-import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.79';
-import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.79';
-import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.79';
-import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.79';
-import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.79';
-import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.79';
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.79';
-import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.79';
-import { REINFORCEMENTS } from './endless.js?v=0.6.79';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.79';
+import{ENCHANTMENTS,ENCHANTMENT_RECIPES}from './enchantments.js?v=0.6.80';
+import {SPECIALIST_FACILITIES,SPECIALIST_AUGMENTS}from './specialist-content.js?v=0.6.80';
+import {PARTY_ACTIONS,PARTY_WEAPONS}from './party-content.js?v=0.6.80';
+import {HOUSING,OUTPOST_BUILDINGS,EXPEDITIONS}from './settlement-content.js?v=0.6.80';
+import {WORKER_RANK_UPGRADES,WORKER_NAMES,workerLevel,workerRankDescription}from './worker-legacy.js?v=0.6.80';
+import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.80';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.80';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.80';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.80';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.80';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.80';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.80';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.80';
+import { REINFORCEMENTS } from './endless.js?v=0.6.80';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.80';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -3670,3 +3671,7 @@ CONTENT.processing.push({id:'cook_simple',name:'野営の煮込み',skill:'cooki
 
 CONTENT.facilities.push(...SPECIALIST_FACILITIES);
 CONTENT.augments.push(...SPECIALIST_AUGMENTS);
+
+CONTENT.resources.push(...ENCHANTMENTS.map(({id,name})=>({id,name})));CONTENT.processing.push(...ENCHANTMENT_RECIPES);
+
+CONTENT.market.push(...ENCHANTMENTS.map((d,i)=>({id:'buy_'+d.id,name:d.name+'を購入',direction:'buy',resource:d.id,quantity:1,gold:[35,40,45][i],discountEligible:true})));

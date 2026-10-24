@@ -1,16 +1,16 @@
-import {visibleWorkerUpgrade}from './worker-legacy.js?v=0.6.79';
-import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.79';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.79';
-import {stockIcon as icon}from './stock-icons.js?v=0.6.79';
-import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.79';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.79';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.79';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.79';
-import {hasUpgrade}from './free-features.js?v=0.6.79';
-import { getStartingResources } from './engine.js?v=0.6.79';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.79';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.79";
-import { CONTENT as C } from "./content.js?v=0.6.79";
+import {visibleWorkerUpgrade}from './worker-legacy.js?v=0.6.80';
+import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.80';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.80';
+import {stockIcon as icon}from './stock-icons.js?v=0.6.80';
+import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.80';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.80';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.80';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.80';
+import {hasUpgrade}from './free-features.js?v=0.6.80';
+import { getStartingResources } from './engine.js?v=0.6.80';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.80';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.80";
+import { CONTENT as C } from "./content.js?v=0.6.80";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -26,7 +26,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.79";
+} from "./engine.js?v=0.6.80";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
