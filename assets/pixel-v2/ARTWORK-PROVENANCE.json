@@ -1,5 +1,5 @@
 {
-  "version": "0.6.62",
+  "version": "0.6.64",
   "method": "Original built-in OpenAI image generation; no assets copied from other games",
   "sourcePixelsUnmodified": true,
   "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
@@ -892,6 +892,122 @@
       "scope": "Common hero with weapon-family poses and exact gear labels; authored river bank; ten facility types including all38 real stages; three paid-progress training sequences; generated combat backdrop and support facility icons.",
       "noExternalGameArt": true,
       "noNewDependencies": true
+    },
+    {
+      "version": "0.6.64",
+      "method": "built-in image_gen__imagegen",
+      "createdAt": "2026-10-24T01:06:13.942Z",
+      "status": "Selected original images, source PNGs unmodified. King and sentinel reused from preserved drafts; new river captain. No rejected halo king adopted.",
+      "assets": [
+        {
+          "file": "dawn-gate-king-v2.png",
+          "prompt": "Use case: stylized-concept. One ORIGINAL isolated full-body pixel-art game enemy, DAWN GATE KING for LOOPKEEPER. Heavy black-bronze armored monarch with compact five-point bronze crown atop closed visor helmet, oxblood red tabard and short red shoulder cloak, stern broad silhouette. Holds one massive straight two-handed execution greatsword diagonally down toward LEFT, hands together at its grip. NO shield. Faces LEFT in three-quarter side battle idle stance. Carefully clustered fantasy pixel art at about160x190 logical density, crisp stepped hard outlines, restrained dark iron, muted bronze, leather brown and faded red colors, ordinary diffuse daylight highlights. Single clean cutout with genuinely transparent alpha outside the hard character silhouette. NO scenery, no floor, no cast shadow, NO glowing light, NO colored mist, NO halo, no vignette or painted background. Entire crown, blade tip and both boots fully inside generous transparent margins on all sides. Full body occupies central75% of canvas. No text, watermark, logo or frame. Match a polished medieval forest settlement game; independent original design, no franchise reference.",
+          "method": "built-in image_gen__imagegen",
+          "width": 1151,
+          "height": 1367,
+          "bytes": 1268194,
+          "sha256": "d72171ec11141e883bc5822c5f16caaa03bc9773e916119a29a0738308fff6c1",
+          "transparentPixels": 988586,
+          "visibleBounds": [
+            28,
+            25,
+            1121,
+            1344
+          ],
+          "visibleMargins": [
+            28,
+            25,
+            29,
+            22
+          ],
+          "pngColorType": 6,
+          "rawAlphaBounds": [
+            0,
+            22,
+            1132,
+            1366
+          ],
+          "rawAlphaMargins": [
+            0,
+            22,
+            18,
+            0
+          ],
+          "visibleAlphaThreshold": 160
+        },
+        {
+          "file": "dawn-last-sentinel-v1.png",
+          "prompt": "Use case: stylized-concept. Create an ORIGINAL clean transparent-alpha pixel-art game sprite for LOOPKEEPER. ONE full-body LAST SENTINEL OF DAWN, armored guardian facing LEFT in three-quarter standing battle stance. Different from a crowned king: NO crown, NO sword, NO cape. Low closed iron sallet helmet, very broad square shoulders, ivory/steel segmented armor, muted sage waist cloth. A tall rectangular slab tower shield with a small engraved sunrise emblem covers one side; other hand holds a long heavy polehammer upright. Stout planted silhouette and squared shield, complete helmet, polehammer and boots visible. Draw like carefully clustered 160x190-resolution fantasy pixel art enlarged with nearest-neighbor: stepped hard outlines, limited desaturated pine/steel/ivory/ochre palette, no blur. Character lit softly upper left, NO emitted light, aura, fog, glow, sparks, shadow or vignette. Empty transparent pixels everywhere outside the hard outline, including between shield and weapon. Compose full sprite occupying only central 75% of canvas with generous completely transparent padding on ALL sides. No floor, environment, backdrop, lettering, watermark or borders. Original independent design for game use, not an existing character.",
+          "method": "built-in image_gen__imagegen",
+          "width": 1151,
+          "height": 1367,
+          "bytes": 1298715,
+          "sha256": "d6c4e4228353b03f19583c08844ab7bdbad6b826fa835019e7a3abad9c690afa",
+          "transparentPixels": 854429,
+          "visibleBounds": [
+            64,
+            66,
+            1036,
+            1306
+          ],
+          "visibleMargins": [
+            64,
+            66,
+            114,
+            60
+          ],
+          "pngColorType": 6,
+          "rawAlphaBounds": [
+            26,
+            23,
+            1120,
+            1366
+          ],
+          "rawAlphaMargins": [
+            26,
+            23,
+            30,
+            0
+          ],
+          "visibleAlphaThreshold": 160
+        },
+        {
+          "file": "river-captain-v1.png",
+          "prompt": "Use case: stylized-concept. Asset type: one ORIGINAL transparent full-body pixel-art enemy sprite for LOOPKEEPER medieval forest settlement game. Subject: RIVER CROSSING TWINBLADE CAPTAIN, a weathered veteran river raider facing LEFT in three-quarter combat stance. Distinct from a masked violet leather assassin: this is a broad sturdy ferry captain in dark teal quilted river coat, worn brown leather brigandine with bronze rivets, short grey beard, low open-faced iron helmet with a brass brow band, thick boots and rope belt. Holds TWO clearly separate short curved broad cutlasses, one extended toward LEFT and another angled down behind his right side, no shield. Strong readable asymmetrical silhouette. Match polished carefully clustered fantasy pixel art, crisp stepped dark outlines, about160x190 logical pixel density, desaturated pine/teal/iron/brown/ochre palette, soft upper-left daylight. Complete helmet, both blade tips and both boots fully contained with generous empty transparent margins on every side, central75% composition. Single isolated figure, genuinely transparent alpha immediately outside hard outline. NO environment, floor, water, boats, cast shadow, aura, fog, halo, glow, vignette, border, text or watermark. Original independent design, no franchise references. High visual readability at130px game height, not smooth illustration or 3D.",
+          "width": 1149,
+          "height": 1368,
+          "bytes": 868292,
+          "sha256": "6f54d9295c080038ac590c1fd636d5ab7a10804ab9c699049bb0747de0033dd3",
+          "transparentPixels": 1110656,
+          "visibleBounds": [
+            39,
+            186,
+            1114,
+            1246
+          ],
+          "visibleMargins": [
+            39,
+            186,
+            34,
+            121
+          ],
+          "pngColorType": 6,
+          "rawAlphaBounds": [
+            0,
+            19,
+            1134,
+            1367
+          ],
+          "rawAlphaMargins": [
+            0,
+            19,
+            14,
+            0
+          ],
+          "visibleAlphaThreshold": 160,
+          "method": "built-in image_gen__imagegen"
+        }
+      ]
     }
   ],
   "actionArtwork": {

@@ -1,20 +1,20 @@
-import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.63';
-import {getCatalog} from './engine.js?v=0.6.63';
-import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.63';
-import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.63';
-import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.63';
-import{duelSnapshot}from './duel-motion.js?v=0.6.63';
-import {totalFood}from './meals.js?v=0.6.63';
-import {mealEffectText}from './meal-ui.js?v=0.6.63';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.63';
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.63';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.63';
-import { getPlayerStrike } from './engine.js?v=0.6.63';
-import {routeById}from './routes.js?v=0.6.63';
-import { equipmentMaterial } from './visual-design.js?v=0.6.63';
-import { battleSound } from "./presentation.js?v=0.6.63";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.63";
-import { icon } from "./icons.js?v=0.6.63";
+import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.64';
+import {getCatalog} from './engine.js?v=0.6.64';
+import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.64';
+import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.64';
+import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.64';
+import{duelSnapshot}from './duel-motion.js?v=0.6.64';
+import {totalFood}from './meals.js?v=0.6.64';
+import {mealEffectText}from './meal-ui.js?v=0.6.64';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.64';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.64';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.64';
+import { getPlayerStrike } from './engine.js?v=0.6.64';
+import {routeById}from './routes.js?v=0.6.64';
+import { equipmentMaterial } from './visual-design.js?v=0.6.64';
+import { battleSound } from "./presentation.js?v=0.6.64";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.64";
+import { icon } from "./icons.js?v=0.6.64";
 
 const views = new WeakMap();
 const number = (value) =>

@@ -7,6 +7,9 @@ export const BOSS_ART=Object.freeze({
  silver_bandit_king:{file:'silver-bandit-king-v1.png',kind:'boss'},
  mountain_colossus:{file:'mountain-colossus-v1.png',kind:'giant'},
  crystal_guardian:{file:'crystal-guardian-v1.png',kind:'knight'},
+ dawn_gate_king:{file:'dawn-gate-king-v2.png',kind:'boss'},
+ dawn_last_sentinel:{file:'dawn-last-sentinel-v1.png',kind:'knight'},
+ river_captain:{file:'river-captain-v1.png',kind:'raider'},
 });
 export const REGION_ART=Object.freeze({
  forest:{file:'winged-v1.png',kind:'winged'},forest_depth:{file:'winged-v1.png',kind:'winged'},
