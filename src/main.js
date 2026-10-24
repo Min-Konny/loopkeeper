@@ -1,74 +1,75 @@
-import{canEarlyRaid}from './engine.js?v=0.6.73';
-import{earlyRaidControl,earlyRaidToken,earlyRaidConfirmation}from './early-raid-ui.js?v=0.6.73';
-import{editStoredEarlyRaid}from './early-raid-storage.js?v=0.6.73';
-import{usefulGoalsMarkup}from './useful-goals.js?v=0.6.73';
-import {mealMarkup}from './meal-ui.js?v=0.6.73';
-import {getTotalFood,mealStatus,useMeal,setMealPreference,setRecoveryMeal,setAutoCookRecipe}from './engine.js?v=0.6.73';
-import './decision-keyboard.js?v=0.6.73';
-import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.73';
-import {isQueuedNumberInput,captureQueuedNumberEdit,queuedNumberEditIndex,queuedNumberEditValue,restoreQueuedNumberEdit,preserveQueuedNumberEdit}from './queue-number-edit.js?v=0.6.73';
-import { mountPixelCamp } from './pixel-camp-scene.js?v=0.6.73';
-import {mountPhaserCamp}from './phaser-camp-scene.js?v=0.6.73';
-import {trainingMode,nextTrainingLevel,trainingLevelEditor,trainingQueueEditor}from './training-queue-ui.js?v=0.6.73';
-import {queueTraining}from './planner.js?v=0.6.73';
-import {editQueuedTrainingLevel}from './engine.js?v=0.6.73';
-import {raidEnemyStats}from './raid-info-ui.js?v=0.6.73';
-import {stockMarkup}from './stock-ui.js?v=0.6.73';
-import {inventoryMarkup,queueStopStatus,queueStopMarkup,createStopTransition,createQuestSeen,BAG_CATEGORIES}from './camp-space-ui.js?v=0.6.73';
-import {installDialogDismissal}from './dialog-dismissal.js?v=0.6.73';
-import {createExpandedPane}from './expanded-pane.js?v=0.6.73';
-import {createInheritanceMapUI}from './inheritance-map-ui.js?v=0.6.73';
-import {acknowledgeWorkRewards}from './work-milestone-storage.js?v=0.6.73';
-import {getClockStatus} from './engine.js?v=0.6.73';
-import {CRAFT_CATEGORIES,craftCategory,craftCategoryMarkup,readUiPreference,saveUiPreference} from './craft-categories.js?v=0.6.73';
-import {marketMarkup} from './mvp-ui.js?v=0.6.73';
-import {trophyMarkup} from './boss-materials.js?v=0.6.73';
-import {editStoredAugment}from './augment-choice-storage.js?v=0.6.73';import {augmentExclusionMarkup}from './augment-exclusion-ui.js?v=0.6.73';
+import {setGameSpeed}from './game-speed.js?v=0.6.74';
+import{canEarlyRaid}from './engine.js?v=0.6.74';
+import{earlyRaidControl,earlyRaidToken,earlyRaidConfirmation}from './early-raid-ui.js?v=0.6.74';
+import{editStoredEarlyRaid}from './early-raid-storage.js?v=0.6.74';
+import{usefulGoalsMarkup}from './useful-goals.js?v=0.6.74';
+import {mealMarkup}from './meal-ui.js?v=0.6.74';
+import {getTotalFood,mealStatus,useMeal,setMealPreference,setRecoveryMeal,setAutoCookRecipe}from './engine.js?v=0.6.74';
+import './decision-keyboard.js?v=0.6.74';
+import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.74';
+import {isQueuedNumberInput,captureQueuedNumberEdit,queuedNumberEditIndex,queuedNumberEditValue,restoreQueuedNumberEdit,preserveQueuedNumberEdit}from './queue-number-edit.js?v=0.6.74';
+import { mountPixelCamp } from './pixel-camp-scene.js?v=0.6.74';
+import {mountPhaserCamp}from './phaser-camp-scene.js?v=0.6.74';
+import {trainingMode,nextTrainingLevel,trainingLevelEditor,trainingQueueEditor}from './training-queue-ui.js?v=0.6.74';
+import {queueTraining}from './planner.js?v=0.6.74';
+import {editQueuedTrainingLevel}from './engine.js?v=0.6.74';
+import {raidEnemyStats}from './raid-info-ui.js?v=0.6.74';
+import {stockMarkup}from './stock-ui.js?v=0.6.74';
+import {inventoryMarkup,queueStopStatus,queueStopMarkup,createStopTransition,createQuestSeen,BAG_CATEGORIES}from './camp-space-ui.js?v=0.6.74';
+import {installDialogDismissal}from './dialog-dismissal.js?v=0.6.74';
+import {createExpandedPane}from './expanded-pane.js?v=0.6.74';
+import {createInheritanceMapUI}from './inheritance-map-ui.js?v=0.6.74';
+import {acknowledgeWorkRewards}from './work-milestone-storage.js?v=0.6.74';
+import {getClockStatus} from './engine.js?v=0.6.74';
+import {CRAFT_CATEGORIES,craftCategory,craftCategoryMarkup,readUiPreference,saveUiPreference} from './craft-categories.js?v=0.6.74';
+import {marketMarkup} from './mvp-ui.js?v=0.6.74';
+import {trophyMarkup} from './boss-materials.js?v=0.6.74';
+import {editStoredAugment}from './augment-choice-storage.js?v=0.6.74';import {augmentExclusionMarkup}from './augment-exclusion-ui.js?v=0.6.74';
 let augmentSaveError='',pendingAugmentExclude=null;
-import {clearHistoryMarkup}from './clear-history-ui.js?v=0.6.73';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.73';
-import {contractsMarkup}from './contracts-ui.js?v=0.6.73';import {editStoredContract}from './contracts-storage.js?v=0.6.73';
-import {routesMarkup}from './routes-ui.js?v=0.6.73';import {editStoredRoute}from './routes-storage.js?v=0.6.73';
-import {settleFarmOffline}from './farm-offline.js?v=0.6.73';
-import {farmMarkup}from './farm-ui.js?v=0.6.73';import {editStoredFarm}from './farm-storage.js?v=0.6.73';
-import {companionMarkup}from './companion-ui.js?v=0.6.73';import {companionById}from './companion-content.js?v=0.6.73';import {proposeCompanion,confirmStoredCompanion}from './companion-storage.js?v=0.6.73';
-import {editStoredMagic}from './magic-storage.js?v=0.6.73';
-import {proposeBuildRestore}from './build-presets.js?v=0.6.73';import {editStoredBuild}from './build-presets-storage.js?v=0.6.73';import {buildRestoreMarkup}from './build-presets-ui.js?v=0.6.73';
-import {gearMarkup}from './gear-ui.js?v=0.6.73';import {editStoredGear}from './gear-storage.js?v=0.6.73';import {trainBuild}from './gear-training.js?v=0.6.73';
-import {runResultMarkup}from './run-results-ui.js?v=0.6.73';
-import {editStoredLegacyRank}from './legacy-ranks-storage.js?v=0.6.73';
-import {migrateStoredFoundation}from './foundation-storage.js?v=0.6.73';
-import {hasUpgrade,FREE_FEATURES}from './free-features.js?v=0.6.73';
-import { confirmStoredRun } from './run-confirmation.js?v=0.6.73';
-import { trainingPurpose } from './training-purpose.js?v=0.6.73';
-import { GATHER_VIEW_KEY, readGatherView, readGatherPreference, saveGatherView, gatherGuideMarkup } from './gather-display.js?v=0.6.73';
-import { workshopProduct, workshopMaterialIcon, materialShortage } from './workshop-art.js?v=0.6.73';
-import { createRewardDisplay } from './reward-notices.js?v=0.6.73';
-import { withWorkCompletions } from './work-completion.js?v=0.6.73';
-import { portraitImage, portraitBadge } from './portrait-art.js?v=0.6.73';
-import { reinforcementEffect } from './endless.js?v=0.6.73';
-import { setTextIfChanged } from './dom-text.js?v=0.6.73';
-import { validateReservationInput, reservationInputError, installReservationKeyboard, restoreControlFocus } from './reservation-input.js?v=0.6.73';
-import { createRecipeSearch, filterRecipeNames } from './recipe-search.js?v=0.6.73';
-import { prepareTemplateOverwrite, commitTemplateOverwrite, templateOverwriteMarkup } from './template-overwrite.js?v=0.6.73';
-import { prepareMaterialPriority, commitMaterialPriority, materialPriorityMarkup, editMaterialPriority } from './material-priority-ui.js?v=0.6.73';
-import { startEndless } from './engine.js?v=0.6.73';
-import { augmentStatusMarkup } from './augments-ui.js?v=0.6.73';
-import { getActionYields } from './engine.js?v=0.6.73';
-import { reportMarkup, enemyRoadmap, challengesMarkup, chapterPresentation, queueTimingMarkup, conditionalMarkup, updateConditionDraft, conditionalRequest, conditionLabel } from './strategy-ui.js?v=0.6.73';
-import { enqueueConditional } from './engine.js?v=0.6.73';
-import { tradeResource } from "./engine.js?v=0.6.73";
-import { changelogMarkup } from "./changelog.js?v=0.6.73";
-import { createBackgroundClock } from "./background-clock.js?v=0.6.73";
-import { updateSetupDialog } from "./setup-dialog.js?v=0.6.73";
-import { compareRun } from './visual-design.js?v=0.6.73';
-import { createRenderGuard } from './render-guard.js?v=0.6.73';
-import { installQueueDrag } from './queue-drag.js?v=0.6.73';
-import { preparationMarkup } from './preparation-ui.js?v=0.6.73';
-import { saveClearCard } from './clear-card.js?v=0.6.73';
-import { runFrameTasks } from './frame-loop.js?v=0.6.73';
-import { getCatalog } from "./engine.js?v=0.6.73";
-import { CONTENT } from "./content.js?v=0.6.73";
+import {clearHistoryMarkup}from './clear-history-ui.js?v=0.6.74';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.74';
+import {contractsMarkup}from './contracts-ui.js?v=0.6.74';import {editStoredContract}from './contracts-storage.js?v=0.6.74';
+import {routesMarkup}from './routes-ui.js?v=0.6.74';import {editStoredRoute}from './routes-storage.js?v=0.6.74';
+import {settleFarmOffline}from './farm-offline.js?v=0.6.74';
+import {farmMarkup}from './farm-ui.js?v=0.6.74';import {editStoredFarm}from './farm-storage.js?v=0.6.74';
+import {companionMarkup}from './companion-ui.js?v=0.6.74';import {companionById}from './companion-content.js?v=0.6.74';import {proposeCompanion,confirmStoredCompanion}from './companion-storage.js?v=0.6.74';
+import {editStoredMagic}from './magic-storage.js?v=0.6.74';
+import {proposeBuildRestore}from './build-presets.js?v=0.6.74';import {editStoredBuild}from './build-presets-storage.js?v=0.6.74';import {buildRestoreMarkup}from './build-presets-ui.js?v=0.6.74';
+import {gearMarkup}from './gear-ui.js?v=0.6.74';import {editStoredGear}from './gear-storage.js?v=0.6.74';import {trainBuild}from './gear-training.js?v=0.6.74';
+import {runResultMarkup}from './run-results-ui.js?v=0.6.74';
+import {editStoredLegacyRank}from './legacy-ranks-storage.js?v=0.6.74';
+import {migrateStoredFoundation}from './foundation-storage.js?v=0.6.74';
+import {hasUpgrade,FREE_FEATURES}from './free-features.js?v=0.6.74';
+import { confirmStoredRun } from './run-confirmation.js?v=0.6.74';
+import { trainingPurpose } from './training-purpose.js?v=0.6.74';
+import { GATHER_VIEW_KEY, readGatherView, readGatherPreference, saveGatherView, gatherGuideMarkup } from './gather-display.js?v=0.6.74';
+import { workshopProduct, workshopMaterialIcon, materialShortage } from './workshop-art.js?v=0.6.74';
+import { createRewardDisplay } from './reward-notices.js?v=0.6.74';
+import { withWorkCompletions } from './work-completion.js?v=0.6.74';
+import { portraitImage, portraitBadge } from './portrait-art.js?v=0.6.74';
+import { reinforcementEffect } from './endless.js?v=0.6.74';
+import { setTextIfChanged } from './dom-text.js?v=0.6.74';
+import { validateReservationInput, reservationInputError, installReservationKeyboard, restoreControlFocus } from './reservation-input.js?v=0.6.74';
+import { createRecipeSearch, filterRecipeNames } from './recipe-search.js?v=0.6.74';
+import { prepareTemplateOverwrite, commitTemplateOverwrite, templateOverwriteMarkup } from './template-overwrite.js?v=0.6.74';
+import { prepareMaterialPriority, commitMaterialPriority, materialPriorityMarkup, editMaterialPriority } from './material-priority-ui.js?v=0.6.74';
+import { startEndless } from './engine.js?v=0.6.74';
+import { augmentStatusMarkup } from './augments-ui.js?v=0.6.74';
+import { getActionYields } from './engine.js?v=0.6.74';
+import { reportMarkup, enemyRoadmap, challengesMarkup, chapterPresentation, queueTimingMarkup, conditionalMarkup, updateConditionDraft, conditionalRequest, conditionLabel } from './strategy-ui.js?v=0.6.74';
+import { enqueueConditional } from './engine.js?v=0.6.74';
+import { tradeResource } from "./engine.js?v=0.6.74";
+import { changelogMarkup } from "./changelog.js?v=0.6.74";
+import { createBackgroundClock } from "./background-clock.js?v=0.6.74";
+import { updateSetupDialog } from "./setup-dialog.js?v=0.6.74";
+import { compareRun } from './visual-design.js?v=0.6.74';
+import { createRenderGuard } from './render-guard.js?v=0.6.74';
+import { installQueueDrag } from './queue-drag.js?v=0.6.74';
+import { preparationMarkup } from './preparation-ui.js?v=0.6.74';
+import { saveClearCard } from './clear-card.js?v=0.6.74';
+import { runFrameTasks } from './frame-loop.js?v=0.6.74';
+import { getCatalog } from "./engine.js?v=0.6.74";
+import { CONTENT } from "./content.js?v=0.6.74";
 import {
   isLegacy,
   isKnown,
@@ -81,7 +82,7 @@ import {
   saveTemplate,
   loadTemplate,
   deleteTemplate,
-} from "./engine.js?v=0.6.73";
+} from "./engine.js?v=0.6.74";
 import {
   setupMarkup,
   diplomacyMarkup,
@@ -92,10 +93,10 @@ import {
   templatesMarkup,
   milestoneMarkup as economicMilestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.6.73";
-import {earlyDefeatMarkup}from './early-loop.js?v=0.6.73';
-import { createSessionOwner } from "./session-owner.js?v=0.6.73";
-import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.6.73";
+} from "./mvp-ui.js?v=0.6.74";
+import {earlyDefeatMarkup}from './early-loop.js?v=0.6.74';
+import { createSessionOwner } from "./session-owner.js?v=0.6.74";
+import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.6.74";
 import {
   loadStoredGame,
   writeStoredGame,
@@ -105,14 +106,14 @@ import {
   readResetBackup,
   resetStoredGame,
   replaceStoredGame,
-} from "./save-storage.js?v=0.6.73";
+} from "./save-storage.js?v=0.6.74";
 import {
   updatePresentation,
   playCompletedWork,
   markQueueEdited,
   unlockAudio,
   previewSound,
-} from "./presentation.js?v=0.6.73";
+} from "./presentation.js?v=0.6.74";
 import {
   getRaidInterval,
   aidCountry,
@@ -135,9 +136,9 @@ import {
   abandonRun,
   serializeGame,
   parseSave,
-} from "./engine.js?v=0.6.73";
-import { icon } from "./icons.js?v=0.6.73";
-import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.6.73";
+} from "./engine.js?v=0.6.74";
+import { icon } from "./icons.js?v=0.6.74";
+import { planCraft, queueCraft, queueAction, queueWork, selectManualAction, blockedReservation, recoverReservation } from "./planner.js?v=0.6.74";
 import {
   FIRST_RAID_DELAY,
   getUnlocks,
@@ -147,24 +148,24 @@ import {
   getRecipeCost,
   getFoodHealing,
   getSkillEffects,
-} from "./engine.js?v=0.6.73";
-import { renderAugments } from "./augments-ui.js?v=0.6.73";
-import {canStartManualRepeat}from './engine.js?v=0.6.73';
-import {editStoredManualRepeat}from './manual-repeat-storage.js?v=0.6.73';
-import {manualRepeatMarkup}from './manual-repeat-ui.js?v=0.6.73';
-import {LEGACY_CATEGORIES}from './legacy-categories.js?v=0.6.73';
-import { renderUpgradeSections } from "./upgrades-ui.js?v=0.6.73";
-import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.6.73";
-import { mountCampScene } from "./camp-scene.js?v=0.6.73";
-import { workScene, syncWorkAnimation } from "./work-scene.js?v=0.6.73";
-import { getRecipeVisibility } from "./workshop.js?v=0.6.73";
-import { getMilestoneStatus } from "./engine.js?v=0.6.73";
+} from "./engine.js?v=0.6.74";
+import { renderAugments } from "./augments-ui.js?v=0.6.74";
+import {canStartManualRepeat}from './engine.js?v=0.6.74';
+import {editStoredManualRepeat}from './manual-repeat-storage.js?v=0.6.74';
+import {manualRepeatMarkup}from './manual-repeat-ui.js?v=0.6.74';
+import {LEGACY_CATEGORIES}from './legacy-categories.js?v=0.6.74';
+import { renderUpgradeSections } from "./upgrades-ui.js?v=0.6.74";
+import { renderBattle, suspendBattle } from "./battle-ui.js?v=0.6.74";
+import { mountCampScene } from "./camp-scene.js?v=0.6.74";
+import { workScene, syncWorkAnimation } from "./work-scene.js?v=0.6.74";
+import { getRecipeVisibility } from "./workshop.js?v=0.6.74";
+import { getMilestoneStatus } from "./engine.js?v=0.6.74";
 import {
   advanceTime,
   getAccelerationStatus,
   startAcceleration,
   stopAcceleration,
-} from "./engine.js?v=0.6.73";
+} from "./engine.js?v=0.6.74";
 
 history.scrollRestoration = "manual";
 const wideWorkLayout=window.matchMedia("(min-width:1000px)");
@@ -408,7 +409,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>灯が消えても、<br />経験は次の命へ。</p></div>
     <div id="generation" class="generation"></div>
-    <button class="prototype-label updates-link" data-command="updates-menu">更新履歴 <b>v0.6.73</b></button>
+    <button class="prototype-label updates-link" data-command="updates-menu">更新履歴 <b>v0.6.74</b></button>
   </aside>
   <div class="workspace">
          <header class="topbar"><span class="mobile-header-title">LoopKeeper</span><button title="メニュー（保存・状態・周回復帰など）" class="mobile-menu-toggle" data-command="header-menu" data-focus="header-menu" aria-label="メニュー" aria-haspopup="dialog" aria-controls="header-menu-dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="breadcrumb">灰の辺境</div><nav class="quick-actions" aria-label="よく使う詳細"><button class="dashboard-button" data-info="bag" data-focus="bag-open" aria-label="持ち物・すべての所持品" title="持ち物">${icon("bag")}</button><button class="dashboard-button" data-info="quests" data-focus="quests-open" aria-label="クエスト" title="クエスト">${icon("book")}<span data-quest-badge></span></button><button class="dashboard-button" data-info="strategy" data-camp-strategy data-focus="strategy-open" aria-label="方針" title="方針">${icon("flag")}<span data-strategy-badge></span></button><button class="dashboard-button" data-info="queue" data-camp-queue data-focus="queue-open" aria-label="行動予約" title="行動予約">${icon("queue")}<span data-queue-badge></span></button><button class="dashboard-button" data-command="settings-menu" data-focus="settings-open" aria-label="設定" title="設定">${icon("settings")}</button></nav><div class="topbar-actions"><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="データの保存" aria-label="データの保存">${icon("save")}</button></div></header>
@@ -617,12 +618,10 @@ function renderControls() {
   );
   const awaitingChoice = getAugmentStatus(state).offer.length > 0;
   const acceleration = getAccelerationStatus(state);
-  const accelerationControl = acceleration.unlocked
-    ? `<button class="button ${acceleration.active ? "gold-outline" : "muted"} acceleration-button" data-command="acceleration" data-focus="acceleration" aria-pressed="${acceleration.active}" title="${escape(acceleration.reason || "撃退済み区間の準備を5倍速で進める")}" ${!acceleration.active && !acceleration.eligible ? "disabled" : ""}>${icon("clock")}<span>${acceleration.active ? state.settings.paused ? "加速設定中" : "加速中" : "周回復帰"} <small>${acceleration.multiplier}× · ${time(Math.ceil(acceleration.remainingSeconds))}</small></span></button>`
-    : "";
+  const accelerationControl = "";
   setHTML(
     "#time-controls",
-    `<button class="button ${state.settings.paused ? "gold" : "muted"} pause-button" data-command="${awaitingChoice ? "show-augments" : "pause"}" data-focus="pause" aria-label="${awaitingChoice ? "方針を選ぶ" : state.settings.paused ? "時間を進める" : "一時停止"}" title="${awaitingChoice ? "方針を選ぶ" : state.settings.paused ? "時間を進める" : "一時停止"}" ${["dead", "cleared", "legacy_setup"].includes(state.run.status) ? "disabled" : ""}>${icon(awaitingChoice ? "spark" : state.settings.paused ? "play" : "pause")}<span>${awaitingChoice ? "方針を選ぶ" : state.settings.paused ? (!state.run.activeAction&&!state.run.queue.length&&!state.run.automationOnly ? "作業なしで待機" : "時間を進める") : "一時停止"}</span></button>`,
+    `<select aria-label="ゲーム速度" data-game-speed data-focus="game-speed" title="生産・襲撃・戦闘を同じ倍率で進めます">${[1,2,5].map(n=>`<option value="${n}" ${(state.settings.gameSpeed||1)===n?'selected':''}>${n}倍速</option>`).join('')}</select><button class="button ${state.settings.paused ? "gold" : "muted"} pause-button" data-command="${awaitingChoice ? "show-augments" : "pause"}" data-focus="pause" aria-label="${awaitingChoice ? "方針を選ぶ" : state.settings.paused ? "時間を進める" : "一時停止"}" title="${awaitingChoice ? "方針を選ぶ" : state.settings.paused ? "時間を進める" : "一時停止"}" ${["dead", "cleared", "legacy_setup"].includes(state.run.status) ? "disabled" : ""}>${icon(awaitingChoice ? "spark" : state.settings.paused ? "play" : "pause")}<span>${awaitingChoice ? "方針を選ぶ" : state.settings.paused ? (!state.run.activeAction&&!state.run.queue.length&&!state.run.automationOnly ? "作業なしで待機" : "時間を進める") : "一時停止"}</span></button>`,
   );
   setHTML("#header-acceleration",accelerationControl);
   const saveText = loadWarning
@@ -757,7 +756,7 @@ function renderGather() {
         const locked = !check.ok && !active;
         const levelLocked = current.level < (action.unlockLevel || 1);
         const yields = Object.entries(getActionYields(state, action));
-        return `<article class="gather-card"><button class="action-card ${active ? "active" : ""} ${locked ? "locked" : ""}" data-action="${action.id}" data-focus="action-${action.id}" ${locked ? "disabled" : ""} aria-pressed="${active}" aria-label="${escape(action.name+(locked ? "："+check.reason : ""))}"><span class="simple-state">${active ? "選択中" : locked ? "不可" : ""}</span><div class="action-summary"><div class="card-top"><span class="action-icon ${action.skill}">${icon(skillIcons[action.skill])}</span><span class="action-time">${icon(locked ? "lock" : "clock")}${levelLocked ? `進行 Lv.${action.unlockLevel}` : state.run.status === "combat" ? "襲撃中" : `${getActionDuration(state, action).toFixed(1)}秒`}</span></div><div class="action-name"><h3>${escape(action.name)}</h3>${active ? '<span class="active-pill">選択中</span>' : ""}</div>${action.id === "gather_food" || !yields.length ? `<p>${escape(action.id === "gather_food" ? `戦闘中、体力が55%以下になると自動で食べて${getFoodHealing(state)}回復。` : action.description)}</p>` : ""}<div class="action-yield">${yields.length ? yields.map(([id, amount]) => `<span>${icon(id)}${escape(resourceName(id))}<b>+${amount}</b></span>`).join("") : `<span>${icon(action.trainingStat === "defense" ? "shield" : action.trainingStat === "vitality" ? "heart" : "sword")}${focusedTraining ? `${{attack:"攻撃",defense:"防御",vitality:"最大HP"}[action.trainingStat]} +${(current.level-1)*({attack:2,defense:1.5,vitality:18}[action.trainingStat])}` : "戦闘経験を積む"}</span>`}${icon("arrow", "card-arrow")}</div></div><div class="action-portrait portrait-${action.skill} ${action.id === "fish_river" ? "portrait-fishing" : ""}" aria-hidden="true"><span class="portrait-horizon"></span>${portraitImage(action.skill, action.id, state.run.equipment, state.settings.effectsEnabled)}<span class="portrait-caption">${portraitBadge(skillIcons[action.skill])}</span></div><div class="action-details"><div class="card-levels"><span>${focusedTraining ? "訓練" : "進行"} <b>Lv.${current.level}</b></span><span class="permanent-text">${icon("memory")}永続 <b>Lv.${permanent.level}</b></span></div>${!focusedTraining && current.level > 1 ? `<div class="run-growth"><b>${runGrowth(action.skill)}</b></div>` : ""}${savedWorkNote(suspended)}<div class="card-skill-track"><i style="width:${progress(current.progress)}%"></i></div>${levelLocked ? `<div class="lock-reason">${escape(check.reason)}</div>` : ""}</div></button>${hasUpgrade(state,"action_queue") ? `<div class="gather-reservation">${trainingMode(state,action.id)?trainingLevelEditor(state,action.id,craftQuantities[action.id],`data-craft-count="${action.id}" data-focus="work-count-${action.id}" aria-label="${escape(action.name)}の目標進行レベル"`):`<label>回数<input type="number" min="1" max="99" step="1" title="1〜99の整数" inputmode="numeric" data-craft-count="${action.id}" data-focus="work-count-${action.id}" aria-label="${escape(action.name)}の予約回数" value="${Number.isFinite(craftQuantities[action.id] ?? 1) ? craftQuantities[action.id] ?? 1 : ""}"></label>`}<button data-queue-work="${action.id}" data-focus="queue-work-${action.id}" ${locked ? "disabled" : ""}>${state.run.queue.length ? "末尾に予約" : "行動予約"}</button>${state.run.queue.length ? `<button data-queue-work="${action.id}" data-queue-position="front" data-focus="queue-work-front-${action.id}" ${locked ? "disabled" : ""}>先頭に予約</button>` : ""}</div>` : ""}<button type="button" class="gather-detail-button" data-gather-detail="${action.id}" data-focus="gather-detail-${action.id}" aria-label="${escape(action.name)}の詳細">詳細</button></article>`;
+        return `<article class="gather-card"><button class="action-card ${active ? "active" : ""} ${locked ? "locked" : ""}" data-action="${action.id}" data-focus="action-${action.id}" ${locked ? "disabled" : ""} aria-pressed="${active}" aria-label="${escape(action.name+(locked ? "："+check.reason : ""))}"><span class="simple-state">${active ? "選択中" : locked ? "不可" : ""}</span><div class="action-summary"><div class="card-top"><span class="action-icon ${action.skill}">${icon(skillIcons[action.skill])}</span><span class="action-time">${icon(locked ? "lock" : "clock")}${levelLocked ? `進行 Lv.${action.unlockLevel}` : state.run.status === "combat" ? "襲撃中" : `${getActionDuration(state, action).toFixed(1)}秒`}</span></div><div class="action-name"><h3>${escape(action.name)}</h3>${active ? '<span class="active-pill">選択中</span>' : ""}</div>${action.id === "gather_food" || !yields.length ? `<p>${escape(action.id === "gather_food" ? `救護所で戦闘外の回復に使用。` : action.description)}</p>` : ""}<div class="action-yield">${yields.length ? yields.map(([id, amount]) => `<span>${icon(id)}${escape(resourceName(id))}<b>+${amount}</b></span>`).join("") : `<span>${icon(action.trainingStat === "defense" ? "shield" : action.trainingStat === "vitality" ? "heart" : "sword")}${focusedTraining ? `${{attack:"攻撃",defense:"防御",vitality:"最大HP"}[action.trainingStat]} +${(current.level-1)*({attack:2,defense:1.5,vitality:18}[action.trainingStat])}` : "戦闘経験を積む"}</span>`}${icon("arrow", "card-arrow")}</div></div><div class="action-portrait portrait-${action.skill} ${action.id === "fish_river" ? "portrait-fishing" : ""}" aria-hidden="true"><span class="portrait-horizon"></span>${portraitImage(action.skill, action.id, state.run.equipment, state.settings.effectsEnabled)}<span class="portrait-caption">${portraitBadge(skillIcons[action.skill])}</span></div><div class="action-details"><div class="card-levels"><span>${focusedTraining ? "訓練" : "進行"} <b>Lv.${current.level}</b></span><span class="permanent-text">${icon("memory")}永続 <b>Lv.${permanent.level}</b></span></div>${!focusedTraining && current.level > 1 ? `<div class="run-growth"><b>${runGrowth(action.skill)}</b></div>` : ""}${savedWorkNote(suspended)}<div class="card-skill-track"><i style="width:${progress(current.progress)}%"></i></div>${levelLocked ? `<div class="lock-reason">${escape(check.reason)}</div>` : ""}</div></button>${hasUpgrade(state,"action_queue") ? `<div class="gather-reservation">${trainingMode(state,action.id)?trainingLevelEditor(state,action.id,craftQuantities[action.id],`data-craft-count="${action.id}" data-focus="work-count-${action.id}" aria-label="${escape(action.name)}の目標進行レベル"`):`<label>回数<input type="number" min="1" max="99" step="1" title="1〜99の整数" inputmode="numeric" data-craft-count="${action.id}" data-focus="work-count-${action.id}" aria-label="${escape(action.name)}の予約回数" value="${Number.isFinite(craftQuantities[action.id] ?? 1) ? craftQuantities[action.id] ?? 1 : ""}"></label>`}<button data-queue-work="${action.id}" data-focus="queue-work-${action.id}" ${locked ? "disabled" : ""}>${state.run.queue.length ? "末尾に予約" : "行動予約"}</button>${state.run.queue.length ? `<button data-queue-work="${action.id}" data-queue-position="front" data-focus="queue-work-front-${action.id}" ${locked ? "disabled" : ""}>先頭に予約</button>` : ""}</div>` : ""}<button type="button" class="gather-detail-button" data-gather-detail="${action.id}" data-focus="gather-detail-${action.id}" aria-label="${escape(action.name)}の詳細">詳細</button></article>`;
       })
       .join(
         "",
@@ -1219,7 +1218,7 @@ function renderScreen() {
 function showHelp() {
   state.settings.paused = true;
   document.querySelector("#help-dialog").innerHTML =
-    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.6.73</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。回復ポーションを工房で製作すると、戦闘中の回復に使えます。食料は救護所で戦闘外に使います。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
+    `<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.6.74</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。回復ポーションを工房で製作すると、戦闘中の回復に使えます。食料は救護所で戦闘外に使います。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`;
   document.querySelector("#help-dialog").showModal();
   render();
 }
@@ -2358,4 +2357,4 @@ window.addEventListener("pageshow", (event) => {
   if (event.persisted) session.acquire();
 });
 
-document.addEventListener('change',event=>{const el=event.target;if(!session.owned)return;let result;if(el.matches('[data-recovery-meal]'))result=setRecoveryMeal(state,el.value);if(el.matches('[data-meal-preference]'))result=setMealPreference(state,el.value);if(el.matches('[data-auto-cook-recipe]'))result=setAutoCookRecipe(state,el.value);if(result){if(!result.ok)toast(result.reason);saveGame();render();}});
+document.addEventListener('change',event=>{const el=event.target;if(!session.owned)return;let result;if(el.matches('[data-game-speed]'))result=setGameSpeed(state,el.value);if(el.matches('[data-recovery-meal]'))result=setRecoveryMeal(state,el.value);if(el.matches('[data-meal-preference]'))result=setMealPreference(state,el.value);if(el.matches('[data-auto-cook-recipe]'))result=setAutoCookRecipe(state,el.value);if(result){if(!result.ok)toast(result.reason);saveGame();render();}});

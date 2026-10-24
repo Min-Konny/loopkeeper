@@ -1,9 +1,10 @@
-import {preparationBalance}from './preparation-balance.js?v=0.6.73';
-import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.73';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.73';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.73';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.73';
-import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.73';
+import {visibleWorkerUpgrade,workerRankDescription,WORKER_NAMES}from './worker-legacy.js?v=0.6.74';
+import {preparationBalance}from './preparation-balance.js?v=0.6.74';
+import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.74';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.74';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.74';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.74';
+import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.74';
 import {
   ACCELERATION,
   LEGACY_UPGRADES,
@@ -11,8 +12,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.6.73";
-import { icon } from "./icons.js?v=0.6.73";
+} from "./engine.js?v=0.6.74";
+import { icon } from "./icons.js?v=0.6.74";
 
 const escape = (value) =>
   String(value ?? "").replace(
@@ -49,12 +50,13 @@ const descriptions = {
 };
 
 export function getUpgradeDescription(state, upgrade) {
+  if(WORKER_NAMES[upgrade.id])return workerRankDescription(upgrade.id,1);if(upgrade.workerId)return workerRankDescription(upgrade.workerId,upgrade.workerRank);
   if(upgrade.kind==="starting_resources"){const owned=state.run.status==="legacy_setup"?state.run.legacyDraft.upgrades:state.meta.upgrades,ids=new Set([...owned,upgrade.id]);for(const id of [...ids])for(const parent of STARTING_UPGRADES.find(u=>u.id===id)?.unlock.requires || [])ids.add(parent);const grant=startingGrant([...ids],state.settings.disabledUpgrades);return "次回の支給合計："+Object.entries(grant).map(([id,n])=>({wood:"木材",stone:"石材",gold:"金貨"}[id] || id)+n).join("・")+"。転生を確定した時に受け取ります。";}
 
   const effect = upgrade.effect;
   if (upgrade.id === "auto_cook" && state.version !== 1) {
     const recipe = getCatalog(state).RECIPES.find(r => r.id === "cook_meal"), cost = getRecipeCost(state, recipe);
-    return `主作業と並行して、薬草${cost.herbs}・木材${cost.wood} → 食料${recipe.yields.food}。${preparationBalance(state)?"ゆっくり備蓄を補充。急ぐときは本人が調理。":"補充目標まで自動で作る。"}`;
+    return `主作業と並行して、薬草${cost.herbs}・木材${cost.wood} → 食料3。${preparationBalance(state)?"ゆっくり備蓄を補充。急ぐときは本人が調理。":"補充目標まで自動で作る。"}`;
   }
   if (upgrade.kind === "combat")
     return effect.attack
@@ -81,7 +83,7 @@ export function renderUpgradeSections(state,category='all',mapOptions={}) {
   )
     return freeFeatureMarkup(state);
   const acceleration = getAccelerationStatus(state);
-  const catalog = getCatalog(state).LEGACY_UPGRADES;
+  const catalog = getCatalog(state).LEGACY_UPGRADES.filter(x=>visibleWorkerUpgrade(x,state.meta)).filter(x=>state.version===1||!["cycle_acceleration","acceleration_extension"].includes(x.id));
 
   function card(upgrade) {
     const owned = state.meta.upgrades.includes(upgrade.id);

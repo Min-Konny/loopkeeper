@@ -1,11 +1,11 @@
-import {earlyRoutePoints}from './early-loop.js?v=0.6.73';
-import {repeatRouteValue}from './late-loop.js?v=0.6.73';import {rewardRepeatRoute}from './progression-rewards.js?v=0.6.73';
-import {FRONTIER_REGIONS}from './regional-content.js?v=0.6.73';
-import {initializeRegionalRewards,awardRegionalMaterial}from './regional-rewards.js?v=0.6.73';
+import {earlyRoutePoints}from './early-loop.js?v=0.6.74';
+import {repeatRouteValue}from './late-loop.js?v=0.6.74';import {rewardRepeatRoute}from './progression-rewards.js?v=0.6.74';
+import {FRONTIER_REGIONS}from './regional-content.js?v=0.6.74';
+import {initializeRegionalRewards,awardRegionalMaterial}from './regional-rewards.js?v=0.6.74';
 export const ROUTES=[
  {id:'forest',name:'風の森',danger:'通常・軽装飛行',hint:'弓の飛行特効。攻撃+2・木材作業10%短縮。',hp:130,attack:9,defense:2,trait:'flying',points:1,buff:{attack:2,loggingSpeed:.1}},
  {id:'quarry',name:'岩の峠',danger:'通常・重装',hint:'貫通・魔法が有効。防御+3。',hp:160,attack:8,defense:14,trait:'heavy',points:1,buff:{defense:3}},
- {id:'marsh',name:'霧の湿地',danger:'通常・連撃',hint:'防御・食料が有効。HP+20・MP再生+0.5/秒。',hp:110,attack:10,defense:5,trait:'combo',points:1,buff:{maxHp:20,manaRegen:.5}},
+ {id:'marsh',name:'霧の湿地',danger:'通常・連撃',hint:'防御・ポーションが有効。HP+20・MP再生+0.5/秒。',hp:110,attack:10,defense:5,trait:'combo',points:1,buff:{maxHp:20,manaRegen:.5}},
  {id:'citadel',name:'黒曜の砦',danger:'極危険・長期目標',hint:'初期戦力では困難。継承・貫通・回復を揃えて挑戦。攻撃+6。',hp:900,attack:60,defense:28,trait:'heavy',points:4,buff:{attack:6}},
 ];
 // Entrance routes retain all existing rewards and strength. Depths are fixed optional goals.

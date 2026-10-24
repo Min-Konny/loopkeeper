@@ -1,13 +1,14 @@
-import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.73';
-import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.73';
-import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.73';
-import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.73';
-import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.73';
-import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.73';
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.73';
-import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.73';
-import { REINFORCEMENTS } from './endless.js?v=0.6.73';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.73';
+import {WORKER_RANK_UPGRADES,WORKER_NAMES,workerLevel,workerRankDescription}from './worker-legacy.js?v=0.6.74';
+import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.74';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.74';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.74';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.74';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.74';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.74';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.74';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.74';
+import { REINFORCEMENTS } from './endless.js?v=0.6.74';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.74';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -3602,6 +3603,7 @@ CONTENT.facilities.push(...FISH_FACILITIES);
 CONTENT.augments.push(...TRADE_AUGMENTS);
 
 CONTENT.legacy.push(...INVESTMENT_UPGRADES);
+for(const n of [1,2])CONTENT.legacy.push({id:n===1?'potion_pouch':'potion_pouch_2',name:'ポーション携行枠 '+n,cost:n,rank:n,kind:'combat',unlock:n===1?{}:{requires:['potion_pouch']},effect:{potionCapacity:1},description:'1戦のポーション携行上限 +1本'});
 for(const rank of LEGACY_RANKS)delete CONTENT.legacy.find(x=>x.id===rankId(rank,2)).unlock.bestWave;
 CONTENT.legacy.push(...EXTRA_LEGACY_RANKS);
 
@@ -3646,3 +3648,6 @@ for(const [id,cost]of Object.entries({cook_fish:{fish:6,herbs:3,wood:2},egg_stew
  const d=CONTENT.processing.find(r=>r.id===id),m=MEALS.find(m=>m.recipe===id);
  d.cost=cost;d.duration=18;d.yields={[m.id]:1};d.description=`${m.name}1食。戦闘開始時に使用し、${m.label}（90戦闘秒）。戦闘中は食べ直しません。`;
 }
+
+CONTENT.legacy.push(...WORKER_RANK_UPGRADES);
+for(const w of CONTENT.workers){w.levels=Array.from({length:20},(_,i)=>workerLevel(w.id,i+1));const base=CONTENT.legacy.find(u=>u.id===w.id);base.description=workerRankDescription(w.id,1);base.name=WORKER_NAMES[w.id]+'を雇う';}

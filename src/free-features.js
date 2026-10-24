@@ -1,15 +1,15 @@
-import {initializeMeals}from './meals.js?v=0.6.73';
-import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.73';
-import {initializeWorkMilestones}from './work-milestones.js?v=0.6.73';
-import {initializeTrophies} from './boss-materials.js?v=0.6.73';
-import {initializeContracts}from './contracts.js?v=0.6.73';
-import {initializeRoutes}from './routes.js?v=0.6.73';
-import {initializeFarm}from './farm-state.js?v=0.6.73';
-import {synchronizeCompanions}from './companion-state.js?v=0.6.73';
-import {initializeMagic}from './magic-state.js?v=0.6.73';
-import {initializeGear}from './gear-state.js?v=0.6.73';
-import {initializeProgression}from './progression-rewards.js?v=0.6.73';
-import {initializeRunResults}from './run-results.js?v=0.6.73';
+import {initializeMeals}from './meals.js?v=0.6.74';
+import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.74';
+import {initializeWorkMilestones}from './work-milestones.js?v=0.6.74';
+import {initializeTrophies} from './boss-materials.js?v=0.6.74';
+import {initializeContracts}from './contracts.js?v=0.6.74';
+import {initializeRoutes}from './routes.js?v=0.6.74';
+import {initializeFarm}from './farm-state.js?v=0.6.74';
+import {synchronizeCompanions}from './companion-state.js?v=0.6.74';
+import {initializeMagic}from './magic-state.js?v=0.6.74';
+import {initializeGear}from './gear-state.js?v=0.6.74';
+import {initializeProgression}from './progression-rewards.js?v=0.6.74';
+import {initializeRunResults}from './run-results.js?v=0.6.74';
 export const FREE_FEATURES = [
  {id:'action_queue',name:'行動予約',wave:QUEUE_UNLOCK_WAVE},
  {id:'queue_templates',name:'手順テンプレート',wave:3},
@@ -45,7 +45,7 @@ export function synchronizeFreeFeatures(s){
  return {refunded,companionsAdded,changed:before!==JSON.stringify(s)};
 }
 export function freeFeatureMarkup(s,allowedIds=null){
- const visible=FREE_FEATURES.filter(f=>!allowedIds||allowedIds.includes(f.id));if(!visible.length)return "";
+ const visible=FREE_FEATURES.filter(f=>!['cycle_acceleration','acceleration_extension'].includes(f.id)&&(!allowedIds||allowedIds.includes(f.id)));if(!visible.length)return "";
  if(s.version===1)return '';
  return '<section class="strategy-details free-features"><h3>無料の便利機能</h3>'+visible.map(f=>{
   const unlocked=hasUpgrade(s,f.id),enabled=!s.settings.disabledUpgrades.includes(f.id),disabled=s.run.status!=='preparing'||s.run.augments.offer.length;

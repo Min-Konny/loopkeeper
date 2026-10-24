@@ -12,7 +12,13 @@ export const STRATEGY_AUGMENTS = [
   { id: 'piercing_volley', name: '破甲の斉射', family: 'fortress', unlockBestWave: 6, description: '弓塔の攻撃後、敵の防御を開始時の8%ずつ削る（最大40%）。', tags: ['弓塔', '装甲対策'], pairs: ['executioner', 'weapon_master'], hint: '長期戦ほど、本人も守備隊も攻撃を通しやすくなる。', facility: 'archery_tower' },
   { id: 'thorn_wall', name: '反撃の防塁', family: 'fortress', unlockBestWave: 9, description: '防護柵があれば、敵の攻撃を生き残るたび防御力の25%で反撃。敵防御の影響を受ける。', tags: ['防護柵', '防御'], pairs: ['guard', 'shield_master'], hint: '被害を抑えながら、反撃で敵を削る。', facility: 'barricade' },
   { id: 'triage', name: '救護からの反攻', family: 'fortress', unlockBestWave: 9, description: '救護所II以上の戦闘中の処置後、次の本人の攻撃＋50%。食料回復では発動しない。', tags: ['救護所', '攻撃'], pairs: ['healing_patrol', 'warrior'], hint: '救護所と体力への投資を、攻勢へ変える。', facility: 'infirmary', facilityLevel: 2 },
-].map(a => ({ ...a, pack: `${a.family}_augments`, values: {}, requiresPurchasedWorker: false }));
+  {id:'hands_on',name:'現場第一',family:'economy',unlockBestWave:6,description:'本人の伐採・採掘・採集時間−20%。人員の作業時間＋25%。',tags:['本人','採集'],pairs:['forestry'],hint:'自分で建材を確保する周回に。'},
+  {id:'delegation',name:'分業体制',family:'economy',unlockBestWave:6,requiresPurchasedWorker:true,description:'人員の作業時間−25%。本人の伐採・採掘・採集時間＋15%。',tags:['人員','投資'],pairs:['artisan_guild'],hint:'育てた人員に任せ、本人は訓練や製作へ。'},
+  {id:'paid_repairs',name:'評判の修繕屋',family:'economy',unlockBestWave:6,description:'修繕の仕事の金貨＋1。本人の訓練時間＋10%。',tags:['金貨','仕事'],pairs:['builder'],hint:'金策へ時間を割いて施設に投資する。'},
+  {id:'frugal_building',name:'村営工事',family:'economy',unlockBestWave:9,description:'施設の金貨費用−25%。建設時間＋20%。',tags:['施設','金貨'],pairs:['investment'],hint:'建設に時間を使い、金貨を他の投資へ。'},
+  {id:'food_warrior',name:'腹ごしらえの猛攻',family:'martial',unlockBestWave:6,description:'料理の強化効果中、本人の攻撃＋15%、防御−10%。',tags:['料理','短期決戦'],pairs:['warrior'],hint:'貴重な料理を使う戦闘で攻め切る。'},
+  {id:'potion_focus',name:'濃縮処方',family:'fortress',unlockBestWave:9,description:'ポーションの基礎回復量＋50%。1戦の携行上限−1本（最低1本）。',tags:['ポーション','携行枠'],pairs:['provisions'],hint:'少ない本数で大きく回復。携行枠への投資と組み合わせる。'},
+].map(a => ({ ...a, pack: `${a.family}_augments`, values: {}, requiresPurchasedWorker: !!a.requiresPurchasedWorker }));
 
 export const CHALLENGES = [
   { id: 'independent', name: '独立の守り手', description: '外交援助を一度もせずにクリア', color: '#bd9263' },

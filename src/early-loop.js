@@ -1,5 +1,5 @@
-import {battleFood}from './meals.js?v=0.6.73';
-import {preparationDefinition}from './preparation-balance.js?v=0.6.73';
+import {battleFood}from './meals.js?v=0.6.74';
+import {preparationDefinition}from './preparation-balance.js?v=0.6.74';
 // Local W1–12 study only. Unstamped saves retain released rules.
 export const earlyLoop=s=>s?.version===2&&s.meta.earlyLoopVersion===1&&s.run.earlyLoopVersion===1;
 export const earlyJobMultiplier=id=>['fish_river','mine_coal','mine_silver','smelt_steel'].includes(id)?2:1;

@@ -1,15 +1,16 @@
-import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.73';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.73';
-import {stockIcon as icon}from './stock-icons.js?v=0.6.73';
-import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.73';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.73';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.73';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.73';
-import {hasUpgrade}from './free-features.js?v=0.6.73';
-import { getStartingResources } from './engine.js?v=0.6.73';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.73';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.73";
-import { CONTENT as C } from "./content.js?v=0.6.73";
+import {visibleWorkerUpgrade}from './worker-legacy.js?v=0.6.74';
+import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.74';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.74';
+import {stockIcon as icon}from './stock-icons.js?v=0.6.74';
+import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.74';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.74';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.74';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.74';
+import {hasUpgrade}from './free-features.js?v=0.6.74';
+import { getStartingResources } from './engine.js?v=0.6.74';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.74';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.74";
+import { CONTENT as C } from "./content.js?v=0.6.74";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -25,7 +26,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.73";
+} from "./engine.js?v=0.6.74";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -55,7 +56,7 @@ export function setupMarkup(s, category = "combat", mapOptions = {}) {
   const mapActive=category==='map'&&s.version!==1;
   const selected = setupCategories.find(c => c.id === category) || setupCategories[0];
   if(mapActive)return `<div class="setup-header"><h2 id="death-title">次の命への継承</h2><div class="setup-points">残り <strong>${d.points} pt</strong></div></div><div class="setup-tabs" role="tablist" aria-label="継承の表示">${inheritanceMapTabs('setup',true)}</div><div class="setup-upgrades setup-map-view" id="setup-upgrades" role="tabpanel" aria-labelledby="setup-inheritance-map-tab">${inheritanceMapMarkup(s,'setup',mapOptions)}</div>${setupFooter()}`;
-  return `<div class="setup-header"><h2 id="death-title">次の命への継承</h2><div class="setup-points">残り <strong>${d.points} pt</strong></div></div><div class="setup-tabs" role="tablist" aria-label="継承の分類">${setupCategories.map(c => `<button role="tab" id="setup-tab-${c.id}" aria-selected="${c.id === selected.id}" aria-controls="setup-upgrades" tabindex="${c.id===selected.id?0:-1}" data-setup-category="${c.id}">${c.name}</button>`).join("")}${s.version!==1?inheritanceMapTabs('setup'):''}</div><div class="setup-upgrades" id="setup-upgrades" role="tabpanel" aria-labelledby="setup-tab-${selected.id}">${inheritanceMapReturnMarkup(s,'setup',mapOptions)}${selected.rankGroup?legacyRanksMarkup(s,true,selected.rankGroup):LEGACY_UPGRADES.filter(u => selected.kinds.includes(u.kind)&&!isFreeFeature(u.id)).map(
+  return `<div class="setup-header"><h2 id="death-title">次の命への継承</h2><div class="setup-points">残り <strong>${d.points} pt</strong></div></div><div class="setup-tabs" role="tablist" aria-label="継承の分類">${setupCategories.map(c => `<button role="tab" id="setup-tab-${c.id}" aria-selected="${c.id === selected.id}" aria-controls="setup-upgrades" tabindex="${c.id===selected.id?0:-1}" data-setup-category="${c.id}">${c.name}</button>`).join("")}${s.version!==1?inheritanceMapTabs('setup'):''}</div><div class="setup-upgrades" id="setup-upgrades" role="tabpanel" aria-labelledby="setup-tab-${selected.id}">${inheritanceMapReturnMarkup(s,'setup',mapOptions)}${selected.rankGroup?legacyRanksMarkup(s,true,selected.rankGroup):LEGACY_UPGRADES.filter(u => selected.kinds.includes(u.kind)&&!isFreeFeature(u.id)&&visibleWorkerUpgrade(u,d)&&!["cycle_acceleration","acceleration_extension"].includes(u.id)).map(
     (u) => {
       const owned = d.upgrades.includes(u.id),
         allowed = canPurchaseUpgrade(preview, u.id);
@@ -63,7 +64,7 @@ export function setupMarkup(s, category = "combat", mapOptions = {}) {
         (x) => d.upgrades.includes(x.id) && x.unlock.requires?.includes(u.id),
       );
       
-      return `<div class="setup-upgrade" data-upgrade-state="${owned?'owned':allowed.ok?'available':'locked'}"><span>${esc(u.name)}<small>${owned ? d.paidCosts[u.id] : u.cost} pt · ${esc(getUpgradeDescription(s, u))}</small>${!owned && !allowed.ok ? `<small class="setup-unlock-hint">${esc(allowed.reason)}</small>` : ""}</span>${owned ? (u.kind!=="augment_reroll"?button((s.run.legacyDraft.disabledUpgrades??s.settings.disabledUpgrades).includes(u.id)?"次の命で有効":"次の命で無効", `data-toggle-upgrade="${u.id}"`):"")+button("外す", `data-refund="${u.id}" title="${child ? "先に上位の解放を外してください。" : "購入時のポイントを返却"}"`, child) : button("解放", `data-purchase="${u.id}" title="${esc(allowed.reason)}"`, !allowed.ok)}</div>`;
+      return `<div class="setup-upgrade" data-upgrade-state="${owned?'owned':allowed.ok?'available':'locked'}"><span>${esc(u.name)}<small>${owned ? d.paidCosts[u.id] : u.cost} pt · ${esc(getUpgradeDescription(s, u))}</small>${!owned && !allowed.ok ? `<small class="setup-unlock-hint">${esc(allowed.reason)}</small>` : ""}</span>${owned ? (u.kind!=="augment_reroll"&&!u.workerId?button((s.run.legacyDraft.disabledUpgrades??s.settings.disabledUpgrades).includes(u.id)?"次の命で有効":"次の命で無効", `data-toggle-upgrade="${u.id}"`):"")+button("外す", `data-refund="${u.id}" title="${child ? "先に上位の解放を外してください。" : "購入時のポイントを返却"}"`, child) : button("解放", `data-purchase="${u.id}" title="${esc(allowed.reason)}"`, !allowed.ok)}</div>`;
     },
   ).join(
     "",
@@ -110,17 +111,7 @@ export function autoCookingMarkup(s) {
   const status = getAutoCookingStatus(s), enabled = status.code !== "disabled";
   return `<section class="auto-cooking-panel"><div class="auto-cooking-heading"><h3>自動調理 <small>${esc(cookingBatchText(s)||cookingChoiceText(s))}</small></h3><button data-toggle-upgrade="auto_cook" data-focus="auto-cooking-toggle" aria-label="自動調理を${enabled ? "OFF" : "ON"}にする" aria-pressed="${enabled}">${enabled ? "ON" : "OFF"}</button></div><div class="auto-cooking-controls"><strong>食料 ${Math.floor(status.food)}</strong><label>補充目標<input type="number" min="0" max="9999" value="${status.target}" data-target="foodTarget" data-focus="cooking-food-target"></label>${s.settings.paused && enabled && s.run.status === "preparing" && (status.code === "paused") ? '<button class="button small gold-outline" data-command="auto-cook-start" data-focus="auto-cook-start">調理を開始</button>' : ""}</div><p>${esc(autoCookStatus(s))}</p><small>${esc(getUpgradeDescription(s,{id:"auto_cook"}))} 素材集めは別途必要。</small></section>`;
 }
-function workerUpgradeMarkup(s, worker) {
-  const next = worker.levels[s.run.workers[worker.id].level + 1];
-  if (!next) return '<span>最大段階</span>';
-  const reasons = [];
-  if (s.meta.bestWave < next.unlockBestWave) reasons.push(`WAVE ${String(next.unlockBestWave).padStart(2,'0')}撃退で解放（最高 ${String(s.meta.bestWave).padStart(2,'0')}）`);
-  if (s.run.resources.gold < next.goldCost) reasons.push(`金貨あと${Math.ceil(next.goldCost-s.run.resources.gold)}`);
-  if (s.settings.disabledUpgrades.includes(worker.id)) reasons.push('人員をONにしてください');
-  if (s.run.status !== 'preparing') reasons.push('準備中のみ強化可能');
-  const hintId = `upgrade-hint-${worker.id}`;
-  return `<div class="worker-upgrade">${button('強化 '+next.goldCost+'金貨', `data-worker-upgrade="${worker.id}"${reasons.length ? ` aria-describedby="${hintId}"` : ''}`, reasons.length > 0)}${reasons.length ? `<small id="${hintId}" class="worker-upgrade-hint">${esc(reasons.join(' · '))}</small>` : ''}</div>`;
-}
+function workerUpgradeMarkup(s,worker){const rank=s.run.workers[worker.id].level+1;return `<div class="worker-upgrade"><small>${rank>=20?'最大Lv.20':`転生時に継承 ${Math.ceil((rank+1)/4)}pt で Lv.${rank+1}へ強化`}</small></div>`;}
 export function processingMarkup(s) {
   if (!s.meta.upgrades.includes("processing_worker")) return "";
   const status = getProcessingStatus(s), enabled = status.code !== "disabled";
@@ -128,14 +119,14 @@ export function processingMarkup(s) {
   const recipe = RECIPES.find(r=>r.id === status.recipe);
   const options = worker.recipeChoices.filter(id=>resourceKnown(s,id) || id === rw.target).map(id=>`<option value="${id}" ${rw.target === id ? 'selected' : ''} ${enabled && !canConfigureWorker(s,worker.id,id).ok ? 'disabled' : ''}>${esc(label(id))}${enabled && !canConfigureWorker(s,worker.id,id).ok ? '（強化が必要）' : ''}</option>`).join('');
   const progress = status.code === "processing" ? ` ${status.batch.progress.toFixed(1)} / ${status.batch.duration.toFixed(1)}秒` : '';
-  return `<section class="auto-cooking-panel processing-panel"><div class="auto-cooking-heading"><h3>加工職人 <small>段階 ${rw.level + 1}</small></h3><button data-toggle-upgrade="processing_worker" data-focus="processing-toggle" aria-label="加工職人を${enabled ? 'OFF' : 'ON'}にする" aria-pressed="${enabled}">${enabled ? 'ON' : 'OFF'}</button></div><div class="auto-cooking-controls"><label>加工する品<select data-worker="processing_worker" data-focus="processing-recipe" aria-label="加工する品" ${enabled ? '' : 'disabled'}>${options}</select></label><strong>${esc(label(status.output))} ${Math.floor(status.stock)}</strong><label>補充目標<input type="number" min="0" max="9999" value="${status.target}" data-target="processingTarget" data-focus="processing-target" aria-label="加工品の補充目標"></label>${s.settings.paused && enabled && status.code === 'paused' ? '<button class="button small gold-outline" data-command="processing-start">加工を開始</button>' : ''}</div><p>${esc(status.text)}${progress}</p><div class="processing-footer"><small>${Object.entries(getRecipeCost(s, recipe)).map(([id,n])=>`${esc(label(id))}${n}`).join('・')} → ${Object.entries(recipe.yields).map(([id,n])=>`${esc(label(id))}${n}`).join('・')}。素材集めは別途必要。</small>${workerUpgradeMarkup(s, worker)}</div></section>`;
+  return `<section class="auto-cooking-panel processing-panel"><div class="auto-cooking-heading"><h3>加工職人 <small>永続Lv.${rw.level + 1}/20</small></h3><button data-toggle-upgrade="processing_worker" data-focus="processing-toggle" aria-label="加工職人を${enabled ? 'OFF' : 'ON'}にする" aria-pressed="${enabled}">${enabled ? 'ON' : 'OFF'}</button></div><div class="auto-cooking-controls"><label>加工する品<select data-worker="processing_worker" data-focus="processing-recipe" aria-label="加工する品" ${enabled ? '' : 'disabled'}>${options}</select></label><strong>${esc(label(status.output))} ${Math.floor(status.stock)}</strong><label>補充目標<input type="number" min="0" max="9999" value="${status.target}" data-target="processingTarget" data-focus="processing-target" aria-label="加工品の補充目標"></label>${s.settings.paused && enabled && status.code === 'paused' ? '<button class="button small gold-outline" data-command="processing-start">加工を開始</button>' : ''}</div><p>${esc(status.text)}${progress}</p><div class="processing-footer"><small>${Object.entries(getRecipeCost(s, recipe)).map(([id,n])=>`${esc(label(id))}${n}`).join('・')} → ${Object.entries(recipe.yields).map(([id,n])=>`${esc(label(id))}${n}`).join('・')}。素材集めは別途必要。</small>${workerUpgradeMarkup(s, worker)}</div></section>`;
 }
 export function automationMarkup(s) {
   let out = "";
   for (const w of C.workers.filter((w) => w.id !== "processing_worker" && s.meta.upgrades.includes(w.id))) {
     const rw = s.run.workers[w.id],
       l = w.levels[rw.level];
-    out += `<article class="worker-control"><div><strong>${esc(LEGACY_UPGRADES.find((u) => u.id === w.id).name)}</strong><small>段階 ${rw.level + 1}${l.interval ? ` / ${l.interval}秒ごと ${l.quantity}個` : ""}</small></div><label>作業<select data-worker="${w.id}" data-focus="worker-${w.id}">${[
+    out += `<article class="worker-control"><div><strong>${esc(LEGACY_UPGRADES.find((u) => u.id === w.id).name)}</strong><small>永続Lv.${rw.level + 1}/20${l.interval ? ` / ${l.interval}秒ごと ${l.quantity}個` : ""}</small></div><label>作業<select data-worker="${w.id}" data-focus="worker-${w.id}">${[
       ...(w.resourceChoices || []),
       ...(w.recipeChoices || []),
     ]
