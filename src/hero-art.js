@@ -1,5 +1,6 @@
-import {HERO_LAYOUT} from './hero-atlas-layout.js?v=0.6.65';
-import {spritePlacement} from './enemy-art.js?v=0.6.65';
+import{outfitHeroSource}from './hero-outfit-art.js?v=0.6.66';
+import {HERO_LAYOUT} from './hero-atlas-layout.js?v=0.6.66';
+import {spritePlacement} from './enemy-art.js?v=0.6.66';
 // Exact authored builds plus a common generated body for every other equipment combination.
 export const HERO_BUILDS=Object.freeze([
  {weapon:'iron_bow',armor:null,shield:null,file:'hero-iron-bow-v1.png'},
@@ -14,6 +15,7 @@ function primeHeroAtlas(){if(atlasStarted||typeof Image==='undefined')return;atl
 export function generatedHeroSource(equipment={}){
  primeHeroAtlas();const weapon=equipment.weapon?.id||null,armor=equipment.armor?.id||null,shield=equipment.shield?.id||null;
  const exact=HERO_BUILDS.find(b=>b.weapon===weapon&&b.armor===armor&&b.shield===shield);
+ const outfit=outfitHeroSource(equipment,heroFamily(equipment));if(outfit)return outfit;
  return exact?new URL('../assets/pixel-v2/'+exact.file,import.meta.url).href:familyImages.get(heroFamily(equipment))||common;
 }
 export function playerVisualKind(equipment={}){

@@ -1,5 +1,5 @@
 {
-  "version": "0.6.65",
+  "version": "0.6.66",
   "method": "Original built-in OpenAI image generation; no assets copied from other games",
   "sourcePixelsUnmodified": true,
   "runtime": "Canvas/Phaser nearest-neighbor composition, alpha-bound framing, foot anchoring and cosmetic color grading only",
@@ -1134,6 +1134,60 @@
             1,
             0
           ]
+        }
+      ]
+    },
+    {
+      "version": "0.6.66",
+      "createdAt": "2026-10-24T03:00:05.328Z",
+      "method": "built-in image_gen__imagegen",
+      "status": "Local only; iron armor without shield or with iron shield, six weapon families. No other armor/shield combinations claimed.",
+      "assets": [
+        {
+          "file": "hero-iron-armor-v2-sheet.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 1973090,
+          "sha256": "aa3d3d0fb2ae13beddf1c2a969a8a92d3ff2ff7588a265d349eac2981934ad0e",
+          "transparentPixels": 1061303,
+          "visibleBounds": [
+            0,
+            5,
+            1519,
+            1007
+          ],
+          "visibleMargins": [
+            0,
+            5,
+            16,
+            16
+          ],
+          "pngColorType": 6,
+          "prompt": "Use case: stylized-concept. Asset type: original LOOPKEEPER production character sprite sheet. Exactly SIX full-body sprites in exactly3equal columns by2equal rows, each in its own equal cell, genuinely transparent background. SAME young adult brown-haired human hero in every cell, green tunic under worn grey IRON BREASTPLATE, iron shoulder plates and forearm guards, leather belt, brown trousers and boots. NO helmet (keep familiar face), NO SHIELD in any cell. All face RIGHT in three-quarter side battle stance, feet at identical baseline and same body height. Row1 left: one-handed straight sword held forward RIGHT; row1 middle: long wooden spear with iron point held diagonally toward RIGHT, fully contained within its cell; row1 right: bow fully drawn toward RIGHT with arrow. Row2 left: crossbow aimed RIGHT using both hands; row2 middle: tall wooden staff with small amber gem, right-facing casting stance; row2 right: empty-handed guard stance with open hands. Clearly different weapons and readable hands, no extra weapons in any cell. Match polished medieval woodland fantasy pixel art: carefully clustered pixels, crisp stepped dark outlines, about120x150logical character density, muted iron-grey/pine-green/earth-brown/ochre palette, warm upper-left daylight, realistic stylized anatomy. Every complete weapon, head and boots inside its own cell with generous transparent gaps on all sides, no overlap between cells. Consistent3x2grid, no labels or gridlines. No floor, shadows, aura, gradients, fog, glow, scenery, text, borders, watermark or recognizable franchise designs. Rich readable sprites at100px game height, not smooth painting or3D.",
+          "sourcePixelsUnmodified": true
+        },
+        {
+          "file": "hero-iron-guard-v2-sheet.png",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 2187878,
+          "sha256": "67204c2c9b9b81f2b10b1380a5af80f4f7a2ff180791e89b8cad380bc8cd1e63",
+          "transparentPixels": 1004440,
+          "visibleBounds": [
+            0,
+            0,
+            1519,
+            1023
+          ],
+          "visibleMargins": [
+            0,
+            0,
+            16,
+            0
+          ],
+          "pngColorType": 6,
+          "prompt": "Use case: stylized-concept. Asset type: original LOOPKEEPER production character sprite sheet. Exactly SIX full-body sprites in exactly3equal columns by2equal rows, each in an equal separate cell, genuinely transparent background. SAME familiar young adult brown-haired human hero in every cell, green tunic under worn grey IRON BREASTPLATE, iron shoulder and forearm guards, leather belt, brown trousers and boots, NO helmet, face visible. EVERY sprite also has ONE clearly visible grey IRON SHIELD with small brass central boss and dark rim. All face RIGHT in three-quarter battle stance, same body height, feet at same cell baseline. Row1 left: straight sword in right hand toward RIGHT, iron shield on left forearm held forward, shield must not hide sword blade. Row1 middle: iron-pointed spear in right hand toward RIGHT with forearm iron shield close to torso. Row1 right: bow drawn RIGHT using both hands; shield carried visibly strapped on the LEFT-back hip behind arms, never obstruct bowstring. Row2 left: crossbow aimed RIGHT with both hands; iron shield visibly strapped behind LEFT shoulder/hip, separate from crossbow. Row2 middle: wooden staff with amber gem in right hand, iron shield on left forearm. Row2 right: no weapon, guarding with iron shield on left forearm. Different weapons must remain recognizable. Crisp carefully clustered medieval forest fantasy pixel art at about120x150logical density, stepped dark outlines, muted iron-grey/pine-green/earth-brown/ochre palette, warm upper-left light, realistic stylized anatomy. Entire sprite including weapon tip and both boots fully contained in central75percent of each cell, transparent gaps on ALL sides and no overlap. Exactly3x2 layout, no labels or gridlines, no scenery, floor, cast shadow, halo, fog, gradient, text, watermark, border or recognizable franchise designs. Rich readable detail at100px game height, not smooth illustration or3D.",
+          "sourcePixelsUnmodified": true
         }
       ]
     }
