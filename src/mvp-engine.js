@@ -1,43 +1,43 @@
-import {applyGatheringMaterialSaving}from './gathering-materials.js?v=0.6.72';
-import {mealByRecipe}from './meal-content.js?v=0.6.72';
-import {initializeMeals,totalFood,battleFood,mealEffects,consumeFood,consumeAutomaticFood,serveBattleMeal,advanceMeal}from './meals.js?v=0.6.72';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.72';
-import {preparationEnemyAttack,preparationCostFactor,preparationChannelDuration,preparationRoute}from './preparation-balance.js?v=0.6.72';
-import {lateLoop,lateEncounter,lateRelief}from './late-loop.js?v=0.6.72';
-import {earlyLoop,earlyDefinition,earlyEncounter,earlyJobMultiplier}from './early-loop.js?v=0.6.72';
-import {recordWorkMilestone}from './work-milestones.js?v=0.6.72';
-import {awardTrophy,trophyShortage,payTrophies,refundUnfinishedTrophies} from './boss-materials.js?v=0.6.72';
-import {EXTENDED_CAMPAIGN,FRONTIER_CAMPAIGN,CLASSIC_CAMPAIGN,campaignFinalWave,campaignIncludes,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.6.72';
-import {investmentEffect}from './investments.js?v=0.6.72';
-import {freshContracts,contractEffects}from './contracts.js?v=0.6.72';
-import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.6.72';
-import {freshFarm,advanceFarm}from './farm-state.js?v=0.6.72';import {farmResource,resourceCap}from './farm-content.js?v=0.6.72';
-import {companionById}from './companion-content.js?v=0.6.72';
-import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.6.72';
-import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.6.72';import {alchemyResource}from './magic-content.js?v=0.6.72';
-import {weaponById}from './gear-content.js?v=0.6.72';
-import {initializeGear,accessoryEffects,combatBuild,strikeModifier,changeGear}from './gear-state.js?v=0.6.72';
-import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.6.72';
-import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.6.72';
-import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.6.72';
-import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.6.72';
-import { maximumTradeCount } from './maximum-trade.js?v=0.6.72';
-import { startingGrant } from './starting-resources.js?v=0.6.72';
-import { tradeSaleUnit } from './fish-economy.js?v=0.6.72';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.72';
-import { recordReward } from './reward-events.js?v=0.6.72';
-import { observesWork, completedWork } from './work-completion.js?v=0.6.72';
-import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.6.72';
-import { validCondition, goalSatisfied, isCombatTraining } from './queue-conditions.js?v=0.6.72';
-import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.6.72';
-import { CONTENT as C } from "./content.js?v=0.6.72";
-import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.6.72";
-import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.6.72";
+import {applyGatheringMaterialSaving}from './gathering-materials.js?v=0.6.73';
+import {mealByRecipe}from './meal-content.js?v=0.6.73';
+import {initializeMeals,totalFood,battleFood,mealEffects,consumeFood,consumeAutomaticFood,serveBattleMeal,advanceMeal}from './meals.js?v=0.6.73';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.73';
+import {preparationEnemyAttack,preparationCostFactor,preparationChannelDuration,preparationRoute}from './preparation-balance.js?v=0.6.73';
+import {lateLoop,lateEncounter,lateRelief}from './late-loop.js?v=0.6.73';
+import {earlyLoop,earlyDefinition,earlyEncounter,earlyJobMultiplier}from './early-loop.js?v=0.6.73';
+import {recordWorkMilestone}from './work-milestones.js?v=0.6.73';
+import {awardTrophy,trophyShortage,payTrophies,refundUnfinishedTrophies} from './boss-materials.js?v=0.6.73';
+import {EXTENDED_CAMPAIGN,FRONTIER_CAMPAIGN,CLASSIC_CAMPAIGN,campaignFinalWave,campaignIncludes,validCampaign,finalWaveForRun,campaignForRun,encountersForRun}from './campaign-rules.js?v=0.6.73';
+import {investmentEffect}from './investments.js?v=0.6.73';
+import {freshContracts,contractEffects}from './contracts.js?v=0.6.73';
+import {initializeRoutes,freshRoutes,routeById,routeEffects,canEnterRoute,finishRoute}from './routes.js?v=0.6.73';
+import {freshFarm,advanceFarm}from './farm-state.js?v=0.6.73';import {farmResource,resourceCap}from './farm-content.js?v=0.6.73';
+import {companionById}from './companion-content.js?v=0.6.73';
+import {activeCompanion,freshCompanion,beginCompanionFight,companionWork,companionCritical,companionPacket}from './companion-state.js?v=0.6.73';
+import {freshMagic,initializeMagic,advanceMagic,casterMultiplier,physicalIgnition,wardPacket}from './magic-state.js?v=0.6.73';import {alchemyResource}from './magic-content.js?v=0.6.73';
+import {weaponById}from './gear-content.js?v=0.6.73';
+import {initializeGear,accessoryEffects,combatBuild,strikeModifier,changeGear}from './gear-state.js?v=0.6.73';
+import {createProgression,rewardRepeatVictory,rewardFrontierAttempt}from './progression-rewards.js?v=0.6.73';
+import {createRunResults,recordArrival,recordClear,runSummary}from './run-results.js?v=0.6.73';
+import {LEGACY_RANKS,MAX_LEGACY_RANK,rankId}from './legacy-rank-definitions.js?v=0.6.73';
+import {hasUpgrade,isFreeFeature,synchronizeFreeFeatures}from './free-features.js?v=0.6.73';
+import { maximumTradeCount } from './maximum-trade.js?v=0.6.73';
+import { startingGrant } from './starting-resources.js?v=0.6.73';
+import { tradeSaleUnit } from './fish-economy.js?v=0.6.73';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.73';
+import { recordReward } from './reward-events.js?v=0.6.73';
+import { observesWork, completedWork } from './work-completion.js?v=0.6.73';
+import { reinforcementCost, reinforcementEffect, endlessEnemy } from './endless.js?v=0.6.73';
+import { validCondition, goalSatisfied, isCombatTraining } from './queue-conditions.js?v=0.6.73';
+import { strategy, newStrategy, challengeResults } from './strategy.js?v=0.6.73';
+import { CONTENT as C } from "./content.js?v=0.6.73";
+import { A2_ENCOUNTERS } from "./content-a2-encounters.js?v=0.6.73";
+import { A1_ENCOUNTERS } from "./content-a1-encounters.js?v=0.6.73";
 import {
   SKILLS,
   getSkillProgress,
   LEGACY_UPGRADES as OLD_UPGRADES,
-} from "./legacy-engine.js?v=0.6.72";
+} from "./legacy-engine.js?v=0.6.73";
 export { SKILLS, getSkillProgress };
 export const FIRST_RAID_DELAY = 180,
   BASE_RAID_INTERVAL = 180,
@@ -78,7 +78,7 @@ export const FACILITIES = Object.fromEntries(
 );
 const effectText = (f) =>
   ({
-    smokehouse: '魚料理の加工速度 +25% / スープの回復量 +4',
+    smokehouse: '魚料理の加工速度 +25% / ポーションの回復量 +4',
     watchtower: `襲撃猶予 +${f.effect.raidDelay}秒`,
     barricade: `防御 +${f.effect.defense}`,
     infirmary: `準備中は食料で回復 / 戦闘処置 ${f.effect.treatmentCharges}回`,
@@ -188,7 +188,7 @@ export const MILESTONES = C.quests.map((q) => ({
     q.name ||
     {
       first_weapon: "石の槍を作る",
-      first_meal: "薬草のスープを作る",
+      first_meal: "回復ポーションを作る",
       first_tower: "見張り台を建てる",
       first_iron_smelting: "鉄を精錬する",
       first_queue_completion: "予約を完了する",
@@ -603,7 +603,7 @@ function batch(s, id, channel = "main", durationMultiplier = 1) {
   if (d.equipment && s.run.reinvestment) s.run.reinvestment = 0;
   return {
     id,...(d.earlyLoopDefinition?{earlyLoopBatch:1}:{}),
-    ...(mealByRecipe(id)?{mealOutputVersion:1}:{}),
+    ...(mealByRecipe(id)?{mealOutputVersion:2}:{}),
     instanceId: ++s.run.workSeq,
     channel,
     paidCost,
@@ -684,14 +684,14 @@ function gain(s, skill, run, perm, focus) {
 export function getActionYields(s, d, channel = "main") {
   if (typeof d === "string") d = defs.get(d);
   d=earlyDefinition(s,d);
-  if(channel==='auto_cook')return {food:mealByRecipe(d.id)?.units||3};
+  if(channel==='auto_cook')return {food:mealByRecipe(d.id)?.autoUnits||3};
   const bonus = channel === "main" && aug(s, "well_stocked") && totalFood(s) >= 20 && !d.cost && ["logging", "mining"].includes(d.skill) ? (d.earlyLoopUnits||1) : 0;
   return Object.fromEntries(Object.entries(d.yields || {}).map(([r,n])=>[r,n+bonus]));
 }
 function complete(s, a) {
   const original=defs.get(a.id);
   let d = a.earlyLoopBatch===1?earlyDefinition(s,original,{paid:true}):{...original,earlyLoopDefinition:true};
-  if(mealByRecipe(a.id)&&a.mealOutputVersion!==1)d={...d,yields:{food:mealByRecipe(a.id).units}};
+  if(mealByRecipe(a.id)&&a.mealOutputVersion!==2){const m=mealByRecipe(a.id);d={...d,yields:{[a.mealOutputVersion===1?m.id:'food']:m.autoUnits}};}
   for(const material of recordWorkMilestone(s,d,a.earlyLoopBatch===1?earlyJobMultiplier(d.id):1))log(s,material.name+' +1（作業実績の特殊素材）','permanent');
   const observed = (a.channel === 'main' || a.channel === 'auto_cook') && observesWork(s);
   const gains = observed ? {} : null;
@@ -748,7 +748,7 @@ function complete(s, a) {
 export function getPlanningYields(s,d,saved=null){
  if(typeof d==='string')d=defs.get(d);
  const definition=saved?(saved.earlyLoopBatch===1?earlyDefinition(s,d,{paid:true}):{...d,earlyLoopDefinition:true}):d;
- return getActionYields(s,saved&&mealByRecipe(d.id)&&saved.mealOutputVersion!==1?{...definition,yields:{food:mealByRecipe(d.id).units}}:definition);
+ return getActionYields(s,saved&&mealByRecipe(d.id)&&saved.mealOutputVersion!==2?{...definition,yields:{[saved.mealOutputVersion===1?mealByRecipe(d.id).id:'food']:mealByRecipe(d.id).autoUnits}}:definition);
 }
 export function getRequiredProductionBatches(s,d,resource,shortage,saved=null){
  const fresh=getPlanningYields(s,d)[resource];
@@ -1985,7 +1985,7 @@ function battleRound(s){const e=s.run.enemy;const damage=(n,source='player')=>ba
   if (needsFoodHealing(s,stats,packet)) {
     const heal = getFoodHealing(s),consumed=consumeAutomaticFood(s,heal,stats.maxHp);
     if (e.report&&consumed.ok) e.report.foodHealing = round(e.report.foodHealing + consumed.healed);
-    log(s, `薬草のスープで${consumed.healed}回復。`, "heal");
+    log(s, `回復ポーションで${consumed.healed}回復。`, "heal");
   }
   for (const hit of hits) {
     const before = s.run.hp;
@@ -2250,7 +2250,7 @@ export function startEndless(s) {
   log(s,"終わらぬ夜へ。村の施設Vから追加強化できます。","info");
   return ok();
 }
-import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.6.72';
+import { orderedMaterialCosts, dependencyOrderedCosts, validMaterialPriority } from './material-priority.js?v=0.6.73';
 
 export function orderRecipeMaterials(s,d,inventory=s.run.resources,count=1,alreadyPaid=new Set(),visiting=new Set()) {
   return dependencyOrderedCosts(getRecipeCost(s,d),s.settings.craftMaterialPriority||[],{
@@ -2286,7 +2286,7 @@ export function withdrawRoute(s,reason='撤退・帰還'){if(!s.run.routes?.acti
 
 export const getReservedResources=s=>reserve(s);
 
-export function useMeal(s,id){return consumeFood(s,id,getFoodHealing(s),getStats(s).maxHp);}
+export function useMeal(s,id){if(s.run.status==='combat'&&mealByRecipe(id==='fish_meal'?'cook_fish':id==='egg_meal'?'egg_stew':''))return fail('食事は戦闘前に選んでください。');return consumeFood(s,id,getFoodHealing(s),getStats(s).maxHp);}
 
 // Explicit early arrival reuses normal battle entry; no simulation tick is run.
 export function canEarlyRaid(s){

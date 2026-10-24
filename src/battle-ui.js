@@ -1,21 +1,21 @@
-import{frameStaticPortrait}from './portrait-frame.js?v=0.6.72';
-import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.72';
-import {getCatalog} from './engine.js?v=0.6.72';
-import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.72';
-import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.72';
-import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.72';
-import{duelSnapshot}from './duel-motion.js?v=0.6.72';
-import {battleFood}from './meals.js?v=0.6.72';
-import {mealEffectText}from './meal-ui.js?v=0.6.72';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.72';
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.72';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.72';
-import { getPlayerStrike } from './engine.js?v=0.6.72';
-import {routeById}from './routes.js?v=0.6.72';
-import { equipmentMaterial } from './visual-design.js?v=0.6.72';
-import { battleSound } from "./presentation.js?v=0.6.72";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.72";
-import { icon } from "./icons.js?v=0.6.72";
+import{frameStaticPortrait}from './portrait-frame.js?v=0.6.73';
+import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.73';
+import {getCatalog} from './engine.js?v=0.6.73';
+import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.73';
+import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.73';
+import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.73';
+import{duelSnapshot}from './duel-motion.js?v=0.6.73';
+import {battleFood}from './meals.js?v=0.6.73';
+import {mealEffectText}from './meal-ui.js?v=0.6.73';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.73';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.73';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.73';
+import { getPlayerStrike } from './engine.js?v=0.6.73';
+import {routeById}from './routes.js?v=0.6.73';
+import { equipmentMaterial } from './visual-design.js?v=0.6.73';
+import { battleSound } from "./presentation.js?v=0.6.73";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.73";
+import { icon } from "./icons.js?v=0.6.73";
 
 const views = new WeakMap();
 const number = (value) =>
@@ -458,13 +458,13 @@ export function renderBattle(dialog, state) {
   const remaining = Math.max(0, 1.5 - run.combatTimer);
   setText(el["round-time"], `${remaining.toFixed(1)} 秒`);
   el["round-bar"].style.transform = `scaleX(${ratio(run.combatTimer, 1.5)})`;
-  setText(el.food.previousElementSibling,state.version===2?'薬草のスープ':'食料');
+  setText(el.food.previousElementSibling,state.version===2?'回復ポーション':'食料');
   setText(el.food, number((state.version===2?battleFood(state):state.run.resources.food)));
   setText(
     el["food-rule"],
     (state.version===2?battleFood(state):state.run.resources.food) > 0
-      ? state.version===2&&preview.charges>0 ? `救護を先に使用 · 必要ならスープ1杯で${getFoodHealing(state)}回復` : `低HP・致死予測でスープ1杯 · ${getFoodHealing(state)}回復`
-      : state.version===2&&preview.charges>0 ? `スープなし · 低HP時の救護 残り${preview.charges}回` : "スープなし · 自動回復できません",
+      ? state.version===2&&preview.charges>0 ? `救護を先に使用 · 必要ならポーション1本で${getFoodHealing(state)}回復` : `低HP・致死予測でポーション1本 · ${getFoodHealing(state)}回復`
+      : state.version===2&&preview.charges>0 ? `ポーションなし · 低HP時の救護 残り${preview.charges}回` : "ポーションなし · 自動回復できません",
   );
   el["food-rule"].classList.toggle(
     "battle-food-empty",
@@ -510,7 +510,7 @@ export function renderBattle(dialog, state) {
         heal(view);
         battleSound("heal");
         if (hpChange <= 0)
-          feedback(view, "player", "heal", `スープ −${number(foodUsed)}`);
+          feedback(view, "player", "heal", `ポーション −${number(foodUsed)}`);
       }
       if (treatmentUsed > 0) {
         heal(view);

@@ -1,13 +1,13 @@
-import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.72';
-import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.72';
-import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.72';
-import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.72';
-import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.72';
-import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.72';
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.72';
-import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.72';
-import { REINFORCEMENTS } from './endless.js?v=0.6.72';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.72';
+import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.73';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.73';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.73';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.73';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.73';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.73';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.73';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.73';
+import { REINFORCEMENTS } from './endless.js?v=0.6.73';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.73';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -1010,7 +1010,7 @@ export const CONTENT = {
   "processing": [
     {
       "id": "cook_meal",
-      "name": "薬草のスープ",
+      "name": "回復ポーション",
       "skill": "smithing",
       "kind": "cooking",
       "duration": 6,
@@ -3615,10 +3615,10 @@ CONTENT.resources.push(...MEAL_RESOURCES);CONTENT.facilities.push(PRESSURE_FACIL
 for(const m of MEALS){const recipe=CONTENT.processing.find(x=>x.id===m.recipe);recipe.yields={[m.id]:m.units};recipe.description=m.name+' '+m.units+'食。1食で'+m.label+'（90戦闘秒）。効果は1種類、同じ料理は時間更新。';}
 
 // Separate battle supplies from ordinary food; existing food stocks stay food.
-CONTENT.resources.push({id:'herb_soup',name:'薬草のスープ'});
+CONTENT.resources.push({id:'herb_soup',name:'回復ポーション'});
 const soupRecipe=CONTENT.processing.find(r=>r.id==='cook_meal');
 soupRecipe.yields={herb_soup:3};
-soupRecipe.description='戦闘回復用の薬草のスープ3杯。工房で製作・予約できます。';
+soupRecipe.description='戦闘回復用の回復ポーション3本。工房で製作・予約できます。';
 
 // Training investment competes with the workshop at the same progression gates.
 for(const base of CONTENT.facilities.filter(f=>f.facilityId==='workshop')){
@@ -3640,4 +3640,9 @@ CONTENT.actions.push({id:'repair_work',name:'修繕の仕事',skill:'smithing',d
 for(const facility of CONTENT.facilities){
  if(facility.facilityId==='market'&&facility.level===1){facility.cost={...facility.cost};delete facility.cost.gold;continue;}
  facility.cost={...facility.cost,gold:Math.ceil((facility.cost.gold||facility.level*4)*1.5)};
+}
+
+for(const [id,cost]of Object.entries({cook_fish:{fish:6,herbs:3,wood:2},egg_stew:{eggs:4,herbs:3,wood:2}})){
+ const d=CONTENT.processing.find(r=>r.id===id),m=MEALS.find(m=>m.recipe===id);
+ d.cost=cost;d.duration=18;d.yields={[m.id]:1};d.description=`${m.name}1食。戦闘開始時に使用し、${m.label}（90戦闘秒）。戦闘中は食べ直しません。`;
 }

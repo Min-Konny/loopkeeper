@@ -1,6 +1,6 @@
-import {facilityFrame} from './facility-art.js?v=0.6.72';
-import {equipmentMaterial} from './visual-design.js?v=0.6.72';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.72';
+import {facilityFrame} from './facility-art.js?v=0.6.73';
+import {equipmentMaterial} from './visual-design.js?v=0.6.73';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.73';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map(),failedFacilitySheets=new Set();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
@@ -45,7 +45,7 @@ export function pixelProductSource(recipe){
    a+=r(20,12,20,33,shade)+r(20,44,29,10,shade)+r(17,53,35,4,wood)+r(22,15,16,3,gold);for(let i=0;i<4;i++)a+=r(23,23+i*5,12,2,gold);
   }else if(/pendant/.test(id)){
    a+=r(15,10,3,22,gold)+r(46,10,3,22,gold)+r(18,31,6,6,gold)+r(40,31,6,6,gold)+r(24,36,16,3,gold)+r(23,41,18,12,gold)+r(27,38,10,20,gold)+r(27,43,10,8,shade)+r(30,42,4,6,light);
-  }else if(recipe.kind==='alchemy'){
+  }else if(recipe.kind==='alchemy'||id==='cook_meal'){
    a+=r(27,10,10,12,gold)+r(25,17,14,10,'#bfd5bd')+r(18,27,28,23,'#8ba99b')+r(21,50,22,5,'#8ba99b')+r(21,34,22,16,id.includes('spark')?'#d8a965':'#91c4a6')+r(21,28,3,13,'#e4e7c5');
   }else if(/smelt|coal|ingot/.test(id)){
    for(let i=0;i<3;i++){const x=12+i%2*22,y=43-Math.floor(i/2)*17;a+=r(x,y,22,10,metal)+r(x+3,y-4,17,4,light)+r(x+1,y+7,21,3,shade);}

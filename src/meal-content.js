@@ -1,6 +1,6 @@
 export const MEALS = [
-  {id:'fish_meal',recipe:'cook_fish',name:'魚料理',units:6,duration:90,attack:.1,label:'本人の通常攻撃 +10%'},
-  {id:'egg_meal',recipe:'egg_stew',name:'卵料理',units:5,duration:90,haste:.15,label:'通常攻撃速度 +15%'},
+  {id:'fish_meal',recipe:'cook_fish',name:'魚料理',units:1,autoUnits:6,duration:90,attack:.1,label:'本人の通常攻撃 +10%'},
+  {id:'egg_meal',recipe:'egg_stew',name:'卵料理',units:1,autoUnits:5,duration:90,haste:.15,label:'通常攻撃速度 +15%'},
 ];
 export const mealById=id=>MEALS.find(x=>x.id===id);
 export const mealByRecipe=id=>MEALS.find(x=>x.recipe===id);

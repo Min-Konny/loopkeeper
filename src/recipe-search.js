@@ -1,4 +1,4 @@
-import { setTextIfChanged } from './dom-text.js?v=0.6.72';
+import { setTextIfChanged } from './dom-text.js?v=0.6.73';
 
 // Call only after the existing discovery, category and visibility filters.
 export function filterRecipeNames(recipes, query) {

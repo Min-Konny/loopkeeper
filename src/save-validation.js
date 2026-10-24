@@ -1,22 +1,22 @@
-import {validMeals}from './meals.js?v=0.6.72';
-import {MEALS,mealByRecipe}from './meal-content.js?v=0.6.72';
-import {preparationRoute}from './preparation-balance.js?v=0.6.72';
-import {validWorkMilestones}from './work-milestones.js?v=0.6.72';
-import {validTrophies} from './boss-materials.js?v=0.6.72';
-import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.72';
-import {CONTRACTS,contractById}from './contracts.js?v=0.6.72';
-import {validRegionalRewards}from './regional-rewards.js?v=0.6.72';
-import {ROUTES,routeById}from './routes.js?v=0.6.72';
-import {farmResource,resourceCap}from './farm-content.js?v=0.6.72';
-import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.72';
-import {alchemyResource}from './magic-content.js?v=0.6.72';
-import {validPreset}from './build-presets.js?v=0.6.72';
-import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.72';
-import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.72';
-import { endlessEnemy } from './endless.js?v=0.6.72';
-import { validMaterialPriority } from './material-priority.js?v=0.6.72';
-import { validCondition } from './queue-conditions.js?v=0.6.72';
-import { CONTENT as C } from "./content.js?v=0.6.72";
+import {validMeals}from './meals.js?v=0.6.73';
+import {MEALS,mealByRecipe}from './meal-content.js?v=0.6.73';
+import {preparationRoute}from './preparation-balance.js?v=0.6.73';
+import {validWorkMilestones}from './work-milestones.js?v=0.6.73';
+import {validTrophies} from './boss-materials.js?v=0.6.73';
+import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.73';
+import {CONTRACTS,contractById}from './contracts.js?v=0.6.73';
+import {validRegionalRewards}from './regional-rewards.js?v=0.6.73';
+import {ROUTES,routeById}from './routes.js?v=0.6.73';
+import {farmResource,resourceCap}from './farm-content.js?v=0.6.73';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.73';
+import {alchemyResource}from './magic-content.js?v=0.6.73';
+import {validPreset}from './build-presets.js?v=0.6.73';
+import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.73';
+import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.73';
+import { endlessEnemy } from './endless.js?v=0.6.73';
+import { validMaterialPriority } from './material-priority.js?v=0.6.73';
+import { validCondition } from './queue-conditions.js?v=0.6.73';
+import { CONTENT as C } from "./content.js?v=0.6.73";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -48,7 +48,7 @@ const validGoal = (x) =>
 function validBatch(x) {
   return (
     object(x) && (x.earlyLoopBatch===undefined||x.earlyLoopBatch===1) &&
-    (x.mealOutputVersion===undefined||x.mealOutputVersion===1&&!!mealByRecipe(x.id)) &&
+    (x.mealOutputVersion===undefined||[1,2].includes(x.mealOutputVersion)&&!!mealByRecipe(x.id)) &&
     (x.paidCost === undefined || object(x.paidCost) && Object.entries(x.paidCost).every(([id,n]) => C.resources.some(r => r.id === id) && number(n))) &&
     defs.has(x.id) &&
     integer(x.instanceId, 1) &&

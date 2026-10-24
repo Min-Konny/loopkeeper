@@ -1,5 +1,5 @@
-import {battleFood}from './meals.js?v=0.6.72';
-import {preparationDefinition}from './preparation-balance.js?v=0.6.72';
+import {battleFood}from './meals.js?v=0.6.73';
+import {preparationDefinition}from './preparation-balance.js?v=0.6.73';
 // Local W1–12 study only. Unstamped saves retain released rules.
 export const earlyLoop=s=>s?.version===2&&s.meta.earlyLoopVersion===1&&s.run.earlyLoopVersion===1;
 export const earlyJobMultiplier=id=>['fish_river','mine_coal','mine_silver','smelt_steel'].includes(id)?2:1;
@@ -21,8 +21,8 @@ export function earlyDefeatMarkup(s){
  let comparison='';if(previous?.wallWave===current.wave&&previous.enemyRemainingPercent!=null)comparison=`前回の同じ壁：敵HP ${previous.enemyRemainingPercent}% → 今回 ${remaining}%。`;
  const hasFood=battleFood(s)>0,usedFood=current.foodHealing>0;
  const advice=!hasFood
-  ? usedFood?'スープを使い切った。補充するか、防御・火力で消費を抑えよう。':'スープを用意するか、火力で戦闘を短くしよう。'
-  : usedFood?'スープは残った。スープで回復しても押し切られたため、防御・火力・救護の配分を見直そう。':'スープを使う前に倒れた。HP・防御や先に倒す火力を確保しよう。';
+  ? usedFood?'ポーションを使い切った。補充するか、防御・火力で消費を抑えよう。':'ポーションを用意するか、火力で戦闘を短くしよう。'
+  : usedFood?'ポーションは残った。ポーションで回復しても押し切られたため、防御・火力・救護の配分を見直そう。':'ポーションを使う前に倒れた。HP・防御や先に倒す火力を確保しよう。';
 
  const missing=[];if(current.wave===6){if((s.run.equipment.shield?.tier||0)<2)missing.push('鉄の盾');if((s.run.facilities.infirmary||0)<2)missing.push('救護所II');}if(current.wave===12){if((s.run.equipment.armor?.tier||0)<4)missing.push('銀の防具');if((s.run.equipment.shield?.tier||0)<4)missing.push('銀の盾');}
  return `<section class="defeat-report"><h3>次の再挑戦へ</h3><p>${comparison||'今回の壁：敵HP '+remaining+'%まで削った。'}</p><p>この人生の再挑戦報酬 ${(s.run.progression?.checkpointAward||0)+(s.run.progression?.attemptAward||0)+(s.run.progression?.routeAward||0)} pt。永続経験は保持。</p>${missing.length?'<p>この壁までに未完成：'+missing.join('・')+'。次の人生はこの準備を先に。</p>':''}<p>${advice}</p></section>`;
