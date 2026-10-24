@@ -1,4 +1,4 @@
-import {MEALS,mealById}from './meal-content.js?v=0.6.69';
+import {MEALS,mealById}from './meal-content.js?v=0.6.70';
 export function initializeMeals(s){if(s.version!==2)return;for(const m of MEALS)s.run.resources[m.id]??=0;s.run.mealVersion??=1;s.run.mealEffect??=null;s.settings.mealPreference??='food';s.settings.autoCookRecipe??='auto';}
 export const totalFood=s=>(s.run.resources.food||0)+MEALS.reduce((n,m)=>n+(s.run.resources[m.id]||0),0);
 export function mealEffects(s){const active=s.run.mealEffect;return active?.remaining>0?mealById(active.id)||{}:{};}
