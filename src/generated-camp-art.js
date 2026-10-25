@@ -1,8 +1,8 @@
-import{housingFallbackSource}from './pixel-product-art.js?v=0.6.82';
-import{SPECIALISTS}from './specialist-content.js?v=0.6.82';
+import{housingFallbackSource}from './pixel-product-art.js?v=0.6.83';
+import{SPECIALISTS}from './specialist-content.js?v=0.6.83';
 // Original built-in ImageGen assets; raw pixels are preserved. Runtime atlas framing only.
-import{loadFacilityArt}from './facility-art.js?v=0.6.82';
-import{CAMP_BUILDINGS,campBuildings}from './camp-layout.js?v=0.6.82';
+import{loadFacilityArt}from './facility-art.js?v=0.6.83';
+import{CAMP_BUILDINGS,campBuildings}from './camp-layout.js?v=0.6.83';
 const root=new URL('../assets/pixel-v2/',import.meta.url);let pending;
 const image=name=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Camp artwork unavailable: '+name));img.src=new URL(name,root).href;});
 export function alphaBounds(img,x=0,y=0,w=img.width,h=img.height){const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d');ctx.drawImage(img,x,y,w,h,0,0,w,h);const data=ctx.getImageData(0,0,w,h).data;let left=w,top=h,right=0,bottom=0;for(let yy=0;yy<h;yy++)for(let xx=0;xx<w;xx++)if(data[(yy*w+xx)*4+3]>160){left=Math.min(left,xx);right=Math.max(right,xx);top=Math.min(top,yy);bottom=Math.max(bottom,yy);}return{x:left,y:top,width:right-left+1,height:bottom-top+1,bottom};}
