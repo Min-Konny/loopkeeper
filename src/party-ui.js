@@ -1,5 +1,5 @@
-import {PARTY,memberJoined,memberStats,memberFor}from './party.js?v=0.6.81';
-import {fireballPower}from './magic-state.js?v=0.6.81';
+import {PARTY,memberJoined,memberStats,memberFor}from './party.js?v=0.6.82';
+import {fireballPower}from './magic-state.js?v=0.6.82';
 export function partyMarkup(s,recipes=[]){
  if(s.version!==2)return '';
  return `<section class="party-panel"><h3>防衛隊</h3><p class="fine-print">前衛が攻撃を受け止め、後衛は自動攻撃。加入は永続、装備・訓練はこの命で育成。</p><div class="party-grid">${PARTY.map(m=>{

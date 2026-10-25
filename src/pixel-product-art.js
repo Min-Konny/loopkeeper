@@ -1,7 +1,7 @@
-import {SPECIALISTS}from './specialist-content.js?v=0.6.81';
-import {facilityFrame} from './facility-art.js?v=0.6.81';
-import {equipmentMaterial} from './visual-design.js?v=0.6.81';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.81';
+import {SPECIALISTS}from './specialist-content.js?v=0.6.82';
+import {facilityFrame} from './facility-art.js?v=0.6.82';
+import {equipmentMaterial} from './visual-design.js?v=0.6.82';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.82';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map(),failedFacilitySheets=new Set();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
@@ -12,21 +12,24 @@ function facilityArt(id,level){
  const [x,y]=PIXEL_FACILITIES[id];
  return wrap(parts.join(''),id==='workshop'?'282 72 132 132':`${x-43} ${y-76} 86 90`);
 }
-export function pixelProductSource(recipe){
- const id=recipe.id||'',facility=recipe.facility?.id||recipe.facilityId||recipe.endlessFacility,level=recipe.facility?.level||recipe.level||(recipe.endlessFacility?5:1);
- const specialist=SPECIALISTS.find(f=>f.id===facility);if(specialist)return './assets/pixel-v2/'+specialist.image;
- if(facility==='housing')return './assets/pixel-v2/housing-v1.png';
- const key=[id,facility,level,recipe.slot||recipe.equipment?.slot,recipe.kind].join(':');
- if(cache.has(key))return cache.get(key);
- let svg;
- if(facility==='training_yard')svg=wrap(r(9,48,46,6,'#68796b')+r(18,22,5,26,'#a67d4e')+r(10,27,23,5,'#cbb98c')+r(15,14,11,12,'#cbb98c')+r(38,22,5,26,'#a67d4e')+r(31,27,20,5,'#cbb98c')+r(35,14,11,12,'#cbb98c'));
- else if(facility==='housing'){
+const housingFile='./assets/pixel-v2/housing-v1.png',housingFallbacks=new Map();
+function housingFallbackSvg(level){
   let a=r(5,55,54,4,'#40594d')+r(12,29,40,25,'#b7a27b')+r(12,30,3,24,'#655345')+r(49,30,3,24,'#655345');
   for(let y=0;y<6;y++)a+=r(7+y*3,26-y*3,50-y*6,3,y%2?'#795d48':'#96734e');
   a+=r(28,37,10,17,'#39433c')+r(30,39,6,15,'#6f5842')+r(34,45,2,2,'#ddc175')+r(17,35,8,8,'#4b605c')+r(18,36,5,5,'#e5c77d')+r(40,35,6,8,'#4b605c')+r(41,36,4,5,'#e5c77d');
   for(let n=1;n<level;n++)a+=r(13+n*8,49,4,3,'#d8ba78');
-  a+=r(43,9,5,13,'#706a5f')+r(42,8,7,3,'#8d8673');svg=wrap(a);
- }
+  a+=r(43,9,5,13,'#706a5f')+r(42,8,7,3,'#8d8673');return wrap(a);
+}
+export function housingFallbackSource(level=1){const n=Math.max(1,Math.min(5,Math.floor(Number(level)||1)));if(!housingFallbacks.has(n))housingFallbacks.set(n,url(housingFallbackSvg(n)));return housingFallbacks.get(n);}
+export function pixelProductSource(recipe){
+ const id=recipe.id||'',facility=recipe.facility?.id||recipe.facilityId||recipe.endlessFacility,level=recipe.facility?.level||recipe.level||(recipe.endlessFacility?5:1);
+ const specialist=SPECIALISTS.find(f=>f.id===facility);if(specialist)return './assets/pixel-v2/'+specialist.image;
+ if(facility==='housing')return failedFacilitySheets.has(housingFile)?housingFallbackSource(level):housingFile;
+ const key=[id,facility,level,recipe.slot||recipe.equipment?.slot,recipe.kind].join(':');
+ if(cache.has(key))return cache.get(key);
+ let svg;
+ if(facility==='training_yard')svg=wrap(r(9,48,46,6,'#68796b')+r(18,22,5,26,'#a67d4e')+r(10,27,23,5,'#cbb98c')+r(15,14,11,12,'#cbb98c')+r(38,22,5,26,'#a67d4e')+r(31,27,20,5,'#cbb98c')+r(35,14,11,12,'#cbb98c'));
+
  else if(PIXEL_FACILITIES[facility])svg=facilityArt(facility,level);
  else{
   const m=equipmentMaterial({id}),metal=m.metal,shade=m.cloth,light=m.glow,gold='#d5b578',wood='#a67d4e',dark='#304b42';
@@ -69,5 +72,5 @@ export function pixelProductSource(recipe){
  }
  const result=url(svg);if(cache.size>=192)cache.delete(cache.keys().next().value);cache.set(key,result);return result;
 }
-export function pixelFacilityProduct(recipe){const id=recipe.facility?.id||recipe.facilityId||recipe.endlessFacility,level=recipe.facility?.level||recipe.level||(recipe.endlessFacility?5:1),f=facilityFrame(id,level);if(!f||failedFacilitySheets.has(f.src))return '<div class="facility-product" aria-hidden="true"><img src="'+pixelProductSource(recipe)+'" width="128" height="128" alt=""></div>';const b=f.frame,z=.9/Math.max(b.width,b.height),clip=[b.y/f.sheet.height*100,(f.sheet.width-b.x-b.width)/f.sheet.width*100,(f.sheet.height-b.y-b.height)/f.sheet.height*100,b.x/f.sheet.width*100].map(v=>v+'%').join(' ');return '<div class="facility-product" aria-hidden="true"><span class="facility-atlas-frame"><img data-facility-sheet data-facility-id="'+id+'" data-facility-level="'+level+'" src="'+f.src+'" style="width:'+(f.sheet.width*z*100)+'%;height:'+(f.sheet.height*z*100)+'%;left:'+((.5-b.width*z/2-b.x*z)*100)+'%;top:'+((.95-b.height*z-b.y*z)*100)+'%;clip-path:inset('+clip+')" alt="" decoding="async"></span></div>';}
-if(typeof document!=='undefined')document.addEventListener('error',event=>{const img=event.target;if(!img?.hasAttribute?.('data-facility-sheet'))return;failedFacilitySheets.add(img.getAttribute('src'));img.removeAttribute('data-facility-sheet');img.setAttribute('data-facility-fallback','');img.src=pixelProductSource({id:img.dataset.facilityId,facilityId:img.dataset.facilityId,level:Number(img.dataset.facilityLevel)});},true);
+export function pixelFacilityProduct(recipe){const id=recipe.facility?.id||recipe.facilityId||recipe.endlessFacility,level=recipe.facility?.level||recipe.level||(recipe.endlessFacility?5:1),f=facilityFrame(id,level);if(!f||failedFacilitySheets.has(f.src)){const src=pixelProductSource(recipe),tag=id==='housing'?' data-facility-level="'+level+'" '+(src.startsWith('data:')?'data-housing-fallback':'data-housing-art'):'';return '<div class="facility-product" aria-hidden="true"><img'+tag+' src="'+src+'" width="128" height="128" alt=""></div>';} const b=f.frame,z=.9/Math.max(b.width,b.height),clip=[b.y/f.sheet.height*100,(f.sheet.width-b.x-b.width)/f.sheet.width*100,(f.sheet.height-b.y-b.height)/f.sheet.height*100,b.x/f.sheet.width*100].map(v=>v+'%').join(' ');return '<div class="facility-product" aria-hidden="true"><span class="facility-atlas-frame"><img data-facility-sheet data-facility-id="'+id+'" data-facility-level="'+level+'" src="'+f.src+'" style="width:'+(f.sheet.width*z*100)+'%;height:'+(f.sheet.height*z*100)+'%;left:'+((.5-b.width*z/2-b.x*z)*100)+'%;top:'+((.95-b.height*z-b.y*z)*100)+'%;clip-path:inset('+clip+')" alt="" decoding="async"></span></div>';}
+if(typeof document!=='undefined')document.addEventListener('error',event=>{const img=event.target;if(img?.hasAttribute?.('data-housing-art')){failedFacilitySheets.add(img.getAttribute('src'));img.removeAttribute('data-housing-art');img.setAttribute('data-housing-fallback','');img.src=housingFallbackSource(Number(img.dataset.facilityLevel));return;}if(!img?.hasAttribute?.('data-facility-sheet'))return;failedFacilitySheets.add(img.getAttribute('src'));img.removeAttribute('data-facility-sheet');img.setAttribute('data-facility-fallback','');img.src=pixelProductSource({id:img.dataset.facilityId,facilityId:img.dataset.facilityId,level:Number(img.dataset.facilityLevel)});},true);

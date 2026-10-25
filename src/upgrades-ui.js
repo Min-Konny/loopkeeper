@@ -1,10 +1,10 @@
-import {visibleWorkerUpgrade,workerRankDescription,WORKER_NAMES}from './worker-legacy.js?v=0.6.81';
-import {preparationBalance}from './preparation-balance.js?v=0.6.81';
-import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.81';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.81';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.81';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.81';
-import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.81';
+import {visibleWorkerUpgrade,workerRankDescription,WORKER_NAMES}from './worker-legacy.js?v=0.6.82';
+import {preparationBalance}from './preparation-balance.js?v=0.6.82';
+import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.82';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.82';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.82';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.82';
+import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.82';
 import {
   ACCELERATION,
   LEGACY_UPGRADES,
@@ -12,8 +12,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.6.81";
-import { icon } from "./icons.js?v=0.6.81";
+} from "./engine.js?v=0.6.82";
+import { icon } from "./icons.js?v=0.6.82";
 
 const escape = (value) =>
   String(value ?? "").replace(
