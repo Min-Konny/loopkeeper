@@ -1,16 +1,17 @@
-import {visibleWorkerUpgrade}from './worker-legacy.js?v=0.6.80';
-import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.80';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.80';
-import {stockIcon as icon}from './stock-icons.js?v=0.6.80';
-import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.80';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.80';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.80';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.80';
-import {hasUpgrade}from './free-features.js?v=0.6.80';
-import { getStartingResources } from './engine.js?v=0.6.80';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.80';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.80";
-import { CONTENT as C } from "./content.js?v=0.6.80";
+import{merchantMarkup}from './merchant-ui.js?v=0.6.81';
+import {visibleWorkerUpgrade}from './worker-legacy.js?v=0.6.81';
+import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.81';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.81';
+import {stockIcon as icon}from './stock-icons.js?v=0.6.81';
+import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.81';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.81';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.81';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.81';
+import {hasUpgrade}from './free-features.js?v=0.6.81';
+import { getStartingResources } from './engine.js?v=0.6.81';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.81';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.81";
+import { CONTENT as C } from "./content.js?v=0.6.81";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -26,7 +27,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.80";
+} from "./engine.js?v=0.6.81";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -95,7 +96,7 @@ export function marketMarkup(s,marketSide="buy",marketCount=1){return (
     `<div class="market-heading"><h3>市場</h3><span>金貨 ${Number(s.run.resources.gold.toFixed(2))}</span></div>${
       !s.run.facilities.market
         ? "<p>村に市場を建設すると取引できます。</p>"
-        : `<div class="market-tabs" role="tablist" aria-label="売買の切り替え"><button role="tab" aria-selected="${marketSide === 'buy'}" data-market-side="buy">買う</button><button role="tab" aria-selected="${marketSide === 'sell'}" data-market-side="sell">売る</button></div><div class="market-options"><label>数量<select id="market-count" data-focus="market-count">${[1,10,100,"all"].map(n=>`<option value="${n}" ${marketCount === n ? 'selected' : ''}>${n === 'all' ? '全て' : n+'個'}</option>`).join('')}</select></label><small>${marketSide === 'sell' ? '売値は買値より低くなります。' : '発見済みの品を購入できます。'}</small></div><div class="market-list" role="tabpanel" aria-label="${marketSide === 'sell' ? '売る' : '買う'}">${C.resources.filter(r=>r.id !== 'gold' && resourceKnown(s,r.id)).map(r=>{
+        : `<div class="market-tabs" role="tablist" aria-label="売買の切り替え"><button role="tab" aria-selected="${marketSide === 'buy'}" data-market-side="buy">買う</button><button role="tab" aria-selected="${marketSide === 'sell'}" data-market-side="sell">売る</button></div><div class="market-options"><label>数量<select id="market-count" data-focus="market-count">${[1,10,100,"all"].map(n=>`<option value="${n}" ${marketCount === n ? 'selected' : ''}>${n === 'all' ? '全て' : n+'個'}</option>`).join('')}</select></label><small>${marketSide === 'sell' ? '売値は買値より低くなります。' : '発見済みの品を購入できます。'}</small></div>${merchantMarkup(s,marketSide,marketCount)}<h3>常設市場</h3><div class="market-list" role="tabpanel" aria-label="${marketSide === 'sell' ? '売る' : '買う'}">${C.resources.filter(r=>r.id !== 'gold' && resourceKnown(s,r.id)).map(r=>{
           const q=getTradeQuote(s,r.id,marketSide,marketCount);
           return `<article class="market-item"><div><h4>${esc(r.name)}</h4><p>所持 ${Number(s.run.resources[r.id].toFixed(2))} · ${q.count ?? 0}個 → ${q.total ?? 0}金貨</p></div><div>${button(`${q.count ?? 0}個${marketSide === 'sell' ? '売る' : '買う'} · ${q.total ?? 0}金貨`, `data-trade-resource="${r.id}" data-focus="trade-${r.id}"`, !q.ok)}${!q.ok ? `<small class="trade-reason">${esc(q.reason)}</small>` : ''}</div></article>`;
         }).join('')}</div>${marketSide === 'buy' ? `<div class="market-hire"><strong>傭兵を雇う <small>攻撃 +5</small></strong>${button(s.run.diplomacy.mercenary ? '雇用済み' : `${getSupplyCost(s,'mercenary')}金貨`, 'data-buy-supply="mercenary"', s.run.diplomacy.mercenary || s.run.status !== 'preparing' || s.run.resources.gold < getSupplyCost(s,'mercenary'))}</div>` : ''}`
