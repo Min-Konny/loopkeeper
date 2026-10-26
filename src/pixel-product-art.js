@@ -1,7 +1,7 @@
-import {SPECIALISTS}from './specialist-content.js?v=0.6.83';
-import {facilityFrame} from './facility-art.js?v=0.6.83';
-import {equipmentMaterial} from './visual-design.js?v=0.6.83';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.83';
+import {SPECIALISTS}from './specialist-content.js?v=0.6.84';
+import {facilityFrame} from './facility-art.js?v=0.6.84';
+import {equipmentMaterial} from './visual-design.js?v=0.6.84';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.84';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map(),failedFacilitySheets=new Set();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);

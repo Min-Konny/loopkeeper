@@ -1,6 +1,6 @@
-import {mountBattleBackdrop}from './battle-backdrop.js?v=0.6.83';
-import { mountPixelCamp } from './pixel-camp-scene.js?v=0.6.83';
-import {mountPhaserCamp}from './phaser-camp-scene.js?v=0.6.83';
+import {mountBattleBackdrop}from './battle-backdrop.js?v=0.6.84';
+import { mountPixelCamp } from './pixel-camp-scene.js?v=0.6.84';
+import {mountPhaserCamp}from './phaser-camp-scene.js?v=0.6.84';
 
 export function mountCampScene(host, {variant = 'camp'} = {}) {
  const scene=variant==='battle'?mountBattleBackdrop(host):mountPhaserCamp(host);

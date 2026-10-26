@@ -1,0 +1,18 @@
+/* Native controls and current health share the compact raid strip. */
+#time-controls{gap:6px}
+.game-speed-control{position:relative;display:inline-flex;flex:none;align-items:center;margin:0}
+#time-controls .game-speed-select{appearance:none;-webkit-appearance:none;color-scheme:dark;box-sizing:border-box;width:86px;min-height:36px;margin:0;padding:5px 27px 5px 10px;border:1px solid #647454;border-radius:6px;background:linear-gradient(180deg,#304235,#21342c);color:#eee4c8;font:inherit;font-size:13px;font-weight:600;line-height:1.2;cursor:pointer;box-shadow:inset 0 1px #e6d3a21a}
+#time-controls .game-speed-select:hover{border-color:#b3a06c;background:#314536}
+#time-controls .game-speed-select:focus-visible{outline:2px solid #e4c98b;outline-offset:2px}
+.game-speed-select option{background:#24372d;color:#eee4c8}
+.game-speed-control>.icon{position:absolute;right:8px;top:50%;width:14px;height:14px;transform:translateY(-50%) rotate(90deg);color:#cfbd8a;pointer-events:none}
+.topbar .quick-actions [data-command="settings-menu"]>.icon{aspect-ratio:1;object-fit:contain;display:block}
+.camp-health{display:flex;align-items:center;flex-wrap:wrap;gap:0 6px;margin-top:2px;font-size:11px;line-height:15px;min-width:0}
+.camp-health-label{color:#adbdad;white-space:nowrap}
+.camp-health strong{color:#e1e6cb;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.camp-health-divider{color:#94a58f;font-weight:400}
+.camp-health-track{width:42px;height:4px;overflow:hidden;border-radius:3px;background:#101e18;flex:none}
+.camp-health-track i{display:block;height:100%;background:#b5c896;border-radius:inherit}
+.camp-health.is-critical strong{color:#f0b8a1}
+.camp-health.is-critical .camp-health-track i{background:#d7937b}
+@media(max-width:690px){#time-controls{gap:4px}#time-controls .game-speed-select{font-size:16px}.camp-health-track{display:none}}

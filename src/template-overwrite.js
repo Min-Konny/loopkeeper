@@ -1,7 +1,7 @@
-import {hasUpgrade}from './free-features.js?v=0.6.83';
-import { getCatalog } from './engine.js?v=0.6.83';
-import { commitStoredGameEdit } from './save-storage.js?v=0.6.83';
-import { conditionLabel } from './queue-conditions.js?v=0.6.83';
+import {hasUpgrade}from './free-features.js?v=0.6.84';
+import { getCatalog } from './engine.js?v=0.6.84';
+import { commitStoredGameEdit } from './save-storage.js?v=0.6.84';
+import { conditionLabel } from './queue-conditions.js?v=0.6.84';
 
 const fail = reason => ({ ok: false, reason });
 const enabled = state => state.version === 2 && hasUpgrade(state,"queue_templates") && !state.settings.disabledUpgrades.includes('queue_templates');
