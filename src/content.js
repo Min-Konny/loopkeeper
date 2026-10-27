@@ -1,19 +1,20 @@
-import{PROGRESSION_QUESTS}from './quest-content.js?v=0.6.87';
-import{ENCHANTMENTS,ENCHANTMENT_RECIPES}from './enchantments.js?v=0.6.87';
-import {SPECIALIST_FACILITIES,SPECIALIST_AUGMENTS}from './specialist-content.js?v=0.6.87';
-import {PARTY_ACTIONS,PARTY_WEAPONS}from './party-content.js?v=0.6.87';
-import {HOUSING,OUTPOST_BUILDINGS,EXPEDITIONS}from './settlement-content.js?v=0.6.87';
-import {WORKER_RANK_UPGRADES,WORKER_NAMES,workerLevel,workerRankDescription}from './worker-legacy.js?v=0.6.87';
-import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.87';
-import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.87';
-import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.87';
-import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.87';
-import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.87';
-import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.87';
-import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.87';
-import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.87';
-import { REINFORCEMENTS } from './endless.js?v=0.6.87';
-import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.87';
+import {questReward} from './quest-rewards.js?v=0.6.88';
+import{PROGRESSION_QUESTS}from './quest-content.js?v=0.6.88';
+import{ENCHANTMENTS,ENCHANTMENT_RECIPES}from './enchantments.js?v=0.6.88';
+import {SPECIALIST_FACILITIES,SPECIALIST_AUGMENTS}from './specialist-content.js?v=0.6.88';
+import {PARTY_ACTIONS,PARTY_WEAPONS}from './party-content.js?v=0.6.88';
+import {HOUSING,OUTPOST_BUILDINGS,EXPEDITIONS}from './settlement-content.js?v=0.6.88';
+import {WORKER_RANK_UPGRADES,WORKER_NAMES,workerLevel,workerRankDescription}from './worker-legacy.js?v=0.6.88';
+import {MEALS,MEAL_RESOURCES,PRESSURE_FACILITY}from './meal-content.js?v=0.6.88';
+import {INVESTMENT_UPGRADES}from './investments.js?v=0.6.88';
+import {FARM_RESOURCES,FARM_ACTION,FARM_FACILITY,FARM_RECIPE}from './farm-content.js?v=0.6.88';
+import {MAGIC_WEAPON,ALCHEMY_RESOURCES,ALCHEMY_RECIPES,MAGIC_AUGMENTS}from './magic-content.js?v=0.6.88';
+import {WEAPONS,ACCESSORY_RECIPES}from './gear-content.js?v=0.6.88';
+import {EXTRA_LEGACY_RANKS,LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.88';
+import { STARTING_UPGRADES } from './starting-resources.js?v=0.6.88';
+import { FISH_FACILITIES, TRADE_AUGMENTS } from './fish-economy.js?v=0.6.88';
+import { REINFORCEMENTS } from './endless.js?v=0.6.88';
+import { STRATEGY_AUGMENTS } from './strategy.js?v=0.6.88';
 // Runtime catalog: A2.1 strategy expansion; human strategy playtest pending.
 export const CONTENT = {
   "schema": "design_numeric_candidate_v1",
@@ -3677,5 +3678,5 @@ CONTENT.resources.push(...ENCHANTMENTS.map(({id,name})=>({id,name})));CONTENT.pr
 
 CONTENT.market.push(...ENCHANTMENTS.map((d,i)=>({id:'buy_'+d.id,name:d.name+'を購入',direction:'buy',resource:d.id,quantity:1,gold:[35,40,45][i],discountEligible:true})));
 
-CONTENT.quests.find(q=>q.id==='first_orichalcum_equipment').reward=10;
+for(const q of CONTENT.quests)q.reward=questReward(q.id);
 CONTENT.quests.push(...PROGRESSION_QUESTS);

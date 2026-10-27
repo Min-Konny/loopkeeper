@@ -5,3 +5,7 @@
 .milestone-list>div[data-quest] small{display:inline;color:#a8b6a8;font-size:11px;white-space:normal;line-height:1.6}
 .milestone-list>div[data-completed="true"]>span{color:#b7c2a0}
 @media(max-width:390px){.milestone-list>div[data-quest]{gap:8px;font-size:12px}.milestone-list>div[data-quest]>strong{font-size:12px}}
+.cycle-goals{padding:12px;margin:12px 0;border:1px solid #536246;border-radius:8px;background:#213027;overflow-wrap:anywhere}.cycle-goals h4{color:#dfca90;margin:0 0 8px}.cycle-goals p{margin:6px 0;font-size:13px;line-height:1.65}.cycle-goals small{display:block;font-size:12px;color:#b7c2ae;white-space:normal;line-height:1.6}.cycle-goals summary{cursor:pointer;padding:10px 0;color:#ddc78c;min-height:42px}.cycle-accessory{border-top:1px solid #4d5b44;padding:10px 0}.cycle-accessory strong{font-size:13px}.cycle-accessory .boss-material{margin:6px 0}.cycle-accessory .boss-material strong{display:block;white-space:normal}
+.raid-enemy-mechanic{display:block;grid-column:1/-1;grid-row:3;min-width:0;width:100%;color:#d0bc8d;font-size:11px;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+#info-dialog #quest-list .cycle-goals summary{display:list-item}
+.cycle-goals small{float:none}.cycle-goals>details{clear:both}

@@ -1,19 +1,20 @@
-import{questStage}from './quest-content.js?v=0.6.87';
-import{questProgress}from './quest-progress.js?v=0.6.87';
-import{merchantMarkup}from './merchant-ui.js?v=0.6.87';
-import {visibleWorkerUpgrade}from './worker-legacy.js?v=0.6.87';
-import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.87';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.87';
-import {stockIcon as icon}from './stock-icons.js?v=0.6.87';
-import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.87';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.87';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.87';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.87';
-import {hasUpgrade}from './free-features.js?v=0.6.87';
-import { getStartingResources } from './engine.js?v=0.6.87';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.87';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.87";
-import { CONTENT as C } from "./content.js?v=0.6.87";
+import {cycleGoalsMarkup} from './cycle-goals-ui.js?v=0.6.88';
+import{questStage}from './quest-content.js?v=0.6.88';
+import{questProgress}from './quest-progress.js?v=0.6.88';
+import{merchantMarkup}from './merchant-ui.js?v=0.6.88';
+import {visibleWorkerUpgrade}from './worker-legacy.js?v=0.6.88';
+import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.88';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.88';
+import {stockIcon as icon}from './stock-icons.js?v=0.6.88';
+import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.88';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.88';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.88';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.88';
+import {hasUpgrade}from './free-features.js?v=0.6.88';
+import { getStartingResources } from './engine.js?v=0.6.88';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.88';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.88";
+import { CONTENT as C } from "./content.js?v=0.6.88";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -29,7 +30,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.87";
+} from "./engine.js?v=0.6.88";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -166,7 +167,7 @@ export function templatesMarkup(s) {
 }
 export function milestoneMarkup(s) {
  let stage='';const items=MILESTONES.map(q=>{const group=questStage(q),heading=stage!==group?'<h4 class="quest-stage">'+esc(group)+'</h4>':'';stage=group;const done=s.meta.completedMilestones.includes(q.id),progress=done?q.target:questProgress(s,q);return heading+'<div data-quest="'+q.id+'" data-completed="'+done+'"><span>'+(done?'✓ ':'○ ')+esc(q.name)+(q.description?'<br><small>'+esc(q.description)+(progress===null?'':' '+progress+' / '+q.target)+'</small>':'')+'</span><strong>'+q.reward+' pt</strong></div>';}).join('');
- return '<details class="milestone-list"><summary>初達成 '+s.meta.completedMilestones.length+'/'+MILESTONES.length+'</summary><p class="fine-print">報酬はセーブ全体で一度だけ自動反映。転生・振り直し後も受取済みを保持します。</p>'+items+'</details>';
+ return '<details class="milestone-list"><summary>初達成 '+s.meta.completedMilestones.length+'/'+MILESTONES.length+'</summary><p class="fine-print">報酬はセーブ全体で一度だけ自動反映。転生・振り直し後も受取済みを保持します。</p>'+cycleGoalsMarkup(s,getRecipeCost,label)+items+'</details>';
 }
 export function synergyMarkup(s) {
   const selected = getSynergies(s);
