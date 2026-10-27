@@ -1,9 +1,9 @@
-import{specialistArtFile}from './specialist-art.js?v=0.6.98';
-import{housingArtFile}from './housing-art.js?v=0.6.98';
-import {SPECIALISTS}from './specialist-content.js?v=0.6.98';
-import {facilityFrame} from './facility-art.js?v=0.6.98';
-import {equipmentMaterial} from './visual-design.js?v=0.6.98';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.98';
+import{specialistArtFile}from './specialist-art.js?v=0.6.99';
+import{housingArtFile}from './housing-art.js?v=0.6.99';
+import {SPECIALISTS}from './specialist-content.js?v=0.6.99';
+import {facilityFrame} from './facility-art.js?v=0.6.99';
+import {equipmentMaterial} from './visual-design.js?v=0.6.99';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.99';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map(),failedFacilitySheets=new Set();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);

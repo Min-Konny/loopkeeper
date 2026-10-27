@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.98
+# LoopKeeper 0.6.99
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -130,3 +130,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.98: 魔術研究所II・IIIの段階別画像と独立した代替表示。ゲーム計算・保存は維持。詳細: docs/arcane-study-art-0.6.98.md。
+
+
+0.6.99: 拠点画像を現在の所有段階に合わせて遅延読込。詳細: docs/camp-art-loading-0.6.99.md。
