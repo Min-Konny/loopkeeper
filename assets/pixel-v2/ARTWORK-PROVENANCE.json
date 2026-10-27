@@ -1393,5 +1393,49 @@
       "file": "specialist-kitchen-stage-3-v1.png",
       "status": "Integrated separate stage artwork; original I unchanged. Camp and cards use same stage selector."
     }
-  ]
+  ],
+  "laboratoryStagesII_III": {
+    "date": "2026-10-27",
+    "scope": "Laboratory II/III stage art only; original I and all game/save/economy rules unchanged.",
+    "records": [
+      {
+        "file": "specialist-laboratory-stage-2-v1.png",
+        "bytes": 1716939,
+        "sha256": "2faa4c7d0daaa8f617fee3fb957a50a94151c4fb22be01e37135b1649a6ece30",
+        "width": 1304,
+        "height": 1206,
+        "mode": "RGBA",
+        "transparentCorners": true,
+        "alphaBounds": [
+          0,
+          3,
+          1288,
+          1206
+        ],
+        "level": 2,
+        "method": "Built-in image_gen.imagegen; one original generation per stage, original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original pixel-art building sprite for LOOPKEEPER alchemy workshop/laboratory stage II. The preceding existing teal-roof laboratory is a STYLE reference, not an edit target. Same crisp clustered pixels, dark stepped contours, elevated front/right three-quarter orthographic view, warm upper-left light, weathered oak framing, cream plaster, muted teal shingle roof with restrained moss, amber windows, stone footing, copper stills and herb bundles. Expanded working apothecary: tall main gable plus a clearly attached lower square side laboratory with its own teal gable, two copper distillation vessels of different heights visible in a sheltered open-front workbench bay, one substantial stone chimney and one small copper vent. Readable asymmetrical silhouette at 50px wide, bigger and more developed than the original single cottage. Useful equipment, not whimsical ornaments; not wizard tower, castle, palace, modern factory or potion shop signage. Entire single complete centered building with 8 percent empty transparent margin and compact ground-contact steps only. Actual PNG alpha outside hard building contour. No background, haze, glow, halo, fog, smoke, people, letters, numbers, UI, watermark or panels. No smooth painted blur. Original independent game artwork.",
+        "verification": "Persisted, read back, SHA256 verified, PNG fully decoded/CRC checked and local image viewed before integration."
+      },
+      {
+        "file": "specialist-laboratory-stage-3-v1.png",
+        "bytes": 1984514,
+        "sha256": "8477c4bf6caac9f8bc45faa3a69dfab087f2b3ac09203ffb5ced0e2304c824b0",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "transparentCorners": true,
+        "alphaBounds": [
+          0,
+          28,
+          1222,
+          1254
+        ],
+        "level": 3,
+        "method": "Built-in image_gen.imagegen; one original generation per stage, original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art building sprite for LOOPKEEPER alchemy workshop laboratory stage III, the final upgrade. Preceding laboratory II is STYLE reference, not an edit. Crisp fine clustered pixels, dark stepped outlines, elevated front/right orthographic view, warm upper-left light. Oak framing, cream plaster, muted teal shingle roofs with restrained moss, warm amber windows, gray stone foundation, copper distillation vessels and herb bundles. A fully developed woodland alchemy workshop with a compact near-square silhouette: three usable levels under one tall central stepped gable, a joined slightly lower second full-height gabled work wing, small rounded stone service bay with copper ventilation cap, large sheltered workbench with three clear copper/glass apparatus shapes. Clearly taller and more substantial than stage II, but still a practical village workshop. Maintain compact width-to-height approximately 1:1, NOT a panoramic long hall. No wizard spire, castle, palace, modern industry, fantasy crystals or floating magical effects. Legible major roof/turret shapes at 50px wide, avoid tiny clutter. Whole building centered, 8 percent clear transparent margin on every side, compact stone footing only. Actual alpha outside hard building silhouette, no background, glow, halo, fog, vignette, smoke, people, text, numerals, UI, watermark or comparison panels. No smooth painterly blur. Original independent game artwork.",
+        "verification": "Persisted, read back, SHA256 verified, PNG fully decoded/CRC checked and local image viewed before integration."
+      }
+    ]
+  }
 }

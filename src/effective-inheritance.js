@@ -1,8 +1,8 @@
-import{gatheringMaterialSaving}from './gathering-materials.js?v=0.6.94';
-import{investmentEffect}from './investments.js?v=0.6.94';
-import{usefulGoals}from './useful-goals.js?v=0.6.94';
-import{getCatalog,getActionDuration,getSkillProgress,isKnown,getLegacyRankStatus,getRecipeCost}from'./engine.js?v=0.6.94';
-import{LEGACY_RANKS,rankId}from'./legacy-rank-definitions.js?v=0.6.94';
+import{gatheringMaterialSaving}from './gathering-materials.js?v=0.6.95';
+import{investmentEffect}from './investments.js?v=0.6.95';
+import{usefulGoals}from './useful-goals.js?v=0.6.95';
+import{getCatalog,getActionDuration,getSkillProgress,isKnown,getLegacyRankStatus,getRecipeCost}from'./engine.js?v=0.6.95';
+import{LEGACY_RANKS,rankId}from'./legacy-rank-definitions.js?v=0.6.95';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function rankTiming(s,key){
  if(s.version!==2||!['gatherSpeed','craftSpeed','alchemySpeed'].includes(key))return null;
