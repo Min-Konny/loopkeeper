@@ -1,6 +1,7 @@
-import{outfitHeroSource}from './hero-outfit-art.js?v=0.6.106';
-import {HERO_LAYOUT} from './hero-atlas-layout.js?v=0.6.106';
-import {spritePlacement} from './enemy-art.js?v=0.6.106';
+import{outfitHeroSource}from './hero-outfit-art.js?v=0.6.107';
+import{layeredHeroSource}from './hero-layer-art.js?v=0.6.107';
+import {HERO_LAYOUT} from './hero-atlas-layout.js?v=0.6.107';
+import {spritePlacement} from './enemy-art.js?v=0.6.107';
 // Exact authored builds plus a common generated body for every other equipment combination.
 export const HERO_BUILDS=Object.freeze([
  {weapon:'iron_bow',armor:null,shield:null,file:'hero-iron-bow-v1.png'},
@@ -15,6 +16,8 @@ function primeHeroAtlas(){if(atlasStarted||typeof Image==='undefined')return;atl
 export function generatedHeroSource(equipment={}){
  primeHeroAtlas();const weapon=equipment.weapon?.id||null,armor=equipment.armor?.id||null,shield=equipment.shield?.id||null;
  const exact=HERO_BUILDS.find(b=>b.weapon===weapon&&b.armor===armor&&b.shield===shield);
+ const family=heroFamily(equipment),base=exact?new URL('../assets/pixel-v2/'+exact.file,import.meta.url).href:familyImages.get(family)||common;
+ const layered=layeredHeroSource(equipment,family,base,kind=>outfitHeroSource({armor:equipment.armor,shield:null},kind));if(layered)return layered;
  const outfit=outfitHeroSource(equipment,heroFamily(equipment));if(outfit)return outfit;
  return exact?new URL('../assets/pixel-v2/'+exact.file,import.meta.url).href:familyImages.get(heroFamily(equipment))||common;
 }

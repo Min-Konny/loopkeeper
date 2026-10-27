@@ -1,5 +1,5 @@
-import{alphaBounds}from './generated-camp-art.js?v=0.6.106';
-import{spritePlacement}from './enemy-art.js?v=0.6.106';
+import{alphaBounds}from './generated-camp-art.js?v=0.6.107';
+import{spritePlacement}from './enemy-art.js?v=0.6.107';
 const families=['sword','spear','bow','crossbow','magic','unarmed'];
 export const OUTFIT_SHEETS=Object.freeze({
  iron:{width:1536,height:1024,file:'hero-iron-armor-v2-sheet.png',regions:[[[0,0],[520,0],[520,512],[0,512]],[[520,0],[1130,0],[1130,140],[1080,170],[1080,512],[520,512]],[[1130,0],[1536,0],[1536,512],[1080,512],[1080,170],[1130,140]],[[0,512],[512,512],[512,1024],[0,1024]],[[512,512],[1024,512],[1024,1024],[512,1024]],[[1024,512],[1536,512],[1536,1024],[1024,1024]]]},

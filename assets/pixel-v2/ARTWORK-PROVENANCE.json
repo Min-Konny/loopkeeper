@@ -1964,5 +1964,266 @@
         "prompt": "Use case: stylized-concept\nAsset type: one original transparent pixel-art regional outpost sprite for LOOPKEEPER, landscape4:3, management card160x120.\nPrimary request: the ice-crown mountain mine, a compact cold-region orichalcum-ore mining station. A low rugged gray-blue rocky outcrop with a dark timber-reinforced adit, a small insulated timber lodge with frost-dusted slate roof and amber lit window, narrow icicles under the eaves, a loaded hauling sledge, pickaxes and a few ore baskets with small warm muted metallic mineral veins. Snow patches and ice seams frame the footprint; restrained warmth from one lantern distinguishes usable shelter from frozen terrain. No people. It must read as an operating mine in a harsh cold climate, not an ice palace or monster lair.\nStyle: polished handcrafted fantasy pixel art, crisp stepped silhouette and selected pixel clusters, matched to the existing warm timber/moss/slate medieval camp and mining outposts. Gentle elevated three-quarter view showing front and right walls, upper-left sunlight, ochre wood and amber lamps balanced with muted desaturated blue-gray rock and snow. Rich carefully selected detail, strong mine opening and sled silhouette at tiny size.\nComposition: complete connected compact footprint with generous transparent padding on all sides. Nothing touches or crosses the canvas edge. No sky, rectangular snowy background or opaque backdrop; actual transparent alpha outside the footprint. No words, UI, letters, logo, watermark, giant mountain panorama, glowing crystal tower, magic aura, photorealism, smooth vector or3D-render look. Original asset, not a franchise imitation."
       }
     ]
+  },
+  "heroWoodLayers": {
+    "scope": "Wooden armor body and independent wood/iron shields for accurate mixed equipment. Existing iron baked sets unchanged. No gameplay/save changes.",
+    "records": [
+      {
+        "file": "hero-wooden-armor-v1-sheet.png",
+        "bytes": 2108251,
+        "sha256": "07593f2d7aeda6b5f84c0719af10cb7b18136efa64ae7fd9aeb5bee5981c12cd",
+        "width": 1536,
+        "height": 1024,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          254
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              58,
+              61,
+              462,
+              498
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              15,
+              61,
+              512,
+              497
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              16,
+              479,
+              497
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              0,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              55,
+              42,
+              506,
+              469
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              72,
+              11,
+              480,
+              469
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              76,
+              42,
+              441,
+              469
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen with existing original hero reference; original received PNG bytes preserved. Runtime atlas clipping/composition only.",
+        "prompt": "Use case: precise-object-edit\nInput: the most recently viewed six-pose hero sprite sheet is the exact character/style/pose reference.\nCreate a new original six-frame sprite atlas of this SAME hero wearing ONLY wooden armor. Keep his brown short hair, face, green scarf, light sleeves, brown trousers and boots, facing right, proportions, restrained crisp fantasy pixel-art texture, upper-left lighting and the six weapon families/poses. Replace only the torso armor with a simple low-tier wooden plank/lamellar cuirass bound by dark leather straps, a few modest dark buckles, clearly wood rather than steel. No helmet, shield, additional person or magical armor.\nExactly3columns x2rows, one complete figure in each equally sized cell: top left sword,top middle spear,top right bow; bottom left crossbow,bottom middle amber-tipped staff,bottom right unarmed. Keep the arms/grips and family-specific weapon silhouettes clear. All figures fully inside their own cells including spear/bow/staff tips and feet;generous transparent gutters;no overlap into neighboring cell. Comparable body size and footbaseline across cells. Preserve current adult adventurer identity, not chibi and not a knight in metal.\nTransparent background around every sprite instead of the reference's dark backdrop. No words, labels, grid lines, borders, watermarks or logos. Do not draw ANY shield, even on the back. No duplicate figures, extra limbs,weapons or equipment. This new sheet will be combined with separate shield sprites,so free arms must remain legible. Crisp pixel clusters,not smooth3D or photorealistic paint.",
+        "reference": {
+          "file": "hero-families-v2-sheet.png",
+          "sha256": "0b662cf15d53a3dc8e98dace69fdea9daba4c81306fbdc16b60c172f954cb4a7",
+          "role": "Original current hero identity/pose/style reference"
+        }
+      },
+      {
+        "file": "hero-shield-layers-v1.png",
+        "bytes": 647045,
+        "sha256": "8cb8423ce3bfae6312014d968d0917bc76cce85af28e76bb3f1f5a6f1c5ecada",
+        "width": 1374,
+        "height": 1145,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              687,
+              572
+            ],
+            "opaqueBounds": [
+              260,
+              74,
+              532,
+              527
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              687,
+              0,
+              687,
+              572
+            ],
+            "opaqueBounds": [
+              283,
+              74,
+              445,
+              527
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              0,
+              572,
+              687,
+              573
+            ],
+            "opaqueBounds": [
+              254,
+              48,
+              535,
+              498
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              687,
+              572,
+              687,
+              573
+            ],
+            "opaqueBounds": [
+              280,
+              48,
+              441,
+              498
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen with existing original hero reference; original received PNG bytes preserved. Runtime atlas clipping/composition only.",
+        "prompt": "Use case: stylized-concept\nAsset type: original shield-only sprite atlas for layering onto the existing LOOPKEEPER hero.\nThe most recently viewed image is REFERENCE ONLY for the gray iron shield's oval silhouette, modest bronze boss, lighting and crisp fantasy pixel style. Do NOT copy any people, clothes, limbs or weapons from it.\nCreate exactly FOUR isolated shield objects in a clean2column x2row grid with generous transparent gutters. Top left: simple wooden oval plank shield viewed at the same forward three-quarter angle as the reference held shield, dark narrow binding rim, modest central dark/bronze boss, clear ochre wood grain. Top right: the SAME wooden shield in a much narrower steep side angle, outer face visible, suitable for being partly obscured behind a hero's back. Bottom left: the reference-style iron oval shield, dull slate-gray metal with rivets, thin darker rim and small muted bronze boss, forward three-quarter angle. Bottom right: SAME iron shield in the narrower steep side angle for a back-carried layer.\nEach object alone, entirely inside its equal-size cell, centered with clear padding on every side. Comparable height across four objects. No arm, hand, torso, straps extending into another cell, person, shadow rectangle or backdrop. Actual fully transparent alpha outside the four shields. No letters,labels,borders,grid lines,watermark or logo. No sword,weapon or extra shield. Rich but restrained handcrafted pixel clusters and stepped outline, upper-left warm light, matching the existing medieval adventurer art;not a shiny photoreal3D render. These4objects are independently composed at runtime,so the silhouettes must be clean and separate.",
+        "reference": {
+          "file": "hero-iron-shield-v2-sheet.png",
+          "sha256": "f3bcc1fdef47ce8e86a087dd1e6545662448826d886624e947e3abfc1197e56d",
+          "role": "Original iron shield shape/style reference; no people retained in object atlas"
+        }
+      }
+    ]
   }
 }
