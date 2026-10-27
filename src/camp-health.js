@@ -1,4 +1,4 @@
-import{getStats}from './engine.js?v=0.6.107';
+import{getStats}from './engine.js?v=0.6.108';
 const numbers=new Intl.NumberFormat('ja-JP',{maximumFractionDigits:2});
 export const formatHealth=value=>numbers.format(Math.max(0,value));
 export function campHealth(s){

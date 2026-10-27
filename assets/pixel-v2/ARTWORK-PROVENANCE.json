@@ -2225,5 +2225,224 @@
         }
       }
     ]
+  },
+  "heroSteelLayers": {
+    "scope": "Six steel armor weapon families plus two independent heater shield views; only actual equipped materials are selected. Existing wood/iron art preserved.",
+    "records": [
+      {
+        "file": "hero-steel-armor-v1-sheet.png",
+        "bytes": 2157776,
+        "sha256": "1c08c34f79a5acb424cabb7013ef4aa07f8ee8c2444064afed43fe5b18d75e8c",
+        "width": 1536,
+        "height": 1024,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          254
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              54,
+              59,
+              482,
+              499
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              20,
+              59,
+              512,
+              499
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              11,
+              484,
+              499
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              0,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              48,
+              35,
+              512,
+              472
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              63,
+              7,
+              484,
+              472
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              64,
+              35,
+              443,
+              473
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "prompt": "Use case: precise-object-edit\nThe most recently viewed six-pose WOODEN armor hero sheet is the exact reference for character identity, pose, weapon arrangement and pixel style.\nCreate the same6frame hero sheet but replace the wooden plank torso armor with mid-tier STEEL armor: a clearly metallic cool-gray broad reinforced breastplate, layered waist plates, modest angular shoulder guards and forearm protection over the same green cloth/light undershirt. No wooden plank chest pieces may remain. Keep his brown hair, uncovered face, green scarf, brown boots, adult proportions, right-facing direction and each weapon/hand pose. No helmet and NO shield anywhere.\nSteel should be visibly distinct from low-tier iron: clean broad steel planes and restrained bright edge highlights, structured waist plate silhouette, no gold filigree, magic glow or royal/silver ornament. Warm upper-left lighting and crisp handcrafted fantasy pixel clusters,not photoreal3D or smooth vector.\nExactly3columns x2rows: sword,spear,bow;crossbow,amber staff,unarmed. Complete weapon tips and feet ineach cell,consistent body scale and footbaseline,generous transparent gutters,no duplicates/no extra limbs,no adjoining pose overlap. Entire background outside sprites must have actual alpha transparency. Do not add a colored matte even if the reference preview shows hidden RGB. No text,labels,grid,borders,watermarks or logos. This is a new non-destructive asset for the same original game hero,not a replacement of the previous file.",
+        "method": "Original built-in image_gen reference-based generation; selected received PNG bytes preserved; runtime clipping/composition only",
+        "reference": {
+          "file": "hero-wooden-armor-v1-sheet.png",
+          "sha256": "07593f2d7aeda6b5f84c0719af10cb7b18136efa64ae7fd9aeb5bee5981c12cd"
+        }
+      },
+      {
+        "file": "hero-steel-shield-v1-sheet.png",
+        "bytes": 701566,
+        "sha256": "23e97b9efee2d1e65c91d8ada87353be00e438d7d331e81e82a106a37f91538e",
+        "width": 1774,
+        "height": 887,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              887,
+              887
+            ],
+            "opaqueBounds": [
+              215,
+              87,
+              746,
+              784
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              887,
+              0,
+              887,
+              887
+            ],
+            "opaqueBounds": [
+              345,
+              95,
+              596,
+              768
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "prompt": "Use case: stylized-concept\nAsset type: original TWO shield-only sprites for the same hero's mid-tier STEEL shield.\nThe most recent steel-armored hero sheet is a reference ONLY for crisp pixel style, cool steel planes, dark edging and warm upper-left lighting. Do not copy any hero, limb, weapon or background.\nCreate exactly TWO isolated steel HEATER shields side by side in a1row x2column atlas. Left: three-quarter forward view, broad slightly curved top, angular taper to a modest pointed bottom, structured central ridge and thin darker riveted edging, clean cool-gray steel with restrained bright edge reflections. Right: the SAME heater shield in a narrower steep side angle for back-carried layering, same height/material. Visibly distinguish this shape from the previous oval iron shield;no gold filigree,painted crest,gemstones or glow. Plain functional mid-tier gear,not royal legendary armor.\nBoth objects entire,centered individually in equal cells with generous fully transparent padding and gutter. No overlap. Actual alpha transparency outside each shield,not a dark matte. No arms,hands,body,straps sticking into another cell,person,extra shield,weapon,text,labels,UI,grid,borders,watermarks or logos. Original clean handcrafted fantasy pixel clusters and stepped edges,matching the supplied steel hero,not photorealistic3D or vector.",
+        "method": "Original built-in image_gen reference-based generation; selected received PNG bytes preserved; runtime clipping/composition only",
+        "reference": {
+          "file": "hero-steel-armor-v1-sheet.png",
+          "sha256": "1c08c34f79a5acb424cabb7013ef4aa07f8ee8c2444064afed43fe5b18d75e8c"
+        }
+      }
+    ]
   }
 }

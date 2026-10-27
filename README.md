@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.107
+# LoopKeeper 0.6.108
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -157,3 +157,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.107: 木の鎧・盾と混成装備。範囲: docs/hero-equipment-0.6.107.md。
+
+
+0.6.108: 鋼の鎧・盾と木/鉄との混成。範囲: docs/hero-equipment-0.6.108.md。

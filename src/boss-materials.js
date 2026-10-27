@@ -1,5 +1,5 @@
-import {REGIONAL_MATERIALS,REGIONAL_REQUIREMENTS}from './regional-content.js?v=0.6.107';
-import {WORK_MILESTONES,workMaterialById}from './work-milestone-content.js?v=0.6.107';
+import {REGIONAL_MATERIALS,REGIONAL_REQUIREMENTS}from './regional-content.js?v=0.6.108';
+import {WORK_MILESTONES,workMaterialById}from './work-milestone-content.js?v=0.6.108';
 // Permanent trophies never enter ordinary inventory, shops or worker targets.
 export const BOSS_MATERIALS = [
  ['wolf_fang','群狼の牙','forest_chief','群狼の主',3],
