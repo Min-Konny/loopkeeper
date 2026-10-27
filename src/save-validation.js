@@ -1,27 +1,27 @@
-import{validMerchant}from './merchant.js?v=0.6.86';
-import{ENCHANTMENTS,enchantmentResource,validEnchantmentState}from './enchantments.js?v=0.6.86';
-import {EXTRA_SKILLS}from './new-skills.js?v=0.6.86';
-import {validParty}from './party.js?v=0.6.86';
-import {validPopulation}from './settlement.js?v=0.6.86';
-import {validMeals}from './meals.js?v=0.6.86';
-import {MEALS,mealByRecipe}from './meal-content.js?v=0.6.86';
-import {preparationRoute}from './preparation-balance.js?v=0.6.86';
-import {validWorkMilestones}from './work-milestones.js?v=0.6.86';
-import {validTrophies} from './boss-materials.js?v=0.6.86';
-import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.86';
-import {CONTRACTS,contractById}from './contracts.js?v=0.6.86';
-import {validRegionalRewards}from './regional-rewards.js?v=0.6.86';
-import {ROUTES,routeById}from './routes.js?v=0.6.86';
-import {farmResource,resourceCap}from './farm-content.js?v=0.6.86';
-import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.86';
-import {alchemyResource}from './magic-content.js?v=0.6.86';
-import {validPreset}from './build-presets.js?v=0.6.86';
-import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.86';
-import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.86';
-import { endlessEnemy } from './endless.js?v=0.6.86';
-import { validMaterialPriority } from './material-priority.js?v=0.6.86';
-import { validCondition } from './queue-conditions.js?v=0.6.86';
-import { CONTENT as C } from "./content.js?v=0.6.86";
+import{validMerchant}from './merchant.js?v=0.6.87';
+import{ENCHANTMENTS,enchantmentResource,validEnchantmentState}from './enchantments.js?v=0.6.87';
+import {EXTRA_SKILLS}from './new-skills.js?v=0.6.87';
+import {validParty}from './party.js?v=0.6.87';
+import {validPopulation}from './settlement.js?v=0.6.87';
+import {validMeals}from './meals.js?v=0.6.87';
+import {MEALS,mealByRecipe}from './meal-content.js?v=0.6.87';
+import {preparationRoute}from './preparation-balance.js?v=0.6.87';
+import {validWorkMilestones}from './work-milestones.js?v=0.6.87';
+import {validTrophies} from './boss-materials.js?v=0.6.87';
+import {validCampaign,campaignFinalWave,campaignIncludes,finalWaveForRun,encountersForRun,EXTENDED_ENCOUNTERS,FRONTIER_ENCOUNTERS,FRONTIER_CAMPAIGN,EXTENDED_CAMPAIGN}from './campaign-rules.js?v=0.6.87';
+import {CONTRACTS,contractById}from './contracts.js?v=0.6.87';
+import {validRegionalRewards}from './regional-rewards.js?v=0.6.87';
+import {ROUTES,routeById}from './routes.js?v=0.6.87';
+import {farmResource,resourceCap}from './farm-content.js?v=0.6.87';
+import {COMPANIONS,companionById,companionEligible}from './companion-content.js?v=0.6.87';
+import {alchemyResource}from './magic-content.js?v=0.6.87';
+import {validPreset}from './build-presets.js?v=0.6.87';
+import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.87';
+import {FREE_FEATURES,hasUpgrade}from './free-features.js?v=0.6.87';
+import { endlessEnemy } from './endless.js?v=0.6.87';
+import { validMaterialPriority } from './material-priority.js?v=0.6.87';
+import { validCondition } from './queue-conditions.js?v=0.6.87';
+import { CONTENT as C } from "./content.js?v=0.6.87";
 const object = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
 const number = (x, min = 0, max = 1e9) =>
   Number.isFinite(x) && x >= min && x <= max;
@@ -103,6 +103,8 @@ export function validateSave(s) {
     if(r.campaign!==undefined&&(!validCampaign(r.campaign)||r.campaign!=="classic21"&&["A1","A2"].includes(s.contentVersion)))return false;
     const goal=finalWaveForRun(s);
     if(m.freeFeatures!==undefined && (!validList(m.freeFeatures,new Set(FREE_FEATURES.map(x=>x.id)),5) || m.foundationVersion!==1))return false;
+    if(m.questRewardVersion!==undefined&&m.questRewardVersion!==1)return false;
+    if(m.questRewardVersion===undefined&&C.quests.some(q=>q.kind&&m.completedMilestones?.includes(q.id)))return false;
     if(m.foundationVersion!==undefined && m.foundationVersion!==1)return false;
     if(m.featureRefundTotal!==undefined && !integer(m.featureRefundTotal,0,m.totalPoints))return false;
     const validClear = x => object(x) && integer(x.generation,1,m.generation) && (x.campaign===undefined?x.wave===21:validCampaign(x.campaign)&&x.wave===campaignFinalWave(x.campaign)) && integer(x.seconds) && validList(x.augments,new Set(C.augments.map(a=>a.id)),4) && validList(x.badges,new Set(['independent','architect','champion']),3);
@@ -174,7 +176,7 @@ export function validateSave(s) {
       !validList(
         m.completedMilestones,
         new Set(C.quests.map((q) => q.id)),
-        15,
+        C.quests.length,
       ) ||
       !unique(m.defeatedBosses) ||
       m.defeatedBosses.some(

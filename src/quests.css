@@ -1,0 +1,7 @@
+.milestone-list>.quest-stage{margin:18px 0 6px;color:#d8c488;font-size:13px;font-weight:600;letter-spacing:.04em}
+.milestone-list>div[data-quest]{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;line-height:1.65;padding:9px 0}
+.milestone-list>div[data-quest]>span{min-width:0;overflow-wrap:anywhere}
+.milestone-list>div[data-quest]>strong{flex:none;white-space:nowrap;color:#ddc88f;font-size:13px;font-variant-numeric:tabular-nums}
+.milestone-list>div[data-quest] small{display:inline;color:#a8b6a8;font-size:11px;white-space:normal;line-height:1.6}
+.milestone-list>div[data-completed="true"]>span{color:#b7c2a0}
+@media(max-width:390px){.milestone-list>div[data-quest]{gap:8px;font-size:12px}.milestone-list>div[data-quest]>strong{font-size:12px}}
