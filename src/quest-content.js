@@ -1,4 +1,4 @@
-import {questReward} from './quest-rewards.js?v=0.6.100';
+import {questReward} from './quest-rewards.js?v=0.6.101';
 export const PROGRESSION_QUESTS=[
  {id:'frontier_wave_12',name:'最初の関門を越える',description:'通常の襲撃を12波まで突破する。',kind:'wave',target:12,stage:'中盤の整備',tab:'gather'},
  {id:'specialist_stage_2',name:'得意な仕事を育てる',description:'専門施設のいずれかをIIへ増築する。',kind:'specialist',target:2,stage:'中盤の整備',tab:'village'},

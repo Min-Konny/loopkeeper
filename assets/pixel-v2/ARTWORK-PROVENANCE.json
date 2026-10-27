@@ -1703,5 +1703,59 @@
         "verification": "Persisted bytes/SHA256/PNG decode/CRC/local view checked; transparent corner alpha <=2/255, original bytes retained."
       }
     ]
+  },
+  "regionalOutpostBases": {
+    "date": "2026-10-27",
+    "scope": "Quarry and marsh base scenery; same base across existing I/II/III. Forest reuses original outpost-v1. No gameplay/save changes.",
+    "records": [
+      {
+        "id": "quarry",
+        "file": "outpost-quarry-v1.png",
+        "bytes": 2129158,
+        "sha256": "32d3fd467402636b4237d8ea66299a1fcc8c6cdfe06e502deb193220cb72e9f2",
+        "width": 1312,
+        "height": 1199,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "opaqueBounds": [
+          23,
+          45,
+          1291,
+          1164
+        ],
+        "pngCRCVerified": true,
+        "method": "Original built-in image_gen generation; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art outpost sprite for LOOPKEEPER, mountain-pass STONE QUARRY. Match a cozy woodland medieval village's fine crisp clustered pixels, dark stepped outlines, elevated front-right orthographic camera, warm upper-left light, weathered oak, muted moss-green slate roofs and amber lanterns. A compact quarry worksite: low gray GRANITE rock cutting face forming the rear foundation, small timber shelter with mossy roof and stone chimney, wooden pulley crane, a short track with a cart full of pale gray stone blocks, pickaxes and neatly stacked cut stones. A modest rough stone retaining wall and compact rocky footing. Stone production must be unmistakable even at160x120px: large gray blocks, pickaxe rack, quarry cart. This is STONE not a metal mine: no gold, gems, glowing ore, lava or magic. One connected small worksite centered, broad near-square silhouette with generous clear margin. Genuine transparent PNG alpha outside a crisp hard contour and compact footing. No surrounding landscape, sky or large mountain backdrop, vignette, haze, glow, smoke, bloom, people, text, numerals, logos, UI, watermark or multiple panels. No smooth painterly blur. A practical charming outpost, not a fortress, giant industrial factory or castle. Original new artwork only."
+      },
+      {
+        "id": "marsh",
+        "file": "outpost-marsh-v1.png",
+        "bytes": 1978524,
+        "sha256": "09d81ae09729d3abc86bde095498721273268e1129d90c9df5a67026f688d7f3",
+        "width": 1447,
+        "height": 1087,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "opaqueBounds": [
+          14,
+          63,
+          1433,
+          1033
+        ],
+        "pngCRCVerified": true,
+        "method": "Original built-in image_gen generation; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art outpost sprite for LOOPKEEPER: MARSH HERB GARDEN. Match fine crisp clustered pixels, dark stepped outlines, elevated front-right orthographic camera, warm upper-left light, weathered oak, muted moss-green/gray slate roofs and amber lanterns of a cozy medieval woodland village. A compact gardener's worksite: small oak potting hut with mossy slate gable roof, a modest attached timber-and-glass plant shelter, three clearly visible raised wooden HERB BEDS filled with lush medicinal leafy green plants, a herb drying rack with hanging bundles and pots, water barrel and watering can. Short weathered boardwalks and stepping stones connect the beds over a few shallow dark teal marsh puddles within the compact footing. Plant beds should dominate the low foreground silhouette, distinct from a timber watchtower or stone quarry. No vegetables, fruit, flowers as crops, magic or modern industrial greenhouse. One whole connected near-square facility centered, complete object with generous clear transparent margin. Genuine transparent PNG alpha outside the crisp hard contour and compact garden footing. No surrounding marsh landscape or sky, background, vignette, colored fringe, haze, fog, glow, smoke, bloom, people, writing, numerals, UI, logos, watermark or multiple panels. No smooth painterly blur. Readable as a small160x120px outpost card. Original new artwork only."
+      }
+    ]
   }
 }

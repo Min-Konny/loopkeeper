@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.100
+# LoopKeeper 0.6.101
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -136,3 +136,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.100: 訓練場II〜Vの専用画像。Iとゲーム仕様を維持。詳細: docs/training-yard-art-0.6.100.md、docs/art-coverage-0.6.100.md。
+
+
+0.6.101: 峠の採掘拠点・湿地の薬草園の基本景観を描き分け。詳細: docs/outpost-art-0.6.101.md。
