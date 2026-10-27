@@ -1,5 +1,5 @@
-import {specialistDuration}from './specialist-content.js?v=0.6.109';
-import {getSkillProgress}from './legacy-engine.js?v=0.6.109';
+import {specialistDuration}from './specialist-content.js?v=0.6.110';
+import {getSkillProgress}from './legacy-engine.js?v=0.6.110';
 // New preparation rules start only in a newly created/confirmed life.
 export const preparationBalance=s=>s?.version===2&&[1,2].includes(s.meta.preparationBalanceVersion)&&[1,2].includes(s.run.preparationBalanceVersion);
 export function preparationCostFactor(s,d){if(!preparationBalance(s))return 1;if(d?.equipment)return ({4:1.25,5:1.6,6:2.1,7:2.6})[d.tier]||1;if(d?.facility||d?.facilityId)return ({3:1.3,4:1.6,5:2})[d.level||d.facility?.level]||1;return 1;}

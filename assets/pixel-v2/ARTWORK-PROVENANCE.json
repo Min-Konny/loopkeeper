@@ -2667,5 +2667,228 @@
         }
       }
     ]
+  },
+  "heroMithrilLayers": {
+    "scope": "Six mithril armor poses and independent two-view mithril shield for real equipped combinations; previous wood/iron/steel/silver art preserved.",
+    "records": [
+      {
+        "file": "hero-mithril-armor-v1-sheet.png",
+        "bytes": 2271662,
+        "sha256": "28b17c95cd5682706dca12c3f0071971b82e68e1cd27b2edd34d234adea05ab1",
+        "width": 1536,
+        "height": 1024,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          254
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              48,
+              34,
+              487,
+              498
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              21,
+              34,
+              512,
+              498
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              10,
+              485,
+              497
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              0,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              43,
+              18,
+              512,
+              473
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              3,
+              491,
+              475
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              51,
+              18,
+              452,
+              475
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen material edit of existing original assets; received PNG bytes preserved; runtime clipping/composition only",
+        "prompt": "Use case: precise-object-edit. Edit target: the freshly viewed original six-pose SILVER armor hero sheet. Create a MITHRIL armor sibling for the same game, preserving the exact face, brown hair, green scarf, light sleeves, trousers, boots, six weapon/hand poses, right-facing direction and 3-column by 2-row arrangement. Replace only armor with pale mint-teal mithril: lightweight overlapping leaf-shaped plates, slim pointed shoulder plates and articulated tapered waist, restrained cool ivory highlights and deep desaturated teal outlines. Distinguish its light elegant silhouette from rounded silver armor, not a color filter. No helmet, no shield, no gems, no glow, no crown, no new powers; keep all weapons unchanged. Same stepped pixel clusters, readable dark contour and warm upper-left light, no photoreal/3D/vector. Preserve complete spear/bow/staff tips and feet with transparent gutters and no adjacent overlaps. Actual alpha-transparent background around six sprites, no opaque matte. Exactly sword,spear,bow on top; crossbow,amber staff,unarmed below. No labels/grid/text/watermark. Save as a new original variant, never overwrite earlier material.",
+        "reference": {
+          "file": "hero-silver-armor-v1-sheet.png",
+          "sha256": "8a1311a481fc02980d4caef4a6f2afb066ffd6a2fd38245e5bb50f7507788d5e"
+        }
+      },
+      {
+        "file": "hero-mithril-shield-v1-sheet.png",
+        "bytes": 797019,
+        "sha256": "c89abcf06ef9c52aca30efceeddbe04db4107d8709cbc962d734b19fe6bdfc12",
+        "width": 1774,
+        "height": 887,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              887,
+              887
+            ],
+            "opaqueBounds": [
+              286,
+              43,
+              729,
+              805
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              887,
+              0,
+              887,
+              887
+            ],
+            "opaqueBounds": [
+              349,
+              70,
+              614,
+              786
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen material edit of existing original assets; received PNG bytes preserved; runtime clipping/composition only",
+        "prompt": "Use case: precise-object-edit. Edit target: most recently viewed two-view silver shield sheet. Supporting palette reference: the preceding generated six-pose mint-teal mithril armor hero sheet, NOT an edit target. Create one new original MITHRIL shield sheet with exactly two isolated shields, front view on left and narrow three-quarter/back view on right, two columns one row. Keep scale, margin, upper-left lighting, crisp stepped pixel contours and handcrafted fantasy cluster style. Change silhouette from silver kite to an elegant lightweight tapered leaf shield, a split leaf-like center ridge, curved overlapping pale mint metal ribs, dark teal recesses and restrained ivory highlights matching mithril armor. Front/back clearly the same shield. No gems, glow, magical effects, crest lettering, gold, extra objects or figures. Preserve full shield tips and ample transparent gutter, no object overlap. Genuine alpha-transparent background, no opaque matte/grid/labels/watermarks. New sibling asset; do not overwrite silver.",
+        "reference": {
+          "file": "hero-silver-shield-v1-sheet.png",
+          "sha256": "8a84dc624324550bed46d6138d9007c7245e098d5f4aca0fc519ad81637d3cbe"
+        },
+        "additionalPaletteReference": {
+          "file": "hero-mithril-armor-v1-sheet.png",
+          "sha256": "28b17c95cd5682706dca12c3f0071971b82e68e1cd27b2edd34d234adea05ab1"
+        }
+      }
+    ]
   }
 }
