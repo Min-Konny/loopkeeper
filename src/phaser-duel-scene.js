@@ -1,7 +1,7 @@
-import{playerPose}from './hero-art.js?v=0.6.90';
-import{enemyPose}from './enemy-art.js?v=0.6.90';
-import{createPortraitFrame}from './portrait-frame.js?v=0.6.90';
-import{duelChanges,attackPose}from './duel-motion.js?v=0.6.90';
+import{playerPose}from './hero-art.js?v=0.6.91';
+import{enemyPose}from './enemy-art.js?v=0.6.91';
+import{createPortraitFrame}from './portrait-frame.js?v=0.6.91';
+import{duelChanges,attackPose}from './duel-motion.js?v=0.6.91';
 const mounted=new WeakMap();let library;const load=()=>library??=import('./vendor/phaser-3.90.0.esm.min.js').then(m=>m.default||m);
 export function mountPhaserDuel(field){
  if(!field?.closest||typeof document==='undefined'||typeof IntersectionObserver==='undefined'||typeof ResizeObserver==='undefined')return{ready:false,update(){},suspend(){}};
