@@ -1437,5 +1437,49 @@
         "verification": "Persisted, read back, SHA256 verified, PNG fully decoded/CRC checked and local image viewed before integration."
       }
     ]
+  },
+  "workhouseStagesII_III": {
+    "date": "2026-10-27",
+    "scope": "Workhouse stage art only; existing images and game/save/economy rules unchanged.",
+    "records": [
+      {
+        "file": "specialist-workhouse-stage-2-v1.png",
+        "bytes": 1715956,
+        "sha256": "ad9d73ec843faeb35ffb3c76a5ec7815a79bd889133b815253bfe557d4439198",
+        "width": 1208,
+        "height": 1302,
+        "mode": "RGBA",
+        "transparentCorners": true,
+        "alphaBounds": [
+          0,
+          23,
+          1194,
+          1302
+        ],
+        "level": 2,
+        "method": "Built-in image_gen.imagegen; one original generation per stage, original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art building sprite for LOOPKEEPER workhouse/repair-and-commission workshop stage II. The preceding ochre-roof workhouse is STYLE reference, not an edit. Match crisp fine clustered pixels, stepped dark outlines, elevated front/right three-quarter orthographic view, warm upper-left light, oak timber, gray stone, ochre-golden roof tiles with moss, amber windows and a small hanging horseshoe emblem WITHOUT text. Expanded practical village workhouse: one full gabled cottage with a clearly joined lower covered side work bay, two organized wooden repair benches, a large wagon wheel propped by the open bay, a few tools/leather straps and sturdy storage crates, modest stone chimney. Make the added side bay and doubled bench silhouette distinguish II from I at 50px wide; compact width-to-height about1.1, not a panoramic row. Maintain earthy restrained palette, no intense shine. This is a workshop for existing repair/commission tasks, NOT a metal forge, market, inn, castle or modern factory. Entire single building centered with8 percent clear margin; compact stone footing only. Genuine transparent PNG alpha outside hard building/footing shape, NO background, glow, halo, fog, vignette, smoke, people, letters, numerals, UI, watermark or comparison panels. No smooth painterly blur. Original independent game artwork.",
+        "verification": "Persisted, read back, SHA256/PNG decode/CRC/corners/local image viewed; isolated preview verified before integration."
+      },
+      {
+        "file": "specialist-workhouse-stage-3-v1.png",
+        "bytes": 1682213,
+        "sha256": "bfbd6231e0c2ab7e56721ba6a3db3ec3bfd139df9fda82729b31d5794bc63657",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "transparentCorners": true,
+        "alphaBounds": [
+          0,
+          21,
+          1240,
+          1254
+        ],
+        "level": 3,
+        "method": "Built-in image_gen.imagegen; one original generation per stage, original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art building sprite for LOOPKEEPER workhouse/repair commission workshop stage III, final upgrade. Use the preceding stage II as STYLE reference only. Same fine clustered pixels, dark stepped outlines, slight elevated front/right orthographic view, warm upper-left light, oak timber, stone, ochre-golden mossy roof tiles, amber windows and small hanging horseshoe emblem without letters. A developed practical village repair hall with a compact near-square silhouette: raised central gabled two-storey clerks loft and a second substantial gabled workshop wing of nearly equal height, broad sheltered open front with three organized repair benches, large wagon wheel, a few tools/leather straps, ledger and sturdy storage crates. The TWO high gables must clearly distinguish III from II's one high gable plus low side canopy, legible at50px wide. Compact about1:1 width/height; not a panoramic building row. Still visibly a workhouse, not an inn, market, metal forge, castle, palace or modern factory. Restrained earthy palette, no intense highlights or tiny clutter. Single whole building centered with8 percent empty margin and compact stone footing only. True transparent PNG alpha outside hard contour. No background, glow, halo, fog, vignette, smoke, people, text, numbers, UI, watermark or panels; no smooth painterly blur. Original independent game artwork.",
+        "verification": "Persisted, read back, SHA256/PNG decode/CRC/corners/local image viewed; isolated preview verified before integration."
+      }
+    ]
   }
 }
