@@ -1307,5 +1307,45 @@
     "processing": "Original PNG bytes preserved. Existing runtime alpha-bounds framing; stageIII camp footprint56x49 only.",
     "verification": "Received image persisted and read back, PNG decoded, alpha/corners inspected and local file viewed before integration.",
     "scope": "Only housingIII dedicated art; housingI/II and existing IV/V fallback maintained. No gameplay/save/economy changes."
+  },
+  "housingStageIV": {
+    "date": "2026-10-27",
+    "method": "Built-in image_gen.imagegen; one original generation per stage; no CLI/API fallback",
+    "file": "housing-stage-4-v1.png",
+    "prompt": "Create one original pixel-art building sprite, housing stage IV for LOOPKEEPER. Use the immediately preceding visible stage III house as STYLE reference only: same fine clustered pixels, dark stepped outline, warm upper-left light, dark oak timber framing, cream plaster, mossy brown shingle roofs, amber diamond-paned windows, small stone foundation. Stage IV is a clearly larger woodland communal residence, three inhabited levels with a tall central gable and a lower attached side wing, two modest stone chimneys, sheltered entrance porch. Strong readable silhouette at 60 pixels wide; architecture more developed than reference III without becoming castle, palace, church or modern building. Slight elevated front/right three-quarter orthographic viewpoint. Entire building centered with 8 percent transparent margin, compact ground-contact stone steps only. Actual transparent alpha outside building. No landscape, sky, forest, people, smoke, halo, vignette, text, numbers, UI or watermark. Consistent sharp pixel clusters and restrained earth palette; no smooth painted gradients. Single asset only.",
+    "bytes": 1667350,
+    "sha256": "1371fdf5adc04cfe74d7ecf45be1dad9a1f7a9751b964cd80b96a0e221a6c9be",
+    "width": 1312,
+    "height": 1199,
+    "mode": "RGBA",
+    "transparentCorners": true,
+    "alphaBounds": [
+      0,
+      0,
+      1296,
+      1199
+    ],
+    "verification": "Persisted original PNG, byte count and SHA256 readback, decoded and alpha corners inspected, local image viewed before integration.",
+    "scope": "Dedicated housing stage artwork only. Existing I/II/III assets, gameplay and saves retained."
+  },
+  "housingStageV": {
+    "date": "2026-10-27",
+    "method": "Built-in image_gen.imagegen; one original generation per stage; no CLI/API fallback",
+    "file": "housing-stage-5-v1.png",
+    "prompt": "Create one original pixel-art building sprite, housing stage V for LOOPKEEPER. STYLE reference is the preceding stage III and IV houses, not an edit: same crisp clustered pixels, stepped dark contours, upper-left warm light, weathered oak timber and cream plaster, brown shingle roofs with restrained moss, amber diamond-paned windows, gray stone foundation. A developed woodland communal residence at the final upgrade: broad three-storey timber hall with two clearly separated tall roof gables, a joined side dwelling and a central sheltered entrance porch, two modest stone chimneys, a tiny upper balcony. Clearly wider, more substantial and recognizably different silhouette than IV's single dominant gable; still cozy working village housing, NOT castle, palace, church, military tower or modern building. Slight elevated front/right three-quarter orthographic view, same relative pixel density as IV. Readable clear main shapes when reduced to 60px wide, restraint in tiny ornaments. Entire building centered, compact stone footing and front steps only, at least 8% clear margin every edge. Actual transparent PNG alpha outside building, no landscape, sky, forest, people, smoke, halo, fog, text, numerals, UI, watermark or panel. Hard-edged fine pixel clusters, earthy palette, no smooth painted gradients. Single asset only.",
+    "bytes": 1994849,
+    "sha256": "3cbfeb76791c2c63a3323b5d6944cea3a8b989e34ea073a08fd8a58b95ed7ef2",
+    "width": 1536,
+    "height": 1024,
+    "mode": "RGBA",
+    "transparentCorners": true,
+    "alphaBounds": [
+      0,
+      37,
+      1516,
+      1024
+    ],
+    "verification": "Persisted original PNG, byte count and SHA256 readback, decoded and alpha corners inspected, local image viewed before integration.",
+    "scope": "Dedicated housing stage artwork only. Existing I/II/III assets, gameplay and saves retained."
   }
 }

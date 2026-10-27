@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.92
+# LoopKeeper 0.6.93
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -112,3 +112,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.92: 起動待ち・失敗時の再読込案内と住宅IIIの専用画像。低速・画像遅延/失敗と操作の維持を確認。住宅IV/Vは既存共通表示。通常36波・経済・難度は維持。詳細 docs/startup-housing-0.6.92.md。
+
+
+0.6.93: 住宅IV・Vの専用画像を追加。住宅I〜IIIと建築・保存・ゲームバランスは維持。詳細: docs/housing-0.6.93.md。

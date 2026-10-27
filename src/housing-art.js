@@ -1,2 +1,2 @@
-// Dedicated II/III artwork. Unmade IV/V retain the existing base and level marks.
-export const housingArtFile=level=>({2:'housing-stage-2-v1.png',3:'housing-stage-3-v1.png'})[Math.max(1,Math.min(5,Math.floor(Number(level)||1)))]||'housing-v1.png';
+// Dedicated stage images; levels are bounded consistently with facility rendering.
+export const housingArtFile=level=>{const n=Math.max(1,Math.min(5,Math.floor(Number(level)||1)));return n===1?'housing-v1.png':`housing-stage-${n}-v1.png`;};
