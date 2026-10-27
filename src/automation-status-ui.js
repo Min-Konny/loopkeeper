@@ -1,6 +1,6 @@
-import {staffing}from './settlement.js?v=0.6.96';
-import {CONTENT as C} from './content.js?v=0.6.96';
-import {RECIPES,LEGACY_UPGRADES,getAutoCookingStatus,getProcessingStatus,canConfigureWorker} from './engine.js?v=0.6.96';
+import {staffing}from './settlement.js?v=0.6.97';
+import {CONTENT as C} from './content.js?v=0.6.97';
+import {RECIPES,LEGACY_UPGRADES,getAutoCookingStatus,getProcessingStatus,canConfigureWorker} from './engine.js?v=0.6.97';
 
 export const escapeText=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const recipes=new Map(RECIPES.map(r=>[r.id,r]));

@@ -1481,5 +1481,49 @@
         "verification": "Persisted, read back, SHA256/PNG decode/CRC/corners/local image viewed; isolated preview verified before integration."
       }
     ]
+  },
+  "archeryRangeStagesII_III": {
+    "date": "2026-10-27",
+    "scope": "Existing archery range stage artwork only, no effect/cost/game/save changes.",
+    "records": [
+      {
+        "file": "specialist-archery_range-stage-2-v1.png",
+        "bytes": 1627534,
+        "sha256": "601f94891d3b8cdeb49a423a91cc31f76504b796f52ad4ae7ca017297f546bb6",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "transparentCorners": true,
+        "alphaBounds": [
+          0,
+          20,
+          1224,
+          1254
+        ],
+        "level": 2,
+        "method": "Built-in image_gen.imagegen; one original generation per stage, saved original bytes reused without regeneration",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art facility sprite for LOOPKEEPER archery practice range stage II. The preceding green-canopy range is STYLE reference, not an edit. Match fine crisp clustered pixels, stepped dark outlines, slightly elevated front/right orthographic view, warm upper-left light, warm oak posts, iron brackets, green canvas with restrained ochre trim, small amber lanterns and simple arrow-emblem pennants without text. Expanded practical woodland bow-training pavilion: taller main peaked green canopy and a clearly joined smaller covered side bow-preparation bay, three straw bullseye targets under the rear shelter, organized bow/arrow rack and one bowyer workbench, compact raised timber platform with stone footing and stairs. The additional practice bay and layered canopy must read as a larger stage than I at50px wide. Compact near-square silhouette, not panoramic; no fortress, watchtower, stone castle, tavern, magic or modern sports equipment. Single whole facility centered,8 percent clear margin, only compact ground-contact footing, no landscape. True transparent PNG alpha outside hard silhouette. No background, haze, glow, halo, vignette, smoke, people, text, numerals, UI, watermark or panels. No smooth painterly blur. Original independent game artwork.",
+        "verification": "Persisted/readback/SHA256/PNG decode/CRC/corners/local image and isolated PC/mobile preview verified."
+      },
+      {
+        "file": "specialist-archery_range-stage-3-v1.png",
+        "bytes": 1535528,
+        "sha256": "d627bb8367ecb013ed56c4a018a991d43d123d1ae20e18819864854150c4fb76",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "transparentCorners": true,
+        "alphaBounds": [
+          0,
+          3,
+          1240,
+          1254
+        ],
+        "level": 3,
+        "method": "Built-in image_gen.imagegen; one original generation per stage, saved original bytes reused without regeneration",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art facility sprite for LOOPKEEPER archery practice range stage III final upgrade. Preceding range II is STYLE reference, not an edit. Same fine clustered pixels and stepped dark contours, elevated front/right orthographic view, warm upper-left light, oak posts/iron brackets, muted forest-green canvas with ochre-gold trim and simple bow/arrow emblems without words, amber lanterns. Developed practical training pavilion: TWO joined high peaked green canopies of similar height, four large straw bullseye targets across the sheltered rear, side bow/arrow racks and a covered bowyer preparation bench, solid raised timber platform with short steps and compact stone supports. Twin high canopy peaks must make III clearly different from II's one high canopy with low side bay at50px wide. Keep compact near-square width/height, not panoramic; legible major shapes, little clutter. Preserve the open pavilion identity, NOT a castle, watchtower, tavern, large stone house, modern range or magical structure. Single whole facility centered, at least8 percent empty transparent margin, footing only. True transparent PNG alpha outside the hard facility contour. No background, terrain, haze, glow, halo, vignette, smoke, people, letters, numbers, UI, watermark or panels; no smooth painterly blur. Original independent game artwork.",
+        "verification": "Persisted/readback/SHA256/PNG decode/CRC/corners/local image and isolated PC/mobile preview verified."
+      }
+    ]
   }
 }

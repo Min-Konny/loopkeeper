@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.96
+# LoopKeeper 0.6.97
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -124,3 +124,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.96: 仕事場II・IIIの段階別画像と独立した代替表示。ゲーム計算・保存は維持。詳細: docs/workhouse-art-0.6.96.md。
+
+
+0.6.97: 弓術場II・IIIの段階別画像と独立した代替表示。ゲーム計算・保存は維持。詳細: docs/archery-range-art-0.6.97.md。
