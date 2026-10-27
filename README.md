@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.99
+# LoopKeeper 0.6.100
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -133,3 +133,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.99: 拠点画像を現在の所有段階に合わせて遅延読込。詳細: docs/camp-art-loading-0.6.99.md。
+
+
+0.6.100: 訓練場II〜Vの専用画像。Iとゲーム仕様を維持。詳細: docs/training-yard-art-0.6.100.md、docs/art-coverage-0.6.100.md。

@@ -1569,5 +1569,139 @@
         "verification": "Persisted/readback/SHA256/PNG decode/CRC/corners/local image verified before integration."
       }
     ]
+  },
+  "trainingYardStagesII_V": {
+    "date": "2026-10-27",
+    "scope": "Existing training yard stages only; I/gameplay/save/difficulty unchanged.",
+    "records": [
+      {
+        "file": "training-yard-stage-2-v1.png",
+        "bytes": 2094179,
+        "sha256": "605358d37c905d0f68cc2b39a5f4a69270544b348353390eb5655e0cc3b436be",
+        "width": 1510,
+        "height": 1041,
+        "mode": "RGBA",
+        "transparentCorners": true,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "alphaBounds": [
+          0,
+          0,
+          1494,
+          1041
+        ],
+        "opaqueBounds": [
+          30,
+          4,
+          1484,
+          1003
+        ],
+        "pngCRCVerified": true,
+        "level": 2,
+        "method": "Built-in image_gen.imagegen; one original generation per stage; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. Create one original transparent pixel-art building sprite for LOOPKEEPER training yard stage II. Crisp fine clustered pixels, dark stepped outlines, elevated front/right orthographic camera, warm upper-left light, weathered oak beams, muted gray slate shingles, pale stone paving and moss. A practical medieval woodland village training yard with an open courtyard, three straw target dummies on wooden crosses, a round archery target and sword/spear rack. Sturdy pointed oak palisade around three sides, open wooden entry at front. A connected L-shaped covered equipment porch has two joined low roof sections at rear/right, reinforced timber corner posts with iron straps, a slightly taller corner practice pole. The expanded equipment porch should provide a distinctive connected roof silhouette while the practice courtyard remains readable. This is a modest village facility, not a fortress or castle. One compact whole facility centered, approximately1.45 width/height silhouette, generous clear transparent margin. Crisp hard contour, genuinely transparent PNG alpha outside the compact stone footing. No surrounding scene, landscape, background, ground haze, vignette, fog, glow, bloom, smoke, people, text, numerals, UI, panels, logos or watermark. No smooth painterly blur. Must remain readable as a tiny60px-wide camp building. Output one independent new stage-II asset only, not a sheet or multiple panels.",
+        "verification": "Persisted bytes/SHA256/PNG decode/CRC/local view checked; transparent corner alpha <=2/255, original bytes retained."
+      },
+      {
+        "file": "training-yard-stage-3-v1.png",
+        "bytes": 1856984,
+        "sha256": "82a15301f2e779c5f8c4888e89cb96a55eec61023487dfabc7ad0c4e8f0d8b35",
+        "width": 1492,
+        "height": 1054,
+        "mode": "RGBA",
+        "transparentCorners": true,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "alphaBounds": [
+          0,
+          37,
+          1462,
+          1054
+        ],
+        "opaqueBounds": [
+          43,
+          105,
+          1455,
+          932
+        ],
+        "pngCRCVerified": true,
+        "level": 3,
+        "method": "Built-in image_gen.imagegen; one original generation per stage; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art sprite for LOOPKEEPER training yard stage III. Match the established fine crisp clustered pixels, dark stepped outlines, elevated front/right orthographic view, upper-left warm light, weathered oak, pale stone paving, muted gray slate shingles, moss. This is a village martial training compound: open foreground practice courtyard with three straw target dummies, a round archery target and sword/spear rack, pointed timber palisade with iron straps and stone footings, open front entry. Upgrade to a central single-storey TRAINING HALL at the rear with one clearly taller gabled slate roof and a warm small window; connect its right side to a low L-shaped sheltered equipment porch. The central high gable roof plus low side wing must distinguish III from the preceding II's two low joined porch roofs at60px wide. Still compact and practical, not a castle, fortress, palace or barracks city. One whole connected facility centered; slightly broader-than-tall silhouette, about1.4 width/height, keep courtyard/dummies clearly visible. Genuine transparent PNG alpha outside crisp hard contour, generous transparent margin, compact stone footing only. No landscape, backdrop, ground haze, colored fringe, vignette, fog, glow, smoke, bloom, people, text, numerals, UI, panels, logos or watermark. No smooth painterly blur. One new stage-III asset only, not a sheet or multiple panels.",
+        "verification": "Persisted bytes/SHA256/PNG decode/CRC/local view checked; transparent corner alpha <=2/255, original bytes retained."
+      },
+      {
+        "file": "training-yard-stage-4-v1.png",
+        "bytes": 1412497,
+        "sha256": "84f8ede3e0d9444e9419d1808dc3e7d195469b87267b9eb3c7bc362cd6069e43",
+        "width": 1497,
+        "height": 1051,
+        "mode": "RGBA",
+        "transparentCorners": false,
+        "cornerAlpha": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "alphaBounds": [
+          0,
+          0,
+          1477,
+          1051
+        ],
+        "opaqueBounds": [
+          165,
+          16,
+          1337,
+          1006
+        ],
+        "pngCRCVerified": true,
+        "level": 4,
+        "method": "Built-in image_gen.imagegen; one original generation per stage; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art facility sprite: LOOPKEEPER training yard stage IV. Same fine crisp clustered pixels/dark stepped outlines/elevated front-right orthographic camera/warm upper-left light as a cozy woodland village's oak-and-slate training yard. Expanded martial school compound, practical rather than military castle. At rear, one modest tall gabled gray-slate training hall with warm amber window, connected to low sheltered timber equipment wing. Distinguishing upgrade IV: two short square pale-stone gate posts and a low tiled/slate covered timber entry arch at front, plus reinforced lower stone-and-oak courtyard wall. The gate must be SHORT so three straw target dummies, a round archery target and weapon racks remain plainly visible inside the open courtyard. Preserve weathered oak, iron bands, muted gray slate, stone paving, moss and a small faded blue cloth pennant without symbols. Gate arch plus rear hall distinguish IV from III's open timber entry; do not add tall watchtowers. One whole connected compact facility centered, roughly1.4 width/height, complete object with generous transparent margin and compact stone footing. Genuine transparent PNG alpha outside a crisp hard contour. No surrounding terrain/landscape, background, colored fringe, vignette, haze, fog, glow, smoke, bloom, people, writing, numerals, UI, logos, watermark or sheet panels. No smooth painterly blur. Readable as one tiny64px camp facility; do not make a castle, palace or giant fort. One new stage-IV asset only.",
+        "verification": "Persisted bytes/SHA256/PNG decode/CRC/local view checked; transparent corner alpha <=2/255, original bytes retained."
+      },
+      {
+        "file": "training-yard-stage-5-v1.png",
+        "bytes": 2254970,
+        "sha256": "091097d1375f3df216d97745ff17ed567b38aebd8350ac3d7ffe2e19fabfefe1",
+        "width": 1455,
+        "height": 1081,
+        "mode": "RGBA",
+        "transparentCorners": true,
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "alphaBounds": [
+          0,
+          0,
+          1455,
+          1067
+        ],
+        "opaqueBounds": [
+          7,
+          6,
+          1448,
+          1064
+        ],
+        "pngCRCVerified": true,
+        "level": 5,
+        "method": "Built-in image_gen.imagegen; one original generation per stage; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art facility sprite: LOOPKEEPER training yard stage V, final developed village martial school. Consistent fine crisp clustered pixels, dark stepped outlines, elevated front-right orthographic camera, warm upper-left light, weathered oak beams, pale gray stone, muted gray slate shingles, moss and warm amber windows. A compact open foreground practice courtyard with three straw target dummies, round archery target, organized sword/spear racks and training pole; low stone-and-oak perimeter and a short covered slate-roof entry gate. Distinctive final upgrade: a modest TWO-STOREY oak-and-pale-stone main training hall at rear with a broad high gabled slate roof and a short covered wooden BALCONY facing the courtyard; connect one low sheltered equipment wing beside it. Twin small blue cloth pennants without text flank the balcony. The two-storey hall and balcony silhouette must distinguish V from IV's single-storey hall and stone gate at66px wide. Keep the courtyard visible and practical. A cozy well-established woodland village school, NOT a castle, palace, cathedral, fortress or watchtower complex. One whole connected compact facility centered, about1.35 width/height silhouette, complete object with generous transparent margin and compact stone footing. Genuine transparent PNG alpha outside the crisp hard contour. No surrounding landscape or background, colored fringe, haze, vignette, fog, glow, smoke, bloom, people, writing, numerals, UI, logos, watermark or sheet panels. No smooth painterly blur. One new stage-V asset only.",
+        "verification": "Persisted bytes/SHA256/PNG decode/CRC/local view checked; transparent corner alpha <=2/255, original bytes retained."
+      }
+    ]
   }
 }
