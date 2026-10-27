@@ -1525,5 +1525,49 @@
         "verification": "Persisted/readback/SHA256/PNG decode/CRC/corners/local image and isolated PC/mobile preview verified."
       }
     ]
+  },
+  "arcaneStudyStagesII_III": {
+    "date": "2026-10-27",
+    "scope": "Existing arcane study stage art only; all gameplay/save/difficulty rules unchanged.",
+    "records": [
+      {
+        "file": "specialist-arcane_study-stage-2-v1.png",
+        "bytes": 1765857,
+        "sha256": "ff78d630b8234d045e4c174f4ecb723b890f137fcd58712e38f42041003a61de",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "transparentCorners": true,
+        "alphaBounds": [
+          0,
+          10,
+          1242,
+          1254
+        ],
+        "level": 2,
+        "method": "Built-in image_gen.imagegen; one original generation per stage, original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art facility sprite for LOOPKEEPER arcane study stage II. The preceding existing blue-roof stone study is STYLE reference, not an edit. Match fine crisp clustered pixels, dark stepped outlines, elevated front/right orthographic view, warm upper-left light, pale gray stone with oak beams and ivy, muted deep-blue slate roofs with small brass finials, warm amber windows, blue/gold moon-star banner, a brass armillary sphere and open book bench. An expanded woodland scholar workshop: retain one round blue-conical-roof tower but add a clearly joined two-storey rectangular book/lecture wing with its own blue gabled roof, modest sheltered entry and one balcony holding the armillary. Main tower plus added two-storey wing must be distinct from stageI's low lean-to, readable at50px wide. Compact near-square silhouette, practical cozy study, not a fortress, cathedral, palace or huge wizard castle. One small blue crystal may stand on the bench, light confined to its surface; no floating magic or external effects. Whole single building centered,8 percent clear transparent margin, compact stone footing only. True transparent PNG alpha outside hard building contour. No background, halo, fog, haze, glow, vignette, smoke, people, text, numerals, UI, watermark or panels; no smooth painterly blur. Original independent game artwork.",
+        "verification": "Persisted/readback/SHA256/PNG decode/CRC/corners/local image verified before integration."
+      },
+      {
+        "file": "specialist-arcane_study-stage-3-v1.png",
+        "bytes": 1406168,
+        "sha256": "46093455308b3d64e1bdec76a405f972226df2eb9984e3421ae2a052b28b79c2",
+        "width": 1191,
+        "height": 1321,
+        "mode": "RGBA",
+        "transparentCorners": true,
+        "alphaBounds": [
+          0,
+          9,
+          1179,
+          1321
+        ],
+        "level": 3,
+        "method": "Built-in image_gen.imagegen; one original generation per stage, original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art facility sprite for LOOPKEEPER arcane study stage III final upgrade. Preceding study II is STYLE reference, not an edit. Same crisp fine clustered pixels, dark stepped outlines, elevated front/right orthographic view, warm upper-left light; pale gray stone/oak beams/ivy, muted deep-blue slate roofs with small brass finials, amber windows, blue/gold moon-star banner, modest brass armillary sphere and open book desk. Developed woodland scholars' study with TWO slender joined round towers carrying distinct high blue conical roofs, main tower slightly taller, narrow secondary tower set diagonally behind the connected compact two-storey book wing. Small armillary balcony and sheltered book desk with a tiny blue crystal; no external magical effects. Twin tall cone silhouette must clearly distinguish III from II's single tower and rectangular gabled wing at50px wide. Compact slightly taller-than-wide silhouette, about0.9 width/height, not a wide castle complex. Cozy practical village study, not palace, cathedral, fortress, giant wizard castle or modern laboratory. Whole single building centered with8 percent clear transparent margin; compact stone footing only. Genuine PNG alpha outside hard building contour. No background, haze, fog, glow, halo, vignette, smoke, people, text, numerals, UI, watermark or panels; no smooth painterly blur. Original independent game artwork.",
+        "verification": "Persisted/readback/SHA256/PNG decode/CRC/corners/local image verified before integration."
+      }
+    ]
   }
 }

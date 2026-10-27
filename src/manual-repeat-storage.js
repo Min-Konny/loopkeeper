@@ -1,5 +1,5 @@
-import {startManualRepeat,stopAction}from './mvp-engine.js?v=0.6.97';
-import {commitStoredGameEdit}from './save-storage.js?v=0.6.97';
+import {startManualRepeat,stopAction}from './mvp-engine.js?v=0.6.98';
+import {commitStoredGameEdit}from './save-storage.js?v=0.6.98';
 export function editStoredManualRepeat(storage,current,{stop=false,isOwner=()=>false,now=Date.now()}={}){
  if(!isOwner())return {ok:false,reason:'別のタブでプレイ中です。'};
  const next=structuredClone(current),result=stop?stopAction(next):startManualRepeat(next);if(!result.ok)return result;

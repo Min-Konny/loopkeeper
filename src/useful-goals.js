@@ -1,4 +1,4 @@
-import{getCatalog,getRecipeCost,getSkillProgress,isKnown,canStartAction}from'./engine.js?v=0.6.97';
+import{getCatalog,getRecipeCost,getSkillProgress,isKnown,canStartAction}from'./engine.js?v=0.6.98';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function usefulGoals(s){
  if(s.version!==2||s.run.status!=='preparing')return[];

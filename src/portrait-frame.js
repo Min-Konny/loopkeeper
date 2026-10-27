@@ -1,5 +1,5 @@
-import{alphaBounds}from './generated-camp-art.js?v=0.6.97';
-import{spritePlacement}from './enemy-art.js?v=0.6.97';
+import{alphaBounds}from './generated-camp-art.js?v=0.6.98';
+import{spritePlacement}from './enemy-art.js?v=0.6.98';
 // The animated scene and motion-free portrait use exactly the same visible bounds.
 export function createPortraitFrame(image){
  const b=alphaBounds(image,0,0,image.naturalWidth||image.width,image.naturalHeight||image.height);if(b.width<=0||b.height<=0)throw Error('Empty portrait');

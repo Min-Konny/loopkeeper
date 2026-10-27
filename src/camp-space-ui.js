@@ -1,6 +1,6 @@
-import {getCatalog}from './engine.js?v=0.6.97';
+import {getCatalog}from './engine.js?v=0.6.98';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export {BAG_CATEGORIES,inventoryMarkup}from './inventory-ui.js?v=0.6.97';
+export {BAG_CATEGORIES,inventoryMarkup}from './inventory-ui.js?v=0.6.98';
 export function compactResourceIds(state){return ['food','herb_soup','gold'].filter(id=>Object.hasOwn(state.run.resources,id));}
 export function queueStopStatus(s,issue,{manualReason=''}={}){
  if(s.run.status!=='preparing'||!s.settings.paused||!s.run.queue.length)return null;
