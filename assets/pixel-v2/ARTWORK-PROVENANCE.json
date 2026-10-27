@@ -1293,5 +1293,19 @@
     "processing": "Original PNG bytes preserved. Runtime alpha-bounds framing in camp and modest card scaling only.",
     "selection": "Saved PNG decoded and visually compared with original housing I in isolated Chrome; consistent timber/moss/window palette and viewpoint.",
     "scope": "Housing II only. Original housing I and existing III–V images retained. No gameplay/save changes."
+  },
+  "housingStageIII": {
+    "date": "2026-10-27",
+    "method": "Built-in image_gen.imagegen; one original generation, no CLI/API fallback",
+    "file": "housing-stage-3-v1.png",
+    "prompt": "Use case: stylized-concept. Asset type: one original high-quality pixel-art building sprite for LOOPKEEPER housing stage III. A developed woodland timber-and-cream-plaster family residence: two complete usable storeys, a broad main gabled shingle roof and a clearly joined taller two-storey side wing, small sheltered front porch, a modest extra gable, one stone chimney to the upper right. The III silhouette must be visibly taller and more substantial than a two-storey cottage with a single low annex, while remaining a cozy working village home, never a castle, grand mansion or modern building. Match existing settlement artwork: weathered dark oak framing, warm cream plaster, low slate-stone foundation, earthy umber/brown shingle roofs with restrained muted green moss and ivy, warm amber diamond-paned windows, small restrained flowerboxes. Crisp clustered pixel art, stepped dark outlines, coherent fine pixel density, clear major shapes when reduced to 60px wide. Slight elevated front-and-right three-quarter orthographic view, consistent warm upper-left lighting. Single centered complete building with compact stone steps/ground-contact footing only. Genuine transparent PNG alpha outside the hard building/footing contour, at least 8% clear margin on every side. NO background, glow, halo, fog, gradient or vignette; light is confined to windows and building surfaces. No forest, landscape, sky, people, smoke, text, numerals, UI, watermark, grid or comparison panels. Avoid blur, anti-aliased smooth painterly rendering, photoreal texture, excessive ornaments or mismatched perspectives. This is original independent game artwork.",
+    "sha256": "d2574c1ae37176b8f03af5068af92e0ceb4742c6066d0f9fc778597590dbfafe",
+    "bytes": 2037476,
+    "width": 1312,
+    "height": 1199,
+    "transparent": true,
+    "processing": "Original PNG bytes preserved. Existing runtime alpha-bounds framing; stageIII camp footprint56x49 only.",
+    "verification": "Received image persisted and read back, PNG decoded, alpha/corners inspected and local file viewed before integration.",
+    "scope": "Only housingIII dedicated art; housingI/II and existing IV/V fallback maintained. No gameplay/save/economy changes."
   }
 }
