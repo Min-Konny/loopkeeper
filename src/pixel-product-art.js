@@ -1,7 +1,8 @@
-import {SPECIALISTS}from './specialist-content.js?v=0.6.84';
-import {facilityFrame} from './facility-art.js?v=0.6.84';
-import {equipmentMaterial} from './visual-design.js?v=0.6.84';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.84';
+import{housingArtFile}from './housing-art.js?v=0.6.85';
+import {SPECIALISTS}from './specialist-content.js?v=0.6.85';
+import {facilityFrame} from './facility-art.js?v=0.6.85';
+import {equipmentMaterial} from './visual-design.js?v=0.6.85';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.85';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map(),failedFacilitySheets=new Set();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
@@ -12,7 +13,7 @@ function facilityArt(id,level){
  const [x,y]=PIXEL_FACILITIES[id];
  return wrap(parts.join(''),id==='workshop'?'282 72 132 132':`${x-43} ${y-76} 86 90`);
 }
-const housingFile='./assets/pixel-v2/housing-v1.png',housingFallbacks=new Map();
+const housingFallbacks=new Map();
 function housingFallbackSvg(level){
   let a=r(5,55,54,4,'#40594d')+r(12,29,40,25,'#b7a27b')+r(12,30,3,24,'#655345')+r(49,30,3,24,'#655345');
   for(let y=0;y<6;y++)a+=r(7+y*3,26-y*3,50-y*6,3,y%2?'#795d48':'#96734e');
@@ -24,7 +25,7 @@ export function housingFallbackSource(level=1){const n=Math.max(1,Math.min(5,Mat
 export function pixelProductSource(recipe){
  const id=recipe.id||'',facility=recipe.facility?.id||recipe.facilityId||recipe.endlessFacility,level=recipe.facility?.level||recipe.level||(recipe.endlessFacility?5:1);
  const specialist=SPECIALISTS.find(f=>f.id===facility);if(specialist)return './assets/pixel-v2/'+specialist.image;
- if(facility==='housing')return failedFacilitySheets.has(housingFile)?housingFallbackSource(level):housingFile;
+ if(facility==='housing'){const file='./assets/pixel-v2/'+housingArtFile(level);return failedFacilitySheets.has(file)?housingFallbackSource(level):file;}
  const key=[id,facility,level,recipe.slot||recipe.equipment?.slot,recipe.kind].join(':');
  if(cache.has(key))return cache.get(key);
  let svg;
@@ -72,5 +73,5 @@ export function pixelProductSource(recipe){
  }
  const result=url(svg);if(cache.size>=192)cache.delete(cache.keys().next().value);cache.set(key,result);return result;
 }
-export function pixelFacilityProduct(recipe){const id=recipe.facility?.id||recipe.facilityId||recipe.endlessFacility,level=recipe.facility?.level||recipe.level||(recipe.endlessFacility?5:1),f=facilityFrame(id,level);if(!f||failedFacilitySheets.has(f.src)){const src=pixelProductSource(recipe),tag=id==='housing'?' data-facility-level="'+level+'" '+(src.startsWith('data:')?'data-housing-fallback':'data-housing-art'):'';return '<div class="facility-product" aria-hidden="true"><img'+tag+' src="'+src+'" width="128" height="128" alt=""></div>';} const b=f.frame,z=.9/Math.max(b.width,b.height),clip=[b.y/f.sheet.height*100,(f.sheet.width-b.x-b.width)/f.sheet.width*100,(f.sheet.height-b.y-b.height)/f.sheet.height*100,b.x/f.sheet.width*100].map(v=>v+'%').join(' ');return '<div class="facility-product" aria-hidden="true"><span class="facility-atlas-frame"><img data-facility-sheet data-facility-id="'+id+'" data-facility-level="'+level+'" src="'+f.src+'" style="width:'+(f.sheet.width*z*100)+'%;height:'+(f.sheet.height*z*100)+'%;left:'+((.5-b.width*z/2-b.x*z)*100)+'%;top:'+((.95-b.height*z-b.y*z)*100)+'%;clip-path:inset('+clip+')" alt="" decoding="async"></span></div>';}
-if(typeof document!=='undefined')document.addEventListener('error',event=>{const img=event.target;if(img?.hasAttribute?.('data-housing-art')){failedFacilitySheets.add(img.getAttribute('src'));img.removeAttribute('data-housing-art');img.setAttribute('data-housing-fallback','');img.src=housingFallbackSource(Number(img.dataset.facilityLevel));return;}if(!img?.hasAttribute?.('data-facility-sheet'))return;failedFacilitySheets.add(img.getAttribute('src'));img.removeAttribute('data-facility-sheet');img.setAttribute('data-facility-fallback','');img.src=pixelProductSource({id:img.dataset.facilityId,facilityId:img.dataset.facilityId,level:Number(img.dataset.facilityLevel)});},true);
+export function pixelFacilityProduct(recipe){const id=recipe.facility?.id||recipe.facilityId||recipe.endlessFacility,level=recipe.facility?.level||recipe.level||(recipe.endlessFacility?5:1),f=facilityFrame(id,level);if(!f||failedFacilitySheets.has(f.src)){const src=pixelProductSource(recipe),tag=id==='housing'?' data-facility-level="'+level+'" '+(src.startsWith('data:')?'data-housing-fallback':'data-housing-art'+(level===2?' style="transform:scale(1.18);transform-origin:50% 70%"':'')):'';return '<div class="facility-product" aria-hidden="true"><img'+tag+' src="'+src+'" width="128" height="128" alt=""></div>';} const b=f.frame,z=.9/Math.max(b.width,b.height),clip=[b.y/f.sheet.height*100,(f.sheet.width-b.x-b.width)/f.sheet.width*100,(f.sheet.height-b.y-b.height)/f.sheet.height*100,b.x/f.sheet.width*100].map(v=>v+'%').join(' ');return '<div class="facility-product" aria-hidden="true"><span class="facility-atlas-frame"><img data-facility-sheet data-facility-id="'+id+'" data-facility-level="'+level+'" src="'+f.src+'" style="width:'+(f.sheet.width*z*100)+'%;height:'+(f.sheet.height*z*100)+'%;left:'+((.5-b.width*z/2-b.x*z)*100)+'%;top:'+((.95-b.height*z-b.y*z)*100)+'%;clip-path:inset('+clip+')" alt="" decoding="async"></span></div>';}
+if(typeof document!=='undefined')document.addEventListener('error',event=>{const img=event.target;if(img?.hasAttribute?.('data-housing-art')){failedFacilitySheets.add(img.getAttribute('src'));img.removeAttribute('data-housing-art');img.removeAttribute('style');img.setAttribute('data-housing-fallback','');img.src=housingFallbackSource(Number(img.dataset.facilityLevel));return;}if(!img?.hasAttribute?.('data-facility-sheet'))return;failedFacilitySheets.add(img.getAttribute('src'));img.removeAttribute('data-facility-sheet');img.setAttribute('data-facility-fallback','');img.src=pixelProductSource({id:img.dataset.facilityId,facilityId:img.dataset.facilityId,level:Number(img.dataset.facilityLevel)});},true);

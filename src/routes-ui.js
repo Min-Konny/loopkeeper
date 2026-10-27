@@ -1,13 +1,13 @@
-import {hasUpgrade}from './free-features.js?v=0.6.84';
-import {OUTPOSTS,outpostId,outpostRecipe,expeditionId}from './settlement-content.js?v=0.6.84';
-import {allocationControls}from './settlement-ui.js?v=0.6.84';
-import {outpostRate,staffing}from './settlement.js?v=0.6.84';
-import {RECIPES,getRecipeCost,getActionDuration,canStartAction}from './mvp-engine.js?v=0.6.84';
-import {getClockStatus} from './engine.js?v=0.6.84';
-import {preparationRoute} from './preparation-balance.js?v=0.6.84';
-import {earlyRoutePoints} from './early-loop.js?v=0.6.84';
-import {lateLoop,repeatRouteValue} from './late-loop.js?v=0.6.84';
-import {ROUTES,canEnterRoute,routeEffects,routeGoldReward} from './routes.js?v=0.6.84';
+import {hasUpgrade}from './free-features.js?v=0.6.85';
+import {OUTPOSTS,outpostId,outpostRecipe,expeditionId}from './settlement-content.js?v=0.6.85';
+import {allocationControls}from './settlement-ui.js?v=0.6.85';
+import {outpostRate,staffing}from './settlement.js?v=0.6.85';
+import {RECIPES,getRecipeCost,getActionDuration,canStartAction}from './mvp-engine.js?v=0.6.85';
+import {getClockStatus} from './engine.js?v=0.6.85';
+import {preparationRoute} from './preparation-balance.js?v=0.6.85';
+import {earlyRoutePoints} from './early-loop.js?v=0.6.85';
+import {lateLoop,repeatRouteValue} from './late-loop.js?v=0.6.85';
+import {ROUTES,canEnterRoute,routeEffects,routeGoldReward} from './routes.js?v=0.6.85';
 
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const order=['forest','lake','road','forest_depth','quarry','quarry_depth','marsh','marsh_depth','citadel','river','forge','observatory','ice'];

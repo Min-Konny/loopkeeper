@@ -1279,5 +1279,19 @@
       }
     ],
     "limits": "No third-party artwork. Existing camp/Phaser third-party notices retained; no new dependency."
+  },
+  "housingStageII": {
+    "date": "2026-10-27",
+    "method": "Built-in image_gen.imagegen, one new original image",
+    "file": "housing-stage-2-v1.png",
+    "prompt": "Use case: stylized-concept. One ORIGINAL pixel-art building sprite for LOOPKEEPER housing stage II, single complete isolated medieval woodland home. Modest expanded cozy forest cottage, visibly wider joined bedroom side wing and a small covered porch; broad main gable with smaller offset gable, a few additional upper windows, chimney. Dark weathered oak framing, warm cream plaster, stone foundations, brown mossy shingle roof, restrained green climbing plants and tiny flowerboxes, warm orange diamond-paned windows. Finely clustered high-quality pixel art with crisp stepped dark edges, coherent small pixel density, slight elevated front-and-right three-quarter orthographic view, upper-left warm sunlight. Earthy umber/ochre/oak, muted moss green, neutral slate. Match an established richly detailed woodland settlement, never a castle or mansion. Different broad roof silhouette readable at 60px wide. Compact tiny ground-contact footing only, no surrounding scene. GENUINELY TRANSPARENT PNG ALPHA background with at least 10% empty transparent margin around every edge: outside the hard building/footing contour all pixels completely transparent, NO glow, haze, colored mist, vignette, gradient, dark backdrop or backdrop shadow. No people, sky, landscape, trees, lettering, numerals, UI, watermark, border, grid or comparison panels; not an atlas. No painted smoke. No photographic texture, blur or smooth 3D rendering. Original independent game artwork only.",
+    "sha256": "f81611197663862140bfc1929b92dbf1608b10074862293a75865a5871a4dc42",
+    "bytes": 2104017,
+    "width": 1536,
+    "height": 1024,
+    "transparent": true,
+    "processing": "Original PNG bytes preserved. Runtime alpha-bounds framing in camp and modest card scaling only.",
+    "selection": "Saved PNG decoded and visually compared with original housing I in isolated Chrome; consistent timber/moss/window palette and viewpoint.",
+    "scope": "Housing II only. Original housing I and existing III–V images retained. No gameplay/save changes."
   }
 }

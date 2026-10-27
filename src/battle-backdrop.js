@@ -1,5 +1,5 @@
-import {mountPixelCamp}from './pixel-camp-scene.js?v=0.6.84';
-import {loadCampArt,paintGeneratedCamp}from './generated-camp-art.js?v=0.6.84';
+import {mountPixelCamp}from './pixel-camp-scene.js?v=0.6.85';
+import {loadCampArt,paintGeneratedCamp}from './generated-camp-art.js?v=0.6.85';
 const mounted=new WeakMap();
 // A static authored environment; confirmed duel events alone move the fighters.
 export function mountBattleBackdrop(host){

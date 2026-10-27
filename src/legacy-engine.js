@@ -1,6 +1,6 @@
-import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.84';
-import { recordReward } from './reward-events.js?v=0.6.84';
-import { observesWork, completedWork } from './work-completion.js?v=0.6.84';
+import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.85';
+import { recordReward } from './reward-events.js?v=0.6.85';
+import { observesWork, completedWork } from './work-completion.js?v=0.6.85';
 // Original local simulation. All mutations stay in this module; no wall-clock or random input.
 export const FIRST_RAID_DELAY = 180;
 export const BASE_RAID_INTERVAL = 180;
@@ -1078,4 +1078,4 @@ export function parseSave(text) {
   }
 }
 
-import { validMaterialPriority } from './material-priority.js?v=0.6.84';
+import { validMaterialPriority } from './material-priority.js?v=0.6.85';
