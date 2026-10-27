@@ -2444,5 +2444,228 @@
         }
       }
     ]
+  },
+  "heroSilverLayers": {
+    "scope": "Six silver armor poses and independent two-view silver shield for real equipped combinations; previous wood/iron/steel art preserved.",
+    "records": [
+      {
+        "file": "hero-silver-armor-v1-sheet.png",
+        "bytes": 2238837,
+        "sha256": "8a1311a481fc02980d4caef4a6f2afb066ffd6a2fd38245e5bb50f7507788d5e",
+        "width": 1536,
+        "height": 1024,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          254
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              48,
+              35,
+              487,
+              497
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              21,
+              35,
+              512,
+              497
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              10,
+              485,
+              497
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              0,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              43,
+              19,
+              512,
+              473
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              5,
+              488,
+              474
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              51,
+              19,
+              452,
+              475
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen material edit of existing original assets; received PNG bytes preserved; runtime clipping/composition only",
+        "prompt": "Use case: precise-object-edit\nEdit the freshly viewed six-pose STEEL armor hero sheet into a SILVER armor variant for the same original hero. Preserve character identity,brown hair,uncovered face,green scarf,light sleeves,brown trousers/boots,the six weapon and hand poses,scale,right-facing direction,and3columns x2rows arrangement. No helmet and NO shield.\nReplace only the metal armor with distinctive mid-late SILVER armor: pale cool silver breastplate with gently rounded articulated surfaces,slimmer layered waist plates and graceful rounded shoulder guards,thin engraved geometric borderwork in slightly darker silver,subtle pale-blue shadows and restrained white highlights. Clearly more refined and lighter in silhouette than the plain broad steel plates;do not merely tint steel. No gold ornaments,gems,magic glow,new powers or royal crown. Do not change weapons or cloth into silver.\nKeep complete spear,bow,staff tips and feet,clear transparent separation/gutters and no adjacent figure overlap. Same polished handcrafted fantasy pixel clusters and stepped outline with warm upper-left light,not3D/photo/vector. Actual alpha transparency around each sprite;hidden matte RGB may remainonlywherealpha0. No labels,letters,grid,borders,watermark or logo. Exactly sixfigures: sword,spear,bow / crossbow,amberstaff,unarmed. Non-destructive new variant;do not overwrite any previous image.",
+        "reference": {
+          "file": "hero-steel-armor-v1-sheet.png",
+          "sha256": "1c08c34f79a5acb424cabb7013ef4aa07f8ee8c2444064afed43fe5b18d75e8c"
+        }
+      },
+      {
+        "file": "hero-silver-shield-v1-sheet.png",
+        "bytes": 688104,
+        "sha256": "8a84dc624324550bed46d6138d9007c7245e098d5f4aca0fc519ad81637d3cbe",
+        "width": 1774,
+        "height": 887,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              887,
+              887
+            ],
+            "opaqueBounds": [
+              284,
+              97,
+              751,
+              777
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              887,
+              0,
+              887,
+              887
+            ],
+            "opaqueBounds": [
+              345,
+              97,
+              593,
+              775
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen material edit of existing original assets; received PNG bytes preserved; runtime clipping/composition only",
+        "prompt": "Use case: precise-object-edit\nInput roles: the image containing TWO steel heater shields is the EDIT TARGET;the six-pose silver-armored hero sheet is PALETTE/STYLE REFERENCE ONLY. Do not include any person or weapon in the output.\nTransform the2view shield atlas into SILVER shields. Keep exactly two isolated objects side byside,forward three-quarter view left and narrow back-carried side angle right,matching height,upper-left light,clean outline,pixel density,transparent gutters and alpha.\nGive both shields a refined elongated kite silhouette with smoothly curved shoulders and a slightly more tapered lower point,distinct from the broad angular steel heater and the oval iron shield. Pale cool silver metal,gentle pale-blue shadows,subtle white edge highlights,a thin engraved geometric border and one modest tonal raised lozenge/ridge in the center. No golden boss,painted crest,gems,magic glow or added powers. The narrow view must depict the SAME silver shield and remain clean for partly obscured back layering.\nActual full transparency outside the shields,complete edges with generous clear padding,neither object touching any canvas edge. Do not include hands,arms,body,weapons,extra objects,text,labels,grid,borders,logo or watermark. Original handcrafted fantasy pixel clusters,not photoreal3D or smooth vector. New non-destructive material variant;keep previous steel asset unchanged.",
+        "reference": {
+          "file": "hero-steel-shield-v1-sheet.png",
+          "sha256": "23e97b9efee2d1e65c91d8ada87353be00e438d7d331e81e82a106a37f91538e"
+        },
+        "additionalPaletteReference": {
+          "file": "hero-silver-armor-v1-sheet.png",
+          "sha256": "8a1311a481fc02980d4caef4a6f2afb066ffd6a2fd38245e5bb50f7507788d5e"
+        }
+      }
+    ]
   }
 }

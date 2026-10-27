@@ -1,2 +1,2 @@
-import{tradeWithMerchant}from './engine.js?v=0.6.108';import{commitStoredGameEdit}from './save-storage.js?v=0.6.108';
+import{tradeWithMerchant}from './engine.js?v=0.6.109';import{commitStoredGameEdit}from './save-storage.js?v=0.6.109';
 export function editStoredMerchant(storage,current,{id,side,count,visit},{isOwner=()=>false,now=Date.now()}={}){if(!isOwner())return{ok:false,reason:'別のタブでプレイ中です。'};if(current.run.merchant?.visit!==visit)return{ok:false,reason:'行商人の商品が更新されています。'};const next=structuredClone(current),r=tradeWithMerchant(next,id,side,count);if(!r.ok)return r;if(!isOwner())return{ok:false,reason:'操作権が移ったため中止しました。'};try{return{...r,state:commitStoredGameEdit(storage,current,next,{now})};}catch{return{ok:false,reason:'保存できなかったため取引を中止しました。'};}}
