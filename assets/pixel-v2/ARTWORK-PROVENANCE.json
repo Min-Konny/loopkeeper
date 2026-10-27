@@ -1914,6 +1914,54 @@
         "pngCRCVerified": true,
         "method": "Original built-in image_gen generation; original PNG bytes preserved",
         "prompt": "Use case: stylized-concept\nAsset type: one original transparent pixel-art regional outpost sprite, LOOPKEEPER management card displayed160x120.\nPrimary request: an advanced remote wetland medicinal herb garden, clearly different from a simple small marsh plot. A compact timber herb nursery lodge on short stilts with a low mossy slate roof and amber window, small attached sloped glass propagation lean-to, orderly raised beds of broad green medicinal leaves and tiny muted violet flowers, drying racks with herb bundles, woven gathering baskets, short plank boardwalk and a shallow dark teal water channel around the ground footprint. No potion laboratory, giant greenhouse, people or magic. The herb beds must remain readable at tiny display size.\nStyle: polished handcrafted fantasy pixel art, crisp stepped contour and intentional pixel clusters, gentle elevated three-quarter view showing front and right sides, upper-left warm sunlight. Same medieval timber/moss/gray-slate and warm amber camp style as the other new regional outposts. Muted olive and sage greens, ochre timber, small desaturated violet accents and restrained teal water. Rich selective details rather than noisy texture.\nFraming: compact single connected ground footprint, entire artwork centered in landscape4:3, at least7percent clear transparent padding around every side, no part touches canvas edge. Actual transparent background outside the footprint, no sky, rectangular ground patch or opaque shadow. No text, letters, UI, border, watermark, logo, photorealism, smooth vector or 3D-render look. Original game asset, not based on an existing franchise."
+      },
+      {
+        "id": "observatory",
+        "file": "outpost-observatory-v1.png",
+        "bytes": 1824973,
+        "sha256": "d227adcc99e31036c34808c42adcde657beb0ffbc1ec2db5ce80f95a508e90f7",
+        "width": 1448,
+        "height": 1086,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "opaqueBounds": [
+          49,
+          68,
+          1400,
+          1019
+        ],
+        "pngCRCVerified": true,
+        "method": "Original built-in image_gen generation; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept\nAsset type: original transparent pixel-art regional outpost sprite for LOOPKEEPER, landscape4:3, card160x120.\nPrimary request: a mountain gemstone mining outpost known as the stargazing gemstone dig. A compact gray rocky spur with a small timber-braced mining entrance, a mossy slate-roof sorting lodge, low wooden ore-washing/sorting bench, tiny restrained pale-blue clear crystal/diamond pieces in trays, pickaxe and stone baskets. A small brass telescope on a simple elevated wooden lookout platform identifies the stargazing aspect without becoming a wizard tower. Modest warm window and hanging lantern. No characters. Clear different silhouette from a large iron-ore mine and from an alchemy workshop.\nStyle: richly polished handcrafted fantasy pixel art, crisp stepped contours and intentional pixel clusters. Match medieval timber/moss/slate camp and regional outposts, warm upper-left sunlight, gentle elevated three-quarter view of front and right walls. Slate gray rock, ochre timber, olive moss, amber lantern and small pale-cyan gemstone accents. Selective rich details, readable at tiny size. Gemstones are natural mineral material, not glowing magic.\nFraming: complete compact connected footprint centered, generous transparent margin on all sides including telescope tip, nothing touching the edge. Actual alpha transparency outside footprint, no sky, rectangular scene or opaque backdrop. No text, UI, letters, logos, watermark, people, large castle, giant crystal fantasy tower, photorealism, vector or smooth3D render. Original asset not imitating a named game."
+      },
+      {
+        "id": "ice",
+        "file": "outpost-ice-v1.png",
+        "bytes": 2204841,
+        "sha256": "d45760859eb9d8a1bd195b9204a8946f97f0e09c0840436f2c0f6f2c82d56d4d",
+        "width": 1448,
+        "height": 1086,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "opaqueBounds": [
+          64,
+          28,
+          1389,
+          1053
+        ],
+        "pngCRCVerified": true,
+        "method": "Original built-in image_gen generation; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept\nAsset type: one original transparent pixel-art regional outpost sprite for LOOPKEEPER, landscape4:3, management card160x120.\nPrimary request: the ice-crown mountain mine, a compact cold-region orichalcum-ore mining station. A low rugged gray-blue rocky outcrop with a dark timber-reinforced adit, a small insulated timber lodge with frost-dusted slate roof and amber lit window, narrow icicles under the eaves, a loaded hauling sledge, pickaxes and a few ore baskets with small warm muted metallic mineral veins. Snow patches and ice seams frame the footprint; restrained warmth from one lantern distinguishes usable shelter from frozen terrain. No people. It must read as an operating mine in a harsh cold climate, not an ice palace or monster lair.\nStyle: polished handcrafted fantasy pixel art, crisp stepped silhouette and selected pixel clusters, matched to the existing warm timber/moss/slate medieval camp and mining outposts. Gentle elevated three-quarter view showing front and right walls, upper-left sunlight, ochre wood and amber lamps balanced with muted desaturated blue-gray rock and snow. Rich carefully selected detail, strong mine opening and sled silhouette at tiny size.\nComposition: complete connected compact footprint with generous transparent padding on all sides. Nothing touches or crosses the canvas edge. No sky, rectangular snowy background or opaque backdrop; actual transparent alpha outside the footprint. No words, UI, letters, logo, watermark, giant mountain panorama, glowing crystal tower, magic aura, photorealism, smooth vector or3D-render look. Original asset, not a franchise imitation."
       }
     ]
   }

@@ -1,5 +1,5 @@
-import {specialistAug}from './specialist-content.js?v=0.6.105';
-import {MEALS,mealById}from './meal-content.js?v=0.6.105';
+import {specialistAug}from './specialist-content.js?v=0.6.106';
+import {MEALS,mealById}from './meal-content.js?v=0.6.106';
 export function initializeMeals(s){if(s.version!==2)return;s.run.resources.herb_soup??=0;s.run.potionsUsed??=0;if(s.settings.mealPreference==='food')s.settings.mealPreference='herb_soup';if(s.settings.autoCookRecipe==='cook_meal')s.settings.autoCookRecipe='rations';for(const m of MEALS)s.run.resources[m.id]??=0;s.run.mealVersion??=1;s.run.mealEffect??=null;s.settings.mealPreference??='none';s.settings.recoveryMeal??='herb_soup';if(s.settings.mealPreference==='herb_soup')s.settings.mealPreference='none';s.settings.autoCookRecipe??='auto';}
 export const totalFood=s=>(s.run.resources.food||0)+MEALS.reduce((n,m)=>n+(s.run.resources[m.id]||0),0);
 export function mealEffects(s){const active=s.run.mealEffect;const m=active?.remaining>0?mealById(active.id):null;if(!m)return {};return specialistAug(s,'camp_cuisine')?{...m,label:m.attack?'本人の通常攻撃 +15%':'通常攻撃速度 +20%',...(m.attack?{attack:m.attack+.05}:{}),...(m.haste?{haste:m.haste+.05}:{})}:m;}

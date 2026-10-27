@@ -1,4 +1,4 @@
-import{readUiPreference,saveUiPreference}from './craft-categories.js?v=0.6.105';
+import{readUiPreference,saveUiPreference}from './craft-categories.js?v=0.6.106';
 export const NAV_SHORT={gather:'採集',craft:'工房',village:'施設',diplomacy:'外交',trade:'交易',legacy:'継承',workers:'人員'};
 export function speedControls(speed){return '<div class="speed-options" role="group" aria-label="ゲーム速度">'+[1,2,5].map(n=>'<button type="button" data-game-speed-choice="'+n+'" data-focus="speed-'+n+'" aria-pressed="'+((speed||1)===n)+'" aria-label="'+n+'倍速" title="生産・訓練・戦闘を'+n+'倍で進める">'+n+'<small>倍</small></button>').join('')+'</div>';}
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
