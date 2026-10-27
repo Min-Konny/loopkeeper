@@ -1347,5 +1347,51 @@
     ],
     "verification": "Persisted original PNG, byte count and SHA256 readback, decoded and alpha corners inspected, local image viewed before integration.",
     "scope": "Dedicated housing stage artwork only. Existing I/II/III assets, gameplay and saves retained."
-  }
+  },
+  "kitchenStagesII_III": [
+    {
+      "facility": "kitchen",
+      "name": "炊事場",
+      "level": 2,
+      "bytes": 1804182,
+      "sha256": "dc966908fae3d7906e4b8c5a74f881db062887594a91faf2878c38ab044ccd88",
+      "width": 1312,
+      "height": 1199,
+      "mode": "RGBA",
+      "transparentCorners": true,
+      "alphaBounds": [
+        0,
+        22,
+        1296,
+        1199
+      ],
+      "prompt": "Use case: stylized-concept. Asset: one original transparent pixel-art building for LOOPKEEPER's existing cooking kitchen level II. Match the preceding reference kitchen's fine crisp clustered pixels and slight elevated front/right orthographic view, warm upper-left light, dark oak timber framing, cream plaster, earthy terracotta tile roof with modest moss/ivy, warm amber windows and copper pots. It is an expanded woodland village kitchen: retain the recognizable original gabled kitchen and open front cooking alcove, add a clearly attached lower side preparation wing with a second compact stone oven, a broad sheltered wooden counter and two modest chimneys. The larger connected silhouette must be identifiable at 50px wide, without excessive clutter. Not an inn, palace, castle, modern restaurant or factory. Single complete centered building, compact stone footing only, 8 percent empty margin. True transparent PNG outside the hard building/footing silhouette; NO background, glow, halo, fog, vignette, people, smoke, text, numerals, watermark, UI or comparison panels. No smooth painterly blur. Original independent artwork, not copied from any franchise.",
+      "method": "One built-in image_gen.imagegen request per stage. Original PNG bytes preserved; no CLI/API fallback or source-pixel modification.",
+      "styleReference": "Existing specialist-kitchen-v1.png and preceding stage candidate, visually inspected.",
+      "file": "specialist-kitchen-stage-2-v1.png",
+      "status": "Integrated separate stage artwork; original I unchanged. Camp and cards use same stage selector."
+    },
+    {
+      "facility": "kitchen",
+      "name": "炊事場",
+      "level": 3,
+      "bytes": 2252196,
+      "sha256": "f5d4b9ddfdd01f3e30a55ec5a9bbe5ce8dce933ac11b6582596c513f6e8f6057",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "transparentCorners": true,
+      "alphaBounds": [
+        0,
+        27,
+        1518,
+        1024
+      ],
+      "prompt": "Use case: stylized-concept. One original transparent pixel-art building sprite, LOOPKEEPER cooking kitchen stage III, final upgrade. STYLE reference: the preceding stage II woodland kitchen, same crisp clustered pixels, slightly elevated front/right orthographic view, warm upper-left light, dark oak framing, cream plaster, muted terracotta roof tiles with moss, amber windows, copper cooking vessels. Make a clearly larger communal cookhouse silhouette: TWO joined full gabled wings of comparable height, a broad continuous open-front cooking gallery, three distinct stone oven hearths arranged under the gallery, two sturdy chimneys, a small central timber entrance, restrained shelves and ingredient baskets. At tiny 50px display the twin high gables and long cooking gallery distinguish III from II's one high gable plus low annex. Cozy practical village kitchen, not mansion, castle, inn, church or modern industrial factory. Entire building centered with generous 8 percent transparent margin, compact stone footing only. True transparent alpha outside hard building contour; no background, fog, glow, halo, vignette, smoke, people, text, numeral, UI, watermark or panels. Earthy subdued palette, stepped outlines, no smooth painted blur, original independent artwork.",
+      "method": "One built-in image_gen.imagegen request per stage. Original PNG bytes preserved; no CLI/API fallback or source-pixel modification.",
+      "styleReference": "Existing specialist-kitchen-v1.png and preceding stage candidate, visually inspected.",
+      "file": "specialist-kitchen-stage-3-v1.png",
+      "status": "Integrated separate stage artwork; original I unchanged. Camp and cards use same stage selector."
+    }
+  ]
 }

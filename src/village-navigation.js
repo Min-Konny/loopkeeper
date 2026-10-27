@@ -1,4 +1,4 @@
-import {SPECIALISTS}from './specialist-content.js?v=0.6.93';
+import {SPECIALISTS}from './specialist-content.js?v=0.6.94';
 export const VILLAGE_CATEGORIES=[['all','すべて'],['defense','防衛'],['training','訓練'],['production','生産・加工'],['housing','住宅']];
 export function villageCategory(d){const id=d.facility?.id||d.facilityId||d.endlessFacility;if(id==='housing')return 'housing';if(['training_yard','archery_range','arcane_study'].includes(id))return 'training';return ['watchtower','barricade','guardhouse','archery_tower','infirmary','signal_post'].includes(id)?'defense':'production';}
 export function villageCategoriesMarkup(selected){return '<div class="craft-category-tabs" role="group" aria-label="施設の分類">'+VILLAGE_CATEGORIES.map(([id,name])=>`<button type="button" class="button small ${selected===id?'gold-outline':'muted'}" aria-pressed="${selected===id}" data-village-category="${id}" data-focus="village-category-${id}">${name}</button>`).join('')+'</div>';}
