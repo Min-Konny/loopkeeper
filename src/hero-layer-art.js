@@ -1,5 +1,5 @@
-import{alphaBounds}from './generated-camp-art.js?v=0.6.112';
-import{createPortraitFrame}from './portrait-frame.js?v=0.6.112';
+import{alphaBounds}from './generated-camp-art.js?v=0.6.113';
+import{createPortraitFrame}from './portrait-frame.js?v=0.6.113';
 const families=['sword','spear','bow','crossbow','magic','unarmed'];
 export const WOOD_ARMOR_REGIONS=Object.freeze([
  [[0,0],[512,0],[512,512],[0,512]],
@@ -49,8 +49,16 @@ export const ORICHALCUM_ARMOR_REGIONS=Object.freeze([
  [[544,500],[1024,500],[1024,1024],[544,1024]],
  [[1024,512],[1536,512],[1536,1024],[1024,1024]]
 ]);
-const armorStyles=Object.freeze({wooden_armor:'wood',iron_armor:'iron',steel_armor:'steel',silver_armor:'silver',mithril_armor:'mithril',diamond_armor:'crystal',orichalcum_armor:'orichalcum'}),shieldStyles=Object.freeze({wooden_shield:'wood',iron_shield:'iron',steel_shield:'steel',silver_shield:'silver',mithril_shield:'mithril',diamond_shield:'crystal',orichalcum_shield:'orichalcum'});
-const bodySheets=Object.freeze({wood:{file:'hero-wooden-armor-v1-sheet.png',regions:WOOD_ARMOR_REGIONS},steel:{file:'hero-steel-armor-v1-sheet.png',regions:STEEL_ARMOR_REGIONS},silver:{file:'hero-silver-armor-v1-sheet.png',regions:SILVER_ARMOR_REGIONS},mithril:{file:'hero-mithril-armor-v1-sheet.png',regions:MITHRIL_ARMOR_REGIONS},crystal:{file:'hero-crystal-armor-v1-sheet.png',regions:CRYSTAL_ARMOR_REGIONS},orichalcum:{file:'hero-orichalcum-armor-v1-sheet.png',regions:ORICHALCUM_ARMOR_REGIONS}});
+export const LEATHER_ARMOR_REGIONS=Object.freeze([
+ [[0,0],[512,0],[512,512],[0,512]],
+ [[512,0],[1124,0],[1124,190],[1060,190],[1060,500],[512,500]],
+ [[1124,0],[1536,0],[1536,512],[1060,512],[1060,190],[1124,190]],
+ [[0,512],[544,512],[544,1024],[0,1024]],
+ [[544,500],[1024,500],[1024,1024],[544,1024]],
+ [[1024,512],[1536,512],[1536,1024],[1024,1024]]
+]);
+const armorStyles=Object.freeze({wooden_armor:'wood',iron_armor:'iron',steel_armor:'steel',silver_armor:'silver',mithril_armor:'mithril',diamond_armor:'crystal',orichalcum_armor:'orichalcum',leather_armor:'leather'}),shieldStyles=Object.freeze({wooden_shield:'wood',iron_shield:'iron',steel_shield:'steel',silver_shield:'silver',mithril_shield:'mithril',diamond_shield:'crystal',orichalcum_shield:'orichalcum'});
+const bodySheets=Object.freeze({wood:{file:'hero-wooden-armor-v1-sheet.png',regions:WOOD_ARMOR_REGIONS},steel:{file:'hero-steel-armor-v1-sheet.png',regions:STEEL_ARMOR_REGIONS},silver:{file:'hero-silver-armor-v1-sheet.png',regions:SILVER_ARMOR_REGIONS},mithril:{file:'hero-mithril-armor-v1-sheet.png',regions:MITHRIL_ARMOR_REGIONS},crystal:{file:'hero-crystal-armor-v1-sheet.png',regions:CRYSTAL_ARMOR_REGIONS},orichalcum:{file:'hero-orichalcum-armor-v1-sheet.png',regions:ORICHALCUM_ARMOR_REGIONS},leather:{file:'hero-leather-armor-v1-sheet.png',regions:LEATHER_ARMOR_REGIONS}});
 const commonShieldPack={file:'hero-shield-layers-v1.png',columns:2,rows:2,keys:['wood:front','wood:back','iron:front','iron:back']};
 const shieldPacks=Object.freeze({wood:commonShieldPack,iron:commonShieldPack,steel:{file:'hero-steel-shield-v1-sheet.png',columns:2,rows:1,keys:['steel:front','steel:back']},silver:{file:'hero-silver-shield-v1-sheet.png',columns:2,rows:1,keys:['silver:front','silver:back']},mithril:{file:'hero-mithril-shield-v1-sheet.png',columns:2,rows:1,keys:['mithril:front','mithril:back']},crystal:{file:'hero-crystal-shield-v1-sheet.png',columns:2,rows:1,keys:['crystal:front','crystal:back']},orichalcum:{file:'hero-orichalcum-shield-v1-sheet.png',columns:2,rows:1,keys:['orichalcum:front','orichalcum:back']}});
 // Existing baked iron outfits retain their original selection path.

@@ -3336,5 +3336,157 @@
         }
       }
     ]
+  },
+  "heroLeatherLayers": {
+    "scope": "Existing leather_armor, six renderer poses and independent composition with all existing shields. No leather shield exists or is added; all old materials preserved.",
+    "records": [
+      {
+        "file": "hero-leather-armor-v1-sheet.png",
+        "bytes": 2299642,
+        "sha256": "9d27562c169e8c17a5cbe62b36d6a765354848294b28b60c405236ccbd6c8b22",
+        "width": 1536,
+        "height": 1024,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          254
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              39,
+              19,
+              499,
+              497
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              22,
+              19,
+              512,
+              512
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              7,
+              489,
+              497
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              0,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              37,
+              1,
+              512,
+              474
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              0,
+              503,
+              474
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              44,
+              1,
+              458,
+              474
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen edit of own orichalcum reference; received PNG bytes retained, runtime clipping/composition only",
+        "prompt": "Use case: precise-object-edit. Edit target: freshly viewed six-pose original copper orichalcum hero sheet. Create an original LEATHER ARMOR variant for the existing leather_armor item. Preserve the exact hero face,brown hair,green scarf,light cloth sleeves,brown trousers and boots,the six weapon/hand poses,right-facing direction,scale and3columns x2rows layout. Replace ONLY the metal armor with practical matte dark chestnut-brown leather: fitted reinforced stitched leather vest,small rounded padded leather shoulder guards,leather bracers,short flexible stitched waist tabs and visible simple seams/buckles. Supple low-profile silhouette,clearly leather rather than brown metal;dark brown shadows,muted warm highlights,only tiny dull buckle hardware,no polished plates/crystal facets/gold rims. Keep the boots/trousers/cloth distinct from armor and all weapons unchanged. Face uncovered,no helmet/crown,no shield,NO extra shield asset(no leather shield exists),no magic/glow or new powers. Same polished handcrafted fantasy pixel clusters,stepped dark outline,warm upper-left light,not photo/3D/vector. Preserve complete spear,bow,staff tips and feet with ample transparent gutters and no adjacent overlap. Actual alpha-transparent background,exactly six figures sword,spear,bow / crossbow,amber staff,unarmed. No text,labels,grid,watermark. New sibling only,do not overwrite earlier art.",
+        "reference": {
+          "file": "hero-orichalcum-armor-v1-sheet.png",
+          "sha256": "6c14cf4713fb7d66fd36716e3f20d25270624a965ecd8fc240b9e3992295cd9e"
+        }
+      }
+    ]
   }
 }
