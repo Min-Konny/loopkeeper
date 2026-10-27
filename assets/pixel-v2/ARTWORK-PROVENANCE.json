@@ -2890,5 +2890,228 @@
         }
       }
     ]
+  },
+  "heroCrystalLayers": {
+    "scope": "Existing diamond_armor/shield (水晶の鎧・盾), six armor weapon poses and independent two-view shield; old five material layers retained.",
+    "records": [
+      {
+        "file": "hero-crystal-armor-v1-sheet.png",
+        "bytes": 2284556,
+        "sha256": "b1a0d5182a105df77127a9a88b1fb63213f5dd81de20f6e4216d26531cb2327f",
+        "width": 1536,
+        "height": 1024,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          254
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              46,
+              34,
+              491,
+              498
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              22,
+              34,
+              512,
+              498
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              10,
+              485,
+              498
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              0,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              41,
+              18,
+              512,
+              474
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              3,
+              492,
+              475
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              50,
+              17,
+              453,
+              475
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen edit of own mithril reference; original PNG bytes retained; runtime clipping/composition only",
+        "prompt": "Use case: precise-object-edit. Edit target: freshly viewed six-pose original mithril hero sheet. Create a new CRYSTAL armor variant (game's actual name crystal armor, internal ID diamond_armor). Same hero face, brown hair, green scarf, light sleeves, brown trousers/boots, six exact weapon and hand poses facing right, same scale and three columns/two rows. Change ONLY armor into faceted translucent-looking quartz/crystal plates with angular beveled shoulders, short angular segmented waist plates, pale icy lavender-blue shadows, restrained white reflective facets and thin dark blue-gray outlines. Crystal should have broad readable facets at small scale, not noisy scattered gems or simply tinted metal/leaf armor. Keep face uncovered, no helmet, no shield, no giant crystals, no crown/gold, no glow/aura/sparkles or added gameplay power. Keep weapons and cloth unchanged. Polished handcrafted pixel cluster style, stepped edges, upper-left warm lighting consistent with input. Preserve full spear,bow,staff tips and feet and clear transparent gutters, no adjacent sprite overlaps. Actual alpha-transparent background around exactly six figures: sword,spear,bow / crossbow,amber staff,unarmed. No text,grid,border,watermark. New sibling asset only.",
+        "reference": {
+          "file": "hero-mithril-armor-v1-sheet.png",
+          "sha256": "28b17c95cd5682706dca12c3f0071971b82e68e1cd27b2edd34d234adea05ab1"
+        }
+      },
+      {
+        "file": "hero-crystal-shield-v1-sheet.png",
+        "bytes": 864101,
+        "sha256": "44530bedd52c481c7951a1a1d96b584c07232561ad2a2a85018788ad7c76e0d5",
+        "width": 1774,
+        "height": 887,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              887,
+              887
+            ],
+            "opaqueBounds": [
+              267,
+              39,
+              787,
+              811
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              887,
+              0,
+              887,
+              887
+            ],
+            "opaqueBounds": [
+              327,
+              52,
+              658,
+              800
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen edit of own mithril reference; original PNG bytes retained; runtime clipping/composition only",
+        "prompt": "Use case: precise-object-edit. Edit target: freshly viewed two-view mint mithril shield sheet. Supporting palette reference: preceding generated six-pose CRYSTAL armor hero sheet. Create a new CRYSTAL shield variant for internal ID diamond_shield, actual game name crystal shield. Exactly two isolated views, front left and narrow three-quarter/back right, same scale/upper-left lighting and 2-column one-row layout. Change leaf-shaped mint metal into clearly faceted quartz: broad angular hexagonal shield silhouette tapering toward bottom, thick beveled crystal rim, broad prismatic lavender/icy blue planes and restrained white reflective edges with dark blue-gray contours. Avoid mithril leaf ribs, pointed silver kite duplication, giant projecting spikes, noisy tiny gems. Same polished handcrafted pixel clusters/stepped outline as input and hero. No glow, magical aura, sparkles, text, crest lettering, new gameplay powers or characters. Complete shield tips inside frame with transparent gutters; genuine alpha-transparent background, no opaque matte/grid/labels/watermark. New sibling asset, never overwrite earlier materials.",
+        "reference": {
+          "file": "hero-mithril-shield-v1-sheet.png",
+          "sha256": "c89abcf06ef9c52aca30efceeddbe04db4107d8709cbc962d734b19fe6bdfc12"
+        },
+        "additionalPaletteReference": {
+          "file": "hero-crystal-armor-v1-sheet.png",
+          "sha256": "b1a0d5182a105df77127a9a88b1fb63213f5dd81de20f6e4216d26531cb2327f"
+        }
+      }
+    ]
   }
 }
