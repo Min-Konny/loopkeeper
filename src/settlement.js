@@ -1,5 +1,5 @@
-import {specialistAug}from './specialist-content.js?v=0.6.102';
-import {JOBS,OUTPOSTS,outpostId} from './settlement-content.js?v=0.6.102';
+import {specialistAug}from './specialist-content.js?v=0.6.103';
+import {JOBS,OUTPOSTS,outpostId} from './settlement-content.js?v=0.6.103';
 export const populationCapacity=s=>2+(s.run.facilities.housing||0);
 export function population(s){
  if(s.run.population)return s.run.population;

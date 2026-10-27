@@ -1803,6 +1803,36 @@
         "pngCRCVerified": true,
         "method": "Original built-in image_gen generation; original PNG bytes preserved",
         "prompt": "Use case: stylized-concept. One original transparent pixel-art outpost sprite for LOOPKEEPER: ROCKY STREAM FISHERY. Same fine crisp clustered pixels, dark stepped outlines, elevated front-right orthographic camera, warm upper-left light, weathered oak, moss-green slate roofs, pale gray stone and amber lanterns as a cozy woodland village. Compact fishing outpost beside a narrow running stream: a SMALL low moss-roof timber fisher shelter on a rock-edged bank, narrow weathered wooden footbridge crossing a contained diagonal channel of dark teal water, a short raised angling/net landing, wicker fish baskets, hanging fishing nets and wooden fish-trap/weir stakes. Rounded gray stream boulders and clear pixel ripples emphasize moving water. Unlike the broad calm lakeside dock and rowboat, this site has a narrow bridge, rocky channel, LOWER shelter and net stakes; NO boat and NO waterwheel or machinery. Practical small fish-producing outpost, not a tower or fortress. Whole connected near-square facility centered with generous transparent margin. Genuine transparent PNG alpha outside the crisp contour and compact rock/water footing; no surrounding river panorama, landscape or sky. No people, text, numerals, UI, logos, watermark, multiple panels, glow, smoke, bloom, vignette, fog, haze or colored fringe. No smooth painterly blur. Readable at160x120px. Original new artwork only."
+      },
+      {
+        "id": "citadel",
+        "file": "outpost-citadel-v1.png",
+        "bytes": 1566985,
+        "sha256": "0dc2842cc6322268f7d601fdcf65c1408b20ea8adcec7d8737c691e56cdbee3a",
+        "width": 1448,
+        "height": 1086,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "opaqueBounds": [
+          60,
+          81,
+          1408,
+          1034
+        ],
+        "pngCRCVerified": true,
+        "method": "Original built-in image_gen generation; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art outpost sprite for LOOPKEEPER: FORTRESS TRADING POST. Same fine crisp clustered pixels, dark stepped outlines, elevated front-right orthographic camera, warm upper-left light, weathered oak, pale gray stone, moss-green/gray slate and amber lanterns of a cozy medieval woodland village. A COMPACT trading warehouse beside a short stone gate: modest two-level pale-stone gatehouse with mossy slate roof and open timber-braced arched entry, joined low oak warehouse with a cream-cloth awning trading counter. Clearly visible stacked goods crates, barrels, folded cloth bundles, small brass weighing scale and a modest coin chest at the counter. A short stone perimeter wall and compact cobbled footing. This is a small economic outpost AT a fortress, not an entire castle or fortified city. Distinguish it from a repair workshop: stone arch plus awning/merchandise/scales, NO wheel-repair bench or giant watchtower. One connected near-square facility centered, complete object with generous transparent margin. Genuine transparent PNG alpha outside crisp hard contour and compact footing. No surrounding town/landscape, sky, people, text, numerals, logos, UI, watermark, multiple panels, smoke, glow, bloom, colored fringe, vignette, fog or haze. No smooth painterly blur. Readable at160x120px. Original new artwork only; no new game rule or effect."
+      },
+      {
+        "id": "road",
+        "file": "specialist-workhouse-v1.png",
+        "sha256": "9a3b3509375d9c53def102ae3d13224993e25e85e882328296044e37665645e9",
+        "method": "Reuse existing original workhouse base artwork: repair tools, wheel, horseshoe sign and trading workbench. Original provenance retained; no new generation."
       }
     ]
   }

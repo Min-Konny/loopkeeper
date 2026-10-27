@@ -1,5 +1,5 @@
 // Presentation only. Regional II/III stage variants are not yet authored.
-export const OUTPOST_ART=Object.freeze({quarry:'outpost-quarry-v1.png',marsh:'outpost-marsh-v1.png',lake:'outpost-lake-v1.png',river:'outpost-river-v1.png'});
+export const OUTPOST_ART=Object.freeze({quarry:'outpost-quarry-v1.png',marsh:'outpost-marsh-v1.png',lake:'outpost-lake-v1.png',river:'outpost-river-v1.png',road:'specialist-workhouse-v1.png',citadel:'outpost-citadel-v1.png'});
 const failed=new Set();
 const fallback='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="160" height="120" viewBox="0 0 80 60" shape-rendering="crispEdges"><path fill="#63725a" d="M6 47h68v8H6z"/><path fill="#927752" d="M19 23h43v25H19z"/><path fill="#485d46" d="M13 24L40 6l28 18z"/><path fill="#423c30" d="M35 34h10v14H35z"/><path fill="#d5b77c" d="M23 29h7v8h-7zM51 29h7v8h-7z"/></svg>');
 export function outpostArtFile(id){return Object.hasOwn(OUTPOST_ART,id)?OUTPOST_ART[id]:'outpost-v1.png';}
