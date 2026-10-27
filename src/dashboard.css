@@ -731,7 +731,7 @@ body.effects-disabled .work-vignette::after{animation:none!important}
 }
 /* Dynamic lists restore their own scroll position in setHTML. Do not also
    anchor to a replaced card or an asynchronously loaded work illustration. */
-#content, [data-scroll-key], #expanded-work-dialog {
+main, .sidebar, #content, [data-scroll-key], #expanded-work-dialog {
   overflow-anchor: none;
 }
 

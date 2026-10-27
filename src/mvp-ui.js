@@ -1,17 +1,17 @@
-import{merchantMarkup}from './merchant-ui.js?v=0.6.85';
-import {visibleWorkerUpgrade}from './worker-legacy.js?v=0.6.85';
-import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.85';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.85';
-import {stockIcon as icon}from './stock-icons.js?v=0.6.85';
-import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.85';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.85';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.85';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.85';
-import {hasUpgrade}from './free-features.js?v=0.6.85';
-import { getStartingResources } from './engine.js?v=0.6.85';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.85';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.85";
-import { CONTENT as C } from "./content.js?v=0.6.85";
+import{merchantMarkup}from './merchant-ui.js?v=0.6.86';
+import {visibleWorkerUpgrade}from './worker-legacy.js?v=0.6.86';
+import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.86';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.86';
+import {stockIcon as icon}from './stock-icons.js?v=0.6.86';
+import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.86';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.86';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.86';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.86';
+import {hasUpgrade}from './free-features.js?v=0.6.86';
+import { getStartingResources } from './engine.js?v=0.6.86';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.86';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.86";
+import { CONTENT as C } from "./content.js?v=0.6.86";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -27,7 +27,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.85";
+} from "./engine.js?v=0.6.86";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
