@@ -1,5 +1,5 @@
-import {resourceCap}from './farm-content.js?v=0.6.111';
-import {maximumTradeCount}from './maximum-trade.js?v=0.6.111';
+import {resourceCap}from './farm-content.js?v=0.6.112';
+import {maximumTradeCount}from './maximum-trade.js?v=0.6.112';
 export const MERCHANT_TIMING={first:60,period:360,stay:90};
 export const freshMerchant=()=>({version:1,clock:0,visit:-1,offers:[]});
 export function initializeMerchant(s){if(s.version===2)s.run.merchant??=freshMerchant();}

@@ -1,4 +1,4 @@
-import {REPLAY_ACHIEVEMENTS} from './replay-achievements.js?v=0.6.111';
+import {REPLAY_ACHIEVEMENTS} from './replay-achievements.js?v=0.6.112';
 export function replayAchievementsMarkup(s){
   if(s.version!==2)return '';
   const records=s.replay?.unlocked||[],a=s.replay?.attempt;

@@ -3113,5 +3113,228 @@
         }
       }
     ]
+  },
+  "heroOrichalcumLayers": {
+    "scope": "Existing orichalcum_armor/shield (オリハルコンの鎧・盾), six armor weapon poses and independent two-view shield; old six material layers retained.",
+    "records": [
+      {
+        "file": "hero-orichalcum-armor-v1-sheet.png",
+        "bytes": 2313786,
+        "sha256": "6c14cf4713fb7d66fd36716e3f20d25270624a965ecd8fc240b9e3992295cd9e",
+        "width": 1536,
+        "height": 1024,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          254
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              42,
+              29,
+              497,
+              496
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              21,
+              29,
+              512,
+              512
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              0,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              7,
+              487,
+              496
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              0,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              38,
+              7,
+              512,
+              473
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              512,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              0,
+              0,
+              499,
+              474
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              1024,
+              512,
+              512,
+              512
+            ],
+            "opaqueBounds": [
+              48,
+              7,
+              458,
+              473
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen edit of own crystal reference; original PNG bytes retained; runtime clipping/composition only",
+        "prompt": "Use case: precise-object-edit. Edit target: the freshly viewed original six-pose crystal armor hero sheet. Make a new ORICHALCUM armor variant for existing orichalcum_armor. Preserve the same hero identity, uncovered face,brown hair,green scarf,light sleeves,brown trousers and boots,exact six weapon/hand poses,right-facing direction,3 columns by 2rows,scale and lighting. Change ONLY the armor to warm copper-gold orichalcum: robust layered breastplate, broad articulated overlapping shoulder plates with readable reinforced raised borders, short rectangular overlapping waist plates, dark red-brown recessed seams, amber-orange/copper midtones and restrained pale-gold highlights. Distinct from cold crystal facets and mint leaf armor, not just a tint. No helmet/crown, no shield, no giant ornament/gems/spikes, no glow/aura/magic effect/new powers. Leave all weapons and cloth unchanged. Polished handcrafted fantasy pixel clusters and stepped dark outlines, consistent warm upper-left illumination, not photo/3D/vector. All spear,bow,staff tips and feet complete, separated transparent gutters, no adjacent overlap. Actual alpha-transparent background around exactly six figures: sword,spear,bow / crossbow,amber staff,unarmed. No labels,text,grid,watermark. New sibling asset, never overwrite earlier art.",
+        "reference": {
+          "file": "hero-crystal-armor-v1-sheet.png",
+          "sha256": "b1a0d5182a105df77127a9a88b1fb63213f5dd81de20f6e4216d26531cb2327f"
+        }
+      },
+      {
+        "file": "hero-orichalcum-shield-v1-sheet.png",
+        "bytes": 957674,
+        "sha256": "d0de05665f596055dba94e0274ced16c904c9dba9a866fb63fa7e02ba11b0b38",
+        "width": 1774,
+        "height": 887,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              887,
+              887
+            ],
+            "opaqueBounds": [
+              260,
+              38,
+              792,
+              817
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "cell": [
+              887,
+              0,
+              887,
+              887
+            ],
+            "opaqueBounds": [
+              328,
+              62,
+              666,
+              801
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen edit of own crystal reference; original PNG bytes retained; runtime clipping/composition only",
+        "prompt": "Use case: precise-object-edit. Edit target: freshly viewed two-view crystal shield sheet. Supporting color/style reference: preceding generated copper-gold orichalcum armor hero sheet. Create a new ORICHALCUM shield sheet for existing orichalcum_shield: exactly two isolated views,front on left,narrow three-quarter/back on right,2columns1row. Preserve scale,gutters,upper-left light and crisp handcrafted pixel-cluster contours. Replace crystalline quartz with solid warm copper-gold metal: broad angular six-sided shield,reinforced stepped layered rim,raised central geometric rib and a few readable short inset panels,dark red-brown recesses,amber/copper surfaces with restrained pale-gold highlights matching the armor. Clearly robust forged metal,not translucent crystal or just a color filter. No gems,crown,letters,logos,glow,aura,spikes or extra characters. Both views same shield,complete tips with ample transparent margins and no overlap. Genuine alpha-transparent background,not opaque dark matte;no labels/grid/watermark. New sibling only,do not overwrite earlier assets.",
+        "reference": {
+          "file": "hero-crystal-shield-v1-sheet.png",
+          "sha256": "44530bedd52c481c7951a1a1d96b584c07232561ad2a2a85018788ad7c76e0d5"
+        },
+        "additionalPaletteReference": {
+          "file": "hero-orichalcum-armor-v1-sheet.png",
+          "sha256": "6c14cf4713fb7d66fd36716e3f20d25270624a965ecd8fc240b9e3992295cd9e"
+        }
+      }
+    ]
   }
 }

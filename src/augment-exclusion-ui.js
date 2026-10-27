@@ -1,4 +1,4 @@
-import {getAugmentExclusionStatus,getCatalog}from './engine.js?v=0.6.111';
+import {getAugmentExclusionStatus,getCatalog}from './engine.js?v=0.6.112';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function augmentExclusionMarkup(s,id,error=''){
  const status=getAugmentExclusionStatus(s,id),d=getCatalog(s).AUGMENTS.find(a=>a.id===id);
