@@ -1,4 +1,4 @@
-import {advanceTime,parseSave}from './engine.js?v=0.6.89';import {STORAGE_KEY,writeStoredGame}from './save-storage.js?v=0.6.89';
+import {advanceTime,parseSave}from './engine.js?v=0.6.90';import {STORAGE_KEY,writeStoredGame}from './save-storage.js?v=0.6.90';
 // Opt-in, bounded full-engine replay. No independent free farm clock.
 export function settleFarmOffline(storage,current,{isOwner=()=>false,now=Date.now()}={}){
  const unchanged={ok:true,state:current,seconds:0};if(!isOwner())return {ok:false,state:current,reason:'操作権がありません。'};

@@ -1,5 +1,6 @@
-import {synchronizeFreeFeatures}from './free-features.js?v=0.6.89';
-import { createGame, parseSave, serializeGame } from './engine.js?v=0.6.89';
+import {synchronizeFreeFeatures}from './free-features.js?v=0.6.90';
+import {retainReplayCollection} from './replay-achievements.js?v=0.6.90';
+import { createGame, parseSave, serializeGame } from './engine.js?v=0.6.90';
 export const STORAGE_KEY = 'tomori-rebirth-v1';
 const BACKUP_KEY = `${STORAGE_KEY}-backups`;
 const ARCHIVE_KEY = `${STORAGE_KEY}-unreadable`;
@@ -15,6 +16,7 @@ export function resetStoredGame(storage, current, { now = Date.now() } = {}) {
   const oldPayload = serializeGame(current);
   if (!parseSave(oldPayload)) throw new Error('Invalid current game');
   const fresh = createGame();
+  retainReplayCollection(fresh,current);
   for (const key of ['soundVolume', 'musicVolume', 'ambientVolume', 'effectsEnabled', 'pauseWhenHidden']) {
     if (current.settings[key] !== undefined) fresh.settings[key] = current.settings[key];
   }
@@ -76,6 +78,7 @@ export function unreadableRecord(storage) { try { return storage.getItem(ARCHIVE
 export function replaceStoredGame(storage, current, replacement, { now = Date.now() } = {}) {
   const next = parseSave(serializeGame(replacement));
   if(next)synchronizeFreeFeatures(next);
+  if(next)retainReplayCollection(next,current);
   if (!next || !parseSave(serializeGame(current))) throw new Error('Invalid game');
   next.settings.paused = true;
   writeStoredGame(storage, current, { now, checkpoint: true });

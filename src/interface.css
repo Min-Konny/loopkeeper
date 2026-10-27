@@ -32,3 +32,14 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
 }
 @media(prefers-reduced-motion:reduce){.speed-options button{transition:none}}
 @media(max-width:690px){#resource-bar .stock-scroll{overscroll-behavior-x:contain;overscroll-behavior-y:auto}}
+/* Collection UI stays inside the existing journal/clear dialogs. */
+.replay-achievements{border:1px solid var(--line,#536450);border-radius:10px;padding:12px;margin-block:12px;text-align:left;min-width:0}
+.replay-achievement-list{display:grid;gap:8px;margin-top:10px}
+.replay-achievement{border:1px solid var(--line,#536450);border-radius:8px;padding:10px;min-width:0;overflow-wrap:anywhere}
+.replay-achievement h4{margin:0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px}
+.replay-achievement p{font-size:13px;line-height:1.6;margin:8px 0}
+.replay-achievement.earned{border-color:#bba061;background:#bba06112}
+.replay-achievements summary{cursor:pointer;min-height:44px;display:flex;align-items:center}
+#reset-dialog .reset-ack{display:flex;align-items:flex-start;gap:8px;margin:16px 0;font-size:14px;line-height:1.6}
+#reset-dialog .reset-ack input{flex:none;width:18px;height:18px;margin:2px 0}
+#reset-dialog .save-options .button{font-size:14px;min-height:44px}
