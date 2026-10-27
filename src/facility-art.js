@@ -1,5 +1,5 @@
-import{trainingYardArtFile,TRAINING_YARD_LAYOUT,trainingYardFallbackSource}from './training-yard-art.js?v=0.6.104';
-import {FACILITY_LAYOUT} from './facility-atlas-layout.js?v=0.6.104';
+import{trainingYardArtFile,TRAINING_YARD_LAYOUT,trainingYardFallbackSource}from './training-yard-art.js?v=0.6.105';
+import {FACILITY_LAYOUT} from './facility-atlas-layout.js?v=0.6.105';
 // Original generated sheets: row is facility, column is its real built stage.
 export const FACILITY_SHEETS=Object.freeze({
  training_yard:['training-yard-v1.png',0],

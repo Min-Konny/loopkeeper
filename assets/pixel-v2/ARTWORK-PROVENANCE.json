@@ -1863,6 +1863,57 @@
         "file": "workshop-v1.png",
         "sha256": "ab9debbdc2034811a7c9304fd968b667be11274203216c0d6b773c4c23a9547f",
         "method": "Reuse existing original forge/workshop building: furnace, anvil, chimney and ingot workbench. Original provenance retained; no new generation."
+      },
+      {
+        "id": "forest_depth",
+        "file": "outpost-forest_depth-v1.png",
+        "bytes": 1850155,
+        "sha256": "7de19a64a37435556d3c5cad068e3f5be3b5c5ae84fc90d0d9886bea92ae90c1",
+        "width": 1448,
+        "height": 1086,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "opaqueBounds": [
+          79,
+          55,
+          1376,
+          1043
+        ],
+        "pngCRCVerified": true,
+        "method": "Original built-in image_gen generation followed by one framing edit; selected edited PNG bytes preserved",
+        "prompt": "Use case: stylized-concept\nAsset type: one original transparent pixel-art regional outpost sprite, LOOPKEEPER card displayed160x120.\nPrimary request: a deep-forest logging settlement: sturdy compact timber logging lodge beneath two tall dark fir trees, a low mossy slate roof, small warm window and lantern, heavy log stacks, sawbuck and large cut trunk with visible rings, hauling sledge and axe. Clearly a deeper forest logging station, not a generic house, not a sawmill city. No people. One connected compact ground footprint.\nStyle: polished handcrafted fantasy pixel art, crisp stepped silhouettes and clustered pixels, matched to medieval timber/moss-roof camp buildings and the new compact mining/trading outposts. Warm upper-left light, gentle elevated three-quarter view showing front and right walls. Limited ochre wood, deep fir green, olive moss, gray slate and warm amber accents. Readable silhouette at tiny scale; large tree trunks frame lodge without obscuring its tools. Rich selective texture, not noisy fine leaves.\nFraming: whole lodge, trees and ground in landscape4:3 with clear padding, transparent outside footprint. No sky or rectangular background. Actual transparent alpha, no shadow rectangle. No text, UI, border, watermark, logo, magical aura, photorealism or smooth vector/3D-render look. Original asset not imitating a named franchise.",
+        "editPrompt": "Edit the most recent generated deep-forest logging lodge sprite. Keep the same original pixel-art design, timber lodge, mossy slate roof, log piles, sawbuck, hauling sledge, two fir trees, lighting, palette, three-quarter perspective and transparent background. Fix framing only: both fir tree apexes must be fully completed, and ALL artwork including tree tips and ground must fit with a clearly transparent margin of at least 7 percent on every side. Scale the connected composition down slightly within the landscape canvas as needed; no element may touch any canvas edge. Do not crop the trees, do not add a rectangular backdrop or text, do not change the subject or add people. Preserve crisp pixel clusters and alpha. This is one targeted framing correction, not a new scene.",
+        "rejectedSourceSha256": "c81149a747ecd5f584319c8b220aca10ba4d8346a1963e71c7052f0fb9c2252e",
+        "selectionReason": "Original opaque artwork came within6px of top. Framing edit provides55px upper padding and complete tree silhouette; no claim that requested7percent margin was met."
+      },
+      {
+        "id": "marsh_depth",
+        "file": "outpost-marsh_depth-v1.png",
+        "bytes": 1708494,
+        "sha256": "376ab8017c1e713afdaeb4045bfdad1cd4bbc2d4008417ea763f2eddd50233ca",
+        "width": 1448,
+        "height": 1086,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "opaqueBounds": [
+          97,
+          116,
+          1366,
+          940
+        ],
+        "pngCRCVerified": true,
+        "method": "Original built-in image_gen generation; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept\nAsset type: one original transparent pixel-art regional outpost sprite, LOOPKEEPER management card displayed160x120.\nPrimary request: an advanced remote wetland medicinal herb garden, clearly different from a simple small marsh plot. A compact timber herb nursery lodge on short stilts with a low mossy slate roof and amber window, small attached sloped glass propagation lean-to, orderly raised beds of broad green medicinal leaves and tiny muted violet flowers, drying racks with herb bundles, woven gathering baskets, short plank boardwalk and a shallow dark teal water channel around the ground footprint. No potion laboratory, giant greenhouse, people or magic. The herb beds must remain readable at tiny display size.\nStyle: polished handcrafted fantasy pixel art, crisp stepped contour and intentional pixel clusters, gentle elevated three-quarter view showing front and right sides, upper-left warm sunlight. Same medieval timber/moss/gray-slate and warm amber camp style as the other new regional outposts. Muted olive and sage greens, ochre timber, small desaturated violet accents and restrained teal water. Rich selective details rather than noisy texture.\nFraming: compact single connected ground footprint, entire artwork centered in landscape4:3, at least7percent clear transparent padding around every side, no part touches canvas edge. Actual transparent background outside the footprint, no sky, rectangular ground patch or opaque shadow. No text, letters, UI, border, watermark, logo, photorealism, smooth vector or 3D-render look. Original game asset, not based on an existing franchise."
       }
     ]
   }

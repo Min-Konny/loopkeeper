@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.104
+# LoopKeeper 0.6.105
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -148,3 +148,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.104: 峠奥地と工房街の景観。対応表: docs/outpost-art-0.6.104.md。
+
+
+0.6.105: 深森と湿地奥地の景観。対応表: docs/outpost-art-0.6.105.md。

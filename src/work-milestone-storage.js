@@ -1,4 +1,4 @@
-import {WORK_MILESTONES}from './work-milestone-content.js?v=0.6.104';import {writeStoredGame}from './save-storage.js?v=0.6.104';
+import {WORK_MILESTONES}from './work-milestone-content.js?v=0.6.105';import {writeStoredGame}from './save-storage.js?v=0.6.105';
 // Acknowledge durably before showing the one-time notice; failed writes show nothing.
 export function acknowledgeWorkRewards(storage,current,{isOwner=()=>false,now=Date.now()}={}){
  if(!isOwner())return {ok:false,rewards:[]};
