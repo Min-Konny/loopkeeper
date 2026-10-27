@@ -1,4 +1,4 @@
-import{merchantStatus}from './merchant.js?v=0.6.101';import{getMerchantQuote,getTradeQuote}from './engine.js?v=0.6.101';import{CONTENT as C}from './content.js?v=0.6.101';
+import{merchantStatus}from './merchant.js?v=0.6.102';import{getMerchantQuote,getTradeQuote}from './engine.js?v=0.6.102';import{CONTENT as C}from './content.js?v=0.6.102';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const time=n=>Math.floor(n/60)+':'+String(n%60).padStart(2,'0');
 export function merchantNotice(s){const v=merchantStatus(s);return v.visiting&&s.run.status==='preparing'?'<div class="diplomacy-notice"><span>行商人が滞在中 · 残り '+time(v.remaining)+'</span><button data-tab="trade" data-focus="merchant-notice">取引を見る →</button></div>':'';}

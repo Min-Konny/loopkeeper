@@ -1,7 +1,7 @@
-import {memberJoined,memberFor,equipParty}from './party.js?v=0.6.101';
-import {mealEffects}from './meals.js?v=0.6.101';
-import {investmentEffect}from './investments.js?v=0.6.101';
-import {accessoryById,weaponById,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.101';
+import {memberJoined,memberFor,equipParty}from './party.js?v=0.6.102';
+import {mealEffects}from './meals.js?v=0.6.102';
+import {investmentEffect}from './investments.js?v=0.6.102';
+import {accessoryById,weaponById,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.102';
 export const emptySets=()=>({preparation:Object.fromEntries(ACCESSORY_SLOTS.map(s=>[s,null])),combat:Object.fromEntries(ACCESSORY_SLOTS.map(s=>[s,null]))});
 export function initializeGear(s){
  if(s.version===1)return;

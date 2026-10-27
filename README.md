@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.101
+# LoopKeeper 0.6.102
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -139,3 +139,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.101: 峠の採掘拠点・湿地の薬草園の基本景観を描き分け。詳細: docs/outpost-art-0.6.101.md。
+
+
+0.6.102: 湖畔/渓流の漁場の基本景観を追加。詳細: docs/outpost-art-0.6.102.md。

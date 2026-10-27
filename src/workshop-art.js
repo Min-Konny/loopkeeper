@@ -1,5 +1,5 @@
-import {pixelProductSource} from './pixel-product-art.js?v=0.6.101';
-import { icon } from './icons.js?v=0.6.101';
+import {pixelProductSource} from './pixel-product-art.js?v=0.6.102';
+import { icon } from './icons.js?v=0.6.102';
 const materials=new Map();
 const image=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
 export function materialShortage(required,available){return Number.isFinite(required)&&required>=0?Math.max(0,required-available):0;}

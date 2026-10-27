@@ -1706,7 +1706,7 @@
   },
   "regionalOutpostBases": {
     "date": "2026-10-27",
-    "scope": "Quarry and marsh base scenery; same base across existing I/II/III. Forest reuses original outpost-v1. No gameplay/save changes.",
+    "scope": "Dedicated regional base scenery; same region base across existing I/II/III. Forest original retained. No gameplay/save changes.",
     "records": [
       {
         "id": "quarry",
@@ -1755,6 +1755,54 @@
         "pngCRCVerified": true,
         "method": "Original built-in image_gen generation; original PNG bytes preserved",
         "prompt": "Use case: stylized-concept. One original transparent pixel-art outpost sprite for LOOPKEEPER: MARSH HERB GARDEN. Match fine crisp clustered pixels, dark stepped outlines, elevated front-right orthographic camera, warm upper-left light, weathered oak, muted moss-green/gray slate roofs and amber lanterns of a cozy medieval woodland village. A compact gardener's worksite: small oak potting hut with mossy slate gable roof, a modest attached timber-and-glass plant shelter, three clearly visible raised wooden HERB BEDS filled with lush medicinal leafy green plants, a herb drying rack with hanging bundles and pots, water barrel and watering can. Short weathered boardwalks and stepping stones connect the beds over a few shallow dark teal marsh puddles within the compact footing. Plant beds should dominate the low foreground silhouette, distinct from a timber watchtower or stone quarry. No vegetables, fruit, flowers as crops, magic or modern industrial greenhouse. One whole connected near-square facility centered, complete object with generous clear transparent margin. Genuine transparent PNG alpha outside the crisp hard contour and compact garden footing. No surrounding marsh landscape or sky, background, vignette, colored fringe, haze, fog, glow, smoke, bloom, people, writing, numerals, UI, logos, watermark or multiple panels. No smooth painterly blur. Readable as a small160x120px outpost card. Original new artwork only."
+      },
+      {
+        "id": "lake",
+        "file": "outpost-lake-v1.png",
+        "bytes": 1606923,
+        "sha256": "59dc9b309eb2d325c549e42a35b575f80d54c0392c6452dedd21aef9833b71b3",
+        "width": 1448,
+        "height": 1086,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "opaqueBounds": [
+          81,
+          65,
+          1369,
+          1014
+        ],
+        "pngCRCVerified": true,
+        "method": "Original built-in image_gen generation; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art outpost sprite for LOOPKEEPER: LAKESIDE FISHERY. Consistent fine crisp clustered pixels, dark stepped outlines, elevated front-right orthographic camera, warm upper-left light, weathered oak, muted moss-green slate roofs, gray stone footing and amber lanterns of a cozy medieval woodland village. Compact small fishing hut with mossy pitched slate roof and a covered net-mending porch, broad low timber landing with moored small wooden ROWBOAT, fishing net racks, a few fish baskets and coiled rope. A contained crescent of calm dark-teal LAKE WATER around dock posts with subtle pixel ripples; no horizon. The boat, wide still-water dock and nets should immediately distinguish this fish outpost from a timber camp, quarry and herb garden. No people or fisherman, no fish as text icon, no magical effects, no industrial processing equipment. One whole connected near-square facility centered with generous clear transparent margin; compact water-and-stone footing only. Genuine transparent PNG alpha outside crisp hard contour. No surrounding landscape, sky, lake panorama, vignette, colored fringe, haze, fog, glow, smoke, bloom, writing, numerals, UI, logo, watermark or multiple panels. No smooth painterly blur. Readable as a small160x120px outpost card. Original new artwork only."
+      },
+      {
+        "id": "river",
+        "file": "outpost-river-v1.png",
+        "bytes": 1588666,
+        "sha256": "3fa101f6f712ebe74fd54f4270e82dd3449517d100ef7cbf437adafc1ccc3724",
+        "width": 1448,
+        "height": 1086,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "opaqueBounds": [
+          42,
+          123,
+          1408,
+          1027
+        ],
+        "pngCRCVerified": true,
+        "method": "Original built-in image_gen generation; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept. One original transparent pixel-art outpost sprite for LOOPKEEPER: ROCKY STREAM FISHERY. Same fine crisp clustered pixels, dark stepped outlines, elevated front-right orthographic camera, warm upper-left light, weathered oak, moss-green slate roofs, pale gray stone and amber lanterns as a cozy woodland village. Compact fishing outpost beside a narrow running stream: a SMALL low moss-roof timber fisher shelter on a rock-edged bank, narrow weathered wooden footbridge crossing a contained diagonal channel of dark teal water, a short raised angling/net landing, wicker fish baskets, hanging fishing nets and wooden fish-trap/weir stakes. Rounded gray stream boulders and clear pixel ripples emphasize moving water. Unlike the broad calm lakeside dock and rowboat, this site has a narrow bridge, rocky channel, LOWER shelter and net stakes; NO boat and NO waterwheel or machinery. Practical small fish-producing outpost, not a tower or fortress. Whole connected near-square facility centered with generous transparent margin. Genuine transparent PNG alpha outside the crisp contour and compact rock/water footing; no surrounding river panorama, landscape or sky. No people, text, numerals, UI, logos, watermark, multiple panels, glow, smoke, bloom, vignette, fog, haze or colored fringe. No smooth painterly blur. Readable at160x120px. Original new artwork only."
       }
     ]
   }
