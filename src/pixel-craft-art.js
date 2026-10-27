@@ -1,4 +1,4 @@
-import {equipmentMaterial} from './visual-design.js?v=0.6.103';
+import {equipmentMaterial} from './visual-design.js?v=0.6.104';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 export function pixelCraftScene(skill,id,mat){
  let target='',arm='',fx='',back='';

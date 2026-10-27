@@ -1833,6 +1833,36 @@
         "file": "specialist-workhouse-v1.png",
         "sha256": "9a3b3509375d9c53def102ae3d13224993e25e85e882328296044e37665645e9",
         "method": "Reuse existing original workhouse base artwork: repair tools, wheel, horseshoe sign and trading workbench. Original provenance retained; no new generation."
+      },
+      {
+        "id": "quarry_depth",
+        "file": "outpost-quarry_depth-v1.png",
+        "bytes": 1865935,
+        "sha256": "dee92a5e21c9e257151d7b9caf13973058bee548363176d8d74c98cebe9d0ca7",
+        "width": 1448,
+        "height": 1086,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "opaqueBounds": [
+          45,
+          63,
+          1415,
+          1024
+        ],
+        "pngCRCVerified": true,
+        "method": "Original built-in image_gen generation; original PNG bytes preserved",
+        "prompt": "Use case: stylized-concept\nAsset type: one original transparent pixel-art regional outpost sprite for LOOPKEEPER, compact card display 160x120.\nPrimary request: a mountain deep iron-ore mine outpost, clearly distinct from an open stone quarry. A dark reinforced timber mine adit inset in a small gray rock spur, low mossy slate-roof ore sorting shed, short rail and loaded ore cart, rusty blue-gray iron ore chunks in bins, pickaxes and a small warm amber lantern. One compact connected ground footprint. No people.\nStyle: highly polished handcrafted fantasy pixel art, crisp stepped contour and pixel clusters, restrained wood ochre, moss olive, slate and charcoal palette. Match warm medieval timber/moss-roof camp buildings; upper-left warm sunlight, front and right walls visible in gentle elevated three-quarter view. Readable dark mine opening and cart silhouette even at small scale. Natural rough stone and wooden joinery; sparse rich details not noise.\nComposition: entire building and rock spur visible, centered landscape 4:3 transparent sprite, small clear padding on every side. Modest rock spur only, no giant mountain panorama, no rectangular sky/background. Transparent background and preserved alpha. No text, letters, UI, border, watermark, logo, magic aura, photorealism, smooth vector or 3D-render look. Original game asset, not based on any existing franchise."
+      },
+      {
+        "id": "forge",
+        "file": "workshop-v1.png",
+        "sha256": "ab9debbdc2034811a7c9304fd968b667be11274203216c0d6b773c4c23a9547f",
+        "method": "Reuse existing original forge/workshop building: furnace, anvil, chimney and ingot workbench. Original provenance retained; no new generation."
       }
     ]
   }
