@@ -1,5 +1,6 @@
-import{alphaBounds}from './generated-camp-art.js?v=0.6.123';
-import{createPortraitFrame}from './portrait-frame.js?v=0.6.123';
+import{alphaBounds}from './generated-camp-art.js?v=0.6.124';
+import{swordMaterialSource,swordMaterialKey}from './hero-sword-material.js?v=0.6.124';
+import{createPortraitFrame}from './portrait-frame.js?v=0.6.124';
 const families=['sword','spear','bow','crossbow','magic','unarmed'];
 export const WOOD_ARMOR_REGIONS=Object.freeze([
  [[0,0],[512,0],[512,512],[0,512]],
@@ -84,9 +85,10 @@ function primeShields(style){const pack=shieldPacks[style];if(!pack||shieldStart
 function bodyFrame(source){if(!bodyImages.has(source)&&typeof Image!=='undefined'){const record={frame:null};bodyImages.set(source,record);const img=new Image();img.onload=()=>{try{record.frame=createPortraitFrame(img);}catch{/* Keep source body. */}};img.onerror=()=>{};img.src=source;}return bodyImages.get(source)?.frame;}
 export function layeredHeroSource(equipment,family,familySource,ironSource){
  const plan=heroLayerPlan(equipment,family);if(!plan)return null;
- let source=familySource;if(Object.hasOwn(bodySheets,plan.body)){primeBody(plan.body);source=bodyFrames.get(plan.body+':'+family)||familySource;}else if(plan.body==='iron')source=ironSource(family)||familySource;
+ let source=familySource,frame='family';if(Object.hasOwn(bodySheets,plan.body)){primeBody(plan.body);const ready=bodyFrames.get(plan.body+':'+family);if(ready){source=ready;frame=plan.body;}}else if(plan.body==='iron'){const ready=ironSource(family);if(ready){source=ready;frame='iron';}}
+ source=swordMaterialSource(equipment,source,frame,family);
  if(!plan.shield)return source;
  primeShields(plan.shield);const layer=shields.get(plan.shield+':'+(plan.behind?'back':'front')),body=bodyFrame(source);if(!layer||!body)return source;
- const key=plan.body+':'+family+':'+plan.shield,old=composites.get(key);if(old?.source===source)return old.result;
+ const material=swordMaterialKey(equipment,family),key=plan.body+':'+family+':'+plan.shield+(material?':'+material:''),old=composites.get(key);if(old?.source===source)return old.result;
  try{const c=document.createElement('canvas');c.width=192;c.height=208;const ctx=c.getContext('2d'),b=alphaBounds(body),p=shieldPlacement(family,b,layer.width/layer.height,plan.body,plan.shield);ctx.imageSmoothingEnabled=false;const paintShield=()=>ctx.drawImage(layer.img,layer.x,layer.y,layer.width,layer.height,p.x,p.y,p.width,p.height);if(plan.behind)paintShield();ctx.drawImage(body,0,0);if(!plan.behind)paintShield();const result=c.toDataURL();composites.set(key,{source,result});return result;}catch{return source;}
 }

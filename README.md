@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.123
+# LoopKeeper 0.6.124
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -205,3 +205,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.123: 上位弓4種の所有者説明の重複を修正。性能・製作費・保存・画像は不変。docs/bow-description-0.6.123.md参照。
+
+
+0.6.124: 戦闘中のオリハルコンの剣の刃を金色に描き分け。人物・鎧・盾とゲーム数値・保存形式は維持。docs/hero-sword-0.6.124.md 参照。
