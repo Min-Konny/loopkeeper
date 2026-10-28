@@ -13,17 +13,24 @@ export const SWORD_BLADE_REGIONS=Object.freeze({
  iron_guard:[[60,94],[184,66],[189,66],[184,71],[63,103]],
  iron_shield:[[77,87],[174,63],[179,63],[174,69],[81,98]],
 });
-export const swordMaterialKey=(equipment={},family='sword')=>family==='sword'&&equipment.weapon?.id==='orichalcum_sword'?'orichalcum':null;
+const materials=Object.freeze({steel_sword:'steel',silver_sword:'silver',mithril_sword:'mithril',diamond_sword:'crystal',orichalcum_sword:'orichalcum'});
+export const swordMaterialKey=(equipment={},family='sword')=>family==='sword'&&Object.hasOwn(materials,equipment.weapon?.id)?materials[equipment.weapon.id]:null;
 export function insideBlade(x,y,polygon){let inside=false;for(let i=0,j=polygon.length-1;i<polygon.length;j=i++){const[a,b]=polygon[i],[c,d]=polygon[j];if((b>y)!==(d>y)&&x<(c-a)*(y-b)/(d-b)+a)inside=!inside;}return inside;}
-const gold=[[38,28,18],[88,58,29],[146,98,42],[201,151,68],[239,203,120],[255,242,192]];
+const palettes=Object.freeze({
+ steel:[[31,44,61],[68,89,112],[112,137,160],[171,196,214],[218,234,244],[250,254,255]],
+ silver:[[40,33,58],[85,74,108],[135,123,159],[189,177,213],[231,220,247],[255,249,255]],
+ mithril:[[22,46,44],[41,90,85],[68,143,134],[112,197,185],[174,235,220],[231,255,245]],
+ crystal:[[27,31,65],[61,65,117],[104,113,173],[156,171,226],[206,216,255],[245,247,255]],
+ orichalcum:[[38,28,18],[88,58,29],[146,98,42],[201,151,68],[239,203,120],[255,242,192]],
+});
 export function shadeSwordPixels(data,width,height,frame,material){
- const polygon=SWORD_BLADE_REGIONS[frame];if(material!=='orichalcum'||!polygon||width!==192||height!==208)return 0;
+ const polygon=SWORD_BLADE_REGIONS[frame],palette=Object.hasOwn(palettes,material)?palettes[material]:null;if(!palette||!polygon||width!==192||height!==208)return 0;
  let changed=0;for(let y=0;y<height;y++)for(let x=0;x<width;x++){
   if(!insideBlade(x+.5,y+.5,polygon))continue;const i=(y*width+x)*4,r=data[i],g=data[i+1],b=data[i+2],a=data[i+3],hi=Math.max(r,g,b),lo=Math.min(r,g,b);
   // Keep the dark outline, transparent fringe and warm grip/skin/gold fittings.
   if(!a||hi<45||hi-lo>75||b<r*.82||g<r*.82)continue;
   const value=Math.max(0,Math.min(5,(r*.2126+g*.7152+b*.0722)/255*5)),n=Math.min(4,Math.floor(value)),t=value-n;
-  for(let c=0;c<3;c++)data[i+c]=Math.round(gold[n][c]*(1-t)+gold[n+1][c]*t);changed++;
+  for(let c=0;c<3;c++)data[i+c]=Math.round(palette[n][c]*(1-t)+palette[n+1][c]*t);changed++;
  }return changed;
 }
 const sources=new Map();
