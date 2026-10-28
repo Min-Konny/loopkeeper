@@ -3542,7 +3542,7 @@
     ]
   },
   "partyWeaponMaterialVariants": {
-    "scope": "Exact owned archer bow/crossbow and mage staff by member and weapon id; orichalcum copper-gold, steel blue-gray, silver-white and mithril icy-cyan with original identities/poses/scales retained",
+    "scope": "Exact owned archer bow/crossbow and mage staff by member and weapon id; orichalcum copper-gold, steel blue-gray, silver-white, mithril icy-cyan and diamond pale faceted cyan/lilac crystal with original identities/poses/scales retained",
     "records": [
       {
         "file": "party-archer-orichalcum-crossbow-v1.png",
@@ -3968,6 +3968,100 @@
         ],
         "method": "Built-in image_gen precise-object-edit on original companion; persistent verified PNG bytes",
         "prompt": "Use case: precise-object-edit. Asset: LOOPKEEPER exact mage companion material variant mithril_staff (ミスリルの火杖). The most recent single blue-robed bearded male mage holding a wooden fire staff is the EXACT edit target. Change ONLY the staff's wooden shaft and curled crown main body into light pearlescent icy-cyan MITHRIL metal, pale blue-silver broad highlights and deeper muted blue recesses, distinct from steel's dark blue-gray, neutral silver-white and orichalcum's copper-gold. Retain fine gold bindings, hanging charm, contained blue/gold orb/flame at exactly original size/brightness, original silhouette/curve/hand grip/orientation. No new spell or larger aura. Preserve exact SAME mage face/identity/hair/beard/eyes/expression, blue embroidered hood/robes, book/scroll, bag, hands, boots, pose/body scale and transparent composition.1254square: hood26,feet1228,robeleft236,staffheadright1202; no zoom/crop/enlargement/recomposition, all staff/feet intact. Same crisp pixel-art cluster density and upper-left lighting, do not brighten costume/person. Material reads at96x132 management and100x112 battle. Genuine transparent alpha background, no text/grid/watermark/extraobjects/background. Only staff material changes, no character or pose redesign.\n",
+        "reference": {
+          "file": "party-mage-v1.png",
+          "sha256": "2fd534e936fc1373b21ff692f9050f042bb05f66b6056e2a7f099bb45f7b1a5a"
+        }
+      },
+      {
+        "file": "party-archer-diamond-bow-v1.png",
+        "bytes": 1319374,
+        "sha256": "853f323188d0698f4a5b9245320cec6403a65a9c18c969d46c5d07dfb864ecaf",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "opaqueBounds": [
+              162,
+              10,
+              1204,
+              1225
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen precise-object-edit on original companion; persistent verified PNG bytes",
+        "prompt": "Use case: precise-object-edit. Asset: LOOPKEEPER existing archer sprite, exact material variant for diamond_bow (ダイヤモンドの弓). The most recent single original green-hooded auburn female elf holding a vertical drawn wooden bow is the exact EDIT TARGET. Change ONLY the BOW'S brown wooden limbs/riser into faceted pale diamond/crystal: restrained broad pearl-white faces with subtle cool cyan/lilac refraction planes and crisp dark violet-gray edge definition, visibly distinct from smooth neutral silver and smooth icy-blue mithril. Preserve original curved silhouette/width and full bow geometry, no larger or thicker bow. Retain dark grip, gold bindings/leaves/ornament placements, bowstring and nocked arrow. No glow/aura, floating gems, glitter cloud or extra metal on the person. Preserve exact same elf identity, face, hair, pointed ear, expression, hood/cloak, clothes/armor, hands/fingers, boots, drawn pose, body scale and transparent framing. Original1254square: bowcurl near y11, hoodnear124, feet1224, cloakleft163, arrowtip1203; no zoom/crop/enlargement/recomposition. Allbow andarrow intact with transparent margins. Same crisp pixel-art clusters/upper-left lighting, original green/warm cloth palette unchanged. Diamond facets must read at96x132 management and100x112 battle without noisy tiny speckles. Genuine transparent alpha background. No text/grid/watermark/extraobjects/background. Weapon material only, no character/costume/pose redesign.\n",
+        "reference": {
+          "file": "party-archer-v1.png",
+          "sha256": "93dca38bd15ae1f7037c315d0d9baab5d927554062cae7a82b926c53c143c57c"
+        }
+      },
+      {
+        "file": "party-mage-diamond-staff-v1.png",
+        "bytes": 1328053,
+        "sha256": "61d1d60ed61c27f9ce39f22af3492981ca0af1916810195e73cd03d961c4f05a",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "opaqueBounds": [
+              235,
+              21,
+              1206,
+              1230
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen precise-object-edit on original companion; persistent verified PNG bytes",
+        "prompt": "Use case: precise-object-edit. Asset: LOOPKEEPER exact mage companion material variant diamond_staff (ダイヤモンドの火杖). The most recent single blue-robed bearded male mage holding a wooden fire staff is the EXACT EDIT TARGET. Change ONLY the staff's wooden shaft and curled crown main body into faceted pale diamond/crystal: restrained broad pearl-white faces with subtle cool cyan/lilac refraction planes and crisp dark violet-gray edge definition, distinct from smooth silver-white and smooth icy-blue mithril. Retain original curved silhouette/width and exact hand grip, fine gold bindings/hanging charm and contained blue/gold orb/flame at exactly original size/brightness. No larger head, extra gems, aura, glitter cloud, larger fireball or new spell. Preserve exact SAME mage face/identity/hair/beard/eyes/expression, blue embroidered hood/robes, book/scroll, bag, hands, boots, pose/body scale and transparent composition.1254square: hood26,feet1228,robeleft236,staffheadright1202; no zoom/crop/enlargement/recomposition, all staff and feet intact with transparent margins. Same crisp pixel-art cluster density and upper-left lighting, do not brighten person/costume. Diamond facets should read at96x132 management and100x112 battle without tiny noisy speckles. Genuine transparent alpha background, no text/grid/watermark/extraobjects/background. Only staff material changes, no character or pose redesign.\n",
         "reference": {
           "file": "party-mage-v1.png",
           "sha256": "2fd534e936fc1373b21ff692f9050f042bb05f66b6056e2a7f099bb45f7b1a5a"

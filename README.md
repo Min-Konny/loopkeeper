@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.121
+# LoopKeeper 0.6.122
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -199,3 +199,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.121: ミスリルの弓・火杖を淡い青銀色の専用材質表示へ。範囲と未対応は docs/party-weapons-0.6.121.md。
+
+
+0.6.122: ダイヤモンドの弓・火杖を同じ仲間の専用結晶表示へ。21武器の表示対応は docs/party-weapons-0.6.122.md。

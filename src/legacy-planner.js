@@ -1,8 +1,8 @@
-import {queueUnlocked}from './queue-unlock.js?v=0.6.121';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.121';
-import { getSkillProgress } from './legacy-engine.js?v=0.6.121';
-import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.6.121';
-import { dependencyOrderedCosts } from './material-priority.js?v=0.6.121';
+import {queueUnlocked}from './queue-unlock.js?v=0.6.122';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.122';
+import { getSkillProgress } from './legacy-engine.js?v=0.6.122';
+import { ACTIONS, RECIPES, RESOURCES, canStartAction, getActionDuration, getRecipeCost, enqueueAction, toggleUpgrade } from './legacy-engine.js?v=0.6.122';
+import { dependencyOrderedCosts } from './material-priority.js?v=0.6.122';
 
 const MAX_STEPS = 8;
 const MAX_COUNT = 99;

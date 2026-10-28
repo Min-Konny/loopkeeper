@@ -1,5 +1,5 @@
-import {preparationRevision}from './preparation-balance.js?v=0.6.121';
-import {runSummary,runComparison}from './run-results.js?v=0.6.121';import {FREE_FEATURES}from './free-features.js?v=0.6.121';
+import {preparationRevision}from './preparation-balance.js?v=0.6.122';
+import {runSummary,runComparison}from './run-results.js?v=0.6.122';import {FREE_FEATURES}from './free-features.js?v=0.6.122';
 const time=n=>n==null?'未記録':Math.round(n)+'秒';
 const signed=n=>(n>0?'+':'')+Math.round(n);
 function arrivalComparison(s,r,c){
