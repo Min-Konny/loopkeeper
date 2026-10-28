@@ -3542,7 +3542,7 @@
     ]
   },
   "partyWeaponMaterialVariants": {
-    "scope": "Exact existing orichalcum_crossbow on same archer; iron/initial/bow/mage remain unchanged",
+    "scope": "Existing orichalcum bow and crossbow materials on original archer; other bows/initial/mage remain unchanged",
     "records": [
       {
         "file": "party-archer-orichalcum-crossbow-v1.png",
@@ -3595,6 +3595,53 @@
           "sha256": "ac52e4e6dddbc63a46af581cd3308f44566ca6af11f96729f5440557ee8214fa",
           "role": "Own generated weapon palette only; rejected larger character framing not adopted",
           "published": false
+        }
+      },
+      {
+        "file": "party-archer-orichalcum-bow-v1.png",
+        "bytes": 1321124,
+        "sha256": "b6f62730fbaf1c265e79ecf1d2b941137d9e4bda48a48db46fca07fda6584607",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "opaqueBounds": [
+              162,
+              10,
+              1203,
+              1225
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen precise-object-edit; original PNG bytes retained",
+        "prompt": "Use case: precise-object-edit. Asset: existing LOOPKEEPER companion pixel-art sprite, new sibling orichalcum bow material. Image1 (most recent original green-hooded female elf drawing a vertical bow) is the exact EDIT TARGET, not merely style reference. Change ONLY the bow's wooden limbs/risers to reinforced warm copper-gold orichalcum, dark copper recesses with restrained pale-gold metallic edges; retain dark grip, string, arrow, same slender recurved bow silhouette and orientation. Keep the same auburn-haired female elf identity, face, pointed ear, expression, green hood/cloak, hands, clothes, boots, drawn-bow pose, pixel-art clusters and upper-left light. Do NOT change character, body scale, armor, pose or framing. Original1254x1254 square layout: hood near y124, boots bottom1225, cloak left163, upper bow curl near x920 y10, arrow tip x1200 y327; preserve original margins and locations, all limbs/arrow intact, no zoom or crop. Material readable at96x132 management and100x112 combat: clean copper-gold broad edge clusters; no glow/gems/fire/spell FX, no extra objects/text/grid/watermark. Genuine transparent alpha background. This is the same archer and same bow stance, only bow material changes. Keep original transparent canvas footprint.\n",
+        "reference": {
+          "file": "party-archer-v1.png",
+          "sha256": "93dca38bd15ae1f7037c315d0d9baab5d927554062cae7a82b926c53c143c57c"
         }
       }
     ]

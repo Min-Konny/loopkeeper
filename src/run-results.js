@@ -1,6 +1,6 @@
-import {earlyLoop}from './early-loop.js?v=0.6.115';import {lateLoop}from './late-loop.js?v=0.6.115';
-import {campaignForRun}from './campaign-rules.js?v=0.6.115';
-import {repeatRunPoints}from './progression-rewards.js?v=0.6.115';
+import {earlyLoop}from './early-loop.js?v=0.6.116';import {lateLoop}from './late-loop.js?v=0.6.116';
+import {campaignForRun}from './campaign-rules.js?v=0.6.116';
+import {repeatRunPoints}from './progression-rewards.js?v=0.6.116';
 export function createRunResults(meta){
  const previous=(meta.history||[]).find(x=>x.generation<meta.generation),previousWall=previous?.result?.wallWave||null;
  return {startPoints:meta.totalPoints,startFeatures:[...(meta.freeFeatures||[])],startAccessories:[...(meta.accessories||[])],startRouteClears:[...(meta.routeClears||[])],partial:false,activeRealSeconds:0,timingComplete:true,arrivals:{},clears:{},previousWall,wallReference:null};

@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.115
+# LoopKeeper 0.6.116
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -181,3 +181,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.115: 仲間のオリハルコンの弩を専用の材質表示へ。範囲: docs/party-weapons-0.6.115.md。
+
+
+0.6.116: オリハルコンの弓を専用材質表示へ。範囲: docs/party-weapons-0.6.116.md。
