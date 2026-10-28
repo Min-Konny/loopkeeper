@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.119
+# LoopKeeper 0.6.120
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -193,3 +193,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.119: 自動製作切替時の作業一覧スクロールと、未編集の訓練予約目標の現在Lv＋1追従を修正。詳細: docs/work-transition-0.6.119.md。
+
+
+0.6.120: 銀の弓・銀の火杖を同じ仲間の銀白色の専用材質表示へ。範囲と未対応は docs/party-weapons-0.6.120.md。
