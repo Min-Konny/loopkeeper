@@ -1,10 +1,10 @@
-import{specialistArtFile}from './specialist-art.js?v=0.6.134';
-import{housingArtFile}from './housing-art.js?v=0.6.134';
-import{housingFallbackSource,kitchenFallbackSource,laboratoryFallbackSource,workhouseFallbackSource,archeryRangeFallbackSource,arcaneStudyFallbackSource}from './pixel-product-art.js?v=0.6.134';
-import{SPECIALISTS}from './specialist-content.js?v=0.6.134';
+import{specialistArtFile}from './specialist-art.js?v=0.6.135';
+import{housingArtFile}from './housing-art.js?v=0.6.135';
+import{housingFallbackSource,kitchenFallbackSource,laboratoryFallbackSource,workhouseFallbackSource,archeryRangeFallbackSource,arcaneStudyFallbackSource}from './pixel-product-art.js?v=0.6.135';
+import{SPECIALISTS}from './specialist-content.js?v=0.6.135';
 // Original built-in ImageGen assets; raw pixels are preserved. Runtime atlas framing only.
-import{loadFacilityArt}from './facility-art.js?v=0.6.134';
-import{CAMP_BUILDINGS,campBuildings}from './camp-layout.js?v=0.6.134';
+import{loadFacilityArt}from './facility-art.js?v=0.6.135';
+import{CAMP_BUILDINGS,campBuildings}from './camp-layout.js?v=0.6.135';
 const root=new URL('../assets/pixel-v2/',import.meta.url);let pending;const stages=new Map(),workerAtlases=new WeakMap();
 const images=new Map();
 const image=name=>{if(!images.has(name))images.set(name,new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Camp artwork unavailable: '+name));img.src=new URL(name,root).href;}));return images.get(name);};

@@ -1,17 +1,19 @@
-import {alphaBounds}from './generated-camp-art.js?v=0.6.134';
-import {workKind,workPose}from './work-motion.js?v=0.6.134';
+import {alphaBounds}from './generated-camp-art.js?v=0.6.135';
+import {workKind,workPose}from './work-motion.js?v=0.6.135';
 const root=new URL('../assets/pixel-v2/',import.meta.url),mounted=new WeakMap();let pending;
 const sheets=Object.freeze({foraging:'forager-v1-sheet.png',fishing:'fisher-v2-sheet.png',cooking:'cook-v1-sheet.png',training:'training-v2-sheet.png'}),extras=new Map(),foragingProps=new Map();let background,propsPending,miningArt;
 export const FODDER_PROP_FILE='fodder-patch-v1.png';
 export const HIGHLAND_PROP_FILE='highland-food-v1.png';
 export const TRAINING_IRON_SHIELD_FILE='training-iron-shield-v1.png';
 export const TRAINING_STEEL_SHIELD_FILE='training-steel-shield-v1.png';
-const trainingShields=Object.freeze({iron_shield:TRAINING_IRON_SHIELD_FILE,steel_shield:TRAINING_STEEL_SHIELD_FILE}),trainingVariants=new Map();
+export const TRAINING_SILVER_SHIELD_FILE='training-silver-shield-v1.png';
+const trainingShields=Object.freeze({iron_shield:TRAINING_IRON_SHIELD_FILE,steel_shield:TRAINING_STEEL_SHIELD_FILE,silver_shield:TRAINING_SILVER_SHIELD_FILE}),trainingVariants=new Map();
 // Authored steel sheet has nonuniform row spacing. Only its four defense poses
 // are framed; use the established practice atlas as the size/footline reference.
 export const STEEL_DEFENSE_ROW=Object.freeze({top:386,bottom:744,width:1448,height:1086});
-function steelDefenseAtlas(img,reference){const r=STEEL_DEFENSE_ROW;if(img.width!==r.width||img.height!==r.height)throw Error('Unexpected steel training sheet');const c=document.createElement('canvas');c.width=reference.width;c.height=reference.height;const ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;const cw=img.width/4;for(let n=0;n<4;n++){const b=alphaBounds(img,n*cw,r.top,cw,r.bottom-r.top),target=alphaBounds(reference,(4+n)*96,0,96,104),scale=Math.min(target.height/b.height,88/b.width),w=b.width*scale,h=b.height*scale;ctx.drawImage(img,n*cw+b.x,r.top+b.y,b.width,b.height,(4+n)*96+target.x+(target.width-w)/2,target.bottom+1-h,w,h);}return c;}
-function shieldTrainingArt(id){if(!trainingVariants.has(id))trainingVariants.set(id,Promise.all([loadArt('training'),image(trainingShields[id]).catch(()=>null)]).then(([base,img])=>{if(!img)return base;try{return{...base,training:id==='steel_shield'?steelDefenseAtlas(img,base.training):atlas(img,3,true)};}catch{return base;}}));return trainingVariants.get(id);}
+export const SILVER_DEFENSE_ROW=Object.freeze({top:386,bottom:744,width:1448,height:1086});
+function steelDefenseAtlas(img,reference,r=STEEL_DEFENSE_ROW){if(img.width!==r.width||img.height!==r.height)throw Error('Unexpected defense training sheet');const c=document.createElement('canvas');c.width=reference.width;c.height=reference.height;const ctx=c.getContext('2d');ctx.imageSmoothingEnabled=false;const cw=img.width/4;for(let n=0;n<4;n++){const b=alphaBounds(img,n*cw,r.top,cw,r.bottom-r.top),target=alphaBounds(reference,(4+n)*96,0,96,104),scale=Math.min(target.height/b.height,88/b.width),w=b.width*scale,h=b.height*scale;ctx.drawImage(img,n*cw+b.x,r.top+b.y,b.width,b.height,(4+n)*96+target.x+(target.width-w)/2,target.bottom+1-h,w,h);}return c;}
+function shieldTrainingArt(id){if(!trainingVariants.has(id))trainingVariants.set(id,Promise.all([loadArt('training'),image(trainingShields[id]).catch(()=>null)]).then(([base,img])=>{if(!img)return base;try{return{...base,training:id==='steel_shield'?steelDefenseAtlas(img,base.training):id==='silver_shield'?steelDefenseAtlas(img,base.training,SILVER_DEFENSE_ROW):atlas(img,3,true)};}catch{return base;}}));return trainingVariants.get(id);}
 const actionProps=Object.freeze({collect_fodder:{file:FODDER_PROP_FILE,tag:'fodder'},gather_highland_food:{file:HIGHLAND_PROP_FILE,tag:'highland'}});
 function foragingArt(id){if(!foragingProps.has(id))foragingProps.set(id,Promise.all([loadArt('foraging'),image(actionProps[id].file).then(img=>({img,bounds:alphaBounds(img)})).catch(()=>null)]).then(([base,actionProp])=>({...base,actionProp})));return foragingProps.get(id);}
 function workProps(){return propsPending??=image('work-environment-v2.png').then(img=>{const cw=img.width/3;return{img,cw,bounds:[0,1,2].map(n=>alphaBounds(img,n*cw,0,cw,img.height))};});}
