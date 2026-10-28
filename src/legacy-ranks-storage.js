@@ -1,4 +1,4 @@
-import {purchaseUpgrade,refundUpgrade,toggleUpgrade,purchaseLegacyRank,refundLegacyRank,toggleLegacyRank,resetLegacyRankDraft,cancelLegacyDraft}from './engine.js?v=0.6.129';import {commitStoredGameEdit}from './save-storage.js?v=0.6.129';
+import {purchaseUpgrade,refundUpgrade,toggleUpgrade,purchaseLegacyRank,refundLegacyRank,toggleLegacyRank,resetLegacyRankDraft,cancelLegacyDraft}from './engine.js?v=0.6.130';import {commitStoredGameEdit}from './save-storage.js?v=0.6.130';
 export function editStoredLegacyRank(storage,current,{key,type},{isOwner=()=>false,now=Date.now()}={}){
  if(!isOwner())return {ok:false,reason:'別のタブでプレイ中です。'};
  const next=structuredClone(current),fn={upgrade:purchaseUpgrade,remove:refundUpgrade,switch:toggleUpgrade,buy:purchaseLegacyRank,refund:refundLegacyRank,toggle:toggleLegacyRank,reset:resetLegacyRankDraft,cancel:cancelLegacyDraft}[type];if(!fn)return {ok:false,reason:'不明な操作です。'};

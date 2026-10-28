@@ -1,5 +1,7 @@
 // Browser-only collection records. No currency, stats, or platform API calls.
+import {MILESTONE_ACHIEVEMENTS,milestoneAchievementProgress} from './milestone-achievements.js?v=0.6.130';
 export const REPLAY_ACHIEVEMENTS = [
+  ...MILESTONE_ACHIEVEMENTS,
   {id:'frontier_clear',name:'夜明けを取り戻す',rule:'通常36波をクリア。旧セーブの36波クリア記録も対象。'},
   {id:'frontier_15_generations',name:'十五の灯で夜明けへ',rule:'新しい挑戦の第15世代以内に通常36波をクリア。縛りとの同時達成は不要。'},
   ...[['martial','武勇','弓術場'],['fortress','要塞','錬金工房'],['economy','経済','仕事場']].map(([type,label,facility])=>({id:'frontier_'+type,name:label+'の夜明け',rule:'挑戦全体で購入した追加オーグメント集は'+label+'だけ。その集を有効にして3世代以上を開始し、'+facility+'IIを一度建て、集が有効なまま通常36波をクリア。'})),
@@ -29,6 +31,7 @@ export function initializeReplay(s,{fresh=false}={}){
   if(old&&!s.replay.unlocked.some(x=>x.id==='frontier_clear'))s.replay.unlocked.push({id:'frontier_clear',generation:old.generation,seconds:old.seconds});
 }
 export function observeReplay(s,recipe=null){
+  recordReplayMilestones(s);
   const a=s.replay?.attempt;if(!a||a.finished)return;
   const owned=s.meta.upgrades||[],disabled=s.settings.disabledUpgrades||[];
   for(const t of TYPES){
@@ -44,6 +47,14 @@ export function observeReplay(s,recipe=null){
   const ids=[recipe?.facility?.id,recipe?.facilityId,...Object.keys(s.run.facilities||{}).filter(k=>s.run.facilities[k]>0)];
   if(ids.includes('market'))a.usedMarket=true;
   if(ids.some(id=>['archery_tower','guardhouse'].includes(id)))a.usedTowers=true;
+}
+// Independent unlock-event boundary: valid ownership/completion facts only.
+// A paid recipe, reservation, or offered item does not qualify. No rewards.
+export function recordReplayMilestones(s){
+  if(s.version!==2||!s.replay)return [];
+  const records=s.replay.unlocked;
+  const events=MILESTONE_ACHIEVEMENTS.filter(d=>!records.some(x=>x.id===d.id)&&milestoneAchievementProgress(s,d).complete).map(d=>({id:d.id,generation:s.meta.generation,seconds:s.run.elapsed}));
+  records.push(...events);return events;
 }
 // Stable platform-neutral unlock-event boundary. Called only at a genuine clear.
 export function recordReplayClear(s){

@@ -1,4 +1,4 @@
-import {FRONTIER_REGIONS}from './regional-content.js?v=0.6.129';
+import {FRONTIER_REGIONS}from './regional-content.js?v=0.6.130';
 export function initializeRegionalRewards(s){
  if(s.version===1)return;
  if(s.meta.regionalVersion===undefined){s.meta.regionalVersion=1;s.run.regionalClaims=[];}

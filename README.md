@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.129
+# LoopKeeper 0.6.130
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -223,3 +223,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.129: タイトル確認/設定のキャンセルが縦長になる問題を修正。docs/title-dialogs-0.6.129.md 参照。
+
+
+0.6.130: 節目実績10個を追加し、既存7個と合わせて17個に。追加のポイント報酬はありません。[実績仕様](docs/milestone-achievements-0.6.130.md)・[現在の残作業](docs/remaining-work.md)・[現在の表示対応](docs/art-coverage-current.md)。

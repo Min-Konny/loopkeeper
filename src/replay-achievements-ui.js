@@ -1,8 +1,14 @@
-import {REPLAY_ACHIEVEMENTS} from './replay-achievements.js?v=0.6.129';
+import {REPLAY_ACHIEVEMENTS} from './replay-achievements.js?v=0.6.130';
+import {milestoneAchievementProgress} from './milestone-achievements.js?v=0.6.130';
 export function replayAchievementsMarkup(s){
   if(s.version!==2)return '';
   const records=s.replay?.unlocked||[],a=s.replay?.attempt;
   const progress=id=>{
+    const definition=REPLAY_ACHIEVEMENTS.find(d=>d.id===id);
+    if(definition?.kind==='milestone'){
+      const p=milestoneAchievementProgress(s,definition);
+      return (definition.metric==='equipmentTier'?'装備等級 ':'現在の達成 ')+p.current+' / '+p.target+'・追加のポイント報酬なし';
+    }
     if(!a?.known&&id!=='frontier_clear')return '過去の条件履歴なし：新しい挑戦から記録';
     if(a?.finished)return 'この挑戦は36波クリア済み：新しい挑戦で再挑戦';
     if(id==='frontier_15_generations')return s.meta.generation>15?'この挑戦では対象外（世代上限なしの他実績は継続可能）':'現在 第'+s.meta.generation+'世代 / 15世代';
@@ -12,5 +18,8 @@ export function replayAchievementsMarkup(s){
     if(['martial','fortress','economy'].includes(type))return a?.packs.some(t=>t!==type)?'この挑戦では対象外：別タイプの集を購入済み':'該当集で開始 '+(a?.started[type]||0)+' / 3世代以上・専門施設II '+(a?.specialists.includes(type)?'達成':'未達成');
     return '通常36波のクリアを目指す';
   };
-  return '<section class="replay-achievements" aria-label="リプレイ実績"><h3>リプレイ実績 <small>'+records.length+' / '+REPLAY_ACHIEVEMENTS.length+'</small></h3><p class="fine-print">継承ポイントとは別の収集記録。強化報酬はなく、新しい挑戦でも解除済み実績は残ります。</p><details data-replay-list><summary>条件・挑戦中の状態を確認</summary><div class="replay-achievement-list">'+REPLAY_ACHIEVEMENTS.map(d=>{const r=records.find(x=>x.id===d.id);return '<article data-replay-achievement="'+d.id+'" class="replay-achievement '+(r?'earned':'')+'"><h4>'+d.name+' <small>'+(r?'解除済み':'未解除')+'</small></h4><p>'+d.rule+'</p><small>'+(r?'第'+r.generation+'世代で解除':progress(d.id))+'</small></article>';}).join('')+'</div></details><p class="fine-print">縛りとタイプ条件は第1世代から全世代を記録。設定の「新しい挑戦」から始められます。転生は同じ挑戦の続きです。</p></section>';
+  const article=d=>{const r=records.find(x=>x.id===d.id);return '<article data-replay-achievement="'+d.id+'" class="replay-achievement '+(r?'earned':'')+'"><h4>'+d.name+' <small>'+(r?'解除済み':'未解除')+'</small></h4><p>'+d.rule+'</p><small>'+(r?'第'+r.generation+'世代で記録':progress(d.id))+'</small></article>';};
+  const groups=[['milestones','旅の節目',REPLAY_ACHIEVEMENTS.filter(d=>d.kind==='milestone')],['challenges','クリアへの挑戦',REPLAY_ACHIEVEMENTS.filter(d=>d.kind!=='milestone')]];
+  const list=groups.map(([id,label,definitions])=>'<section data-achievement-group="'+id+'"><p><strong>'+label+' '+definitions.filter(d=>records.some(x=>x.id===d.id)).length+' / '+definitions.length+'</strong></p><div class="replay-achievement-list">'+definitions.map(article).join('')+'</div></section>').join('');
+  return '<section class="replay-achievements" aria-label="リプレイ実績"><h3>リプレイ実績 <small>'+records.length+' / '+REPLAY_ACHIEVEMENTS.length+'</small></h3><p class="fine-print">継承ポイントとは別の収集記録。強化報酬はなく、新しい挑戦でも解除済み実績は残ります。</p><details data-replay-list><summary>条件・挑戦中の状態を確認</summary>'+list+'</details><p class="fine-print">節目は所持品・解放状況・保存済みの初達成履歴から確認。旧記録の節目は今回の世代で記録します。縛りとタイプ条件は第1世代から全世代を記録し、過去の条件は推測しません。転生は同じ挑戦の続きです。</p></section>';
 }
