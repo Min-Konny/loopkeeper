@@ -1,10 +1,10 @@
-import { pixelWorkScene } from './pixel-work-art.js?v=0.6.132';
-import { equipmentMaterial } from './visual-design.js?v=0.6.132';
-import { icon } from './icons.js?v=0.6.132';
-import { miningScene } from './mining-scene.js?v=0.6.132';
-import { actionTarget } from './action-target.js?v=0.6.132';
-import {partyImageMarkup} from './party-art.js?v=0.6.132';
-import {enhanceWorkScene,syncGeneratedWork}from './generated-work-art.js?v=0.6.132';
+import { pixelWorkScene } from './pixel-work-art.js?v=0.6.133';
+import { equipmentMaterial } from './visual-design.js?v=0.6.133';
+import { icon } from './icons.js?v=0.6.133';
+import { miningScene } from './mining-scene.js?v=0.6.133';
+import { actionTarget } from './action-target.js?v=0.6.133';
+import {partyImageMarkup} from './party-art.js?v=0.6.133';
+import {enhanceWorkScene,syncGeneratedWork}from './generated-work-art.js?v=0.6.133';
 
 // Decorative work scenes follow the actual selected skill; no separate timer or game state.
 export function workScene(skill, actionId, equipment = {}, displayState = null) {
@@ -17,7 +17,7 @@ export function workScene(skill, actionId, equipment = {}, displayState = null) 
     return `<div class="work-vignette party-training-scene" aria-hidden="true">${image}<span class="party-training-target">${member==='archer'?'◎':'✦'}</span></div>`;
   }
   const visualSkill=["cooking","alchemy","commerce"].includes(skill)?"smithing":skill;
-  const pixel=pixelWorkScene(visualSkill,actionId,equipment);if(pixel)return enhanceWorkScene(pixel,skill,actionId);
+  const pixel=pixelWorkScene(visualSkill,actionId,equipment);if(pixel)return enhanceWorkScene(pixel,skill,actionId,equipment);
   const toolMaterial = equipmentMaterial(skill === 'combat' ? equipment.weapon : equipment.tool);
   const armorMaterial = equipmentMaterial(equipment.armor);
   const shieldMaterial = equipmentMaterial(equipment.shield);

@@ -4099,5 +4099,20 @@
       "sha256": "d8b9cf67b1c7e260c45effc9ca2bacd87e55ff2b344d2529928c31d2aa2d6aab"
     },
     "runtime": "Alpha bounds cropped only at rendering; one visible highland action prop, shared worker/background unchanged; no gameplay changes"
+  },
+  "ironShieldDefenseTraining": {
+    "file": "training-iron-shield-v1.png",
+    "sha256": "33579223c80a54d56a1b7ef562062cffe42d03c4346d61f80adfa936603e8971",
+    "bytes": 1179426,
+    "width": 1448,
+    "height": 1086,
+    "source": "Built-in ImageGen precise-object-edit of original training-v2-sheet.png, visible reference; one completed image request",
+    "reference": {
+      "file": "training-v2-sheet.png",
+      "sha256": "97057c0c246f36288777fce66cae3b293708d9c3e389f132f9c8d50b2a18261b"
+    },
+    "prompt": "Use case: precise-object-edit. Edit target: existing LOOPKEEPER training-v2-sheet.png, exact 4 columns x3 rows transparent sprite sheet. Change ONLY the wooden round shield faces in the MIDDLE ROW, all four defense-training poses, into an iron round shield: cool dark iron broad metal plates, restrained pale silver edge highlights, rivets and existing central metal boss. Keep same circular outline, exact size/location/hand grip and matching lighting; remove wood grain on shield face. Preserve the SAME character identity, hair, face, green/brown practice clothes, body proportions, all poses, transparency, column/row grid and framing. Top-row wooden practice-sword poses and bottom-row stone lifting poses remain unchanged. Do NOT add armor, helmet, weapon, emblem, text, background, glow or extra frames. Crisp woodland fantasy pixel clusters consistent with input. Genuine transparent alpha. This is an equipment-display variant for defense practice, not character redesign.",
+    "pixels": "Original output bytes preserved, CRC verified, reopened with Pillow",
+    "scope": "Only middle-row four defense poses are used, and only when actual equipped shield.id is iron_shield. Other practice actions keep original sheet. Actor clothes/armor variants remain common practice clothes; no claim of all equipment coverage."
   }
 }
