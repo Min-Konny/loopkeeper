@@ -1,5 +1,5 @@
-import {REPLAY_ACHIEVEMENTS} from './replay-achievements.js?v=0.6.137';
-import {milestoneAchievementProgress} from './milestone-achievements.js?v=0.6.137';
+import {REPLAY_ACHIEVEMENTS} from './replay-achievements.js?v=0.6.138';
+import {milestoneAchievementProgress} from './milestone-achievements.js?v=0.6.138';
 export function replayAchievementsMarkup(s){
   if(s.version!==2)return '';
   const records=s.replay?.unlocked||[],a=s.replay?.attempt;

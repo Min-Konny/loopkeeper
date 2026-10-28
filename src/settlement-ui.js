@@ -1,5 +1,5 @@
-import {JOBS,OUTPOSTS,outpostId,outpostRecipe}from './settlement-content.js?v=0.6.137';
-import {populationCapacity,assigned,staffing,allocationLimit,outpostRate}from './settlement.js?v=0.6.137';
+import {JOBS,OUTPOSTS,outpostId,outpostRecipe}from './settlement-content.js?v=0.6.138';
+import {populationCapacity,assigned,staffing,allocationLimit,outpostRate}from './settlement.js?v=0.6.138';
 export function allocationControls(s,id,name){
  const n=staffing(s,id),limit=allocationLimit(s,id),disabled=s.run.status!=='preparing';
  return `<div class="population-stepper"><button class="button small" data-population="${id}" data-population-count="${n-1}" data-focus="population-minus-${id}" aria-label="${name}から1人外す" ${disabled||n===0?'disabled':''}>−</button><strong>${n} / ${limit}人</strong><button class="button small" data-population="${id}" data-population-count="${n+1}" data-focus="population-plus-${id}" aria-label="${name}に1人配置" ${disabled||n>=limit||assigned(s)>=populationCapacity(s)?'disabled':''}>＋</button></div>`;
