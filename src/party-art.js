@@ -1,4 +1,4 @@
-import{PARTY,partyWeapon}from './party.js?v=0.6.118';
+import{PARTY,partyWeapon}from './party.js?v=0.6.119';
 const crossbow='party-archer-crossbow-v1.png',orichalcumCrossbow='party-archer-orichalcum-crossbow-v1.png',orichalcumBow='party-archer-orichalcum-bow-v1.png',orichalcumStaff='party-mage-orichalcum-staff-v1.png';
 const materialVariants=[{member:'archer',id:'orichalcum_crossbow',material:'orichalcum',file:orichalcumCrossbow},{member:'archer',id:'orichalcum_bow',material:'orichalcum',file:orichalcumBow},{member:'mage',id:'orichalcum_staff',material:'orichalcum',file:orichalcumStaff},{member:'archer',id:'steel_bow',material:'steel',file:'party-archer-steel-bow-v1.png'},{member:'mage',id:'steel_staff',material:'steel',file:'party-mage-steel-staff-v1.png'}],failed=new Set(),known=new Set([...PARTY.map(m=>m.image),crossbow,...materialVariants.map(v=>v.file)]);
 const placeholder='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="112" viewBox="0 0 100 112"><circle cx="50" cy="27" r="15" fill="#c1a678"/><path d="M18 105L28 57Q50 41 72 57L82 105Z" fill="#63725a" stroke="#c1a678" stroke-width="3"/></svg>');

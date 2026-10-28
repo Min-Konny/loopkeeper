@@ -1,5 +1,5 @@
-import {ACCESSORIES,ACCESSORY_RECIPES} from './gear-content.js?v=0.6.118';
-import {trophyMarkup} from './boss-materials.js?v=0.6.118';
+import {ACCESSORIES,ACCESSORY_RECIPES} from './gear-content.js?v=0.6.119';
+import {trophyMarkup} from './boss-materials.js?v=0.6.119';
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function cycleGoalsMarkup(s,costOf,nameOf=id=>id){
  const owned=s.meta.accessories||[], candidates=[...new Set(['work_boots','guard_bracelet','artisan_bracelet','tempo_ring','guild_pendant','steady_ring',...ACCESSORIES.map(a=>a.id)])].filter(id=>!owned.includes(id)).slice(0,2);

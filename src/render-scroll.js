@@ -3,7 +3,7 @@
 // cached position from before a user's wheel, touch or keyboard navigation.
 export function preserveRenderScroll(document, draw) {
   const nodes = new Set([document.scrollingElement,
-    ...document.querySelectorAll('main, .sidebar, #expanded-work-dialog')]);
+    ...document.querySelectorAll('main, .sidebar, #content, #camp-rail, #expanded-work-dialog')]);
   const positions = [...nodes].filter(node => node?.isConnected).map(node =>
     ({node, top:node.scrollTop, left:node.scrollLeft}));
   try { return draw(); }

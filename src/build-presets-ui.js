@@ -1,4 +1,4 @@
-import {EQUIPMENT_SLOTS,PHASES,proposeBuildRestore}from './build-presets.js?v=0.6.118';import {ACCESSORY_SLOTS,accessoryById}from './gear-content.js?v=0.6.118';import {RECIPES}from './engine.js?v=0.6.118';import {companionById}from './companion-content.js?v=0.6.118';
+import {EQUIPMENT_SLOTS,PHASES,proposeBuildRestore}from './build-presets.js?v=0.6.119';import {ACCESSORY_SLOTS,accessoryById}from './gear-content.js?v=0.6.119';import {RECIPES}from './engine.js?v=0.6.119';import {companionById}from './companion-content.js?v=0.6.119';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const labels={archer:'弓使い',mage:'魔法使い',weapon:'武器',armor:'防具',shield:'盾',tool:'道具',ring:'指輪',bracelet:'腕輪',boots:'靴',necklace:'首飾り',companion:'相棒'};
 const companionName=id=>id===null?'同行なし':companionById(id)?.name||id;
