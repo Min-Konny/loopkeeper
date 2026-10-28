@@ -1,6 +1,6 @@
-import {synchronizeFreeFeatures}from './free-features.js?v=0.6.130';
-import {retainReplayCollection} from './replay-achievements.js?v=0.6.130';
-import { createGame, parseSave, serializeGame } from './engine.js?v=0.6.130';
+import {synchronizeFreeFeatures}from './free-features.js?v=0.6.131';
+import {retainReplayCollection} from './replay-achievements.js?v=0.6.131';
+import { createGame, parseSave, serializeGame } from './engine.js?v=0.6.131';
 export const STORAGE_KEY = 'tomori-rebirth-v1';
 const BACKUP_KEY = `${STORAGE_KEY}-backups`;
 const ARCHIVE_KEY = `${STORAGE_KEY}-unreadable`;

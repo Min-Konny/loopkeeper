@@ -1,4 +1,4 @@
-import {isLegacy,getCatalog,getSkillProgress,resolveGoal} from './engine.js?v=0.6.130';
+import {isLegacy,getCatalog,getSkillProgress,resolveGoal} from './engine.js?v=0.6.131';
 export function trainingPurpose(state){
  const catalog=getCatalog(state),active=state.run.activeAction,queue=state.run.queue;
  if(!queue.length || state.settings.disabledUpgrades.includes('action_queue'))return '';

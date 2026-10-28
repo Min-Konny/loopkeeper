@@ -1,7 +1,9 @@
-import {alphaBounds}from './generated-camp-art.js?v=0.6.130';
-import {workKind,workPose}from './work-motion.js?v=0.6.130';
+import {alphaBounds}from './generated-camp-art.js?v=0.6.131';
+import {workKind,workPose}from './work-motion.js?v=0.6.131';
 const root=new URL('../assets/pixel-v2/',import.meta.url),mounted=new WeakMap();let pending;
-const sheets=Object.freeze({foraging:'forager-v1-sheet.png',fishing:'fisher-v2-sheet.png',cooking:'cook-v1-sheet.png',training:'training-v2-sheet.png'}),extras=new Map();let background,propsPending,miningArt;
+const sheets=Object.freeze({foraging:'forager-v1-sheet.png',fishing:'fisher-v2-sheet.png',cooking:'cook-v1-sheet.png',training:'training-v2-sheet.png'}),extras=new Map();let background,propsPending,miningArt,fodderPending;
+export const FODDER_PROP_FILE='fodder-patch-v1.png';
+function fodderArt(){return fodderPending??=Promise.all([loadArt('foraging'),image(FODDER_PROP_FILE).then(img=>({img,bounds:alphaBounds(img)})).catch(()=>null)]).then(([base,fodder])=>({...base,fodder}));}
 function workProps(){return propsPending??=image('work-environment-v2.png').then(img=>{const cw=img.width/3;return{img,cw,bounds:[0,1,2].map(n=>alphaBounds(img,n*cw,0,cw,img.height))};});}
 function naturalProp(c,art,index,x,y,w,h){const p=art.extraProps,b=p.bounds[index];const scale=Math.min(w/b.width,h/b.height),width=b.width*scale,height=b.height*scale;c.drawImage(p.img,index*p.cw+b.x,b.y,b.width,b.height,x+(w-width)/2,y+h-height,width,height);}
 
@@ -10,7 +12,7 @@ function atlas(img,rows,padded=false){const cw=Math.floor(img.width/4),ch=Math.f
 function loadArt(kind){if(kind==='mining')return miningArt??=Promise.all([loadArt('logging'),image('mining-quarry-v1.png')]).then(([art,background])=>({...art,background}));if(Object.hasOwn(sheets,kind)){if(!extras.has(kind))extras.set(kind,Promise.all([kind==='fishing'?image('fishing-bank-v2.png'):(background??=image('forest-clearing-v1.png')),image(sheets[kind]),['foraging','cooking'].includes(kind)?workProps():null]).then(([background,img,extraProps])=>({background,extraProps,[kind]:atlas(img,kind==='training'?3:2,true)})));return extras.get(kind);}return pending??=Promise.all(['forest-clearing-v1.png','lumberjack-v2-sheet.png','miner-v1-sheet.png','smith-v1-sheet.png','work-props-v1.png','logging-tree-v1.png'].map(image)).then(([background,wood,miner,smith,props,tree])=>{const cw=Math.floor(props.width/2),propBounds=[alphaBounds(props,0,0,cw,props.height),alphaBounds(props,cw,0,cw,props.height)];return{background,tree,treeBounds:alphaBounds(tree),logging:atlas(wood,3),mining:atlas(miner,2),smithing:atlas(smith,2),props,propBounds,propCell:cw};});}
 export function enhanceWorkScene(html,skill,id){const kind=workKind(skill,id);if(!kind)return html;return html.replace('<div class="work-vignette',`<div data-work-artwork="loading" data-generated-work="${kind}" data-work-action="${id}" class="work-vignette`).replace('<svg ', '<canvas data-work-canvas width="340" height="180" hidden></canvas><svg data-work-fallback="" ');}
 function drawExtra(c,kind,pose,id,art){
- if(kind==='foraging'){naturalProp(c,art,/food/.test(id)?1:0,92,51,69,34);
+ if(kind==='foraging'){if(id==='collect_fodder'&&art.fodder){const{img,bounds:b}=art.fodder,scale=Math.min(69/b.width,34/b.height),w=b.width*scale,h=b.height*scale;c.drawImage(img,b.x,b.y,b.width,b.height,92+(69-w)/2,85-h,w,h);}else naturalProp(c,art,/food/.test(id)?1:0,92,51,69,34);
  }else if(kind==='fishing'){
   // The authored bank replaces the old rectangular river and dock.
 c.fillStyle='#d7b878';c.fillRect(123,63,2,4);if(pose.impact){c.fillStyle='#c1d4c4';for(let n=0;n<4;n++)c.fillRect(115+n*4,61-n%2*3,2,1);}
@@ -26,12 +28,15 @@ function draw(canvas,art,kind,pose,id){const c=canvas.getContext('2d');c.imageSm
 }
 export function syncGeneratedWork(scene,action,{animate=true}={}){
  const kind=scene?.dataset?.generatedWork;if(!kind)return false;
- let view=mounted.get(scene);if(!view){view={art:null,failed:false,last:'',action:null,animate};mounted.set(scene,view);loadArt(kind).then(art=>{view.art=art;if(scene.isConnected)syncGeneratedWork(scene,view.action,{animate:view.animate});}).catch(()=>{view.failed=true;scene.dataset.workArtwork='fallback';});}
+ const fodder=kind==='foraging'&&(action?.id||scene.dataset.workAction)==='collect_fodder',variant=fodder?'foraging:fodder':kind;
+ // A new prop is decoded only when its actual action/card is visible.
+ if(fodder){if(document.hidden)return true;const r=scene.getBoundingClientRect();if(r.width<=0||r.height<=0||r.bottom<0||r.top>innerHeight)return true;}
+ let view=mounted.get(scene);if(!view||view.variant!==variant){view={variant,art:null,failed:false,last:'',action:null,animate};mounted.set(scene,view);scene.querySelector('[data-work-canvas]').hidden=true;scene.querySelector('[data-work-fallback]').style.display='';scene.dataset.workArtwork='loading';delete scene.dataset.workProp;(fodder?fodderArt():loadArt(kind)).then(art=>{if(mounted.get(scene)!==view)return;view.art=art;if(scene.isConnected)syncGeneratedWork(scene,view.action,{animate:view.animate});}).catch(()=>{if(mounted.get(scene)!==view)return;view.failed=true;scene.dataset.workArtwork='fallback';});}
  // Copy presentation fields. Never retain, mutate or manufacture a simulation batch.
  view.action=action?{id:action.id,progress:action.progress,duration:action.duration}:null;view.animate=animate;
  if(!view.art||view.failed||document.hidden)return true;
  const moving=animate&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
  const pose=workPose(kind,view.action||{id:scene.dataset.workAction},{animate:moving});const key=[view.action?.id,kind,moving,Math.floor(pose.phase*36)].join(':');if(view.last===key)return true;const rect=scene.getBoundingClientRect();if(rect.bottom<0||rect.top>innerHeight)return true;
- try{draw(scene.querySelector('[data-work-canvas]'),view.art,kind,pose,view.action?.id||scene.dataset.workAction);scene.querySelector('[data-work-canvas]').hidden=false;scene.querySelector('[data-work-fallback]').style.display='none';scene.dataset.workArtwork='generated';scene.dataset.workStage=pose.stage;scene.dataset.workFrame=String(pose.frame);view.last=key;}catch{view.failed=true;scene.dataset.workArtwork='fallback';scene.querySelector('[data-work-canvas]').hidden=true;scene.querySelector('[data-work-fallback]').style.display='';}
+ try{draw(scene.querySelector('[data-work-canvas]'),view.art,kind,pose,view.action?.id||scene.dataset.workAction);scene.querySelector('[data-work-canvas]').hidden=false;scene.querySelector('[data-work-fallback]').style.display='none';scene.dataset.workArtwork='generated';if(fodder)scene.dataset.workProp=view.art.fodder?'fodder':'shared-fallback';scene.dataset.workStage=pose.stage;scene.dataset.workFrame=String(pose.frame);view.last=key;}catch{view.failed=true;scene.dataset.workArtwork='fallback';scene.querySelector('[data-work-canvas]').hidden=true;scene.querySelector('[data-work-fallback]').style.display='';}
  return true;
 }

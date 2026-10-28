@@ -4068,5 +4068,20 @@
         }
       }
     ]
+  },
+  "fodderGatheringProp": {
+    "file": "fodder-patch-v1.png",
+    "sha256": "838872459522e07f1ea79f44da0f73f7b7429c92a5f8f16e6933c95af4a895f0",
+    "bytes": 1186292,
+    "width": 1774,
+    "height": 887,
+    "source": "OpenAI built-in ImageGen, original generation; no third-party artwork",
+    "method": "One generated result; original PNG bytes preserved, CRC verified, persistent readback and Pillow PNG verification",
+    "prompt": "Use case: stylized-concept. Asset: one original transparent pixel-art gathering prop for LOOPKEEPER's existing collect_fodder action. Subject: a low, broad patch of meadow fodder grasses with recognizable golden oat seed heads, fresh muted olive-green blades, and one small tied handful of cut stalks resting at its foot. This is animal feed gathered in a forest clearing, clearly distinct from medicinal white-flowered herbs and red berry/mushroom food bushes. No animals or people. Match a detailed woodland fantasy pixel-art game: warm upper-left light, dark pine/olive shadows, warm straw highlights, subtle earthy footing, crisp intentional pixel clusters and clean dark broken contours. Front three-quarter view with a slightly visible top, grounded horizontal silhouette suitable beside an existing worker. Intended display about69x34 pixels: prioritize a readable clump silhouette, 5-7 larger seed heads, restrained detail and strong warm-versus-green separation. Do not make a photorealistic rendering or smooth vector icon. Single prop centered with generous fully transparent margin on all sides; ground ends under the clump, no square tile or landscape/background, no shadow rectangle, no frame, no text, no watermark, no UI, no extra items. Broad object aspect about2:1 inside a square transparent image. Preserve genuine alpha. This is a new prop only, not a character redesign.",
+    "styleReference": {
+      "file": "work-environment-v2.png",
+      "sha256": "d8b9cf67b1c7e260c45effc9ca2bacd87e55ff2b344d2529928c31d2aa2d6aab"
+    },
+    "runtime": "Alpha bounds cropped only at rendering; one visible fodder action prop, shared worker/background unchanged; no gameplay changes"
   }
 }
