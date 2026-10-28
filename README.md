@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.122
+# LoopKeeper 0.6.123
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -202,3 +202,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.122: ダイヤモンドの弓・火杖を同じ仲間の専用結晶表示へ。21武器の表示対応は docs/party-weapons-0.6.122.md。
+
+
+0.6.123: 上位弓4種の所有者説明の重複を修正。性能・製作費・保存・画像は不変。docs/bow-description-0.6.123.md参照。

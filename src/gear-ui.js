@@ -1,8 +1,8 @@
-import {partyMarkup}from './party-ui.js?v=0.6.122';
-import {memberFor}from './party.js?v=0.6.122';
-import {workMilestoneMarkup}from './work-milestones.js?v=0.6.122';
-import {trophyMarkup} from './boss-materials.js?v=0.6.122';
-import {magicMarkup}from './magic-ui.js?v=0.6.122';import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.122';import {combatBuild}from './gear-state.js?v=0.6.122';import {RECIPES,RESOURCES}from './engine.js?v=0.6.122';import {buildPresetsMarkup}from './build-presets-ui.js?v=0.6.122';
+import {partyMarkup}from './party-ui.js?v=0.6.123';
+import {memberFor}from './party.js?v=0.6.123';
+import {workMilestoneMarkup}from './work-milestones.js?v=0.6.123';
+import {trophyMarkup} from './boss-materials.js?v=0.6.123';
+import {magicMarkup}from './magic-ui.js?v=0.6.123';import {ACCESSORIES,ACCESSORY_SLOTS}from './gear-content.js?v=0.6.123';import {combatBuild}from './gear-state.js?v=0.6.123';import {RECIPES,RESOURCES}from './engine.js?v=0.6.123';import {buildPresetsMarkup}from './build-presets-ui.js?v=0.6.123';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const label={ring:'指輪',bracelet:'腕輪',boots:'靴',necklace:'首飾り',weapon:'武器',armor:'防具',shield:'盾',tool:'道具'};
 export function gearMarkup(s,open=false,options={}){if(s.version===1)return '';const blocked=s.run.status!=='preparing'||s.run.augments.offer.length,b=combatBuild(s),equipment=(s.run.ownedEquipment||[]).map(id=>RECIPES.find(x=>x.id===id&&x.equipment)).filter(Boolean);
 const equippedName=(phase,slot)=>ACCESSORIES.find(a=>a.id===s.meta.accessorySets?.[phase]?.[slot])?.name||'なし';

@@ -1,5 +1,5 @@
-import {confirmRun} from './engine.js?v=0.6.122';
-import {commitStoredGameEdit} from './save-storage.js?v=0.6.122';
+import {confirmRun} from './engine.js?v=0.6.123';
+import {commitStoredGameEdit} from './save-storage.js?v=0.6.123';
 export function confirmStoredRun(storage,current,{isOwner=()=>false,now=Date.now(),earlyLoopPrototype=false,lateLoopPrototype=false,preparationBalancePrototype=false}={}){
  if(!isOwner())return {ok:false,reason:'別のタブでプレイ中です。操作権を確認してください。'};
  const next=structuredClone(current),result=confirmRun(next,{earlyLoopPrototype,lateLoopPrototype,preparationBalancePrototype});if(!result.ok)return result;

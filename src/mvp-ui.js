@@ -1,20 +1,20 @@
-import {cycleGoalsMarkup} from './cycle-goals-ui.js?v=0.6.122';
-import{questStage}from './quest-content.js?v=0.6.122';
-import{questProgress}from './quest-progress.js?v=0.6.122';
-import{merchantMarkup}from './merchant-ui.js?v=0.6.122';
-import {visibleWorkerUpgrade}from './worker-legacy.js?v=0.6.122';
-import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.122';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.122';
-import {stockIcon as icon}from './stock-icons.js?v=0.6.122';
-import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.122';
-import {finalWaveForRun}from './campaign-rules.js?v=0.6.122';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.122';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.122';
-import {hasUpgrade}from './free-features.js?v=0.6.122';
-import { getStartingResources } from './engine.js?v=0.6.122';
-import { challengesMarkup } from './strategy-ui.js?v=0.6.122';
-import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.122";
-import { CONTENT as C } from "./content.js?v=0.6.122";
+import {cycleGoalsMarkup} from './cycle-goals-ui.js?v=0.6.123';
+import{questStage}from './quest-content.js?v=0.6.123';
+import{questProgress}from './quest-progress.js?v=0.6.123';
+import{merchantMarkup}from './merchant-ui.js?v=0.6.123';
+import {visibleWorkerUpgrade}from './worker-legacy.js?v=0.6.123';
+import {cookingChoiceText,cookingBatchText}from './automation-status-ui.js?v=0.6.123';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.123';
+import {stockIcon as icon}from './stock-icons.js?v=0.6.123';
+import {LEGACY_CATEGORIES,inheritanceMapTabs}from './legacy-categories.js?v=0.6.123';
+import {finalWaveForRun}from './campaign-rules.js?v=0.6.123';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.123';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.123';
+import {hasUpgrade}from './free-features.js?v=0.6.123';
+import { getStartingResources } from './engine.js?v=0.6.123';
+import { challengesMarkup } from './strategy-ui.js?v=0.6.123';
+import { getUpgradeDescription } from "./upgrades-ui.js?v=0.6.123";
+import { CONTENT as C } from "./content.js?v=0.6.123";
 import {
   LEGACY_UPGRADES,
   MILESTONES,
@@ -30,7 +30,7 @@ import {
   getAutoCookingStatus,
   getProcessingStatus,
   getRecipeCost,
-} from "./engine.js?v=0.6.122";
+} from "./engine.js?v=0.6.123";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,

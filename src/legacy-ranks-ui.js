@@ -1,6 +1,6 @@
-import{rankTimingMarkup}from './effective-inheritance.js?v=0.6.122';
-import {legacyRankCategory}from './legacy-categories.js?v=0.6.122';
-import {LEGACY_RANKS}from './legacy-rank-definitions.js?v=0.6.122';import {getLegacyRankStatus}from './engine.js?v=0.6.122';import {icon}from './icons.js?v=0.6.122';
+import{rankTimingMarkup}from './effective-inheritance.js?v=0.6.123';
+import {legacyRankCategory}from './legacy-categories.js?v=0.6.123';
+import {LEGACY_RANKS}from './legacy-rank-definitions.js?v=0.6.123';import {getLegacyRankStatus}from './engine.js?v=0.6.123';import {icon}from './icons.js?v=0.6.123';
 export function legacyRanksMarkup(s,setup=false,group='all'){
  if(s.version===1)return '';
  if(group==='all')return legacyRanksMarkup(s,setup,'combat')+legacyRanksMarkup(s,false,'production')+legacyRanksMarkup(s,false,'trade');
