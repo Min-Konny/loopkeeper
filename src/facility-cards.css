@@ -1,0 +1,36 @@
+/* One construction-card system, including atlas, authored PNG and fallback art. */
+#content .facility-list{align-items:stretch}
+#content .facility-list>.facility-card{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr auto;gap:10px!important;align-items:start;min-width:0;border-radius:8px}
+.facility-card>.facility-overview{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;align-items:start;min-width:0}
+.facility-overview>.craft-info{min-width:0;display:block}
+#content .facility-card .craft-info h3{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 7px;margin:0;font-size:18px;line-height:1.4;overflow-wrap:anywhere}
+#content .facility-card .craft-info p{margin:5px 0;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
+#content .facility-card .craft-benefits{margin:4px 0 0;padding:0;border:0;font-size:12px;line-height:1.5}
+.facility-overview>.facility-product{grid-column:auto;grid-row:auto;box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:84px;height:84px;aspect-ratio:1;padding:5px;margin:0;border:1px solid #78865c66;border-radius:8px;background:#233a30;overflow:hidden}
+.facility-overview>.facility-product>img{display:block;width:100%;height:100%;object-fit:contain;border:0;border-radius:0;background:transparent}
+.facility-overview .facility-atlas-frame{width:100%;height:100%;aspect-ratio:1;flex:none}
+.facility-overview .facility-atlas-frame>img{border:0;border-radius:0;background:transparent}
+.facility-details{min-width:0;width:100%}
+#content .facility-card .recipe-cost{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;border:0;font-size:12px}
+#content .facility-card .recipe-cost>span{display:grid;grid-template-columns:20px minmax(0,2fr) minmax(0,3fr);gap:3px 6px;align-items:center;flex:1 1 128px;min-width:0;padding:6px 8px;border:1px solid #77815c66;border-radius:5px;background:#15281f99}
+#content .facility-card .recipe-cost>span,#content .facility-card .material-label,#content .facility-card .material-stock{font-size:12px;line-height:1.4}
+#content .facility-card .recipe-cost>span>span{display:block;margin:0;padding:0;border:0;background:none;color:inherit}
+.facility-card .material-label{overflow-wrap:anywhere}
+.facility-card .material-stock{min-width:0;font-variant-numeric:tabular-nums;text-align:right;white-space:normal;overflow-wrap:anywhere}
+.facility-card .material-stock b{font-size:inherit;font-weight:400;color:#aebb9e}
+#content .facility-card .recipe-cost>span.insufficient{border-color:#ad784b;background:#412b2299;color:#e4c19b}
+#content .facility-card .material-gap{grid-column:2/-1;white-space:normal;font-size:11px;line-height:1.4}
+.facility-card .craft-growth{margin-top:7px;font-size:11px;line-height:1.45;overflow-wrap:anywhere}
+#content .facility-card>.craft-command{grid-column:auto;display:flex;flex-direction:column;align-items:stretch;align-self:stretch;justify-content:flex-start;gap:6px;min-width:0;width:100%;padding-top:9px;border-top:1px solid #a3996633}
+#content .facility-card .craft-buttons{display:flex;flex-wrap:wrap;align-items:stretch;justify-content:flex-end;gap:6px;width:100%;margin:0;order:2}
+#content .facility-card .craft-buttons .button{min-height:44px;white-space:normal;overflow-wrap:anywhere}
+.facility-card .craft-hide{min-width:44px;min-height:44px;align-self:stretch}
+#content .facility-card .craft-command>small{order:3;margin:0;font-size:11px;line-height:1.45;text-align:left;overflow-wrap:anywhere}
+.facility-card .craft-command>.craft-quantity{order:0;align-self:flex-start;margin:0}
+#content .facility-card .craft-command>.craft-total{order:1}
+.facility-card .craft-buttons button:focus-visible{outline:3px solid #edcd8a;outline-offset:2px}
+/* Share natural row tracks between adjacent cards; no fixed height or clipped text. */
+@supports(grid-template-rows:subgrid){#content .facility-list>.facility-card{grid-row:span 3;grid-template-rows:subgrid;row-gap:0!important}.facility-card>.facility-overview{grid-row:1}.facility-card>.facility-details{grid-row:2}.facility-card>.craft-command{grid-row:3}}
+@media(max-width:690px){.facility-card>.facility-overview{grid-template-columns:72px minmax(0,1fr);gap:10px}.facility-overview>.facility-product{width:72px;height:72px}#content .facility-card .craft-info h3{font-size:17px}#content .facility-card .recipe-cost>span{flex-basis:120px}}
+@media(max-width:350px){#content .facility-card .recipe-cost>span{grid-template-columns:20px minmax(0,1fr)}.facility-card .recipe-cost .workshop-material-icon{grid-row:1/span 2}.facility-card .material-stock{grid-column:2;text-align:left}}
+@media(prefers-reduced-motion:reduce){.facility-card,.facility-card button{transition:none}}
