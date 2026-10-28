@@ -1,7 +1,7 @@
-import {CONTRACTS,contractAvailability,deliveryQuote} from './contracts.js?v=0.6.116';
-import {contractOptions} from './contracts-storage.js?v=0.6.116';
-import {RESOURCES} from './engine.js?v=0.6.116';
-import {stockIcon as icon} from './stock-icons.js?v=0.6.116';
+import {CONTRACTS,contractAvailability,deliveryQuote} from './contracts.js?v=0.6.117';
+import {contractOptions} from './contracts-storage.js?v=0.6.117';
+import {RESOURCES} from './engine.js?v=0.6.117';
+import {stockIcon as icon} from './stock-icons.js?v=0.6.117';
 export function contractsMarkup(s,open=false){
  if(s.version===1||s.meta.bestWave<3)return '';
  const options=contractOptions(s),active=s.run.contracts?.active;

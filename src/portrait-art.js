@@ -1,6 +1,6 @@
-import { workScene } from './work-scene.js?v=0.6.116';
-import { icon } from './icons.js?v=0.6.116';
-import {workKind}from './work-motion.js?v=0.6.116';
+import { workScene } from './work-scene.js?v=0.6.117';
+import { icon } from './icons.js?v=0.6.117';
+import {workKind}from './work-motion.js?v=0.6.117';
 
 // Decorative SVGs render as images, outside the live work-animation DOM.
 // Stable URLs let the browser reuse decoded images across pane changes.
