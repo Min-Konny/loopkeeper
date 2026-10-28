@@ -4083,5 +4083,21 @@
       "sha256": "d8b9cf67b1c7e260c45effc9ca2bacd87e55ff2b344d2529928c31d2aa2d6aab"
     },
     "runtime": "Alpha bounds cropped only at rendering; one visible fodder action prop, shared worker/background unchanged; no gameplay changes"
+  },
+  "highlandGatheringProp": {
+    "file": "highland-food-v1.png",
+    "sha256": "4b6c45ab03d1addc3b9ed06a97118e350515fd92eb285f5dc99b681108aa07e4",
+    "bytes": 1118118,
+    "width": 1785,
+    "height": 881,
+    "source": "OpenAI built-in ImageGen, original generation; no third-party artwork",
+    "method": "One generated result; original PNG bytes preserved, CRC verified, persistent readback and Pillow PNG verification",
+    "prompt": "Use case: stylized-concept. Asset type: one original transparent pixel-art gathering prop for LOOPKEEPER's existing gather_highland_food action, not a new game item. Subject: a low broad alpine bilberry bush growing beside two weathered gray-green angular stones, a few readable clusters of dusky blue berries and warm russet leaves, short moss and olive grass at its foot. Clearly distinguish this from medicinal white-flowered herbs, ordinary red-berry/mushroom forest food bushes, and golden fodder grass. No people, animals, basket or tools. Style: detailed woodland fantasy pixel-art game, warm upper-left lighting, dark pine/olive shadows, restrained warm highlights, crisp intentional pixel clusters, dark broken contours, no smooth vector edges or photorealism. Front three-quarter view with subtly visible top, grounded horizontal silhouette about2:1, suitable to stand beside an existing small worker in a forest-clearing vignette. Intended display only69x34 pixels: broad simple stone planes, readable blue berry clusters, restrained detail, no noisy speckling. A single self-contained prop centered with generous genuinely transparent margins on every side. Ground ends immediately under the clump, no rectangular tile, landscape, mountain backdrop, sky, scenery, frame, UI, text or watermark. This new prop must not redesign the character or background; genuine alpha transparency.",
+    "styleReference": {
+      "file": "work-environment-v2.png",
+      "role": "Existing project style inspected, not a modified source image",
+      "sha256": "d8b9cf67b1c7e260c45effc9ca2bacd87e55ff2b344d2529928c31d2aa2d6aab"
+    },
+    "runtime": "Alpha bounds cropped only at rendering; one visible highland action prop, shared worker/background unchanged; no gameplay changes"
   }
 }

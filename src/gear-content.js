@@ -1,7 +1,7 @@
-import {ACCESSORY_REQUIREMENTS,SPECIAL_MATERIALS} from './boss-materials.js?v=0.6.131';
-import {EXTRA_ACCESSORIES,EXTRA_ACCESSORY_RECIPES}from './extra-accessories.js?v=0.6.131';
+import {ACCESSORY_REQUIREMENTS,SPECIAL_MATERIALS} from './boss-materials.js?v=0.6.132';
+import {EXTRA_ACCESSORIES,EXTRA_ACCESSORY_RECIPES}from './extra-accessories.js?v=0.6.132';
 export const ACCESSORY_SLOTS=['ring','bracelet','boots','necklace'];
-import {LATE_WEAPONS}from './late-weapons.js?v=0.6.131';
+import {LATE_WEAPONS}from './late-weapons.js?v=0.6.132';
 export const WEAPONS=[
  ...LATE_WEAPONS,
  {id:'iron_bow',name:'鉄弓',tier:2,slot:'weapon',skill:'smithing',unlockLevel:2,unlockBestWave:3,knownAfterBoss:null,duration:14,cost:{wood:16,ingot:4,hide:2},stats:{attack:10},xpCoefficient:1.05,combat:{type:'bow',rate:1.25,pierce:0,opening:.75,markEvery:3},description:'手数で攻める。3射ごとに敵防御を2減らす（最大30%）。先制1射。'},
