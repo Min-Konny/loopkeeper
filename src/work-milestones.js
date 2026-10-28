@@ -1,4 +1,4 @@
-import {WORK_MILESTONES}from './work-milestone-content.js?v=0.6.126';
+import {WORK_MILESTONES}from './work-milestone-content.js?v=0.6.127';
 const jobs=s=>[s.run.activeAction,...Object.values(s.run.suspendedActions||{})].filter(Boolean);
 export function initializeWorkMilestones(s){
  if(s.version===1||s.meta.workMilestoneVersion===1)return;
