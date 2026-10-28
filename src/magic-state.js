@@ -1,13 +1,13 @@
-import{initializeEnchantments,selectEnchantment}from './enchantments.js?v=0.6.127';
-import {specialistAug}from './specialist-content.js?v=0.6.127';
-import {memberJoined,partyWeapon,memberStats}from './party.js?v=0.6.127';
-import {preparationSpellDamage}from './preparation-balance.js?v=0.6.127';
-import {investmentEffect}from './investments.js?v=0.6.127';
-import {weaponById}from './gear-content.js?v=0.6.127';
-import {accessoryEffects}from './gear-state.js?v=0.6.127';
-import {contractEffects}from './contracts.js?v=0.6.127';
-import {routeEffects}from './routes.js?v=0.6.127';
-import {alchemyResource}from './magic-content.js?v=0.6.127';
+import{initializeEnchantments,selectEnchantment}from './enchantments.js?v=0.6.128';
+import {specialistAug}from './specialist-content.js?v=0.6.128';
+import {memberJoined,partyWeapon,memberStats}from './party.js?v=0.6.128';
+import {preparationSpellDamage}from './preparation-balance.js?v=0.6.128';
+import {investmentEffect}from './investments.js?v=0.6.128';
+import {weaponById}from './gear-content.js?v=0.6.128';
+import {accessoryEffects}from './gear-state.js?v=0.6.128';
+import {contractEffects}from './contracts.js?v=0.6.128';
+import {routeEffects}from './routes.js?v=0.6.128';
+import {alchemyResource}from './magic-content.js?v=0.6.128';
 export const freshMagic=()=>({mana:30,castTimer:0,burnTimer:0,burnTicks:0,burnPower:0,wardCooldown:0,casts:0,detonations:0,catalystsUsed:0,wardsUsed:0,burnDamage:0,spellDamage:0});
 export function initializeMagic(s){
  if(s.version===1)return;initializeEnchantments(s);s.meta.magicVersion=1;for(const id of ['spark_catalyst','ward_essence'])s.run.resources[id]??=0;

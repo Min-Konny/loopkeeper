@@ -1,14 +1,21 @@
-import { pixelWorkScene } from './pixel-work-art.js?v=0.6.127';
-import { equipmentMaterial } from './visual-design.js?v=0.6.127';
-import { icon } from './icons.js?v=0.6.127';
-import { miningScene } from './mining-scene.js?v=0.6.127';
-import { actionTarget } from './action-target.js?v=0.6.127';
-import {enhanceWorkScene,syncGeneratedWork}from './generated-work-art.js?v=0.6.127';
+import { pixelWorkScene } from './pixel-work-art.js?v=0.6.128';
+import { equipmentMaterial } from './visual-design.js?v=0.6.128';
+import { icon } from './icons.js?v=0.6.128';
+import { miningScene } from './mining-scene.js?v=0.6.128';
+import { actionTarget } from './action-target.js?v=0.6.128';
+import {partyImageMarkup} from './party-art.js?v=0.6.128';
+import {enhanceWorkScene,syncGeneratedWork}from './generated-work-art.js?v=0.6.128';
 
 // Decorative work scenes follow the actual selected skill; no separate timer or game state.
-export function workScene(skill, actionId, equipment = {}) {
+export function workScene(skill, actionId, equipment = {}, displayState = null) {
   if(skill==='alchemy')return '<div class="work-vignette alchemy-work-scene" aria-hidden="true"><img src="./assets/pixel-v2/alchemy-work-v1.png" alt=""><i class="alchemy-glow"></i></div>';
-  if(['train_archery','train_magic'].includes(actionId))return `<div class="work-vignette party-training-scene" aria-hidden="true"><img src="./assets/pixel-v2/${actionId==='train_archery'?'party-archer-v1.png':'party-mage-v1.png'}" alt=""><span class="party-training-target">${actionId==='train_archery'?'◎':'✦'}</span></div>`;
+  if(['train_archery','train_magic'].includes(actionId)){
+    const member=actionId==='train_archery'?'archer':'mage';
+    // Reuse the equipped companion renderer/fallback. Existing CSS still owns
+    // training size and motion; hero equipment must not select a party weapon.
+    const image=displayState?partyImageMarkup(displayState,member).replace(/ width="\d+" height="\d+"/,''):`<img src="./assets/pixel-v2/${member==='archer'?'party-archer-v1.png':'party-mage-v1.png'}" alt="">`;
+    return `<div class="work-vignette party-training-scene" aria-hidden="true">${image}<span class="party-training-target">${member==='archer'?'◎':'✦'}</span></div>`;
+  }
   const visualSkill=["cooking","alchemy","commerce"].includes(skill)?"smithing":skill;
   const pixel=pixelWorkScene(visualSkill,actionId,equipment);if(pixel)return enhanceWorkScene(pixel,skill,actionId);
   const toolMaterial = equipmentMaterial(skill === 'combat' ? equipment.weapon : equipment.tool);

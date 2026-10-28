@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.127
+# LoopKeeper 0.6.128
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -217,3 +217,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.127: タイトル画面と保存成功後の安全な復帰を追加。進行・難度・報酬・セーブ形式は維持。docs/title-screen-0.6.127.md 参照。
+
+
+0.6.128: 仲間の訓練表示を実際の14武器へ連動。既存画像を再利用し、数値・セーブ形式は不変。docs/training-art-0.6.128.md 参照。

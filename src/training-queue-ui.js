@@ -1,4 +1,4 @@
-import {isCombatTraining,trainingProgress}from './queue-conditions.js?v=0.6.127';
+import {isCombatTraining,trainingProgress}from './queue-conditions.js?v=0.6.128';
 export const trainingMode=(s,id)=>s.version===2&&isCombatTraining(id);
 export const nextTrainingLevel=(s,id)=>Math.min(100,(trainingProgress(s,id)?.level||1)+1);
 // Undefined is an unedited draft, not a snapshot of the level when selected.
