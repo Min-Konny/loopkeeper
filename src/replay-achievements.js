@@ -1,5 +1,5 @@
 // Browser-only collection records. No currency, stats, or platform API calls.
-import {MILESTONE_ACHIEVEMENTS,milestoneAchievementProgress} from './milestone-achievements.js?v=0.6.135';
+import {MILESTONE_ACHIEVEMENTS,milestoneAchievementProgress} from './milestone-achievements.js?v=0.6.136';
 export const REPLAY_ACHIEVEMENTS = [
   ...MILESTONE_ACHIEVEMENTS,
   {id:'frontier_clear',name:'夜明けを取り戻す',rule:'通常36波をクリア。旧セーブの36波クリア記録も対象。'},
