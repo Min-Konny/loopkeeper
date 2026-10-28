@@ -3488,5 +3488,57 @@
         }
       }
     ]
+  },
+  "partyWeaponVariants": {
+    "scope": "Same archer companion holding a crossbow; initial/bow/mage original images retained; display-only selection",
+    "records": [
+      {
+        "file": "party-archer-crossbow-v1.png",
+        "bytes": 1181594,
+        "sha256": "4e85e99eb0e79385f92cb02314ab463d9aad2e4f8c4110f97eeef639fda5bbb2",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "opaqueBounds": [
+              163,
+              124,
+              1215,
+              1225
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              1,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen edit of own original companion; received PNG bytes preserved",
+        "prompt": "Use case: precise-object-edit. Edit target: the freshly viewed original full-body female green-hooded elven archer. Create one CROSSBOW-equipped sibling for the same companion character. Preserve exact face, pointed ears, auburn hair/braid,green hood/cloak,gold foliage embroidery,cream sleeves,brown leather armor and boots,full-body proportions,scale,right-facing aim,lighting and polished fantasy pixel-art clusters. Replace the tall drawn bow and long arrow with a clearly readable compact horizontal wooden-and-dark-steel CROSSBOW held with both hands at chest height: rear hand on trigger grip, forward hand supporting stock,short steel transverse prod at front,string and a short bolt aligned toward right. Adjust only forearms/hands as necessary for believable crossbow grip; keep identity,clothing and stance recognizable. Remove all remnants of the tall bow and drawn long arrow; existing quiver can remain on back but no extra floating arrows. No new armor/gems,crown,magic,aura or powers;no labels/text/grid/watermark. Whole character and crossbow fully within transparent margins,feet aligned to old framing,not cropped. Genuine alpha-transparent background; single full-body figure,not sprite sheet. Match original palette,pixel density,outline and warm upper-left light. Do not redraw the main male hero. New sibling asset; do not overwrite original bow companion.\n",
+        "reference": {
+          "file": "party-archer-v1.png",
+          "sha256": "93dca38bd15ae1f7037c315d0d9baab5d927554062cae7a82b926c53c143c57c"
+        }
+      }
+    ]
   }
 }

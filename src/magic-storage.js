@@ -1,4 +1,4 @@
-import {magicChoice}from './magic-state.js?v=0.6.113';import {setStockTarget}from './engine.js?v=0.6.113';import {commitStoredGameEdit}from './save-storage.js?v=0.6.113';
+import {magicChoice}from './magic-state.js?v=0.6.114';import {setStockTarget}from './engine.js?v=0.6.114';import {commitStoredGameEdit}from './save-storage.js?v=0.6.114';
 export function editStoredMagic(storage,current,choice,{isOwner=()=>false,now=Date.now()}={}){
  if(!isOwner())return {ok:false,reason:'別タブでプレイ中です。'};const next=structuredClone(current);let r;
  if(choice.type==='target'){

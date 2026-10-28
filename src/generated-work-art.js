@@ -1,5 +1,5 @@
-import {alphaBounds}from './generated-camp-art.js?v=0.6.113';
-import {workKind,workPose}from './work-motion.js?v=0.6.113';
+import {alphaBounds}from './generated-camp-art.js?v=0.6.114';
+import {workKind,workPose}from './work-motion.js?v=0.6.114';
 const root=new URL('../assets/pixel-v2/',import.meta.url),mounted=new WeakMap();let pending;
 const sheets=Object.freeze({foraging:'forager-v1-sheet.png',fishing:'fisher-v2-sheet.png',cooking:'cook-v1-sheet.png',training:'training-v2-sheet.png'}),extras=new Map();let background,propsPending,miningArt;
 function workProps(){return propsPending??=image('work-environment-v2.png').then(img=>{const cw=img.width/3;return{img,cw,bounds:[0,1,2].map(n=>alphaBounds(img,n*cw,0,cw,img.height))};});}

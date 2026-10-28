@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.113
+# LoopKeeper 0.6.114
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -175,3 +175,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.113: 革の鎧と全防具素材の戦闘表示。範囲: docs/hero-equipment-0.6.113.md。
+
+
+0.6.114: 仲間の弓／弩の持ち替え表示。範囲: docs/party-weapons-0.6.114.md。
