@@ -3542,7 +3542,7 @@
     ]
   },
   "partyWeaponMaterialVariants": {
-    "scope": "Exact existing orichalcum bow/crossbow on archer and orichalcum fire staff on mage; original identities/poses/scales and other equipment retained",
+    "scope": "Exact owned archer bow/crossbow and mage staff by both member and weapon id; orichalcum copper-gold and steel blue-gray with original identities/poses/scales retained",
     "records": [
       {
         "file": "party-archer-orichalcum-crossbow-v1.png",
@@ -3686,6 +3686,100 @@
         ],
         "method": "Built-in image_gen precise-object-edit on original mage; original received PNG bytes retained",
         "prompt": "Use case: precise-object-edit. Asset: existing LOOPKEEPER mage companion sprite, material-only sibling for actual orichalcum_staff (オリハルコンの火杖). Image1, the most recent single blue-robed male mage, is the exact EDIT TARGET. Change ONLY the staff's wooden shaft and curled crown to warm copper-gold orichalcum metal, dark copper recesses with broad pale-gold highlight clusters. Retain original staff silhouette, hand grip, curve, blue/gold contained magical flame/orb, ornaments and orientation; no larger aura or new FX. Preserve exact same male mage identity, face, brown hair/beard, blue eyes, expression, blue hood/robe with gold embroidery, hands, book/scroll, bag, boots, posture, body scale and canvas framing. Do not change costume/person/pose. Same1254x1254 square transparent composition; hood near y23, boots near y1230, robe left240, staff head right1208; no zoom/crop/enlargement or filling transparent margins. Keep foot/head margins and all staff intact. Same pixel-art clusters/upper-left light. Copper-gold metal must read at96x132 management and100x112 battle without making mage brighter. No text/watermark/grid/background/newobjects. Genuine transparent alpha background. Exact same character and pose, staff material only.\n",
+        "reference": {
+          "file": "party-mage-v1.png",
+          "sha256": "2fd534e936fc1373b21ff692f9050f042bb05f66b6056e2a7f099bb45f7b1a5a"
+        }
+      },
+      {
+        "file": "party-archer-steel-bow-v1.png",
+        "bytes": 1314259,
+        "sha256": "2eb90d75820775208bb1fc482b7b886db1fd16ede48e63e6cc67978b044a4af9",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "opaqueBounds": [
+              163,
+              10,
+              1204,
+              1224
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen precise-object-edit on original companion; received PNG bytes retained",
+        "prompt": "Use case: precise-object-edit. Asset: LOOPKEEPER existing archer sprite, exact material variant for steel_bow (鋼の弓). The most recent single green-hooded auburn female elf with vertical drawn bow is the exact EDIT TARGET. Change ONLY the BOW'S brown wooden limbs/riser into forged cool blue-gray STEEL, dark slate recesses, restrained broad silver-gray bevel highlights; keep dark grip, fine gold bindings/leaves/ornament placement, bowstring and nocked arrow unchanged. Same original recurved bow silhouette, width, orientation and drawn stance. No gold/copper bow body (that belongs to the different orichalcum tier), no glowing metal/gems/spell effects. Preserve exact same elf identity, face, hair, pointed ear, expression, hood/cloak, armor/clothes, hand/finger placement, boots, pose, body scale and original transparent framing.1254x1254 square: upper bow curl near y11, hood near y124, feet near1224, cloak left163, arrow tip1203; no zoom/crop/enlargement/recomposition, all bow and arrow intact. Same pixel-art cluster density, upper-left lighting and existing green/warm cloth palette. Metal distinction must read at96x132 management and100x112 battle, not just enlarged. Genuine transparent alpha background. No added objects, text/grid/watermark/background. Material-only sibling; never redraw the person or change costume/pose.\n",
+        "reference": {
+          "file": "party-archer-v1.png",
+          "sha256": "93dca38bd15ae1f7037c315d0d9baab5d927554062cae7a82b926c53c143c57c"
+        }
+      },
+      {
+        "file": "party-mage-steel-staff-v1.png",
+        "bytes": 1294122,
+        "sha256": "36c656daf67eaa6d2a498c18e5ffeb7b5e7eeb5b95b74dc7b0a6bca67c0f89ea",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "opaqueBounds": [
+              236,
+              26,
+              1206,
+              1231
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen precise-object-edit on original companion; received PNG bytes retained",
+        "prompt": "Use case: precise-object-edit. Asset: LOOPKEEPER companion mage exact material variant steel_staff (鋼の火杖). Image1 (most recent single blue-robed bearded male mage holding a wooden fire staff) is the exact EDIT TARGET. Change ONLY the STAFF shaft and curled crown body from brown wood into forged cool blue-gray STEEL, dark slate recesses and broad restrained silver-gray beveled highlights. Keep original thin gold bindings/ornaments, small hanging charm and contained blue/gold orb/flame, same size and brightness. No gold/copper main metal (reserved for orichalcum), no new magic effect or bigger aura. Preserve EXACT same male mage identity/face/hair/beard/eyes/expression, blue embroidered hood/robes, book/scroll, bag, hand positions, boots, pose, body size, pixel density and upper-left light. Original1254x1254 transparent framing: hood top26, boots1228, robe left236, staff headright1202; same margins, no zoom/crop/recomposition, all staff intact. Same silhouette and orientation, weapon material only. Readable at96x132 management and100x112 combat with restrained clean metal highlights. Genuine transparent alpha background, no newobjects/text/grid/watermark/background. Same character and pose; new sibling material image only.\n",
         "reference": {
           "file": "party-mage-v1.png",
           "sha256": "2fd534e936fc1373b21ff692f9050f042bb05f66b6056e2a7f099bb45f7b1a5a"

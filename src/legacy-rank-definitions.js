@@ -1,4 +1,4 @@
-import {INVESTMENT_BRANCHES}from './investments.js?v=0.6.117';
+import {INVESTMENT_BRANCHES}from './investments.js?v=0.6.118';
 export const LEGACY_RANKS=[
  {key:'potionCapacity',baseId:'potion_pouch',name:'ポーション携行枠',stat:'potionCapacity',label:'携行本数',icon:'herb_soup',increment:r=>1,description:'基本3本。1戦ごとの上限を増やす。倉庫の作り置きは制限しない。'},
  {key:'attack',baseId:'inherited_blade',name:'継承の攻撃力',stat:'attack',label:'攻撃',icon:'sword',increment:r=>4*r},

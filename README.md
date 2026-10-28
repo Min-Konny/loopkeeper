@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.117
+# LoopKeeper 0.6.118
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -187,3 +187,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.117: オリハルコンの火杖を同じ魔法使いの専用材質表示へ。範囲: docs/party-weapons-0.6.117.md。
+
+
+0.6.118: 鋼の弓と鋼の火杖を、同じ仲間の青灰色の専用材質表示へ。範囲: docs/party-weapons-0.6.118.md。
