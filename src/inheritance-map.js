@@ -1,7 +1,7 @@
-import {LEGACY_UPGRADES,canPurchaseUpgrade,getLegacyRankStatus}from './engine.js?v=0.6.128';
-import {LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.128';
-import {legacyRankCategory}from './legacy-categories.js?v=0.6.128';
-import {icon}from './icons.js?v=0.6.128';
+import {LEGACY_UPGRADES,canPurchaseUpgrade,getLegacyRankStatus}from './engine.js?v=0.6.129';
+import {LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.129';
+import {legacyRankCategory}from './legacy-categories.js?v=0.6.129';
+import {icon}from './icons.js?v=0.6.129';
 
 // Related branches stay together within their existing domains.
 export const MAP_ORDER=['attack','maxHp','defense','haste','critRate','spellPower','castHaste','alchemySpeed','craftSpeed','gatherSpeed','returnSpeed','tradeSaleBonus'];

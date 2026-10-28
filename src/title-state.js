@@ -1,5 +1,5 @@
-import {createGame,parseSave,serializeGame} from './engine.js?v=0.6.128';
-import {STORAGE_KEY,decodeRecord,loadStoredGame,resetStoredGame,writeStoredGame} from './save-storage.js?v=0.6.128';
+import {createGame,parseSave,serializeGame} from './engine.js?v=0.6.129';
+import {STORAGE_KEY,decodeRecord,loadStoredGame,resetStoredGame,writeStoredGame} from './save-storage.js?v=0.6.129';
 export const TITLE_PREFERENCES_KEY='loopkeeper-title-preferences-v1';
 const KEYS=['soundVolume','musicVolume','ambientVolume','effectsEnabled','pauseWhenHidden'];
 export function inspectTitleSave(storage){

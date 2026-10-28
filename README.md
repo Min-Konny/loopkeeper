@@ -1,4 +1,4 @@
-# LoopKeeper 0.6.128
+# LoopKeeper 0.6.129
 
 ゲーム: https://min-konny.github.io/loopkeeper/
 
@@ -220,3 +220,6 @@ version2の村への投資は、準備中15ゲーム秒ごとに通常施設段�
 
 
 0.6.128: 仲間の訓練表示を実際の14武器へ連動。既存画像を再利用し、数値・セーブ形式は不変。docs/training-art-0.6.128.md 参照。
+
+
+0.6.129: タイトル確認/設定のキャンセルが縦長になる問題を修正。docs/title-dialogs-0.6.129.md 参照。

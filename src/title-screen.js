@@ -1,8 +1,8 @@
-import {titleText as t,readUILocale} from './title-copy.js?v=0.6.128';
-import {inspectTitleSave,titlePreferences,saveTitlePreferences,startTitleChallenge,withTitleWriter} from './title-state.js?v=0.6.128';
-import {createGame} from './engine.js?v=0.6.128';
-import {replayAchievementsMarkup} from './replay-achievements-ui.js?v=0.6.128';
-const VERSION='0.6.128';
+import {titleText as t,readUILocale} from './title-copy.js?v=0.6.129';
+import {inspectTitleSave,titlePreferences,saveTitlePreferences,startTitleChallenge,withTitleWriter} from './title-state.js?v=0.6.129';
+import {createGame} from './engine.js?v=0.6.129';
+import {replayAchievementsMarkup} from './replay-achievements-ui.js?v=0.6.129';
+const VERSION='0.6.129';
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let storage;try{storage=localStorage;}catch{storage={getItem(){throw Error('Storage unavailable');}};}
 const locale=readUILocale(storage);
@@ -27,7 +27,7 @@ async function openGame(){
   try{
     const loading=document.createElement('section');loading.className='boot-screen';loading.setAttribute('role','status');loading.textContent=t('title.loading');document.getElementById('app').replaceChildren(loading);
     document.getElementById('app').hidden=false;root.hidden=true;document.body.classList.remove('title-mode');
-    await import('./main.js?v=0.6.128');dialog.close();
+    await import('./main.js?v=0.6.129');dialog.close();
   }catch(error){console.error('Game startup failed',error);document.getElementById('app').hidden=true;root.hidden=false;document.body.classList.add('title-mode');render();message(t('title.loadError'));const retry=document.createElement('button');retry.textContent=t('title.retry');retry.onclick=()=>location.reload();root.querySelector('.title-menu').append(retry);}
   // A partially imported game must be reloaded, rather than initialized twice.
 }
