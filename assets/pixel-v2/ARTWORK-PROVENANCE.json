@@ -4159,5 +4159,20 @@
     "prompt": "Use case: precise-object-edit. Edit the visible LOOPKEEPER training sprite sheet. Change ONLY the four round shields in the MIDDLE defense-training row into MITHRIL: pale mint-teal metal faces with restrained turquoise-white edge highlights and deep blue-green shadows. The material must read clearly at tiny game display size and differ from nearly-black iron, blue-gray steel and neutral white silver. No magical glow, jewels, gold, emblem or larger outline. Keep exact circular shape, boss/rivets, hand grip and placement. Preserve SAME person, clothes/face/hair/body proportions and all poses. Exact canvas1448x1086,4columns x3rows,362x362 cells, transparent gutters; keep all figures within original cells without moving/resizing/reflowing the grid. Top wooden-practice-sword row and bottom stone-lifting row unchanged supporting reference; only middle4poses will be used. Crisp woodland fantasy pixel clusters, warm upper-left light, genuine transparent alpha; no background,text,watermark or additional armor. Material edit only.",
     "pixels": "Original output bytes preserved, CRC verified, reopened with Pillow",
     "scope": "Explicit source row386..744 isolates four defense poses; uniformly fit to established practice-pose height/center/footline, original PNG bytes preserved. Only middle-row four defense poses are used, and only when actual equipped shield.id is mithril_shield. Other practice actions keep original sheet. Actor clothes/armor variants remain common practice clothes; no claim of all equipment coverage."
+  },
+  "crystalShieldDefenseTraining": {
+    "file": "training-crystal-shield-v1.png",
+    "sha256": "82b69b732e9e1bbaea2a5425686ada6b2c2a1789590015c6b1deff2b33373fa8",
+    "bytes": 1262613,
+    "width": 1448,
+    "height": 1086,
+    "source": "Built-in ImageGen precise-object-edit of original training-iron-shield-v1.png, visible reference; one completed image request",
+    "reference": {
+      "file": "training-iron-shield-v1.png",
+      "sha256": "33579223c80a54d56a1b7ef562062cffe42d03c4346d61f80adfa936603e8971"
+    },
+    "prompt": "Use case: precise-object-edit. Edit the visible LOOPKEEPER training sprite sheet. Change ONLY the four round shields in the MIDDLE defense-training row into CRYSTAL (the game's diamond_shield): broad pale quartz/crystal facets, pearl-white main planes with restrained lavender and icy-lilac refraction planes, crisp darker violet-gray edges. Unlike smooth white silver or mint-teal mithril, crystal has a few large readable angular facets across the round shield face. Keep exact circular outline and dimensions, existing central boss/rivets and hand grip. No outward crystal spikes, bigger shield, glow, particles, jewels, gold or emblem. Preserve SAME character face/hair/clothes/proportions, all poses and grid positions. Exact1448x1086 canvas,4columns x3rows362x362 cells, transparent gutters; no reflow or figure crossing boundaries. Top wooden-sword and bottom stone-lifting rows unchanged supporting reference; only four middle defense poses will be used. Crisp woodland fantasy pixel clusters, upper-left warm lighting, genuine transparent alpha; no background,text,watermark or extra armor. Material-only edit.",
+    "pixels": "Original output bytes preserved, CRC verified, reopened with Pillow",
+    "scope": "Explicit source row386..744 isolates four defense poses; uniformly fit to established practice-pose height/center/footline, original PNG bytes preserved. Only middle-row four defense poses are used, and only when actual equipped shield.id is diamond_shield. Other practice actions keep original sheet. Actor clothes/armor variants remain common practice clothes; no claim of all equipment coverage."
   }
 }

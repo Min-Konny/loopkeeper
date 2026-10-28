@@ -1,10 +1,10 @@
-import { pixelWorkScene } from './pixel-work-art.js?v=0.6.136';
-import { equipmentMaterial } from './visual-design.js?v=0.6.136';
-import { icon } from './icons.js?v=0.6.136';
-import { miningScene } from './mining-scene.js?v=0.6.136';
-import { actionTarget } from './action-target.js?v=0.6.136';
-import {partyImageMarkup} from './party-art.js?v=0.6.136';
-import {enhanceWorkScene,syncGeneratedWork}from './generated-work-art.js?v=0.6.136';
+import { pixelWorkScene } from './pixel-work-art.js?v=0.6.137';
+import { equipmentMaterial } from './visual-design.js?v=0.6.137';
+import { icon } from './icons.js?v=0.6.137';
+import { miningScene } from './mining-scene.js?v=0.6.137';
+import { actionTarget } from './action-target.js?v=0.6.137';
+import {partyImageMarkup} from './party-art.js?v=0.6.137';
+import {enhanceWorkScene,syncGeneratedWork}from './generated-work-art.js?v=0.6.137';
 
 // Decorative work scenes follow the actual selected skill; no separate timer or game state.
 export function workScene(skill, actionId, equipment = {}, displayState = null) {
