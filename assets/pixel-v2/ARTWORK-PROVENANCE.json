@@ -3540,5 +3540,63 @@
         }
       }
     ]
+  },
+  "partyWeaponMaterialVariants": {
+    "scope": "Exact existing orichalcum_crossbow on same archer; iron/initial/bow/mage remain unchanged",
+    "records": [
+      {
+        "file": "party-archer-orichalcum-crossbow-v1.png",
+        "bytes": 1177483,
+        "sha256": "ab487aa00640e5b7ad0574761f696a7594387bd1a34b4fd4295cfac7ef288451",
+        "width": 1254,
+        "height": 1254,
+        "mode": "RGBA",
+        "cornerAlpha": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "pngCRCVerified": true,
+        "alphaExtrema": [
+          0,
+          255
+        ],
+        "frames": [
+          {
+            "cell": [
+              0,
+              0,
+              1254,
+              1254
+            ],
+            "opaqueBounds": [
+              161,
+              122,
+              1229,
+              1219
+            ],
+            "cornerAlpha": [
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "method": "Built-in image_gen edit; targeted framing correction after first candidate rejected; received PNG bytes retained",
+        "prompt": "Use case: precise-object-edit. TWO REFERENCES: Image1 is ONLY the copper-gold crossbow MATERIAL reference; its character enlargement and reframing are WRONG and must NOT be copied. Image2 (most recent, iron crossbow elf) is the actual EDIT TARGET and exact composition/identity reference. Change ONLY the metal portions of Image2's crossbow to robust warm copper-gold orichalcum with broad reinforced prod limbs/receiver/rail, dark copper recesses and restrained pale-gold highlights; retain wooden stock. Preserve Image2's female elf, face, hair, hood/cloak, hands, clothes, pose and scale. Absolutely NO enlargement, zoom, crop, new pose or new character armor. Exact square canvas/framing like Image2: on 1254x1254, hood top near y124, boots bottom near y1225, left cloak near x163, crossbow tip no farther right than x1215. Keep at least about35pixels transparent right margin, and original top margin about120pixels. All figure/cloak/feet and bolt intact. Do not fill empty margins with subject. Same pixel-art clusters, palette and upper-left light; no glow/gems/fire, no text/grid/watermark. Genuine transparent alpha background, new sibling asset. This is a targeted FRAMING correction, not a new composition.\n",
+        "reference": {
+          "file": "party-archer-crossbow-v1.png",
+          "sha256": "4e85e99eb0e79385f92cb02314ab463d9aad2e4f8c4110f97eeef639fda5bbb2"
+        },
+        "supportingMaterialReference": {
+          "name": "orichalcum-crossbow-candidate.png",
+          "sha256": "ac52e4e6dddbc63a46af581cd3308f44566ca6af11f96729f5440557ee8214fa",
+          "role": "Own generated weapon palette only; rejected larger character framing not adopted",
+          "published": false
+        }
+      }
+    ]
   }
 }
