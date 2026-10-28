@@ -4114,5 +4114,20 @@
     "prompt": "Use case: precise-object-edit. Edit target: existing LOOPKEEPER training-v2-sheet.png, exact 4 columns x3 rows transparent sprite sheet. Change ONLY the wooden round shield faces in the MIDDLE ROW, all four defense-training poses, into an iron round shield: cool dark iron broad metal plates, restrained pale silver edge highlights, rivets and existing central metal boss. Keep same circular outline, exact size/location/hand grip and matching lighting; remove wood grain on shield face. Preserve the SAME character identity, hair, face, green/brown practice clothes, body proportions, all poses, transparency, column/row grid and framing. Top-row wooden practice-sword poses and bottom-row stone lifting poses remain unchanged. Do NOT add armor, helmet, weapon, emblem, text, background, glow or extra frames. Crisp woodland fantasy pixel clusters consistent with input. Genuine transparent alpha. This is an equipment-display variant for defense practice, not character redesign.",
     "pixels": "Original output bytes preserved, CRC verified, reopened with Pillow",
     "scope": "Only middle-row four defense poses are used, and only when actual equipped shield.id is iron_shield. Other practice actions keep original sheet. Actor clothes/armor variants remain common practice clothes; no claim of all equipment coverage."
+  },
+  "steelShieldDefenseTraining": {
+    "file": "training-steel-shield-v1.png",
+    "sha256": "024678a803672984d71cdb2574c2f1d5930c695a460ec3d005e10d63bd2a4e9c",
+    "bytes": 1287412,
+    "width": 1448,
+    "height": 1086,
+    "source": "Built-in ImageGen precise-object-edit of original training-iron-shield-v1.png, visible reference; one completed image request",
+    "reference": {
+      "file": "training-iron-shield-v1.png",
+      "sha256": "33579223c80a54d56a1b7ef562062cffe42d03c4346d61f80adfa936603e8971"
+    },
+    "prompt": "Use case: precise-object-edit. Edit the visible LOOPKEEPER iron-shield training sprite sheet, exact same4columns x3rows. Change ONLY the four shield faces in the MIDDLE ROW from dark iron into polished steel: restrained cool blue-gray broad plate faces, pale silver bevel/rim and rivets, brighter clean metal highlights than the original nearly-black iron. Preserve exact round outline, size, center boss, grip and position in each frame; no larger shield, gold, emblem, magical glow or extra decoration. Keep the exact SAME person, face/hair/clothes/colors/body scale, all12poses/grid/spacing, transparent background and lighting. Top wooden practice sword row and bottom lifting-stone row unchanged. Do not add helmet/armor/weapons or crop feet/shields. Crisp woodland fantasy pixel clusters, genuine alpha transparency. This is only a steel shield defense-practice variant; use only four middle poses.",
+    "pixels": "Original output bytes preserved, CRC verified, reopened with Pillow",
+    "scope": "Explicit source row386..744 avoids adjacent-row contamination; each defense pose is uniformly fit to established practice-pose height and footline without modifying original PNG bytes. Only middle-row four defense poses are used, and only when actual equipped shield.id is steel_shield. Other practice actions keep original sheet. Actor clothes/armor variants remain common practice clothes; no claim of all equipment coverage."
   }
 }
