@@ -1,6 +1,6 @@
-import {specialistAug}from './specialist-content.js?v=0.6.138';
-import {getSkillProgress} from './legacy-engine.js?v=0.6.138';
-import {weaponById} from './gear-content.js?v=0.6.138';
+import {specialistAug}from './specialist-content.js?v=0.6.139';
+import {getSkillProgress} from './legacy-engine.js?v=0.6.139';
+import {weaponById} from './gear-content.js?v=0.6.139';
 export const PARTY=[{id:'archer',name:'弓使い',wave:3,image:'party-archer-v1.png',action:'train_archery'},{id:'mage',name:'魔法使い',wave:6,image:'party-mage-v1.png',action:'train_magic'}];
 export const memberFor=id=>{const type=weaponById(id)?.combat?.type;return type==='magic'?'mage':['bow','crossbow'].includes(type)?'archer':null;};
 export const memberJoined=(s,id)=>s.version===2&&s.meta.bestWave>=(PARTY.find(x=>x.id===id)?.wave??Infinity);

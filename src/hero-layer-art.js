@@ -1,6 +1,6 @@
-import{alphaBounds}from './generated-camp-art.js?v=0.6.138';
-import{swordMaterialSource,swordMaterialKey}from './hero-sword-material.js?v=0.6.138';
-import{createPortraitFrame}from './portrait-frame.js?v=0.6.138';
+import{alphaBounds}from './generated-camp-art.js?v=0.6.139';
+import{swordMaterialSource,swordMaterialKey}from './hero-sword-material.js?v=0.6.139';
+import{createPortraitFrame}from './portrait-frame.js?v=0.6.139';
 const families=['sword','spear','bow','crossbow','magic','unarmed'];
 export const WOOD_ARMOR_REGIONS=Object.freeze([
  [[0,0],[512,0],[512,512],[0,512]],
