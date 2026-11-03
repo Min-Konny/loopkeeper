@@ -1,4 +1,5 @@
-import {WORK_MILESTONES}from './work-milestone-content.js?v=0.6.139';
+import{getUILocale,text as t}from'./i18n.js?v=0.6.140';import{entityText}from'./entity-copy.js?v=0.6.140';import{escapeCopy as esc}from'./locale-controls.js?v=0.6.140';
+import {WORK_MILESTONES}from './work-milestone-content.js?v=0.6.140';
 const jobs=s=>[s.run.activeAction,...Object.values(s.run.suspendedActions||{})].filter(Boolean);
 export function initializeWorkMilestones(s){
  if(s.version===1||s.meta.workMilestoneVersion===1)return;
@@ -24,4 +25,4 @@ export function validWorkMilestones(s){
  for(const d of WORK_MILESTONES){const claimed=m.workClaims.includes(d.id);if(claimed!==((m.workCounts[d.id]||0)>=d.count)||(m.trophyEarned?.[d.material]||0)!==(claimed?1:0))return false;}
  return true;
 }
-export function workMilestoneMarkup(s){if(s.version===1)return '';return '<details class="work-milestones"><summary>作業実績と特殊素材</summary><p>完了回数は転生後も保持。各素材1個を一度だけ獲得し、通常素材と合わせて製作します。導入前の過去分は推測集計しません。職人による別の受動産出・購入・クリックは回数に含みません。</p>'+WORK_MILESTONES.map(m=>'<p><strong>'+m.name+'</strong> · '+m.label+' '+Math.min(m.count,s.meta.workCounts?.[m.id]||0)+' / '+m.count+'回'+(m.id==='fishing'&&s.run.earlyLoopVersion===1?'（魚4匹分を1回として計上）':'')+' · '+(s.meta.workClaims?.includes(m.id)?'素材獲得済み':'未達成')+' · 所持 '+(s.meta.trophies?.[m.material]||0)+'</p>').join('')+'</details>';}
+export function workMilestoneMarkup(s){if(s.version===1)return '';if(getUILocale()!=='ja')return '<details class="work-milestones"><summary>'+esc(t('workMilestones.heading'))+'</summary><p>'+esc(t('workMilestones.hint'))+'</p>'+WORK_MILESTONES.map(m=>'<p>'+esc(t('workMilestones.row',{name:entityText('material',m.material),action:m.equipment?t('workMilestones.smithing'):entityText('action',m.action),done:Math.min(m.count,s.meta.workCounts?.[m.id]||0),target:m.count,batch:m.id==='fishing'&&s.run.earlyLoopVersion===1?t('workMilestones.fishingBatch'):'',status:t(s.meta.workClaims?.includes(m.id)?'workMilestones.claimed':'workMilestones.pending'),owned:s.meta.trophies?.[m.material]||0}))+'</p>').join('')+'</details>';return '<details class="work-milestones"><summary>作業実績と特殊素材</summary><p>完了回数は転生後も保持。各素材1個を一度だけ獲得し、通常素材と合わせて製作します。導入前の過去分は推測集計しません。職人による別の受動産出・購入・クリックは回数に含みません。</p>'+WORK_MILESTONES.map(m=>'<p><strong>'+m.name+'</strong> · '+m.label+' '+Math.min(m.count,s.meta.workCounts?.[m.id]||0)+' / '+m.count+'回'+(m.id==='fishing'&&s.run.earlyLoopVersion===1?'（魚4匹分を1回として計上）':'')+' · '+(s.meta.workClaims?.includes(m.id)?'素材獲得済み':'未達成')+' · 所持 '+(s.meta.trophies?.[m.material]||0)+'</p>').join('')+'</details>';}

@@ -1,10 +1,13 @@
-import {visibleWorkerUpgrade,workerRankDescription,WORKER_NAMES}from './worker-legacy.js?v=0.6.139';
-import {preparationBalance}from './preparation-balance.js?v=0.6.139';
-import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.139';
-import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.139';
-import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.139';
-import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.139';
-import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.139';
+import {getUILocale} from './i18n.js?v=0.6.140';
+import {upgradeDescription} from './unlock-copy.js?v=0.6.140';
+import {englishUpgradeSections} from './unlock-sections-en.js?v=0.6.140';
+import {visibleWorkerUpgrade,workerRankDescription,WORKER_NAMES}from './worker-legacy.js?v=0.6.140';
+import {preparationBalance}from './preparation-balance.js?v=0.6.140';
+import {LEGACY_CATEGORIES,legacyUpgradeCategory,legacyCategoryTabs}from './legacy-categories.js?v=0.6.140';
+import {legacyRanksMarkup}from './legacy-ranks-ui.js?v=0.6.140';
+import {inheritanceMapMarkup,inheritanceMapReturnMarkup}from './inheritance-map.js?v=0.6.140';
+import {isFreeFeature,freeFeatureMarkup}from './free-features.js?v=0.6.140';
+import { startingGrant, STARTING_UPGRADES } from './starting-resources.js?v=0.6.140';
 import {
   ACCELERATION,
   LEGACY_UPGRADES,
@@ -12,8 +15,8 @@ import {
   getAccelerationStatus,
   getCatalog,
   getRecipeCost,
-} from "./engine.js?v=0.6.139";
-import { icon } from "./icons.js?v=0.6.139";
+} from "./engine.js?v=0.6.140";
+import { icon } from "./icons.js?v=0.6.140";
 
 const escape = (value) =>
   String(value ?? "").replace(
@@ -50,6 +53,7 @@ const descriptions = {
 };
 
 export function getUpgradeDescription(state, upgrade) {
+  if(getUILocale()!=='ja'&&state.version!==1)return upgradeDescription(state,upgrade);
   if(WORKER_NAMES[upgrade.id])return workerRankDescription(upgrade.id,1);if(upgrade.workerId)return workerRankDescription(upgrade.workerId,upgrade.workerRank);
   if(upgrade.kind==="starting_resources"){const owned=state.run.status==="legacy_setup"?state.run.legacyDraft.upgrades:state.meta.upgrades,ids=new Set([...owned,upgrade.id]);for(const id of [...ids])for(const parent of STARTING_UPGRADES.find(u=>u.id===id)?.unlock.requires || [])ids.add(parent);const grant=startingGrant([...ids],state.settings.disabledUpgrades);return "次回の支給合計："+Object.entries(grant).map(([id,n])=>({wood:"木材",stone:"石材",gold:"金貨"}[id] || id)+n).join("・")+"。転生を確定した時に受け取ります。";}
 
@@ -74,6 +78,7 @@ export function getUpgradeDescription(state, upgrade) {
 }
 
 export function renderUpgradeSections(state,category='all',mapOptions={}) {
+  if(getUILocale()!=='ja'&&(state.version===1||category!=='map'))return englishUpgradeSections(state,category);
   if(category==='map'&&state.version!==1)return legacyCategoryTabs('map')+'<section id="legacy-category-content" role="tabpanel" aria-labelledby="live-inheritance-map-tab">'+inheritanceMapMarkup(state,'live',mapOptions)+'</section>';
   const selected=LEGACY_CATEGORIES.find(c=>c.id===category)||LEGACY_CATEGORIES.at(-1);
   if (

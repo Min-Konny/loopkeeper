@@ -739,3 +739,10 @@ main, .sidebar, #content, [data-scroll-key], #expanded-work-dialog {
 .enchantment-panel select{width:100%;min-width:0}
 
 .merchant-panel{border:1px solid #ac925a;border-radius:8px;padding:14px;margin:12px 0;background:#293c30}.merchant-panel .market-heading{flex-wrap:wrap;gap:8px}.merchant-panel .market-item{flex-wrap:wrap;gap:10px}.merchant-panel small{white-space:normal}
+
+/* Recipe labels and native selects must fit translated text. */
+.processing-panel .auto-cooking-controls>label{min-width:0;max-width:100%}.processing-panel .auto-cooking-controls select{min-width:0;flex:1 1 130px;max-width:100%}
+@media(max-width:690px){.processing-panel .auto-cooking-controls>label:first-child{display:grid;grid-template-columns:minmax(0,1fr);flex-basis:100%}.processing-panel .auto-cooking-controls select{width:100%;min-width:0}}
+
+/* Keep population names readable alongside translated controls on small screens. */
+@media(max-width:500px){.population-row{flex-wrap:wrap;gap:8px}.population-row>span{flex:1 1 100%;min-width:0;overflow-wrap:anywhere}.population-row .population-stepper{width:100%;justify-content:space-between}}

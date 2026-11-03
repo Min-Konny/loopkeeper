@@ -4,33 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#151e1e" />
-    <meta name="description" content="採り、鍛え、襲撃に備える。失った命の経験を次へつなぐ、資源管理ローグライト。" />
+    <meta data-boot-copy="boot.description" name="description" content="採り、鍛え、襲撃に備える。失った命の経験を次へつなぐ、資源管理ローグライト。" />
     <title>LoopKeeper: Idle Defense</title>
     <link rel="icon" href="./assets/mark.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./src/styles.css?v=0.6.139" />
-    <link rel="stylesheet" href="./src/augments.css?v=0.6.139" />
+    <link rel="stylesheet" href="./src/styles.css?v=0.6.140" />
+    <link rel="stylesheet" href="./src/augments.css?v=0.6.140" />
     <link rel="stylesheet" href="./src/battle.css" />
     <link rel="stylesheet" href="./src/motion.css" />
     <link rel="stylesheet" href="./src/legacy.css" />
-    <link rel="stylesheet" href="./src/dashboard.css?v=0.6.139" />
-  <link rel="stylesheet" href="./src/camp-polish.css?v=0.6.139" />
-    <link rel="stylesheet" href="./src/camp-space.css?v=0.6.139" />
-  <link rel="stylesheet" href="./src/pixel-camp.css?v=0.6.139" />
-<link rel="stylesheet" href="./src/decision-ui.css?v=0.6.139">
-    <link rel="stylesheet" href="./src/route-ui.css?v=0.6.139" />
-    <link rel="stylesheet" href="./src/inheritance-map.css?v=0.6.139">
-<link rel="stylesheet" href="./src/camp-status.css?v=0.6.139">
-<link rel="stylesheet" href="./src/quests.css?v=0.6.139"><link rel="stylesheet" href="./src/interface.css?v=0.6.139" />
-    <link rel="stylesheet" href="./src/facility-cards.css?v=0.6.139" />
-    <link rel="stylesheet" href="./src/title.css?v=0.6.139" />
+    <link rel="stylesheet" href="./src/dashboard.css?v=0.6.140" />
+  <link rel="stylesheet" href="./src/camp-polish.css?v=0.6.140" />
+    <link rel="stylesheet" href="./src/camp-space.css?v=0.6.140" />
+  <link rel="stylesheet" href="./src/pixel-camp.css?v=0.6.140" />
+<link rel="stylesheet" href="./src/decision-ui.css?v=0.6.140">
+    <link rel="stylesheet" href="./src/route-ui.css?v=0.6.140" />
+    <link rel="stylesheet" href="./src/inheritance-map.css?v=0.6.140">
+<link rel="stylesheet" href="./src/camp-status.css?v=0.6.140">
+<link rel="stylesheet" href="./src/quests.css?v=0.6.140"><link rel="stylesheet" href="./src/interface.css?v=0.6.140" />
+    <link rel="stylesheet" href="./src/facility-cards.css?v=0.6.140" />
+    <link rel="stylesheet" href="./src/title.css?v=0.6.140" />
     <style>
       .boot-screen{box-sizing:border-box;max-width:480px;margin:12vh auto;padding:24px;border:1px solid #657052;border-radius:12px;background:#1c2d25;color:#eee9d3;font:16px/1.7 system-ui,sans-serif;width:calc(100% - 32px)}
       .boot-screen h1{font-size:24px;margin:0 0 12px}.boot-screen p{font-size:14px;margin:8px 0;color:#c7d0bf}.boot-screen button{font:inherit;min-height:44px;padding:8px 18px;margin-top:12px;background:#c9ae68;color:#17251c;border:1px solid #ebd49b;border-radius:8px;cursor:pointer}.boot-screen button:focus-visible{outline:3px solid #ebd49b;outline-offset:4px}
     </style>
+  <link rel="stylesheet" href="./src/zh-cn.css?v=0.6.140" />
+<link rel="stylesheet" href="./src/ko.css?v=0.6.140" />
   </head>
   <body>
 
-    <div id="app"><section id="boot-state" class="boot-screen" role="status" aria-live="polite"><h1>LoopKeeper</h1><p>ゲームを読み込んでいます。</p><p data-boot-detail>回線が遅い場合は、起動まで少し時間がかかります。</p><noscript><p>起動にはJavaScriptが必要です。</p></noscript></section></div>
+    <div id="app"><section id="boot-state" class="boot-screen" role="status" aria-live="polite"><h1>LoopKeeper</h1><p data-boot-copy="boot.loading">ゲームを読み込んでいます。</p><p data-boot-detail data-boot-copy="boot.hint">回線が遅い場合は、起動まで少し時間がかかります。</p><noscript><p data-boot-copy="boot.noscript">起動にはJavaScriptが必要です。 <span lang="en">JavaScript is required to start the game.</span></p><p lang="zh-CN">请启用 JavaScript 以运行 LoopKeeper，然后重新加载页面。</p><p lang="ko">LoopKeeper를 실행하려면 JavaScript를 켠 뒤 새로고침하세요.</p></noscript></section></div>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <dialog id="battle-dialog" aria-labelledby="battle-title"></dialog>
     <dialog id="augment-exclude-dialog" aria-labelledby="augment-exclude-title"></dialog>
@@ -43,7 +45,12 @@
     <dialog id="death-dialog" aria-labelledby="death-title"></dialog>
     <input id="import-input" type="file" accept="application/json,.json" hidden />
     <script type="module">
-      const entry = "./src/title-screen.js?v=0.6.139";
+      const bootCatalog={"boot.description":["幾度、倒れても、次の命に備える。放置と周回の経験を次へつなぐ、拠点管理ローグライト。","Prepare for the next life, however often you fall. An idle settlement roguelite built on experience across generations.","采集、锻造，为袭击做好准备。将逝去生命的经验传给下一世的营地经营Roguelite游戏。","몇 번을 쓰러져도 다음 생을 준비하세요. 방치와 회차 경험을 이어가는 거점 관리 로그라이트."],"boot.loading":["ゲームを読み込んでいます。","Loading the game…","正在加载游戏。","게임을 불러오는 중입니다."],"boot.hint":["通信が遅い場合は、起動まで少し時間がかかります。","On a slow connection, starting the game may take a little longer.","网络较慢时，启动可能需要更长时间。","연결이 느리면 시작까지 시간이 걸릴 수 있습니다."],"boot.noscript":["起動にはJavaScriptが必要です。","JavaScript is required to start the game.","启动游戏需要启用JavaScript。","게임을 시작하려면 JavaScript가 필요합니다."],"boot.slow":["読み込みに時間がかかっています。通信が安定しているか確認してください。","Loading is taking longer than expected. Please check your connection.","加载时间较长，请检查网络连接。","불러오는 데 시간이 걸립니다. 연결이 안정적인지 확인하세요."],"boot.failed":["読み込みを完了できませんでした","The game could not finish loading","未能完成游戏加载","게임을 불러오지 못했습니다"],"boot.retryHint":["通信を確認して、再読み込みしてください。","Check your connection, then reload the page.","请检查网络连接后重新加载。","연결을 확인한 뒤 새로고침하세요."],"boot.reload":["再読み込み","Reload","重新加载","새로고침"]};
+      let bootLocale='ja';try{const saved=localStorage.getItem('loopkeeper-ui-locale-v1');if(['ja','en','zh-CN','ko'].includes(saved))bootLocale=saved;}catch{}
+      const bootText=key=>bootCatalog[key]?.[bootLocale==='ko'?3:bootLocale==='zh-CN'?2:bootLocale==='en'?1:0]??key;
+      document.documentElement.lang=bootLocale;
+      for(const node of document.querySelectorAll('[data-boot-copy]')){const value=bootText(node.dataset.bootCopy);if(node.tagName==='META')node.content=value;else node.textContent=value;}
+      const entry = "./src/title-screen.js?v=0.6.140";
       const version = new URL(entry, location.href).searchParams.get("v");
       const url = new URL(location.href);
       if (url.searchParams.has("v") && url.searchParams.get("v") !== version) {
@@ -52,7 +59,7 @@
       } else {
         const slow = setTimeout(() => {
           const detail = document.querySelector('#boot-state [data-boot-detail]');
-          if (detail) detail.textContent = '読み込みに時間がかかっています。通信が安定しているか確認してください。';
+          if (detail) detail.textContent = bootText('boot.slow');
         }, 15000);
         import(entry).then(() => clearTimeout(slow)).catch(error => {
           clearTimeout(slow);
@@ -61,9 +68,9 @@
           if (!panel) { panel = document.createElement('section'); panel.className = 'boot-screen'; document.body.prepend(panel); }
           panel.setAttribute('role', 'alert');
           panel.replaceChildren();
-          const title = document.createElement('h1'); title.textContent = '読み込みを完了できませんでした';
-          const detail = document.createElement('p'); detail.textContent = '通信を確認して、再読み込みしてください。';
-          const button = document.createElement('button'); button.type = 'button'; button.textContent = '再読み込み';
+          const title = document.createElement('h1'); title.textContent = bootText('boot.failed');
+          const detail = document.createElement('p'); detail.textContent = bootText('boot.retryHint');
+          const button = document.createElement('button'); button.type = 'button'; button.textContent = bootText('boot.reload');
           button.addEventListener('click', () => location.reload());
           panel.append(title, detail, button);
         });

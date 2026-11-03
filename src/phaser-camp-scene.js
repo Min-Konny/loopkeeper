@@ -1,9 +1,10 @@
-import{campBuildings}from './camp-layout.js?v=0.6.139';
-import{loadCampArt,generatedWorkerAtlas,paintGeneratedCamp}from './generated-camp-art.js?v=0.6.139';
-import {mountPixelCamp}from './pixel-camp-scene.js?v=0.6.139';
-import {createPixelCampRenderer}from './pixel-camp-art.js?v=0.6.139';
-import {createCampActorAtlas}from './camp-actor-art.js?v=0.6.139';
-import {campSnapshot,lumberjackPose}from './camp-motion.js?v=0.6.139';
+import{getUILocale,text as t}from'./i18n.js?v=0.6.140';import{entityText}from'./entity-copy.js?v=0.6.140';
+import{campBuildings}from './camp-layout.js?v=0.6.140';
+import{loadCampArt,generatedWorkerAtlas,paintGeneratedCamp}from './generated-camp-art.js?v=0.6.140';
+import {mountPixelCamp}from './pixel-camp-scene.js?v=0.6.140';
+import {createPixelCampRenderer}from './pixel-camp-art.js?v=0.6.140';
+import {createCampActorAtlas}from './camp-actor-art.js?v=0.6.140';
+import {campSnapshot,lumberjackPose}from './camp-motion.js?v=0.6.140';
 
 const mounted=new WeakMap();let library;
 const loadLibrary=()=>library??=import('./vendor/phaser-3.90.0.esm.min.js').then(m=>m.default||m);
@@ -33,5 +34,5 @@ export function mountPhaserCamp(host){
  }catch(error){fail(error);}}
  function change(key,value){if(JSON.stringify(model[key])===JSON.stringify(value))return;model={...model,[key]:value};dirty=true;sync();}
  const observer=new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;sync();});observer.observe(host);document.addEventListener('visibilitychange',sync);reduced.addEventListener('change',sync);
- const api={setActive(v){active=!!v;sync();},setSettlement(v){fallback.setSettlement(v);const buildings=campBuildings(v);summary.textContent='施設 '+buildings.length+'種';list.textContent=buildings.map(b=>b.name+' Lv.'+b.level+(b.reinforcement?' +'+b.reinforcement:'')).join(' ・ ');host.dataset.facilityCount=String(buildings.length);change('facilities',{...v});},setConstruction(id,p){fallback.setConstruction(id,p);change('construction',id?{id,progress:Math.round(p*100)/100}:null);},setThreat(p){fallback.setThreat(p);change('threat',p);},setWork(id){fallback.setWork(id);change('chopping',!!id&&/wood|chop|fell|logging/i.test(id));},setNight(v){fallback.setNight(v);change('night',!!v);},destroy(){disposed=true;observer.disconnect();document.removeEventListener('visibilitychange',sync);reduced.removeEventListener('change',sync);game?.destroy(true);fallback.destroy();layer.remove();legend.remove();mounted.delete(host);}};mounted.set(host,api);host.dataset.campRenderer='fallback';return api;
+ const api={setActive(v){active=!!v;sync();},setSettlement(v){fallback.setSettlement(v);const buildings=campBuildings(v);summary.textContent=t('chrome.facilityCount',{count:buildings.length});list.textContent=buildings.map(b=>(getUILocale()!=='ja'?entityText('facility',b.id):b.name)+' Lv.'+b.level+(b.reinforcement?' +'+b.reinforcement:'')).join(getUILocale()!=='ja'?' / ':' ・ ');host.dataset.facilityCount=String(buildings.length);change('facilities',{...v});},setConstruction(id,p){fallback.setConstruction(id,p);change('construction',id?{id,progress:Math.round(p*100)/100}:null);},setThreat(p){fallback.setThreat(p);change('threat',p);},setWork(id){fallback.setWork(id);change('chopping',!!id&&/wood|chop|fell|logging/i.test(id));},setNight(v){fallback.setNight(v);change('night',!!v);},destroy(){disposed=true;observer.disconnect();document.removeEventListener('visibilitychange',sync);reduced.removeEventListener('change',sync);game?.destroy(true);fallback.destroy();layer.remove();legend.remove();mounted.delete(host);}};mounted.set(host,api);host.dataset.campRenderer='fallback';return api;
 }

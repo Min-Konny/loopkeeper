@@ -1,6 +1,6 @@
-import {CONTENT} from './content.js?v=0.6.139';
-import {PROGRESSION_QUESTS} from './quest-content.js?v=0.6.139';
-import {questProgress} from './quest-progress.js?v=0.6.139';
+import {CONTENT} from './content.js?v=0.6.140';
+import {PROGRESSION_QUESTS} from './quest-content.js?v=0.6.140';
+import {questProgress} from './quest-progress.js?v=0.6.140';
 
 // Cosmetic records only. These proof IDs refer to existing earned progression
 // facts; they never call a point/reward function or create a new requirement.

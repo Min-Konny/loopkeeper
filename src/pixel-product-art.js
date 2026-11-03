@@ -1,10 +1,10 @@
-import{trainingYardArtFile,trainingYardFallbackSource}from './training-yard-art.js?v=0.6.139';
-import{specialistArtFile}from './specialist-art.js?v=0.6.139';
-import{housingArtFile}from './housing-art.js?v=0.6.139';
-import {SPECIALISTS}from './specialist-content.js?v=0.6.139';
-import {facilityFrame} from './facility-art.js?v=0.6.139';
-import {equipmentMaterial} from './visual-design.js?v=0.6.139';
-import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.139';
+import{trainingYardArtFile,trainingYardFallbackSource}from './training-yard-art.js?v=0.6.140';
+import{specialistArtFile}from './specialist-art.js?v=0.6.140';
+import{housingArtFile}from './housing-art.js?v=0.6.140';
+import {SPECIALISTS}from './specialist-content.js?v=0.6.140';
+import {facilityFrame} from './facility-art.js?v=0.6.140';
+import {equipmentMaterial} from './visual-design.js?v=0.6.140';
+import {createPixelCampRenderer,PIXEL_FACILITIES} from './pixel-camp-art.js?v=0.6.140';
 const r=(x,y,w,h,c)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
 const cache=new Map(),failedFacilitySheets=new Set();
 const url=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);

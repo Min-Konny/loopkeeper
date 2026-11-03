@@ -1,6 +1,9 @@
-import {totalFood}from './meals.js?v=0.6.139';
-import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus,getAugmentExclusionStatus } from "./engine.js?v=0.6.139";
-import { icon } from "./icons.js?v=0.6.139";
+import {getUILocale} from './i18n.js?v=0.6.140';
+import {englishAugmentInsight} from './augment-copy.js?v=0.6.140';
+import {englishAugments,englishAugmentStatus} from './augments-en.js?v=0.6.140';
+import {totalFood}from './meals.js?v=0.6.140';
+import { getCatalog, getAugmentStatus, getSynergies, getAugmentRerollStatus,getAugmentExclusionStatus } from "./engine.js?v=0.6.140";
+import { icon } from "./icons.js?v=0.6.140";
 
 const families = {
   economy: { name: "生産・投資", icon: "gold" },
@@ -29,6 +32,7 @@ const escape = (value) =>
   );
 
 export function augmentInsight(state, augment) {
+ if(getUILocale()!=='ja')return englishAugmentInsight(state,augment);
   const selected = state.run.augments.selected;
   const pairs = (augment.pairs || []).filter(id => selected.includes(id));
   const { AUGMENTS, FACILITIES } = getCatalog(state);
@@ -46,7 +50,7 @@ export function augmentInsight(state, augment) {
 function synergyGuide(state) {
   if (state.version === 1 || state.meta.bestWave < 6) return '';
   const active = getSynergies(state);
-  return `<details class="strategy-details"><summary>施設と組み合わせる連携</summary>${[
+  return `<details class="strategy-details" data-detail-key="augment-synergy"><summary data-focus="augment-synergy">施設と組み合わせる連携</summary>${[
     ['economy','生産・投資の方針 ＋ 交易所II','資源の購入価格−10%'],
     ['martial','武勇の方針 ＋ 守備隊II または攻撃訓練Lv10','本人の攻撃＋12%・撃退金貨＋20%'],
     ['fortress','防衛の方針 ＋ 防護柵II または救護所II','柵の防御＋25%・戦闘の救護回復＋20%']
@@ -58,13 +62,15 @@ function insightMarkup(state, augment) {
 }
 
 export function augmentStatusMarkup(state) {
+ if(getUILocale()!=='ja')return englishAugmentStatus(state);
   const { AUGMENTS } = getCatalog(state);
   const selected = state.run.augments.selected.map(id => AUGMENTS.find(a=>a.id===id)).filter(Boolean);
   if (!selected.length) return '';
-  return `<details data-detail-key="augment-status" class="strategy-details"><summary>この命のオーグメント · ${selected.length}/${state.run.endless?.active ? "∞" : 4}</summary>${selected.map(a=>`<article><strong>${escape(a.name)}</strong><p>${escape(a.description)}</p>${a.tags ? insightMarkup(state,a) : ''}</article>`).join('')}${synergyGuide(state)}</details>`;
+  return `<details data-detail-key="augment-status" class="strategy-details"><summary data-focus="augment-status">この命のオーグメント · ${selected.length}/${state.run.endless?.active ? "∞" : 4}</summary>${selected.map(a=>`<article><strong>${escape(a.name)}</strong><p>${escape(a.description)}</p>${a.tags ? insightMarkup(state,a) : ''}</article>`).join('')}${synergyGuide(state)}</details>`;
 }
 
 export function renderAugments(state, { offer = false,error="" } = {}) {
+ if(getUILocale()!=='ja')return englishAugments(state,{offer,error});
   const { AUGMENTS } = getCatalog(state);
   const status = getAugmentStatus(state);
   const reroll = getAugmentRerollStatus(state);
@@ -85,7 +91,7 @@ export function renderAugments(state, { offer = false,error="" } = {}) {
       const augment = AUGMENTS.find((item) => item.id === id);
       if (!augment) return "";
       const family = families[augment.family];
-      return `<article class="augment-choice ${augment.family}"><div class="augment-card-top"><span class="augment-symbol">${icon(family.icon)}</span><span class="augment-family">${family.name} · ${augment.pack ? "追加候補" : "基本候補"}</span></div><h3>${escape(augment.name)}</h3><p class="augment-effect">${escape(augment.description)}</p>${insightMarkup(state, augment)}<p class="augment-hint">${escape(augment.hint || hints[augment.id] || "")}</p><button class="button gold-outline" data-choose-augment="${augment.id}" data-focus="augment-${augment.id}" aria-label="${escape(augment.name)}を選ぶ">この方針を選ぶ ${icon("arrow")}</button>${state.version!==1?`<button class="button small muted" data-exclude-augment="${augment.id}" ${getAugmentExclusionStatus(state,augment.id).canExclude?"":"disabled"}>この人生の候補から外す（再抽選1回）</button>`:""}</article>`;
+      return `<article class="augment-choice ${augment.family}"><div class="augment-card-top"><span class="augment-symbol">${icon(family.icon)}</span><span class="augment-family">${family.name} · ${augment.pack ? "追加候補" : "基本候補"}</span></div><h3>${escape(augment.name)}</h3><p class="augment-effect">${escape(augment.description)}</p>${insightMarkup(state, augment)}<p class="augment-hint">${escape(augment.hint || hints[augment.id] || "")}</p><button class="button gold-outline" data-choose-augment="${augment.id}" data-focus="augment-${augment.id}" aria-label="${escape(augment.name)}を選ぶ">この方針を選ぶ ${icon("arrow")}</button>${state.version!==1?`<button class="button small muted" data-exclude-augment="${augment.id}" data-focus="exclude-${augment.id}" ${getAugmentExclusionStatus(state,augment.id).canExclude?"":"disabled"}>この人生の候補から外す（再抽選1回）</button>`:""}</article>`;
     })
     .join(
       "",

@@ -1,0 +1,3 @@
+@font-face{font-family:"Loopkeeper KR";src:url("../assets/fonts/LoopkeeperKR-400.woff") format("woff");font-weight:400 500;font-style:normal;font-display:swap}
+@font-face{font-family:"Loopkeeper KR";src:url("../assets/fonts/LoopkeeperKR-700.woff") format("woff");font-weight:600 900;font-style:normal;font-display:swap}
+html[lang="ko"] body,html[lang="ko"] dialog,html[lang="ko"] #title-screen,noscript [lang="ko"]{font-family:"Loopkeeper KR","Zen Maru Gothic","Loopkeeper SC","Noto Sans CJK KR","Malgun Gothic",sans-serif}

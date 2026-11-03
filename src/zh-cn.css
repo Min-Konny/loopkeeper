@@ -1,0 +1,4 @@
+@font-face{font-family:"Loopkeeper SC";src:url("../assets/fonts/LoopkeeperSC-400.woff") format("woff");font-weight:400 500;font-style:normal;font-display:swap}
+@font-face{font-family:"Loopkeeper SC";src:url("../assets/fonts/LoopkeeperSC-700.woff") format("woff");font-weight:600 900;font-style:normal;font-display:swap}
+html[lang="zh-CN"] body,html[lang="zh-CN"] dialog,html[lang="zh-CN"] #title-screen{font-family:"Loopkeeper SC","Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif}
+noscript [lang="zh-CN"]{font-family:"Loopkeeper SC",sans-serif}

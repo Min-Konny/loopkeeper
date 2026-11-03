@@ -1,10 +1,15 @@
-import {finalWaveForRun,campaignForRun}from './campaign-rules.js?v=0.6.139';
-import {hasUpgrade}from './free-features.js?v=0.6.139';
-import { CONTENT } from './content.js?v=0.6.139';
-import { setTextIfChanged } from './dom-text.js?v=0.6.139';
-import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.6.139';
-import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.6.139';
-import { conditionLabel } from './queue-conditions.js?v=0.6.139';
+import {encounterName} from './encounter-copy.js?v=0.6.140';
+import {formatNumber} from './i18n.js?v=0.6.140';
+import {englishConditional,englishForecast} from './planning-en.js?v=0.6.140';
+import {getUILocale,text as t,hasCopy} from './i18n.js?v=0.6.140';
+import {englishReportMarkup,englishChallengesMarkup} from './lifecycle-copy.js?v=0.6.140';
+import {finalWaveForRun,campaignForRun}from './campaign-rules.js?v=0.6.140';
+import {hasUpgrade}from './free-features.js?v=0.6.140';
+import { CONTENT } from './content.js?v=0.6.140';
+import { setTextIfChanged } from './dom-text.js?v=0.6.140';
+import { CHALLENGES, CHAPTERS, chapterOf } from './strategy.js?v=0.6.140';
+import { getNextEnemy, tick, getSkillProgress } from './mvp-engine.js?v=0.6.140';
+import {conditionText as conditionLabel} from './condition-copy.js?v=0.6.140';
 const esc = x => String(x ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const number = n => Math.round(n).toLocaleString('ja-JP');
 const duration = n => {
@@ -12,6 +17,7 @@ const duration = n => {
   return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
 };
 export function reportMarkup(s) {
+  if(getUILocale()!=='ja')return englishReportMarkup(s);
   const reports = s.run.battleReports || [];
   if (!reports.length) return '';
   return `<details data-detail-key="battle-recaps" class="strategy-details battle-recaps"><summary>戦闘の振り返り · 第${reports[0].wave}波 ${reports[0].won ? '撃退' : '敗北'}</summary>${reports.map(r=>{
@@ -24,17 +30,25 @@ export function enemyRoadmap(s) {
   if (s.version !== 2 || s.meta.bestWave < 3 || s.run.wave >= finalWaveForRun(s) && !s.run.endless?.active) return '';
   const waves = [0,1,2].filter(n=>s.run.endless?.active || s.run.wave+n<finalWaveForRun(s)).map(n=>{
     const e = getNextEnemy({...s,run:{...s.run,wave:s.run.wave+n,hostileQueue:n ? [] : s.run.hostileQueue}});
+    if(getUILocale()!=='ja')return '<article><strong>WAVE '+String(e.wave).padStart(2,'0')+' · '+esc(encounterName(s,e))+'</strong><span>'+esc(t('roadmap.stats',{hp:formatNumber(Math.round(e.hp)),attack:formatNumber(Math.round(e.attack)),defense:formatNumber(Math.round(e.defense))}))+'</span><p>'+esc(t('roadmap.'+(['rally','sunder'].includes(e.pressure)?e.pressure:['flying','combo','heavy','armor'].includes(e.trait)?e.trait:'normal'),{volley:t('augment.piercing_volley.name'),strike:t('augment.weapon_master.name')}))+'</p></article>';
     const pressure = e.pressure === 'rally' ? '戦意高揚：4回攻撃するごとに攻撃＋5%（最大＋30%）。火力で早く倒すか、十分な防御・回復を用意。' : e.pressure === 'sunder' ? '崩し：4回目の攻撃は防御を40%無視。体力・回復・短期決戦で対処。' : '';
     return `<article><strong>WAVE ${String(e.wave).padStart(2,'0')} · ${esc(e.name)}</strong><span>HP ${number(e.hp)} · 攻撃 ${number(e.attack)} · 防御 ${number(e.defense)}</span><p>${pressure || traitHints[e.trait] || '通常：攻撃・防御・回復の配分で備える。'}</p></article>`;
   });
+  if(getUILocale()!=='ja')return '<details data-detail-key="enemy-roadmap" class="strategy-details enemy-roadmap"><summary>'+esc(t('roadmap.title',{count:waves.length}))+'</summary>'+waves.join('')+'<small>'+esc(t('roadmap.hostile'))+'</small></details>';
   return `<details data-detail-key="enemy-roadmap" class="strategy-details enemy-roadmap"><summary>この先の襲撃 · ${waves.length}波</summary>${waves.join('')}<small>外交による敵の強化は、現在の次の襲撃だけに反映。</small></details>`;
 }
 export function challengesMarkup(s) {
+  if(getUILocale()!=='ja')return englishChallengesMarkup(s);
   if (!s.meta.clears) return '';
   return `<details data-detail-key="challenges" class="strategy-details challenges"><summary>クリア後の挑戦 · ${(s.meta.challengeBadges || []).length}/3</summary><p>初クリア後に始めた周回で自由に挑戦。報酬は記念称号と記録画像の装飾です。</p>${CHALLENGES.map(c=>`<article><strong style="color:${c.color}">${s.meta.challengeBadges?.includes(c.id) ? '✓ ' : ''}${c.name}</strong><p>${c.description}</p></article>`).join('')}</details>`;
 }
 export function chapterPresentation(s) {
   const chapter = chapterOf(s);
+  if(getUILocale()!=='ja'){
+    if(document.body.dataset.chapter!==String(chapter))document.body.dataset.chapter=chapter;
+    setTextIfChanged(document.querySelector('.camp-caption h2'),s.run.endless?.active?t('camp.endlessTitle'):hasCopy('camp.chapter.'+chapter)?t('camp.chapter.'+chapter):CHAPTERS[chapter]);
+    setTextIfChanged(document.querySelector('.camp-caption p'),s.run.endless?.active?t('camp.endlessSubtitle'):hasCopy('camp.subtitle.'+chapter)?t('camp.subtitle.'+chapter):'');return;
+  }
   if (document.body.dataset.chapter !== String(chapter)) document.body.dataset.chapter = chapter;
   const title = document.querySelector('.camp-caption h2');
   setTextIfChanged(title, s.run.endless?.active ? "終わらぬ夜" : CHAPTERS[chapter]);
@@ -65,8 +79,9 @@ export function queueForecast(s) {
 export function queueTimingMarkup(s) {
   const f = queueForecast(s);
   if (!f) return '';
+  if(getUILocale()!=='ja')return englishForecast(s,f,duration);
   const firstLate = f.rows.findIndex(r=>r.seconds === null);
-  return `<details data-detail-key="queue-timing" class="strategy-details queue-timing"><summary>襲撃まで ${duration(f.raid)} · ${f.rows.filter(r=>r.seconds!==null).length}/${f.rows.length}件が完了見込み</summary><ol>${f.rows.map((r,i)=>`${i===firstLate ? `<li class="raid-boundary">${r.reason ? esc(r.reason) : 'ここまでに襲撃 · 以後は戦闘後'}</li>`:''}<li><span>${esc([...CONTENT.actions,...CONTENT.equipment,...CONTENT.processing,...CONTENT.facilities].find(d=>d.id===s.run.queue[i].id)?.name)}</span><b>${r.seconds===null ? '—' : `約${duration(r.seconds)}後`}</b></li>`).join('')}</ol><small>予約を有効にして続けた場合の目安。進行・人員・目標到達で変わります。</small></details>`;
+  return `<details data-detail-key="queue-timing" class="strategy-details queue-timing"><summary data-focus="queue-timing">襲撃まで ${duration(f.raid)} · ${f.rows.filter(r=>r.seconds!==null).length}/${f.rows.length}件が完了見込み</summary><ol>${f.rows.map((r,i)=>`${i===firstLate ? `<li class="raid-boundary">${r.reason ? esc(r.reason) : 'ここまでに襲撃 · 以後は戦闘後'}</li>`:''}<li><span>${esc([...CONTENT.actions,...CONTENT.equipment,...CONTENT.processing,...CONTENT.facilities].find(d=>d.id===s.run.queue[i].id)?.name)}</span><b>${r.seconds===null ? '—' : `約${duration(r.seconds)}後`}</b></li>`).join('')}</ol><small>予約を有効にして続けた場合の目安。進行・人員・目標到達で変わります。</small></details>`;
 }
 export { conditionLabel };
 
@@ -94,5 +109,6 @@ export function conditionalMarkup(s) {
   if (!gear.some(d=>d.id===draft.recipe)) draft.recipe=gear[0]?.id || '';
   if ((!hasStock && draft.type==='stock') || (!gear.length && draft.type==='unlock')) draft.type='level';
   const options=[...(hasStock ? [['stock','在庫が目標に達するまで']] : []),['level','この作業のLvが目標に達するまで'],...(gear.length ? [['unlock','装備の製作Lvに達したら停止']] : [])];
-  return `<details data-detail-key="condition-form" class="strategy-details condition-form"><summary>条件を指定して予約</summary><div class="condition-fields"><label>作業<select data-condition-field="action" data-focus="condition-action">${actions.map(d=>`<option value="${d.id}" ${draft.action===d.id?'selected':''}>${esc(d.name)}</option>`).join('')}</select></label><label>終了条件<select data-condition-field="type" data-focus="condition-type">${options.map(([id,name])=>`<option value="${id}" ${draft.type===id?'selected':''}>${name}</option>`).join('')}</select></label>${draft.type==='unlock' ? `<label>装備<select data-condition-field="recipe" data-focus="condition-recipe">${gear.map(d=>`<option value="${d.id}" ${draft.recipe===d.id?'selected':''}>${esc(d.name)}（製作Lv.${d.unlockLevel}）</option>`).join('')}</select></label>` : `<label>${draft.type==='stock' ? esc(CONTENT.resources.find(r=>r.id===Object.keys(action?.yields || {})[0])?.name)+'の所持数' : '目標Lv'}<input data-condition-field="target" data-focus="condition-target" type="number" min="${draft.type==='stock'?1:2}" max="${draft.type==='stock'?9999:100}" value="${Number.isFinite(draft.target)?draft.target:''}"></label><label class="condition-pause"><input type="checkbox" data-condition-field="pause" data-focus="condition-pause" ${draft.pause?'checked':''}>達成したら一時停止</label>`}<button class="button small gold-outline" data-command="queue-condition-add">条件付きで末尾に追加</button></div></details>`;
+  if(getUILocale()!=='ja')return englishConditional({actions,action,gear,draft,options});
+  return `<details data-detail-key="condition-form" class="strategy-details condition-form"><summary data-focus="condition-form">条件を指定して予約</summary><div class="condition-fields"><label>作業<select data-condition-field="action" data-focus="condition-action">${actions.map(d=>`<option value="${d.id}" ${draft.action===d.id?'selected':''}>${esc(d.name)}</option>`).join('')}</select></label><label>終了条件<select data-condition-field="type" data-focus="condition-type">${options.map(([id,name])=>`<option value="${id}" ${draft.type===id?'selected':''}>${name}</option>`).join('')}</select></label>${draft.type==='unlock' ? `<label>装備<select data-condition-field="recipe" data-focus="condition-recipe">${gear.map(d=>`<option value="${d.id}" ${draft.recipe===d.id?'selected':''}>${esc(d.name)}（製作Lv.${d.unlockLevel}）</option>`).join('')}</select></label>` : `<label>${draft.type==='stock' ? esc(CONTENT.resources.find(r=>r.id===Object.keys(action?.yields || {})[0])?.name)+'の所持数' : '目標Lv'}<input data-condition-field="target" data-focus="condition-target" type="number" min="${draft.type==='stock'?1:2}" max="${draft.type==='stock'?9999:100}" value="${Number.isFinite(draft.target)?draft.target:''}"></label><label class="condition-pause"><input type="checkbox" data-condition-field="pause" data-focus="condition-pause" ${draft.pause?'checked':''}>達成したら一時停止</label>`}<button class="button small gold-outline" data-command="queue-condition-add">条件付きで末尾に追加</button></div></details>`;
 }

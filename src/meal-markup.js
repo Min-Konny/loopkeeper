@@ -1,0 +1,15 @@
+import {enchantmentMarkup} from './enchantment-ui.js?v=0.6.140';
+import {MEALS} from './meal-content.js?v=0.6.140';
+import {mealStatus,potionCapacity} from './meals.js?v=0.6.140';
+import {automationStatusMarkup,cookingChoiceText,cookingBatchText,escapeText as esc} from './automation-status-ui.js?v=0.6.140';
+import {text as t} from './i18n.js?v=0.6.140';
+import {entityText} from './entity-copy.js?v=0.6.140';
+const effectLabel=m=>t('meal.effect.'+m.id,{percent:Math.round((m.attack??m.haste??0)*100)});
+const option=(id,label,value)=>`<option value="${id}" ${id===value?'selected':''}>${esc(label)}</option>`;
+export function mealEffectText(s){const m=mealStatus(s);return m?t('meal.active',{name:entityText('resource',m.id),effect:effectLabel(m),seconds:Math.ceil(m.remaining)}):t('meal.noEffect');}
+export function mealMarkup(s){
+ if(s.version!==2)return '';
+ const preference=MEALS.find(m=>m.id===s.settings.mealPreference),recovery=s.settings.recoveryMeal||'herb_soup';
+ const missing=preference&&!(s.run.resources[preference.id]>0),batch=cookingBatchText(s);
+ return `${enchantmentMarkup(s)}${automationStatusMarkup(s)}<section class="meal-overview" aria-label="${esc(t('meal.heading'))}"><div class="meal-stock"><strong>${esc(t('meal.heading'))}</strong><span>${esc(t('meal.stock',{food:s.run.resources.food||0,potions:s.run.resources.herb_soup||0,fish:s.run.resources.fish_meal||0,eggs:s.run.resources.egg_meal||0}))}</span></div><div class="meal-settings"><label>${esc(t('meal.capacity',{count:potionCapacity(s)}))}<select data-recovery-meal data-focus="recovery-meal">${option('herb_soup',t('meal.ownedPotion',{count:s.run.resources.herb_soup||0}),recovery)}${option('none',t('meal.none'),recovery)}</select></label><label>${esc(t('meal.before'))}<select data-meal-preference data-focus="meal-preference">${option('none',t('meal.none'),s.settings.mealPreference)}${MEALS.map(m=>option(m.id,t('meal.option',{name:entityText('resource',m.id),effect:effectLabel(m),count:s.run.resources[m.id]||0}),s.settings.mealPreference)).join('')}</select></label></div><p class="meal-current-effect">${esc(mealEffectText(s))}</p><p class="fine-print">${esc(t('meal.useHint'))}</p>${recovery!=='none'&&!(s.run.resources.herb_soup>0)?'<p class="meal-stock-warning">'+esc(t('meal.noPotions'))+'</p>':''}${missing?'<p class="meal-stock-warning">'+esc(t('meal.noSelected'))+'</p>':''}<details class="meal-panel" data-detail-key="meal-panel"><summary>${esc(t('meal.details'))}</summary><div class="meal-settings"><label>${esc(t('meal.nextIngredients'))}<select data-auto-cook-recipe data-focus="auto-cook-recipe">${option('auto',t('meal.auto'),s.settings.autoCookRecipe)}${option('rations',t('meal.herbStew'),s.settings.autoCookRecipe)}${MEALS.map(m=>option(m.recipe,t('meal.ingredients',{name:entityText('resource',m.id)}),s.settings.autoCookRecipe)).join('')}</select></label></div><p class="meal-plan">${batch?esc(t('meal.currentBatch',{name:batch}))+'<br>':''}${esc(t('meal.nextBatch',{name:cookingChoiceText(s)}))}</p><p class="fine-print">${esc(t('meal.buffHint'))}</p><p class="fine-print">${esc(t('meal.autoHint'))}</p></details></section>`;
+}

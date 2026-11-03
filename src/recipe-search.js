@@ -1,9 +1,10 @@
-import { setTextIfChanged } from './dom-text.js?v=0.6.139';
+import {text as t,subscribeLocale} from './i18n.js?v=0.6.140';
+import { setTextIfChanged } from './dom-text.js?v=0.6.140';
 
 // Call only after the existing discovery, category and visibility filters.
-export function filterRecipeNames(recipes, query) {
+export function filterRecipeNames(recipes, query, nameOf=recipe=>recipe.name) {
   const term = String(query ?? '').trim().toLowerCase();
-  return term ? recipes.filter(recipe => String(recipe.name).toLowerCase().includes(term)) : recipes;
+  return term ? recipes.filter(recipe => [nameOf(recipe),recipe.name].some(name=>String(name).toLowerCase().includes(term))) : recipes;
 }
 
 // The search editor lives outside the refreshed recipe list, so game updates
@@ -16,12 +17,16 @@ export function createRecipeSearch({ document, onChange }) {
   const result = host.querySelector('[data-search-result]');
   const toggle=document.querySelector('#recipe-search-toggle'),tools=document.querySelector('#recipe-search-tools'),summary=document.querySelector('#recipe-search-summary'),reset=document.querySelector('#recipe-search-reset');
   const queries = { craft: '', village: '' };
-  const opened={craft:!toggle,village:!toggle};let count='';
+  const opened={craft:!toggle,village:!toggle};let count='',counts=null;
   let context = null, composing = false;
   function refresh(){
+    if(context)setTextIfChanged(label,t(context==='village'?'search.village':'search.craft'));
+    setTextIfChanged(clear,t('search.clear'));clear.setAttribute?.('aria-label',t('search.clearAria'));input.setAttribute?.('placeholder',t('search.placeholder'));
+    if(reset){setTextIfChanged(reset,t('search.reset'));reset.setAttribute?.('aria-label',t('search.resetAria'));}
+    count=counts?t('search.count',{shown:counts[0],total:counts[1]}):'';setTextIfChanged(result,count);
     host.hidden=!context||!opened[context];if(tools)tools.hidden=!context;
-    if(toggle){const expanded=String(!!context&&opened[context]);if(toggle.getAttribute?.('aria-expanded')!==expanded)toggle.setAttribute('aria-expanded',expanded);setTextIfChanged(toggle,context&&opened[context]?'検索を閉じる':'検索');}
-    const term=context?queries[context].trim():'';if(summary){setTextIfChanged(summary,(term?'検索中：'+term+' · ':'')+count);summary.title=term;}if(reset)reset.hidden=!term;
+    if(toggle){const expanded=String(!!context&&opened[context]);if(toggle.getAttribute?.('aria-expanded')!==expanded)toggle.setAttribute('aria-expanded',expanded);setTextIfChanged(toggle,t(context&&opened[context]?'search.close':'search.open'));}
+    const term=context?queries[context].trim():'';if(summary){setTextIfChanged(summary,(term?t('search.query',{query:term}):'')+count);summary.title=term;}if(reset)reset.hidden=!term;
   }
   function commit() {
     if (!context || queries[context] === input.value) return;
@@ -45,6 +50,7 @@ export function createRecipeSearch({ document, onChange }) {
   });
   toggle?.addEventListener('click',event=>{event.stopPropagation();if(!context)return;opened[context]=!opened[context];refresh();if(opened[context])input.focus({preventScroll:true});});
   reset?.addEventListener('click',event=>{event.stopPropagation();if(!context)return;composing=false;input.value='';commit();toggle?.focus({preventScroll:true});});
+  subscribeLocale(refresh);
   return {
     show(next) {
       if (next === context) {refresh();return;}
@@ -53,11 +59,11 @@ export function createRecipeSearch({ document, onChange }) {
       if (context) {
         input.value = queries[context];
         clear.disabled = !input.value;
-        setTextIfChanged(label, context === 'village' ? '施設の名前検索' : '工房の名前検索');
+        setTextIfChanged(label, t(context==='village'?'search.village':'search.craft'));
       }
-      count='';refresh();
+      counts=null;count='';refresh();
     },
     query() { return context ? queries[context] : ''; },
-    report(shown,total){count='表示 '+shown+' / '+total+'件';setTextIfChanged(result,count);refresh();},
+    report(shown,total){counts=[shown,total];refresh();},
   };
 }

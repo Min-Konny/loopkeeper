@@ -1,11 +1,11 @@
-import {getPlanningYields,getRequiredProductionBatches}from './engine.js?v=0.6.139';
-import {enqueueTrainingLevel}from './engine.js?v=0.6.139';
-import {trophyShortage} from './boss-materials.js?v=0.6.139';
-import {hasUpgrade}from './free-features.js?v=0.6.139';
-import { trainingCandidates } from './prerequisite-training.js?v=0.6.139';
-import { getActionXp } from './engine.js?v=0.6.139';
-import * as old from "./legacy-planner.js?v=0.6.139";
-import { orderRecipeMaterials } from './engine.js?v=0.6.139';
+import {getPlanningYields,getRequiredProductionBatches}from './engine.js?v=0.6.140';
+import {enqueueTrainingLevel}from './engine.js?v=0.6.140';
+import {trophyShortage} from './boss-materials.js?v=0.6.140';
+import {hasUpgrade}from './free-features.js?v=0.6.140';
+import { trainingCandidates } from './prerequisite-training.js?v=0.6.140';
+import { getActionXp } from './engine.js?v=0.6.140';
+import * as old from "./legacy-planner.js?v=0.6.140";
+import { orderRecipeMaterials } from './engine.js?v=0.6.140';
 import {
   isLegacy,
   getCatalog,
@@ -24,7 +24,7 @@ import {
   startAction,
   stopAction,
   getProductionSources,
-} from "./engine.js?v=0.6.139";
+} from "./engine.js?v=0.6.140";
 const fail = (reason) => ({ ok: false, reason, steps: [], summary: "" });
 export function planCraft(s, id, count = 1) {
   if (!Number.isInteger(count) || count < 1 || count > 99) return fail("回数は1〜99の整数で指定してください。");

@@ -1,14 +1,16 @@
-import{outpostArtMarkup}from './outpost-art.js?v=0.6.139';
-import {hasUpgrade}from './free-features.js?v=0.6.139';
-import {OUTPOSTS,outpostId,outpostRecipe,expeditionId}from './settlement-content.js?v=0.6.139';
-import {allocationControls}from './settlement-ui.js?v=0.6.139';
-import {outpostRate,staffing}from './settlement.js?v=0.6.139';
-import {RECIPES,getRecipeCost,getActionDuration,canStartAction}from './mvp-engine.js?v=0.6.139';
-import {getClockStatus} from './engine.js?v=0.6.139';
-import {preparationRoute} from './preparation-balance.js?v=0.6.139';
-import {earlyRoutePoints} from './early-loop.js?v=0.6.139';
-import {lateLoop,repeatRouteValue} from './late-loop.js?v=0.6.139';
-import {ROUTES,canEnterRoute,routeEffects,routeGoldReward} from './routes.js?v=0.6.139';
+import {getUILocale} from './i18n.js?v=0.6.140';
+import {englishRoutes} from './route-copy.js?v=0.6.140';
+import{outpostArtMarkup}from './outpost-art.js?v=0.6.140';
+import {hasUpgrade}from './free-features.js?v=0.6.140';
+import {OUTPOSTS,outpostId,outpostRecipe,expeditionId}from './settlement-content.js?v=0.6.140';
+import {allocationControls}from './settlement-ui.js?v=0.6.140';
+import {outpostRate,staffing}from './settlement.js?v=0.6.140';
+import {RECIPES,getRecipeCost,getActionDuration,canStartAction}from './mvp-engine.js?v=0.6.140';
+import {getClockStatus} from './engine.js?v=0.6.140';
+import {preparationRoute} from './preparation-balance.js?v=0.6.140';
+import {earlyRoutePoints} from './early-loop.js?v=0.6.140';
+import {lateLoop,repeatRouteValue} from './late-loop.js?v=0.6.140';
+import {ROUTES,canEnterRoute,routeEffects,routeGoldReward} from './routes.js?v=0.6.140';
 
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const order=['forest','lake','road','forest_depth','quarry','quarry_depth','marsh','marsh_depth','citadel','river','forge','observatory','ice'];
@@ -47,6 +49,7 @@ function result(s) {
   return '<div class="route-result" role="status" tabindex="-1" data-focus="route-result"><strong>帰還：'+esc(d?.name)+' — '+esc(last.reason)+'</strong><span>'+Number(last.seconds).toFixed(1)+'秒／継承 +'+last.points+'pt'+(last.won?'／金貨 +'+routeGoldReward(last.id):'')+(last.won&&d?.material?'／'+esc(d.materialName)+' +1':'')+'</span><p>'+esc(next)+'</p></div>';
 }
 export function routesMarkup(s,showCompleted=false) {
+  if(getUILocale()!=='ja'&&ROUTES.every(d=>OUTPOSTS.some(p=>p.id===d.id)))return englishRoutes(s,routeChoices(s));
   if(s.version===1||s.meta.bestWave<3)return '';
   const {choices,completed,locked}=routeChoices(s),ready=choices.filter(x=>x.entry.ok).length;
   return '<section class="routes-panel" aria-label="開拓と遠征"><div class="route-heading"><h3>開拓と遠征</h3><button class="button small" data-tab="workers">人口を配分</button></div>'+result(s)
@@ -68,5 +71,5 @@ function outpostCard(s,d,entry){
  if(!level||cleared&&level<3)controls=`<p>${costs} · ${getActionDuration(s,recipe).toFixed(1)}秒</p><div class="route-card-actions"><button class="button small gold-outline" data-action="${recipe.id}" data-focus="build-${recipe.id}" ${!canBuild?'disabled':''}>${active?'工事中':suspended?'工事を再開':level?'拠点を増築':'開拓工事'}</button>${hasUpgrade(s,'action_queue')?`<button class="button small" data-smart-craft="${recipe.id}" data-focus="queue-${recipe.id}" ${s.run.queue.some(q=>q.id===recipe.id)||active?'disabled':''}>材料集めから予約</button>`:''}</div>${!canBuild&&!active?`<small>${esc(buildCheck.reason)}</small>`:''}`;
  if(!cleared&&level)controls+=`<button class="button gold-outline" data-route="${d.id}" data-focus="route-${d.id}" ${!entry.ok?'disabled':''}>守護敵に挑む</button><small>${entry.ok?'':esc(entry.reason||'')}</small>`;
  if(!cleared&&known)controls+=`<button class="button small" data-reopen="${d.id}" data-focus="reopen-${d.id}" ${queue||!hasUpgrade(s,'action_queue')?'disabled':''}>${queue?'再開拓を予約済み':'再開拓を予約'}</button><small>材料調達・工事・守護敵まで。襲撃が近い時は保留。</small>`;
- return `<article class="route-card outpost-card" data-route-card="${d.id}">${outpostArtMarkup(p.id,level)}<header><h4>${p.name}${level?' '+['','I','II','III'][level]:''}</h4><span>${cleared?'稼働可能':level?'守護敵が残っています':'未開拓'}</span></header><p>${p.label} 約${outpostRate(s,p.id).toFixed(1)}個/分・人${level<3?' ／ 増築で人数枠・速度UP':''}</p>${cleared?allocationControls(s,outpostId(d.id),p.name):`<details><summary>守護敵</summary>HP ${d.hp} / 攻撃 ${d.attack} / 防御 ${d.defense} · 最大30秒<p>${esc(pointReward(s,d))}／金貨 +${routeGoldReward(d.id)}${d.material?'／'+esc(d.materialName)+' +1/命':''}</p></details>`}${controls}</article>`;
+ return `<article class="route-card outpost-card" data-route-card="${d.id}">${outpostArtMarkup(p.id,level)}<header><h4>${p.name}${level?' '+['','I','II','III'][level]:''}</h4><span>${cleared?'稼働可能':level?'守護敵が残っています':'未開拓'}</span></header><p>${p.label} 約${outpostRate(s,p.id).toFixed(1)}個/分・人${level<3?' ／ 増築で人数枠・速度UP':''}</p>${cleared?allocationControls(s,outpostId(d.id),p.name):`<details data-detail-key="route-guardian-${d.id}"><summary data-focus="route-guardian-${d.id}">守護敵</summary>HP ${d.hp} / 攻撃 ${d.attack} / 防御 ${d.defense} · 最大30秒<p>${esc(pointReward(s,d))}／金貨 +${routeGoldReward(d.id)}${d.material?'／'+esc(d.materialName)+' +1/命':''}</p></details>`}${controls}</article>`;
 }

@@ -1,7 +1,9 @@
-import {hasUpgrade}from './free-features.js?v=0.6.139';
-import { getCatalog } from './engine.js?v=0.6.139';
-import { commitStoredGameEdit } from './save-storage.js?v=0.6.139';
-import { conditionLabel } from './queue-conditions.js?v=0.6.139';
+import {getUILocale} from './i18n.js?v=0.6.140';
+import {englishTemplateOverwrite} from './planning-en.js?v=0.6.140';
+import {hasUpgrade}from './free-features.js?v=0.6.140';
+import { getCatalog } from './engine.js?v=0.6.140';
+import { commitStoredGameEdit } from './save-storage.js?v=0.6.140';
+import { conditionLabel } from './queue-conditions.js?v=0.6.140';
 
 const fail = reason => ({ ok: false, reason });
 const enabled = state => state.version === 2 && hasUpgrade(state,"queue_templates") && !state.settings.disabledUpgrades.includes('queue_templates');
@@ -38,6 +40,7 @@ export function commitTemplateOverwrite(storage, state, proposal, { isOwner = ()
 
 const esc = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 export function templateOverwriteMarkup(state, proposal) {
+ if(getUILocale()!=='ja'&&state.version===2)return englishTemplateOverwrite(state,proposal);
   const recipes = [...getCatalog(state).ACTIONS, ...getCatalog(state).RECIPES];
   const original = JSON.parse(proposal.originalJSON), replacement = JSON.parse(proposal.queueJSON);
   function list(goals) {

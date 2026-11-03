@@ -1,5 +1,5 @@
-import {alphaBounds}from './generated-camp-art.js?v=0.6.139';
-import {workKind,workPose}from './work-motion.js?v=0.6.139';
+import {alphaBounds}from './generated-camp-art.js?v=0.6.140';
+import {workKind,workPose}from './work-motion.js?v=0.6.140';
 const root=new URL('../assets/pixel-v2/',import.meta.url),mounted=new WeakMap();let pending;
 const sheets=Object.freeze({foraging:'forager-v1-sheet.png',fishing:'fisher-v2-sheet.png',cooking:'cook-v1-sheet.png',training:'training-v2-sheet.png'}),extras=new Map(),foragingProps=new Map();let background,propsPending,miningArt;
 export const FODDER_PROP_FILE='fodder-patch-v1.png';

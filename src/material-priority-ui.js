@@ -1,7 +1,8 @@
-import {hasUpgrade}from './free-features.js?v=0.6.139';
-import { icon } from './icons.js?v=0.6.139';
-import { getCatalog, resourceKnown, getUnlocks, isLegacy, setMaterialPriority } from './engine.js?v=0.6.139';
-import { commitStoredGameEdit } from './save-storage.js?v=0.6.139';
+import{getUILocale}from'./i18n.js?v=0.6.140';import{englishPriority}from'./priority-en.js?v=0.6.140';
+import {hasUpgrade}from './free-features.js?v=0.6.140';
+import { icon } from './icons.js?v=0.6.140';
+import { getCatalog, resourceKnown, getUnlocks, isLegacy, setMaterialPriority } from './engine.js?v=0.6.140';
+import { commitStoredGameEdit } from './save-storage.js?v=0.6.140';
 export function materialPriorityChoices(state) {
   return Object.entries(getCatalog(state).RESOURCES).filter(([id]) => isLegacy(state) || resourceKnown(state, id) && (id !== 'gold' || getUnlocks(state).facilities)).map(([id, resource]) => ({ id, name: resource.name }));
 }
@@ -38,6 +39,7 @@ export function editMaterialPriority(state, proposal, {toggle, move, direction, 
   return true;
 }
 export function materialPriorityMarkup(state, proposal) {
+ if(getUILocale()!=='ja')return englishPriority(state,proposal,allMaterialPriorityChoices(state),icon);
   const choices=allMaterialPriorityChoices(state),names=new Map(choices.filter(r=>r.known).map(r=>[r.id,r.name]));
   const draft=proposal.draft,stale=proposal.state!==state || proposal.run!==state.run || proposal.originalJSON!==JSON.stringify(state.settings.craftMaterialPriority || []);
   const groups=[

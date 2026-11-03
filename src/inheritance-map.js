@@ -1,7 +1,9 @@
-import {LEGACY_UPGRADES,canPurchaseUpgrade,getLegacyRankStatus}from './engine.js?v=0.6.139';
-import {LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.139';
-import {legacyRankCategory}from './legacy-categories.js?v=0.6.139';
-import {icon}from './icons.js?v=0.6.139';
+import {getUILocale} from './i18n.js?v=0.6.140';
+import {englishInheritanceMap} from './inheritance-map-en.js?v=0.6.140';
+import {LEGACY_UPGRADES,canPurchaseUpgrade,getLegacyRankStatus}from './engine.js?v=0.6.140';
+import {LEGACY_RANKS,rankId}from './legacy-rank-definitions.js?v=0.6.140';
+import {legacyRankCategory}from './legacy-categories.js?v=0.6.140';
+import {icon}from './icons.js?v=0.6.140';
 
 // Related branches stay together within their existing domains.
 export const MAP_ORDER=['attack','maxHp','defense','haste','critRate','spellPower','castHaste','alchemySpeed','craftSpeed','gatherSpeed','returnSpeed','tradeSaleBonus'];
@@ -31,7 +33,7 @@ export function inheritanceMapModel(s){
 }
 
 export function inheritanceMapMarkup(s,scope='live',options={}){
- const m=inheritanceMapModel(s);if(!m)return '';
+ const m=inheritanceMapModel(s);if(!m)return '';if(getUILocale()!=='ja')return englishInheritanceMap(s,m,scope,options);
  const selected=options.branch,only=!!options.affordable,available=m.branches.filter(b=>b.next?.status==='available').length;
  const command=b=>m.draft?(b.next?'<button type="button" class="map-allocate" data-buy-rank="'+b.key+'" data-focus="map-buy-'+b.key+'" '+(!b.canBuy?'disabled':'')+' aria-label="'+escape(b.name+'をR'+b.next.rank+'に割り振る、'+b.next.cost+'ポイント')+'">R'+b.next.rank+' に割り振る <strong>'+b.next.cost+' pt</strong></button>':'<span class="map-max">最大 R5</span>'):'<span class="map-live-only">次の命で配分</span>';
  const branch=b=>{

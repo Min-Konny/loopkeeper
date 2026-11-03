@@ -1,27 +1,32 @@
-import{enchantmentById}from './enchantments.js?v=0.6.139';
-import {mountBattleParty,updateBattleParty}from './party-ui.js?v=0.6.139';
-import{frameStaticPortrait}from './portrait-frame.js?v=0.6.139';
-import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.139';
-import {getCatalog} from './engine.js?v=0.6.139';
-import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.139';
-import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.139';
-import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.139';
-import{duelSnapshot}from './duel-motion.js?v=0.6.139';
-import {battleFood,potionCapacity}from './meals.js?v=0.6.139';
-import {mealEffectText}from './meal-ui.js?v=0.6.139';
-import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.139';
-import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.139';
-import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.139';
-import { getPlayerStrike } from './engine.js?v=0.6.139';
-import {routeById}from './routes.js?v=0.6.139';
-import { equipmentMaterial } from './visual-design.js?v=0.6.139';
-import { battleSound } from "./presentation.js?v=0.6.139";
-import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.139";
-import { icon } from "./icons.js?v=0.6.139";
+import {encounterName} from './encounter-copy.js?v=0.6.140';
+import {entityText} from './entity-copy.js?v=0.6.140';
+import {text as t,getUILocale,formatNumber} from './i18n.js?v=0.6.140';
+import {copySpan} from './locale-controls.js?v=0.6.140';
+import {enemyTraitText} from './raid-info-ui.js?v=0.6.140';
+import{enchantmentById}from './enchantments.js?v=0.6.140';
+import {mountBattleParty,updateBattleParty}from './party-ui.js?v=0.6.140';
+import{frameStaticPortrait}from './portrait-frame.js?v=0.6.140';
+import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.140';
+import {getCatalog} from './engine.js?v=0.6.140';
+import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.140';
+import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.140';
+import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.140';
+import{duelSnapshot}from './duel-motion.js?v=0.6.140';
+import {battleFood,potionCapacity}from './meals.js?v=0.6.140';
+import {mealEffectText}from './meal-ui.js?v=0.6.140';
+import {battlePressure,pressuredAttack}from './battle-pressure.js?v=0.6.140';
+import {forestChiefPortrait} from './forest-chief-art.js?v=0.6.140';
+import {pixelBattlePortrait} from './pixel-battle-art.js?v=0.6.140';
+import { getPlayerStrike } from './engine.js?v=0.6.140';
+import {routeById}from './routes.js?v=0.6.140';
+import { equipmentMaterial } from './visual-design.js?v=0.6.140';
+import { battleSound } from "./presentation.js?v=0.6.140";
+import { getStats, getFoodHealing, getCombatPreview } from "./engine.js?v=0.6.140";
+import { icon } from "./icons.js?v=0.6.140";
 
 const views = new WeakMap();
 const number = (value) =>
-  Number(value).toLocaleString("ja-JP", { maximumFractionDigits: 2 });
+  formatNumber(Number(value), { maximumFractionDigits: 2 });
 const ratio = (value, maximum) => Math.max(0, Math.min(1, value / maximum));
 
 function portrait(side, symbol, sigil = "") {
@@ -36,17 +41,17 @@ function createView(dialog) {
   dialog.innerHTML = `
     <section class="battle-scene">
       <header class="battle-heading">
-        <div><span class="battle-wave" data-battle="wave"></span><h2 id="battle-title">野営地を防衛中</h2></div>
-        <span class="battle-state" data-battle="state"></span><button class="button small muted" data-command="abandon-menu">周回を切り上げる</button>
+        <div><span class="battle-wave" data-battle="wave"></span><h2 id="battle-title">${copySpan("battle.title")}</h2></div>
+        <span class="battle-state" data-battle="state"></span><button class="button small muted" data-command="abandon-menu">${copySpan("battle.abandon")}</button>
       </header><p data-battle="magic-readout" class="magic-battle-readout" hidden></p>
-      <div class="battle-field"><div class="boss-arrival" data-battle="boss-arrival" aria-hidden="true"><small>強敵襲来</small><strong data-battle="boss-arrival-name"></strong></div>
+      <div class="battle-field"><div class="boss-arrival" data-battle="boss-arrival" aria-hidden="true"><small>${copySpan("battle.bossArrival")}</small><strong data-battle="boss-arrival-name"></strong></div>
         <article class="battle-fighter battle-player" data-battle="player-card">
           ${portrait("player", "shield", `<span class="battle-sigil">${icon("flame")}</span>`)}
-          <div class="battle-party" data-battle="party"></div><h3>灯守</h3>
+          <div class="battle-party" data-battle="party"></div><h3>${copySpan("battle.player")}</h3>
           <div class="battle-health-value"><strong data-battle="player-hp"></strong><span>/ <span data-battle="player-max"></span></span></div>
-          <div class="battle-health-track" data-battle="player-health" role="progressbar" aria-label="灯守の体力" aria-valuemin="0"><i data-battle="player-bar"></i></div>
-          <div class="battle-attributes"><span>${icon("sword")}攻撃 <b data-battle="player-attack"></b></span><span>${icon("shield")}防御 <b data-battle="player-defense"></b></span></div>
-          <div class="battle-damage" data-battle="outgoing-formula"><span>与える一撃</span><strong data-battle="outgoing"></strong></div>
+          <div class="battle-health-track" data-battle="player-health" role="progressbar" aria-label="${t("battle.playerHp")}" data-ui-aria="battle.playerHp" aria-valuemin="0"><i data-battle="player-bar"></i></div>
+          <div class="battle-attributes"><span>${icon("sword")}${copySpan("battle.attack")} <b data-battle="player-attack"></b></span><span>${icon("shield")}${copySpan("battle.defense")} <b data-battle="player-defense"></b></span></div>
+          <div class="battle-damage" data-battle="outgoing-formula"><span>${copySpan("battle.outgoing")}</span><strong data-battle="outgoing"></strong></div>
           <div class="battle-feedback-row" aria-hidden="true"><span class="battle-feedback" data-battle="player-damage-feedback"></span><span class="battle-feedback" data-effect="heal" data-battle="player-heal-feedback"></span></div>
         </article>
         <div class="battle-versus" aria-hidden="true">${icon("sword")}<span>VS</span></div>
@@ -54,24 +59,24 @@ function createView(dialog) {
           ${portrait("enemy", "skull")}
           <h3 data-battle="enemy-name"></h3>
           <div class="battle-health-value"><strong data-battle="enemy-hp"></strong><span>/ <span data-battle="enemy-max"></span></span></div>
-          <div class="battle-health-track" data-battle="enemy-health" role="progressbar" aria-label="敵の体力" aria-valuemin="0"><i data-battle="enemy-bar"></i></div>
-          <div class="battle-attributes"><span>${icon("sword")}攻撃 <b data-battle="enemy-attack"></b></span><span>${icon("shield")}防御 <b data-battle="enemy-defense"></b></span></div>
-          <div class="battle-damage" data-battle="incoming-formula"><span>次の被害</span><strong data-battle="incoming"></strong></div>
+          <div class="battle-health-track" data-battle="enemy-health" role="progressbar" aria-label="${t("battle.enemyHp")}" data-ui-aria="battle.enemyHp" aria-valuemin="0"><i data-battle="enemy-bar"></i></div>
+          <div class="battle-attributes"><span>${icon("sword")}${copySpan("battle.attack")} <b data-battle="enemy-attack"></b></span><span>${icon("shield")}${copySpan("battle.defense")} <b data-battle="enemy-defense"></b></span></div>
+          <div class="battle-damage" data-battle="incoming-formula"><span>${copySpan("battle.incoming")}</span><strong data-battle="incoming"></strong></div>
           <div class="battle-feedback-row" aria-hidden="true"><span class="battle-feedback" data-battle="enemy-damage-feedback"></span></div>
         </article>
       </div>
       <p class="battle-equipment-note" data-battle="equipment-readout"></p><p class="battle-pressure-note" data-battle="pressure-state"></p><p class="battle-meal-note" data-battle="meal-state"></p><div class="meal-buttons battle-meal-buttons"><button class="button small gold-outline" data-use-meal="fish_meal" data-battle="fish-button"></button><button class="button small gold-outline" data-use-meal="egg_meal" data-battle="egg-button"></button></div>
-      <div class="battle-rhythm"><div><span>次の攻防</span><b data-battle="round-time"></b></div><div class="battle-round-track"><i data-battle="round-bar"></i></div></div>
-      <div class="battle-facilities" aria-label="村の戦闘支援"><div class="battle-facility guardhouse" data-battle="guardhouse-sign" hidden><span class="battle-facility-art" data-battle="guardhouse-art"></span><span>衛兵詰所<small data-battle="support-value"></small></span></div><div class="battle-facility archery" data-battle="archery-sign" hidden><span class="battle-facility-art" data-battle="archery-art"></span><span>弓塔<small data-battle="ranged-value"></small></span></div><div class="battle-facility infirmary" data-battle="infirmary-sign" hidden><span class="battle-facility-art" data-battle="infirmary-art"></span><span>救護所<small data-battle="treatment-value"></small></span></div></div>
+      <div class="battle-rhythm"><div><span>${copySpan("battle.nextRound")}</span><b data-battle="round-time"></b></div><div class="battle-round-track"><i data-battle="round-bar"></i></div></div>
+      <div class="battle-facilities" aria-label="${t("battle.supportAria")}" data-ui-aria="battle.supportAria"><div class="battle-facility guardhouse" data-battle="guardhouse-sign" hidden><span class="battle-facility-art" data-battle="guardhouse-art"></span><span>${copySpan("battle.guardhouse")}<small data-battle="support-value"></small></span></div><div class="battle-facility archery" data-battle="archery-sign" hidden><span class="battle-facility-art" data-battle="archery-art"></span><span>${copySpan("battle.archery")}<small data-battle="ranged-value"></small></span></div><div class="battle-facility infirmary" data-battle="infirmary-sign" hidden><span class="battle-facility-art" data-battle="infirmary-art"></span><span>${copySpan("battle.infirmary")}<small data-battle="treatment-value"></small></span></div></div>
     </section>
-    <section class="battle-supplies" aria-label="戦闘中の回復">
+    <section class="battle-supplies" aria-label="${t("battle.recoveryAria")}" data-ui-aria="battle.recoveryAria">
       <span class="battle-food-icon" data-battle="food-icon">${icon("food")}</span>
-      <div class="battle-food-count"><span>食料</span><strong data-battle="food"></strong><small>個</small></div>
+      <div class="battle-food-count"><span>${copySpan("battle.food")}</span><strong data-battle="food"></strong><small>${copySpan("battle.unit")}</small></div>
       <div class="battle-food-rule" data-battle="food-rule"></div>
     </section>
     <footer class="battle-footer">
       <div class="battle-controls">
-        <button type="button" class="battle-save" data-command="save-menu" aria-label="戦闘を保存" title="保存メニュー">${icon("save")}</button>
+        <button type="button" class="battle-save" data-command="save-menu" aria-label="${t("battle.save")}" data-ui-aria="battle.save" title="${t("battle.saveMenu")}" data-ui-title="battle.saveMenu">${icon("save")}</button>
         <button type="button" class="battle-pause" data-command="pause" autofocus><span data-battle="pause-icon">${icon("pause")}</span><span data-battle="play-icon">${icon("play")}</span><span data-battle="pause-label"></span></button>
       </div>
     </footer>`;
@@ -382,7 +387,7 @@ export function renderBattle(dialog, state) {
   dialog.classList.toggle("battle-is-paused", paused);
   updateBattleParty(el.party,state,!paused&&state.settings.effectsEnabled!==false);
   dialog.classList.toggle("battle-is-boss",!!enemy.isBoss);
-  setText(el['boss-arrival-name'],enemy.name);
+  setText(el['boss-arrival-name'],encounterName(state,enemy));
   if (view.arrivalPending && !view.motionPaused) {
     view.arrivalPending=false;
     animate(view,'boss-arrival',[{opacity:0,transform:'translateY(14px) scale(.92)'},{opacity:1,transform:'translateY(0) scale(1)',offset:.2},{opacity:1,transform:'translateY(0) scale(1)',offset:.65},{opacity:0,transform:'translateY(-12px) scale(1.03)'}],1600);
@@ -390,12 +395,12 @@ export function renderBattle(dialog, state) {
   }
   setText(
     el.wave,
-    run.routes?.active ? "地域遠征（本線WAVE "+run.wave+"）" : `第 ${enemy.wave} 波${enemy.isBoss ? " · BOSS" : ""}${enemy.invasion ? " · 国家軍が加勢" : ""}`,
+    run.routes?.active ? t('battle.routeWave',{wave:run.wave}) : t('battle.wave',{wave:enemy.wave})+(enemy.isBoss?' · BOSS':'')+(enemy.invasion?' · '+t('battle.army'):''),
   );
-  setText(el.state, paused ? "時間停止中" : "自動戦闘");
+  setText(el.state, paused ? t("battle.paused") : t("battle.auto"));
   setText(
     el["enemy-name"],
-    enemy.name + (enemy.trait || enemy.pressure ? " · " + getCombatPreview(state).trait : ""),
+    encounterName(state,enemy) + (enemy.trait || enemy.pressure ? " · " + (getUILocale()==='ja'?getCombatPreview(state).trait:enemyTraitText(enemy)) : ""),
   );
   const portraitId = enemy.trait === "flying" ? "winged" : enemy.isBoss
     ? "boss"
@@ -419,7 +424,7 @@ export function renderBattle(dialog, state) {
   const image=el['enemy-illustration'];
   image.classList.toggle('generated-enemy',!!artSource);
   image.onerror=()=>{if(artSource&&image.getAttribute('src')===artSource){view.failedEnemyArt.add(artSource);image.classList.remove('generated-enemy');image.setAttribute('src',fallbackSrc);frameStaticPortrait(image,false);view.duel.suspend();}};
-  const equipmentText=Object.entries({weapon:'武器',armor:'鎧',shield:'盾'}).map(([slot,label])=>{const item=run.equipment[slot];return label+'：'+(item?(getCatalog(state).RECIPES.find(r=>r.id===item.id)?.name||item.id):'なし');}).join(' / ');
+  const equipmentText=['weapon','armor','shield'].map(slot=>{const item=run.equipment[slot],d=item&&getCatalog(state).RECIPES.find(r=>r.id===item.id);return t('battle.equipment',{slot:t('battle.slot.'+slot),name:item?(d?entityText('recipe',d):item.id):t('battle.none')});}).join(' / ');
   setText(el['equipment-readout'],equipmentText);
   const playerImage=el['player-illustration'];
   playerImage.setAttribute('title',equipmentText);
@@ -435,40 +440,38 @@ export function renderBattle(dialog, state) {
   setText(el["player-attack"], number(stats.attack));
   setText(el["player-defense"], number(stats.defense));
   setText(el["enemy-attack"], number(pressuredAttack(state,enemy)));
-  const pressure=battlePressure(state);el["pressure-state"].hidden=!pressure.active;setText(el["pressure-state"],pressure.graceRemaining>0?`長期戦：あと${Math.ceil(pressure.graceRemaining)}秒で敵の攻撃力が徐々に上昇`:`長期戦：敵攻撃×${pressure.multiplier.toFixed(2)}${pressure.slow?" · 警鐘台で強化速度−30%":""}`);
-  setText(el["meal-state"],mealEffectText(state)+(run.enchantment?.active?" · "+enchantmentById(run.enchantment.active.id).name+" 発動中":""));for(const [id,key,name]of [["fish_meal","fish-button","魚料理"],["egg_meal","egg-button","卵料理"]]){setText(el[key],`${name}を食べる（${run.resources[id]||0}）`);el[key].disabled=!(run.resources[id]>0);}
+  const pressure=battlePressure(state);el['pressure-state'].hidden=!pressure.active;setText(el['pressure-state'],pressure.graceRemaining>0?t('battle.grace',{seconds:Math.ceil(pressure.graceRemaining)}):t('battle.growth',{multiplier:pressure.multiplier.toFixed(2),slow:pressure.slow?t('battle.slow'):''}));
+  setText(el['meal-state'],mealEffectText(state)+(run.enchantment?.active?t('battle.enchantment',{name:entityText('resource',run.enchantment.active.id)}):''));for(const [id,key]of [['fish_meal','fish-button'],['egg_meal','egg-button']]){setText(el[key],t('battle.eat',{name:entityText('resource',id),count:run.resources[id]||0}));el[key].disabled=!(run.resources[id]>0);}
   setText(el["enemy-defense"], number(enemy.defense));
   setText(
     el.outgoing,
     number(outgoing) +
       (stats.support
-        ? ` +${number(Math.max(1, stats.support * (enemy.trait === "flying" ? .5 : 1) - enemy.defense))} 支援`
+        ? t('battle.extraSupport',{damage:number(Math.max(1, stats.support * (enemy.trait === 'flying' ? .5 : 1) - enemy.defense))})
         : ""),
   );
   const preview = getCombatPreview(state);
-  if(el['magic-readout']){const m=run.magicState,visible=state.version===2&&m&&(state.meta.bestWave>=6||run.resources.spark_catalyst||run.resources.ward_essence);el['magic-readout'].hidden=!visible;if(visible)setText(el['magic-readout'],'MP '+Math.floor(m.mana)+'/30 ・ 詠唱 '+m.casts+' / 爆発 '+m.detonations+' ・ 触媒 '+(run.resources.spark_catalyst||0)+' / 護符液 '+(run.resources.ward_essence||0));}
+  if(el['magic-readout']){const m=run.magicState,visible=state.version===2&&m&&(state.meta.bestWave>=6||run.resources.spark_catalyst||run.resources.ward_essence);el['magic-readout'].hidden=!visible;if(visible)setText(el['magic-readout'],t('battle.magic',{mana:Math.floor(m.mana),casts:m.casts,detonations:m.detonations,catalysts:run.resources.spark_catalyst||0,wards:run.resources.ward_essence||0}));}
   for(const [key,id]of [['guardhouse','guardhouse'],['archery','archery_tower'],['infirmary','infirmary']]){const art=el[key+'-art'],level=run.facilities[id]||0;if(art&&art.getAttribute('data-level')!==String(level)){art.setAttribute('data-level',String(level));art.innerHTML=level?pixelFacilityProduct({facilityId:id,level}):'';}}
   el['guardhouse-sign'].hidden = stats.support <= 0;
   el['archery-sign'].hidden = (stats.ranged || 0) <= 0;
-  setText(el['ranged-value'], `${number((stats.ranged || 0)*(enemy.trait==='flying'?2.5:1))}${enemy.trait==='flying'?' · 対空':''}`);
+  setText(el['ranged-value'],number((stats.ranged||0)*(enemy.trait==='flying'?2.5:1))+(enemy.trait==='flying'?t('battle.antiAir'):''));
   el['infirmary-sign'].hidden = !state.run.facilities.infirmary;
-  setText(el['support-value'], `支援 ${number(stats.support)}`);
-  setText(el['treatment-value'], `処置 残り${preview.charges}回`);
+  setText(el['support-value'],t('battle.supportValue',{value:number(stats.support)}));
+  setText(el['treatment-value'],t('battle.treatments',{count:preview.charges}));
   setText(el.incoming, number(preview.packet));
-  el["outgoing-formula"].title =
-    `攻撃 ${number(playerStrike.attack)} − 有効防御 ${number(playerStrike.armor)}（オーグメント反映、最低1ダメージ）`;
-  el["incoming-formula"].title =
-    `${preview.trait}：${preview.hits.map(number).join(" + ")}（各攻撃から防御を減算、最低1）`;
+  el["outgoing-formula"].title=t('battle.outgoingFormula',{attack:number(playerStrike.attack),armor:number(playerStrike.armor)});
+  el["incoming-formula"].title=t('battle.incomingFormula',{trait:(getUILocale()==='ja'?getCombatPreview(state).trait:enemyTraitText(enemy)),hits:preview.hits.map(number).join(' + ')});
   const remaining = Math.max(0, 1.5 - run.combatTimer);
-  setText(el["round-time"], `${remaining.toFixed(1)} 秒`);
+  setText(el["round-time"], t('battle.seconds',{seconds:remaining.toFixed(1)}));
   el["round-bar"].style.transform = `scaleX(${ratio(run.combatTimer, 1.5)})`;
-  setText(el.food.previousElementSibling,state.version===2?'携行ポーション':'食料');
+  setText(el.food.previousElementSibling,state.version===2?t('battle.potions'):t('battle.food'));
   setText(el.food,state.version===2?`${battleFood(state)} / ${potionCapacity(state)}`:number(state.run.resources.food));
   setText(
     el["food-rule"],
     (state.version===2?battleFood(state):state.run.resources.food) > 0
-      ? state.version===2&&preview.charges>0 ? `救護を先に使用 · 必要ならポーション1本で${getFoodHealing(state)}回復` : `低HP・致死予測でポーション1本 · ${getFoodHealing(state)}回復`
-      : state.version===2&&preview.charges>0 ? `携行分なし · 低HP時の救護 残り${preview.charges}回` : "携行分なし · 自動回復できません",
+      ? state.version===2&&preview.charges>0 ? t('battle.recoveryFirst',{healing:getFoodHealing(state)}) : t('battle.recoveryPotion',{healing:getFoodHealing(state)})
+      : state.version===2&&preview.charges>0 ? t('battle.recoveryTreatment',{count:preview.charges}) : t('battle.recoveryEmpty'),
   );
   el["food-rule"].classList.toggle(
     "battle-food-empty",
@@ -476,10 +479,10 @@ export function renderBattle(dialog, state) {
   );
   el["pause-icon"].hidden = paused;
   el["play-icon"].hidden = !paused;
-  setText(el["pause-label"], paused ? "戦闘を再開" : "一時停止");
+  setText(el["pause-label"], paused ? t("battle.resume") : t("battle.pause"));
   view.pause.setAttribute(
     "aria-label",
-    paused ? "戦闘を再開" : "戦闘を一時停止",
+    paused ? t("battle.resume") : t("battle.pauseAria"),
   );
 
   if (
@@ -514,12 +517,12 @@ export function renderBattle(dialog, state) {
         heal(view);
         battleSound("heal");
         if (hpChange <= 0)
-          feedback(view, "player", "heal", `ポーション −${number(foodUsed)}`);
+          feedback(view, "player", "heal", t('battle.potionUsed',{count:number(foodUsed)}));
       }
       if (treatmentUsed > 0) {
         heal(view);
         animate(view,'infirmary-sign',[{boxShadow:'0 0 0 transparent',filter:'brightness(1)'},{boxShadow:'0 0 24px #9de4c5',filter:'brightness(1.6)',offset:.3},{boxShadow:'0 0 0 transparent',filter:'brightness(1)'}],800);
-        feedback(view,'player','heal','救護所の処置');
+        feedback(view,'player','heal',t('battle.treatmentUsed'));
         battleSound('heal');
       }
     }

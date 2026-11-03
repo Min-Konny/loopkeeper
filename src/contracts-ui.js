@@ -1,11 +1,14 @@
-import {CONTRACTS,contractAvailability,deliveryQuote} from './contracts.js?v=0.6.139';
-import {contractOptions} from './contracts-storage.js?v=0.6.139';
-import {RESOURCES} from './engine.js?v=0.6.139';
-import {stockIcon as icon} from './stock-icons.js?v=0.6.139';
+import {getUILocale} from './i18n.js?v=0.6.140';
+import {englishContracts} from './contracts-en.js?v=0.6.140';
+import {CONTRACTS,contractAvailability,deliveryQuote} from './contracts.js?v=0.6.140';
+import {contractOptions} from './contracts-storage.js?v=0.6.140';
+import {RESOURCES} from './engine.js?v=0.6.140';
+import {stockIcon as icon} from './stock-icons.js?v=0.6.140';
 export function contractsMarkup(s,open=false){
+ if(getUILocale()!=='ja')return englishContracts(s,open);
  if(s.version===1||s.meta.bestWave<3)return '';
  const options=contractOptions(s),active=s.run.contracts?.active;
- return '<details class="contracts-panel" '+(open?'open':'')+'><summary>各国の任意依頼 ・ '+(active?'受注中':(s.run.contracts?.completed.length||0)+'件完了')+'</summary><p class="fine-print">各国1件／人生。同時に1件。受注・取消は無料、納品時に全額消費。予約素材は保護されます。</p><div class="contract-grid">'+CONTRACTS.map(d=>{
+ return '<details class="contracts-panel" data-detail-key="contracts" '+(open?'open':'')+'><summary data-focus="contracts-summary">各国の任意依頼 ・ '+(active?'受注中':(s.run.contracts?.completed.length||0)+'件完了')+'</summary><p class="fine-print">各国1件／人生。同時に1件。受注・取消は無料、納品時に全額消費。予約素材は保護されます。</p><div class="contract-grid">'+CONTRACTS.map(d=>{
  const eligible=contractAvailability(s,d.id,options),quote=deliveryQuote(s,d.id,options),done=s.run.contracts?.completed.includes(d.id),accepted=active===d.id;
  return '<article class="diplomacy-card contract-card" data-contract-state="'+(done?'done':accepted?'active':eligible.ok?'available':'locked')+'"><div class="contract-heading"><span class="eyebrow">'+d.countryName+'</span><span class="contract-state">'+(done?'納品完了':accepted?'受注中':eligible.ok?'受注可能':'条件不足')+'</span></div><h4>'+d.name+'</h4><div class="diplomacy-costs">'+Object.entries(d.cost).map(([id,n])=>{const available=Math.max(0,(s.run.resources[id]||0)-(options.reserved[id]||0));return '<span class="payment-item '+(available<n?'is-short':'')+'">'+icon(id)+'<span>'+RESOURCES[id].name+' <b>'+n+'</b><small>所持 '+(s.run.resources[id]||0)+' / 予約 '+(options.reserved[id]||0)+(available<n?' ・不足 '+Math.ceil(n-available):' ・納品可')+'</small></span></span>';}).join('')+'</div><p class="contract-reward"><span>報酬</span> '+d.reward+'</p><details class="contract-conditions" data-detail-key="contract-'+d.id+'"><summary data-focus="contract-condition-'+d.id+'">依頼条件</summary><p>最高WAVE'+d.gate+'・この命でWAVE1'+(d.facility?'・鶏小屋を建設':d.skill?'・鍛冶Lv'+d.level:'')+'。報酬の収入・バフ・傭兵はこの命のみ。</p></details><div class="contract-actions">'+(accepted?'<button class="button small gold-outline" data-contract-deliver="'+d.id+'" data-focus="contract-deliver-'+d.id+'" '+(quote.ok?'':'disabled')+'>納品して報酬を受け取る</button><button class="button small muted" data-contract-cancel="1" data-focus="contract-cancel-'+d.id+'" '+(s.run.status==='preparing'&&!s.run.augments.offer.length?'':'disabled')+'>取り消す</button>':'<button class="button small muted" data-contract-accept="'+d.id+'" data-focus="contract-accept-'+d.id+'" '+(eligible.ok?'':'disabled')+'>'+(done?'納品完了':'受注する')+'</button>')+'</div><p class="contract-availability">'+(done?'この命では完了済み':accepted?(quote.ok?'全額を納品できます':quote.reason):eligible.ok?'受注時の支払いはありません':eligible.reason)+'</p></article>';
  }).join('')+'</div></details>';

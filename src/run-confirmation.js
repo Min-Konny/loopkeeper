@@ -1,9 +1,10 @@
-import {confirmRun} from './engine.js?v=0.6.139';
-import {commitStoredGameEdit} from './save-storage.js?v=0.6.139';
+import {text as t} from './i18n.js?v=0.6.140';
+import {confirmRun} from './engine.js?v=0.6.140';
+import {commitStoredGameEdit} from './save-storage.js?v=0.6.140';
 export function confirmStoredRun(storage,current,{isOwner=()=>false,now=Date.now(),earlyLoopPrototype=false,lateLoopPrototype=false,preparationBalancePrototype=false}={}){
- if(!isOwner())return {ok:false,reason:'別のタブでプレイ中です。操作権を確認してください。'};
+ if(!isOwner())return {ok:false,reason:t('inheritance.notOwner')};
  const next=structuredClone(current),result=confirmRun(next,{earlyLoopPrototype,lateLoopPrototype,preparationBalancePrototype});if(!result.ok)return result;
- if(!isOwner())return {ok:false,reason:'操作権が移ったため転生を中止しました。'};
+ if(!isOwner())return {ok:false,reason:t('inheritance.ownerChanged')};
  try{return {ok:true,state:commitStoredGameEdit(storage,current,next,{now})};}
- catch{return {ok:false,reason:'保存できなかったため転生を中止しました。支給と世代はまだ確定していません。'};}
+ catch{return {ok:false,reason:t('inheritance.saveFailed')};}
 }

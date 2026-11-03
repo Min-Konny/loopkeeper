@@ -9,7 +9,12 @@ export function updateSetupDialog(dialog, markup) {
   const focused = active && dialog.contains?.(active) ? active : null;
   const focusKey = focused?.dataset?.focus;
   const focusId = focused?.id;
+  const details = [...dialog.querySelectorAll('details[data-detail-key]')].map(node => [node.dataset.detailKey, node.open]);
   dialog.innerHTML = markup;
+  for (const node of dialog.querySelectorAll('details[data-detail-key]')) {
+    const saved = details.find(([key]) => key === node.dataset.detailKey);
+    if (saved) node.open = saved[1];
+  }
   dialog.dataset.setup = markup;
   dialog.querySelector(".setup-upgrades").scrollTop = scroll;
   dialog.scrollTop = outerScroll;

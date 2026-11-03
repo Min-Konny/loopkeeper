@@ -1,5 +1,6 @@
-import {pixelProductSource} from './pixel-product-art.js?v=0.6.139';
-import { icon } from './icons.js?v=0.6.139';
+import {text as t} from './i18n.js?v=0.6.140';
+import {pixelProductSource} from './pixel-product-art.js?v=0.6.140';
+import { icon } from './icons.js?v=0.6.140';
 const materials=new Map();
 const image=svg=>'data:image/svg+xml,'+encodeURIComponent(svg);
 export function materialShortage(required,available){return Number.isFinite(required)&&required>=0?Math.max(0,required-available):0;}
@@ -7,7 +8,7 @@ const text=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').r
 // A shared cost chip for construction and workshop recipes; never changes costs.
 export function catalogMaterialMarkup({id,label,available,required,format=String}){
  const missing=materialShortage(required,available);
- return '<span class="'+(required!=null&&available<required?'insufficient':'')+'">'+workshopMaterialIcon(id)+'<span class="material-label">'+text(label)+'</span> <span class="material-stock">'+text(format(available))+'<b>/'+(required==null?'?':text(format(required)))+'</b></span>'+(missing>0?'<small class="material-gap">不足 '+text(format(missing))+'</small>':'')+'</span>';
+ return '<span class="'+(required!=null&&available<required?'insufficient':'')+'">'+workshopMaterialIcon(id)+'<span class="material-label">'+text(label)+'</span> <span class="material-stock">'+text(format(available))+'<b>/'+(required==null?'?':text(format(required)))+'</b></span>'+(missing>0?'<small class="material-gap">'+text(t('material.shortage',{amount:format(missing)}))+'</small>':'')+'</span>';
 }
 export function workshopMaterialIcon(id){
  if(!materials.has(id))materials.set(id,image(icon(id).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" color="#cbb98c" ')));

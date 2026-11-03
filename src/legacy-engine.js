@@ -1,6 +1,7 @@
-import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.139';
-import { recordReward } from './reward-events.js?v=0.6.139';
-import { observesWork, completedWork } from './work-completion.js?v=0.6.139';
+import {registerLogCopy} from './log-copy.js?v=0.6.140';
+import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.140';
+import { recordReward } from './reward-events.js?v=0.6.140';
+import { observesWork, completedWork } from './work-completion.js?v=0.6.140';
 // Original local simulation. All mutations stay in this module; no wall-clock or random input.
 export const FIRST_RAID_DELAY = 180;
 export const BASE_RAID_INTERVAL = 180;
@@ -145,7 +146,7 @@ function newRun(meta) {
 export function createGame() {
   const meta = { generation: 1, bestWave: 0, skills: emptySkills(), history: [], points: 0, defeatedBosses: [], upgrades: [], completedMilestones: [] };
   const state = { version: 1, meta, run: newRun(meta), settings: { paused: true, speed: 1, disabledUpgrades: [], showHiddenRecipes: false, hiddenRecipes: [], soundVolume: 0.3, musicVolume: 0.15, effectsEnabled: true, pauseWhenHidden: false, craftMaterialPriority: [] } };
-  addLog(state, `最初の襲撃まで、あと${FIRST_RAID_DELAY}秒。作業を選んで備えよう。`, 'info');
+  addLog(state, `最初の襲撃まで、あと${FIRST_RAID_DELAY}秒。作業を選んで備えよう。`, 'info', {key:'legacy.log.start',values:{seconds:FIRST_RAID_DELAY}});
   return state;
 }
 
@@ -185,7 +186,7 @@ function awardMilestone(state, actionId) {
   state.meta.completedMilestones.push(entry.id);
   state.meta.points += entry.reward;
   recordReward(state,"points","",state.meta.points-entry.reward,state.meta.points);
-  addLog(state, `初達成：${entry.name}。継承ポイント +${entry.reward}。`, 'permanent');
+  addLog(state, `初達成：${entry.name}。継承ポイント +${entry.reward}。`, 'permanent', {key:'legacy.log.milestone',values:{points:entry.reward},entity:{kind:'legacyGoal',id:entry.id,definition:entry}});
 }
 
 export function getAugmentStatus(state) {
@@ -207,7 +208,7 @@ function offerAugments(state, stage) {
   state.settings.paused = true;
   state.run.simRemainder = 0;
   state.run.acceleration.active = false;
-  addLog(state, 'オーグメントの3択。この周回で使う力を1つ選ぼう。選択後は手動で時間を再開。', 'info');
+  addLog(state, 'オーグメントの3択。この周回で使う力を1つ選ぼう。選択後は手動で時間を再開。', 'info', {key:'legacy.log.offer'});
 }
 
 function introduceAugments(state) {
@@ -220,7 +221,7 @@ export function chooseAugment(state, id) {
   augments.selected.push(id);
   augments.offer = [];
   state.settings.paused = true;
-  addLog(state, `${AUGMENT_BY_ID.get(id).name}を選択。この効果は今回の周回で有効。`, 'info');
+  addLog(state, `${AUGMENT_BY_ID.get(id).name}を選択。この効果は今回の周回で有効。`, 'info', {key:'legacy.log.chosen',entity:{kind:'augment',id,definition:AUGMENT_BY_ID.get(id)}});
   return { ok: true, reason: '' };
 }
 
@@ -237,7 +238,7 @@ export function getFoodHealing(state) {
 function unlockDiplomacy(state) {
   if (state.meta.bestWave < 3 || state.run.diplomacy.status !== 'locked') return;
   state.run.diplomacy = freshDiplomacy(state.run.elapsed, true);
-  addLog(state, '外交が解放された。サフラ辺境国から食料援助の依頼。回答期限は今から140秒。', 'info');
+  addLog(state, '外交が解放された。サフラ辺境国から食料援助の依頼。回答期限は今から140秒。', 'info', {key:'legacy.log.dipUnlock'});
 }
 
 export function getStats(state) {
@@ -309,13 +310,13 @@ export function aidCountry(state) {
   state.run.resources.food -= DIPLOMACY.foodCost;
   state.run.diplomacy.status = 'allied';
   state.run.diplomacy.incomeTimer = 0;
-  addLog(state, `${DIPLOMACY.country}へ食料を援助。10秒ごとに金貨1を受け取る同盟を結んだ。`, 'info');
+  addLog(state, `${DIPLOMACY.country}へ食料を援助。10秒ごとに金貨1を受け取る同盟を結んだ。`, 'info', {key:'legacy.log.aid'});
   return { ok: true, reason: '' };
 }
 
 function turnHostile(state, ignored = false) {
   state.run.diplomacy.status = 'hostile';
-  addLog(state, ignored ? '援助の期限が過ぎた。次の襲撃にはサフラ軍も加わる。' : '援助を断った。次の襲撃にはサフラ軍も加わる。', 'raid');
+  addLog(state, ignored ? '援助の期限が過ぎた。次の襲撃にはサフラ軍も加わる。' : '援助を断った。次の襲撃にはサフラ軍も加わる。', 'raid', {key:ignored?'legacy.log.deadline':'legacy.log.refused'});
 }
 
 export function refuseCountry(state) {
@@ -335,7 +336,7 @@ export function buySupply(state, id) {
   state.run.resources.gold -= supply.cost;
   if (id === 'rations') state.run.resources.food = Math.min(MAX_NUMBER, state.run.resources.food + 2);
   else state.run.diplomacy.mercenary = true;
-  addLog(state, id === 'rations' ? '金貨3で食料2を購入した。' : '金貨8で傭兵を雇った。この周回の攻撃力 +2。', 'info');
+  addLog(state, id === 'rations' ? '金貨3で食料2を購入した。' : '金貨8で傭兵を雇った。この周回の攻撃力 +2。', 'info', {key:id==='rations'?'legacy.log.rations':'legacy.log.mercenary'});
   return { ok: true, reason: '' };
 }
 
@@ -561,9 +562,10 @@ export function setMaterialPriority(state, priority) {
   return {ok:true,reason:''};
 }
 
-function addLog(state, text, type = 'info') {
+function addLog(state, text, type = 'info', copy) {
   state.run.logSeq += 1;
   state.run.log.unshift({ id: state.run.logSeq, time: state.run.elapsed, text, type });
+  registerLogCopy(state.run.log[0], copy);
   state.run.log.length = Math.min(state.run.log.length, MAX_LOG);
 }
 
@@ -578,9 +580,9 @@ function gainXp(state, skill, runAmount = 10, permanentAmount = 2) {
   if (level(state, skill) > oldRunLevel) {
     const effects = getSkillEffects(state, skill);
     const battleBonus = skill === 'combat' ? `・攻撃+${effects.runAttack}・最大HP+${effects.runMaxHp}` : '';
-    addLog(state, `${skillName}Lv.${effects.runLevel}：この周回の作業速度+${effects.runSpeedPercent}%${battleBonus}。`, 'level');
+    addLog(state, `${skillName}Lv.${effects.runLevel}：この周回の作業速度+${effects.runSpeedPercent}%${battleBonus}。`, 'level', {key:skill==='combat'?'legacy.log.levelCombat':'legacy.log.level',values:{level:effects.runLevel,speed:effects.runSpeedPercent,attack:effects.runAttack,hp:effects.runMaxHp},entity:{kind:'skill',id:skill}});
   }
-  if (level(state, skill, true) > oldPermanentLevel) addLog(state, `${skillName}の永続レベルが${level(state, skill, true)}になった。次の世代にも残る。`, 'permanent');
+  if (level(state, skill, true) > oldPermanentLevel) addLog(state, `${skillName}の永続レベルが${level(state, skill, true)}になった。次の世代にも残る。`, 'permanent', {key:'legacy.log.permanent',values:{level:level(state,skill,true)},entity:{kind:'skill',id:skill}});
 }
 
 function finishAction(state) {
@@ -596,13 +598,13 @@ function finishAction(state) {
   }
   if (definition.equipment) {
     state.run.equipment[definition.equipment.slot] = { id: definition.id, ...definition.equipment };
-    addLog(state, `${definition.name}を装備した。`, 'craft');
+    addLog(state, `${definition.name}を装備した。`, 'craft', {key:'legacy.log.equipped',entity:{kind:'recipe',id:definition.id,definition}});
   } else if (definition.facility) {
     state.run.facilities[definition.facility.id] = true;
     if (definition.facility.id === 'watchtower') state.run.nextWaveAt = rounded(state.run.nextWaveAt + 15);
     if (definition.facility.id === 'infirmary') state.run.healTimer = 0;
-    addLog(state, `${definition.name}が完成した。${definition.description}`, 'craft');
-  } else if (active.kind === 'craft') addLog(state, `${definition.name}が完成した。`, 'craft');
+    addLog(state, `${definition.name}が完成した。${definition.description}`, 'craft', {key:'legacy.log.facility',entity:{kind:'recipe',id:definition.id,definition},descriptionEntity:{kind:'recipe',id:definition.id,definition}});
+  } else if (active.kind === 'craft') addLog(state, `${definition.name}が完成した。`, 'craft', {key:'legacy.log.crafted',entity:{kind:'recipe',id:definition.id,definition}});
   awardMilestone(state, definition.id);
   gainXp(state, definition.skill);
   if (observed) completedWork(state, {id:definition.id, skill:definition.skill, kind:active.kind,
@@ -620,7 +622,7 @@ function finishAction(state) {
       state.run.queue.shift();
       delete active.queueCredit;
       if (managed) state.run.activeAction = null;
-      if (state.run.queue.length === 0) addLog(state, '予約した作業がすべて完了した。', 'info');
+      if (state.run.queue.length === 0) addLog(state, '予約した作業がすべて完了した。', 'info', {key:'legacy.log.queueDone'});
     }
     state.run.queueManaged = managed && state.run.activeAction !== null;
   }
@@ -685,7 +687,7 @@ function advanceHelpers(state) {
     state.run.autoCraft = null;
     gainXp(state, 'smithing');
     awardMilestone(state, recipe.id);
-    addLog(state, '自動調理：薬草のスープが完成した。', 'craft');
+    addLog(state, '自動調理：薬草のスープが完成した。', 'craft', {key:'legacy.log.autoCook'});
     if (observesWork(state)) completedWork(state, {id:recipe.id, skill:recipe.skill, kind:'craft', resourceGains:{food:state.run.resources.food - foodBefore}, trainingGain:0, created:false});
   }
 }
@@ -713,7 +715,7 @@ function beginRaid(state) {
   state.run.status = 'combat';
   state.run.enemy = { name: next.name, hp: next.hp, maxHp: next.hp, attack: next.attack, defense: next.defense, wave: next.wave, isBoss: next.isBoss, invasion: next.invasion };
   state.run.combatTimer = 0;
-  addLog(state, `第${next.wave}波：${next.name}が襲ってきた。`, 'raid');
+  addLog(state, `第${next.wave}波：${next.name}が襲ってきた。`, 'raid', {key:'legacy.log.raid',values:{wave:next.wave},encounter:{version:1,run:{enemy:{...next}}}});
 }
 
 function eatFood(state) {
@@ -722,7 +724,7 @@ function eatFood(state) {
     state.run.resources.food -= 1;
     const healing = getFoodHealing(state);
     state.run.hp = Math.min(maxHp, state.run.hp + healing);
-    addLog(state, `食料を1つ使い、体力を${healing}回復した。`, 'heal');
+    addLog(state, `食料を1つ使い、体力を${healing}回復した。`, 'heal', {key:'legacy.log.heal',values:{healing}});
   }
 }
 
@@ -736,7 +738,7 @@ function die(state) {
   state.run.enemy = null;
   state.run.simRemainder = 0;
   state.settings.paused = true;
-  addLog(state, '力尽きた。得た経験は、次の世代の力になる。', 'death');
+  addLog(state, '力尽きた。得た経験は、次の世代の力になる。', 'death', {key:'legacy.log.death'});
   state.meta.history.unshift({
     generation: state.meta.generation, wave: state.run.wave, elapsed: state.run.elapsed,
     skillGains: Object.fromEntries(SKILL_IDS.map((id) => [id, rounded(state.meta.skills[id].xp - state.run.startPermanentXp[id])])),
@@ -755,18 +757,18 @@ function combatRound(state) {
     state.run.wave += 1;
     const previousBest = state.meta.bestWave;
     state.meta.bestWave = Math.max(state.meta.bestWave, state.run.wave);
-    if (previousBest < 1) addLog(state, '村の施設が解放された。製作から防護柵・見張り台・救護所を建設できる。', 'info');
+    if (previousBest < 1) addLog(state, '村の施設が解放された。製作から防護柵・見張り台・救護所を建設できる。', 'info', {key:'legacy.log.villageUnlocked'});
     unlockDiplomacy(state);
     if (enemy.isBoss && !state.meta.defeatedBosses.includes(enemy.wave)) {
       state.meta.defeatedBosses.push(enemy.wave);
       state.meta.points += 1;
       recordReward(state,"points","",state.meta.points-1,state.meta.points);
-      addLog(state, `${enemy.name}を初めて撃破。継承ポイント +1。`, 'permanent');
+      addLog(state, `${enemy.name}を初めて撃破。継承ポイント +1。`, 'permanent', {key:'legacy.log.boss',encounter:{version:1,run:{enemy:{...enemy}}}});
     }
     if (enemy.invasion && state.run.diplomacy.status === 'hostile') {
       state.run.diplomacy.status = 'defeated';
       state.run.resources.gold = Math.min(MAX_NUMBER, state.run.resources.gold + 10);
-      addLog(state, 'サフラ軍を撃退。金貨10を獲得し、この周回の攻撃力が3上がった。', 'victory');
+      addLog(state, 'サフラ軍を撃退。金貨10を獲得し、この周回の攻撃力が3上がった。', 'victory', {key:'legacy.log.armyDefeated'});
     }
     state.run.resources.hide = Math.min(MAX_NUMBER, state.run.resources.hide + 2);
     state.run.status = 'preparing';
@@ -776,7 +778,7 @@ function combatRound(state) {
     gainXp(state, 'combat', 10, 4);
     if (hasAugment(state, 'bounty')) state.run.resources.gold = Math.min(MAX_NUMBER, state.run.resources.gold + 4);
     if (hasAugment(state, 'momentum')) state.run.hp = Math.min(getStats(state).maxHp, state.run.hp + 8);
-    addLog(state, `第${state.run.wave}波を撃退。獣皮を2つ手に入れた。次の襲撃まで${getRaidInterval(state)}秒。`, 'victory');
+    addLog(state, `第${state.run.wave}波を撃退。獣皮を2つ手に入れた。次の襲撃まで${getRaidInterval(state)}秒。`, 'victory', {key:'legacy.log.victory',values:{wave:state.run.wave,seconds:getRaidInterval(state)}});
     if (state.run.wave === 3) offerAugments(state, 'boss3');
     else introduceAugments(state);
     return;
@@ -855,7 +857,7 @@ export function restartRun(state) {
   state.run = newRun(state.meta);
   state.run.hp = getStats(state).maxHp;
   state.settings.paused = true;
-  addLog(state, `第${state.meta.generation}世代。継承した経験とともに、新たな夜明けを目指す。`, 'info');
+  addLog(state, `第${state.meta.generation}世代。継承した経験とともに、新たな夜明けを目指す。`, 'info', {key:'legacy.log.generation',values:{generation:state.meta.generation}});
   introduceAugments(state);
   return state;
 }
@@ -1078,4 +1080,4 @@ export function parseSave(text) {
   }
 }
 
-import { validMaterialPriority } from './material-priority.js?v=0.6.139';
+import { validMaterialPriority } from './material-priority.js?v=0.6.140';

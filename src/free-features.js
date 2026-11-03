@@ -1,15 +1,17 @@
-import {initializeMeals}from './meals.js?v=0.6.139';
-import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.139';
-import {initializeWorkMilestones}from './work-milestones.js?v=0.6.139';
-import {initializeTrophies} from './boss-materials.js?v=0.6.139';
-import {initializeContracts}from './contracts.js?v=0.6.139';
-import {initializeRoutes}from './routes.js?v=0.6.139';
-import {initializeFarm}from './farm-state.js?v=0.6.139';
-import {synchronizeCompanions}from './companion-state.js?v=0.6.139';
-import {initializeMagic}from './magic-state.js?v=0.6.139';
-import {initializeGear}from './gear-state.js?v=0.6.139';
-import {initializeProgression}from './progression-rewards.js?v=0.6.139';
-import {initializeRunResults}from './run-results.js?v=0.6.139';
+import {text as t,getUILocale} from './i18n.js?v=0.6.140';
+import {escapeCopy as esc} from './locale-controls.js?v=0.6.140';
+import {initializeMeals}from './meals.js?v=0.6.140';
+import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.140';
+import {initializeWorkMilestones}from './work-milestones.js?v=0.6.140';
+import {initializeTrophies} from './boss-materials.js?v=0.6.140';
+import {initializeContracts}from './contracts.js?v=0.6.140';
+import {initializeRoutes}from './routes.js?v=0.6.140';
+import {initializeFarm}from './farm-state.js?v=0.6.140';
+import {synchronizeCompanions}from './companion-state.js?v=0.6.140';
+import {initializeMagic}from './magic-state.js?v=0.6.140';
+import {initializeGear}from './gear-state.js?v=0.6.140';
+import {initializeProgression}from './progression-rewards.js?v=0.6.140';
+import {initializeRunResults}from './run-results.js?v=0.6.140';
 export const FREE_FEATURES = [
  {id:'action_queue',name:'行動予約',wave:QUEUE_UNLOCK_WAVE},
  {id:'queue_templates',name:'手順テンプレート',wave:3},
@@ -45,6 +47,8 @@ export function synchronizeFreeFeatures(s){
  return {refunded,companionsAdded,changed:before!==JSON.stringify(s)};
 }
 export function freeFeatureMarkup(s,allowedIds=null){
+ if(getUILocale()!=='ja'&&s.version!==1){const visible=FREE_FEATURES.filter(f=>!['cycle_acceleration','acceleration_extension'].includes(f.id)&&(!allowedIds||allowedIds.includes(f.id)));if(!visible.length)return '';return '<section class="strategy-details free-features"><h3>'+esc(t('unlock.freeGuide'))+'</h3>'+visible.map(f=>{const unlocked=hasUpgrade(s,f.id),enabled=!s.settings.disabledUpgrades.includes(f.id),disabled=s.run.status!=='preparing'||s.run.augments.offer.length;return '<p data-free-feature="'+f.id+'"><span>'+esc(t('feature.'+f.id))+' · '+esc(unlocked?t('common.unlocked'):t('free.wave',{wave:f.wave}))+'</span>'+(unlocked?'<button class="button small gold-outline" data-toggle-upgrade="'+f.id+'" aria-pressed="'+enabled+'" '+(disabled?'disabled':'')+'>'+esc(t(enabled?'free.on':'free.off'))+'</button>':'')+'</p>';}).join('')+(s.meta.featureRefundTotal?'<small>'+esc(t('free.refunded',{points:s.meta.featureRefundTotal}))+'</small>':'')+'</section>';}
+
  const visible=FREE_FEATURES.filter(f=>!['cycle_acceleration','acceleration_extension'].includes(f.id)&&(!allowedIds||allowedIds.includes(f.id)));if(!visible.length)return "";
  if(s.version===1)return '';
  return '<section class="strategy-details free-features"><h3>無料の便利機能</h3>'+visible.map(f=>{

@@ -52,5 +52,5 @@ test('title writer refuses unavailable/busy locks and uses same running-game key
   assert.equal(await withTitleWriter({request:async(k,o,f)=>f({})},()=>++calls),1);
 });
 test('UI locale does not touch progress; unsupported languages are not exposed',()=>{
-  const s=memory();writeStoredGame(s,createGame());const raw=s.getItem(STORAGE_KEY);assert.equal(readUILocale(s),'ja');assert.equal(s.getItem(UI_LOCALE_KEY),null);writeUILocale(s,'ja');assert.equal(s.getItem(STORAGE_KEY),raw);assert.throws(()=>writeUILocale(s,'en'));assert.equal(titleText('title.record',{generation:6,wave:36}),'第6世代 · 通常最高 36 波');assert.throws(()=>titleText('missing'));
+  const s=memory();writeStoredGame(s,createGame());const raw=s.getItem(STORAGE_KEY);assert.equal(readUILocale(s),'ja');assert.equal(s.getItem(UI_LOCALE_KEY),null);writeUILocale(s,'ja');assert.equal(s.getItem(STORAGE_KEY),raw);writeUILocale(s,'en');assert.equal(readUILocale(s),'en');assert.equal(s.getItem(STORAGE_KEY),raw);assert.throws(()=>writeUILocale(s,'fr'));assert.equal(titleText('title.record',{generation:6,wave:36}),'第6世代 · 通常最高 36 波');assert.throws(()=>titleText('missing'));
 });

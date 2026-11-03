@@ -1,10 +1,14 @@
-import {JOBS,OUTPOSTS,outpostId,outpostRecipe}from './settlement-content.js?v=0.6.139';
-import {populationCapacity,assigned,staffing,allocationLimit,outpostRate}from './settlement.js?v=0.6.139';
+import {getUILocale} from './i18n.js?v=0.6.140';
+import {englishAllocation,englishPopulation} from './population-en.js?v=0.6.140';
+import {JOBS,OUTPOSTS,outpostId,outpostRecipe}from './settlement-content.js?v=0.6.140';
+import {populationCapacity,assigned,staffing,allocationLimit,outpostRate}from './settlement.js?v=0.6.140';
 export function allocationControls(s,id,name){
+ if(getUILocale()!=='ja')return englishAllocation(s,id,name);
  const n=staffing(s,id),limit=allocationLimit(s,id),disabled=s.run.status!=='preparing';
  return `<div class="population-stepper"><button class="button small" data-population="${id}" data-population-count="${n-1}" data-focus="population-minus-${id}" aria-label="${name}から1人外す" ${disabled||n===0?'disabled':''}>−</button><strong>${n} / ${limit}人</strong><button class="button small" data-population="${id}" data-population-count="${n+1}" data-focus="population-plus-${id}" aria-label="${name}に1人配置" ${disabled||n>=limit||assigned(s)>=populationCapacity(s)?'disabled':''}>＋</button></div>`;
 }
 export function populationMarkup(s){
+ if(getUILocale()!=='ja')return englishPopulation(s);
  if(s.version!==2)return '';
  const cap=populationCapacity(s),used=assigned(s),level=s.run.facilities.housing||0;
  const rows=Object.entries(JOBS).filter(([id])=>s.meta.upgrades.includes(id)).map(([id,name])=>`<div class="population-row"><span>${name}<small>${!staffing(s,id)?'人員未配置':s.settings.disabledUpgrades.includes(id)?'作業OFF':'配置中'}</small></span>${allocationControls(s,id,name)}</div>`);
