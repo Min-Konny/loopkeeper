@@ -50,7 +50,7 @@ import {createInheritanceMapUI}from './inheritance-map-ui.js?v=0.6.140';
 import {acknowledgeWorkRewards}from './work-milestone-storage.js?v=0.6.140';
 import {getClockStatus} from './engine.js?v=0.6.140';
 import {CRAFT_CATEGORIES,craftCategory,craftCategoryMarkup,readUiPreference,saveUiPreference} from './craft-categories.js?v=0.6.140';
-import {marketMarkup} from './mvp-ui.js?v=0.6.140';
+import {marketMarkup} from './mvp-ui.js?v=0.6.140-ux226';
 import {trophyMarkup} from './trophy-ui.js?v=0.6.140';
 import {editStoredAugment}from './augment-choice-storage.js?v=0.6.140';import {augmentExclusionMarkup}from './augment-exclusion-ui.js?v=0.6.140';
 let augmentSaveError='',pendingAugmentExclude=null;
@@ -122,7 +122,7 @@ import {
   templatesMarkup,
   milestoneMarkup as economicMilestoneMarkup,
   synergyMarkup,
-} from "./mvp-ui.js?v=0.6.140";
+} from "./mvp-ui.js?v=0.6.140-ux226";
 import {earlyDefeatMarkup}from './lifecycle-copy.js?v=0.6.140';
 import { createSessionOwner } from "./session-owner.js?v=0.6.140";
 import { editQueuedAction, moveQueuedAction } from "./engine.js?v=0.6.140";

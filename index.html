@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="./src/pixel-camp.css?v=0.6.140" />
 <link rel="stylesheet" href="./src/decision-ui.css?v=0.6.140">
     <link rel="stylesheet" href="./src/route-ui.css?v=0.6.140" />
-    <link rel="stylesheet" href="./src/inheritance-map.css?v=0.6.140">
+    <link rel="stylesheet" href="./src/inheritance-map.css?v=0.6.140-ux226">
 <link rel="stylesheet" href="./src/camp-status.css?v=0.6.140">
 <link rel="stylesheet" href="./src/quests.css?v=0.6.140"><link rel="stylesheet" href="./src/interface.css?v=0.6.140" />
     <link rel="stylesheet" href="./src/facility-cards.css?v=0.6.140" />
@@ -50,7 +50,7 @@
       const bootText=key=>bootCatalog[key]?.[bootLocale==='ko'?3:bootLocale==='zh-CN'?2:bootLocale==='en'?1:0]??key;
       document.documentElement.lang=bootLocale;
       for(const node of document.querySelectorAll('[data-boot-copy]')){const value=bootText(node.dataset.bootCopy);if(node.tagName==='META')node.content=value;else node.textContent=value;}
-      const entry = "./src/title-screen.js?v=0.6.140";
+      const entry = "./src/title-screen.js?v=0.6.140-ux226";
       const version = new URL(entry, location.href).searchParams.get("v");
       const url = new URL(location.href);
       if (url.searchParams.has("v") && url.searchParams.get("v") !== version) {

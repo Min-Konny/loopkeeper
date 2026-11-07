@@ -31,7 +31,7 @@ async function openGame(){
   try{
     const loading=document.createElement('section');loading.className='boot-screen';loading.setAttribute('role','status');loading.textContent=t('title.loading');document.getElementById('app').replaceChildren(loading);
     document.getElementById('app').hidden=false;root.hidden=true;document.body.classList.remove('title-mode');
-    await import('./main.js?v=0.6.140');dialog.close();
+    await import('./main.js?v=0.6.140-ux226');dialog.close();
   }catch(error){console.error('Game startup failed',error);document.getElementById('app').hidden=true;root.hidden=false;document.body.classList.add('title-mode');render();message(t('title.loadError'));const retry=document.createElement('button');retry.textContent=t('title.retry');retry.onclick=()=>location.reload();root.querySelector('.title-menu').append(retry);}
   // A partially imported game must be reloaded, rather than initialized twice.
 }
