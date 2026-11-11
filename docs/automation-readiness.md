@@ -72,3 +72,5 @@ consumer各stepと予約後の送信直前に、現在のtrusted catalog revisio
 現在のcloudはDocker/Podmanなし。既存bwrapで全namespace/network分離を試すと `Failed to create NETLINK_ROUTE socket: Operation not permitted`。隔離を弱めたfallback、権限設定変更、ホスト上での未信頼コード実行はしない。したがってcredential付き実workerはここでは起動しない。正式に隔離を提供するrunnerで、network/filesystem/credential境界を負例テストしてから接続する必要がある。ユーザーが現段階でsecretを貼る必要はない。
 
 実getJobs adapterは指定attemptの公式endpointを全ページ取得する必要がある。job確認後にrun再読し途中rerunを拒否する。trusted workflowがsubject titleだけでなく、そのHEADを実際に検証していることも配置時の受入条件。
+
+別の正式環境として、公開repoのGitHub-hosted CIに秘密なしDocker境界smokeを追加。公式Node imageを取得し、そのimmutable image IDで非root・read-only root/source・network none・cap drop・no-new-privileges・PID/memory/CPU上限を設定して固定probeを実行する。hostのtrusted verifierはマウントしない。環境sentinel（実秘密ではない）の不在、source/root書込拒否、外部接続拒否、host verifier不変を確認する。これは隔離プリミティブの試験であり、Claude/ゲーム候補/本物の独立verifierを動かした証明ではない。現在のPR workflow自体の改変可能性も残る。
