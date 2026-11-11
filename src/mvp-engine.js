@@ -1,4 +1,4 @@
-import {registerLogCopy} from './log-copy.js?v=0.6.140';
+import {registerLogCopy} from './log-copy-state.js?v=0.6.140';
 import {cycleEncounter} from './cycle-challenges.js?v=0.6.140';
 import{QUEST_ORDER}from './quest-content.js?v=0.6.140';
 import{creditQuestPoints,initializeQuestRewards,earnedProgressQuests}from './quest-progress.js?v=0.6.140';

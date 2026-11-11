@@ -1,4 +1,4 @@
-import {registerLogCopy} from './log-copy.js?v=0.6.140';
+import {registerLogCopy} from './log-copy-state.js?v=0.6.140';
 import {QUEUE_UNLOCK_WAVE,queueUnlocked}from './queue-unlock.js?v=0.6.140';
 import { recordReward } from './reward-events.js?v=0.6.140';
 import { observesWork, completedWork } from './work-completion.js?v=0.6.140';
