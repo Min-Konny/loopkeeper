@@ -44,3 +44,11 @@ main `0b15f74` は266件中4件失敗。4言語導入前のテスト期待値2�
 PRのcheckout・コード実行・依存install・artifact消費・botコメント・秘密参照は一切しない。したがってPR側のinstallが検証器を上書きしたり、任意レポートをbot経由で公開する経路はない。これは形式・範囲の事前確認で、コード内容の安全性や機能の受入を証明しない。21件のfail-closed/正常系テスト付き。main未mergeの段階ではmanual workflow実行は未確認。
 
 Claudeの実行器はまだ存在しない。認証を入れただけで自動開発は開始しない。公式ActionのOAuth方式を選ぶ場合、本人が対象repo限定でClaude Appを設定し、`claude setup-token` の値をGitHub Actionsの `CLAUDE_CODE_OAUTH_TOKEN` secretへ直接登録する。会話への貼付・他repo secretの読み出し・API課金への切替はしない。実行器の書込権限、repo全体のqueue/重複防止、独立検証、1件の実証は別の未完了工程。
+
+## キュー部品（実行器未接続）
+
+`scripts/factory/queue.cjs` は1repo・1state branchを唯一の状態保存先とするキュー部品。Git commitを親SHA固定で作り、force=falseのref更新で競合する兄弟commitの片方だけを反映する。plan/base/policy digestと承認根拠、依存、送信前intentを保持。同じ計画の再enqueueは重複作成しない。reserved/admitted/running/review/uncertainを区別し、結果不明・時間経過から再送/再予約を行わない。known blockedは独立工程を解放でき、復帰には回復根拠が必要。消えたstateを空queue扱いしない。
+
+承認根拠は信頼済み調整者が供給するもので、Issue本文が自称できる承認ではない。現実の外部実行はこの部品に含まれない。送信前予約の成功を確認してから1回だけ呼び出し、結果不明なら予約を残して公式履歴を照合する必要がある。外部呼出とのexactly-onceを保証しない。
+
+ローカルの実Gitオブジェクト/atomic ref更新による再起動・stale writer拒否と、モックAPIのnon-force/未知結果伝播を検証。GitHub上のstate branch作成・保護・常駐consumer・実Claude送信は未実装/未実証。権限設定前に、state branchを誰が書けるか、唯一consumer、未知結果の回復手順を確定する。読み書き権限を増やさずにこのPRだけで常時自動運転になるものではない。
