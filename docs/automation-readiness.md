@@ -62,3 +62,13 @@ mock worker/verifierで両repoの「承認→予約→受付→完了review→�
 残る実運用設定は (1) trusted main上の承認catalogと唯一consumerの配置 (2) state branchの限定書込権限と変更保護 (3) repo限定Claude App/OAuth secret、workerにqueue/配備credentialを渡さないrunner分離 (4) artifact用read-only経路と独立verifier (5) 対象1件の実送信・公式turn/PR/CI照合。現PRはこれらの設定を変更しない。workflowに秘密を入れる前に実行器adapterと最小権限を確定する。
 
 consumer各stepと予約後の送信直前に、現在のtrusted catalog revisionを読み直して承認取消を反映する。最後の読取直後の権限変更まで原子的に防ぐものではなく、実実行環境側の権限失効制御も必要。`verifier.read` は既存の信頼済み検証結果を読むだけの契約で、有料実行・新規検証開始をしない。並行consumerの重複readは許容し、検証runの起動・冪等性は別のtrusted schedulerで実装する。
+
+## 公式検証run readerと隔離の未解決点
+
+`github-run-reader.cjs` はcoordinator保存のsubject→run/attempt receiptと公式GitHub APIを照合する。repo、workflow ID/path、固定trusted source SHA、main、workflow_dispatch、起動者、subject digestを含むrun title、必須jobの成功が揃わない限りpassedにしない。PR任意artifactは一切読まない。完了前はpendingとしてreviewに留める。profileのindependent指定は運用者が実隔離を確認して設定する前提で、文字列自体が隔離を証明するものではない。
+
+実APIから取得した成功run42960952427（通常pull_request CI）が独立検証として拒否される負例を確認した。これは本物の独立受入runの成功ではない。実trusted verifier workflowとsubject receipt発行はまだ未接続。
+
+現在のcloudはDocker/Podmanなし。既存bwrapで全namespace/network分離を試すと `Failed to create NETLINK_ROUTE socket: Operation not permitted`。隔離を弱めたfallback、権限設定変更、ホスト上での未信頼コード実行はしない。したがってcredential付き実workerはここでは起動しない。正式に隔離を提供するrunnerで、network/filesystem/credential境界を負例テストしてから接続する必要がある。ユーザーが現段階でsecretを貼る必要はない。
+
+実getJobs adapterは指定attemptの公式endpointを全ページ取得する必要がある。job確認後にrun再読し途中rerunを拒否する。trusted workflowがsubject titleだけでなく、そのHEADを実際に検証していることも配置時の受入条件。

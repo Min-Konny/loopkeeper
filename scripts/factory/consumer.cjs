@@ -60,6 +60,7 @@ class Consumer {
   // Concurrent reads are safe; verification scheduling/idempotency is a separate integration requirement.
   const result=await this.verifier.read({repository:this.repository,taskId:task.id,intentId:task.intentId,baseSha:task.plan.baseSha,headSha:completed.headSha,planDigest:task.plan.planDigest});
   if(result?.taskId!==task.id||result?.intentId!==task.intentId||result?.repository!==this.repository||result?.headSha!==completed.headSha||result?.planDigest!==task.plan.planDigest||typeof result.reference!=='string'||!result.reference.trim())throw Error('Verifier subject mismatch');
+  if(result.pending===true)return {state:'review',id:task.id};
   if(result.passed!==true){await this.queue.transition(task.id,task.intentId,'blocked',{reference:result.reference,reason:'Independent verification did not pass',resumeCondition:'Repair and separately verify the exact new artifact',outcomeKnown:true});return{state:'blocked',id:task.id};}
   await this.queue.transition(task.id,task.intentId,'verified',{reference:result.reference,headSha:result.headSha,passed:true});
   return {state:'verified',id:task.id};
