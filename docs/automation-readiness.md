@@ -37,3 +37,10 @@
 
 main `0b15f74` は266件中4件失敗。4言語導入前のテスト期待値2件を現行文書に合わせ、engine→log表示→reason表示→engineの循環参照を依存なしのログmetadataモジュールへ分離した。ゲーム計算・保存内容・翻訳fallback仕様は変更しない。
 修正後は307件合格。入口モジュールを変える6件の独立Nodeプロセス検証とmetadata非永続化検証を追加。通常のブラウザー画面・実機・Pages配信はこの試験の範囲外。
+
+## 読み取り専用preflight
+
+`factory-preflight.yml` は main 上の手動実行のみ。現在の再実行者を含む起動者write権限、同一repoのopen PR、main基準、明示HEAD SHA、固定baseSHA...headSHA比較による全変更ファイル（300件超は拒否）、通常blob modeを確認し、最後にHEAD/baseの変化を再確認する。src/tests/docs以外、renameによる範囲逸脱、symlink、submodule、実行属性、binary/省略patch、途中欠落は拒否。
+PRのcheckout・コード実行・依存install・artifact消費・botコメント・秘密参照は一切しない。したがってPR側のinstallが検証器を上書きしたり、任意レポートをbot経由で公開する経路はない。これは形式・範囲の事前確認で、コード内容の安全性や機能の受入を証明しない。21件のfail-closed/正常系テスト付き。main未mergeの段階ではmanual workflow実行は未確認。
+
+Claudeの実行器はまだ存在しない。認証を入れただけで自動開発は開始しない。公式ActionのOAuth方式を選ぶ場合、本人が対象repo限定でClaude Appを設定し、`claude setup-token` の値をGitHub Actionsの `CLAUDE_CODE_OAUTH_TOKEN` secretへ直接登録する。会話への貼付・他repo secretの読み出し・API課金への切替はしない。実行器の書込権限、repo全体のqueue/重複防止、独立検証、1件の実証は別の未完了工程。
