@@ -52,3 +52,13 @@ Claudeの実行器はまだ存在しない。認証を入れただけで自動�
 承認根拠は信頼済み調整者が供給するもので、Issue本文が自称できる承認ではない。現実の外部実行はこの部品に含まれない。送信前予約の成功を確認してから1回だけ呼び出し、結果不明なら予約を残して公式履歴を照合する必要がある。外部呼出とのexactly-onceを保証しない。
 
 ローカルの実Gitオブジェクト/atomic ref更新による再起動・stale writer拒否と、モックAPIのnon-force/未知結果伝播を検証。GitHub上のstate branch作成・保護・常駐consumer・実Claude送信は未実装/未実証。権限設定前に、state branchを誰が書けるか、唯一consumer、未知結果の回復手順を確定する。読み書き権限を増やさずにこのPRだけで常時自動運転になるものではない。
+
+## Consumerと秘密なし往復試験
+
+`consumer.cjs` は信頼済み調整者の入口。保護された設定由来の `SnapshotPolicy` が正確な承認snapshotと承認者の現行write権限を確認してから予約し、限定payloadをworkerへ1回だけ渡す。Issue本文/label/任意artifactでadapterや権限を決めない。実作業開始の観測、同turnの完了、別のtrusted verifierによるrepo/task/intent/plan/head一致を経てverifiedに進む。worker自身の『PASS』は無視する。新しい制限はactive taskをpolicy-holdにし、勝手に予約解除しない。
+
+mock worker/verifierで両repoの「承認→予約→受付→完了review→別検証→verified」を往復。競合consumer、タイムアウト、予約後crash、別turn/別task/旧SHA、承認失効を負例検証。これは実Claude呼出ではない。queue用credentialをworker payloadへ含めない契約をテストするが、同一JavaScript processはcredential隔離の境界ではない。実runner導入時はcoordinator・worker・verifierのOS/runner分離が必須。
+
+残る実運用設定は (1) trusted main上の承認catalogと唯一consumerの配置 (2) state branchの限定書込権限と変更保護 (3) repo限定Claude App/OAuth secret、workerにqueue/配備credentialを渡さないrunner分離 (4) artifact用read-only経路と独立verifier (5) 対象1件の実送信・公式turn/PR/CI照合。現PRはこれらの設定を変更しない。workflowに秘密を入れる前に実行器adapterと最小権限を確定する。
+
+consumer各stepと予約後の送信直前に、現在のtrusted catalog revisionを読み直して承認取消を反映する。最後の読取直後の権限変更まで原子的に防ぐものではなく、実実行環境側の権限失効制御も必要。`verifier.read` は既存の信頼済み検証結果を読むだけの契約で、有料実行・新規検証開始をしない。並行consumerの重複readは許容し、検証runの起動・冪等性は別のtrusted schedulerで実装する。
