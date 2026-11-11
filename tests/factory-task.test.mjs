@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { validateTask } from '../scripts/factory/validate-task.mjs';
+const task = () => ({goal:'Fix authorized defect',baseSha:'a'.repeat(40),owner:'one-editor',acceptance:'reproduction fails before and passes after',verification:'node tests plus explicit UI coverage',paths:['src/game.js','tests/regression.test.mjs'],publish:false,merge:false,newDependencies:false,paidServices:false});
+test('valid constrained plan',()=>assert.deepEqual(validateTask(task()),[]));
+for(const p of ['../secret','.github/workflows/run.yml','src/../.env','/src/game.js','src//game.js','src/*.js','src/./game.js','assets/private.png']) test(`reject ${p}`,()=>assert.ok(validateTask({...task(),paths:[p]}).length));
+for(const key of ['goal','baseSha','owner','acceptance','verification']) test(`require ${key}`,()=>assert.ok(validateTask({...task(),[key]:''}).length));
+for(const key of ['publish','merge','newDependencies','paidServices']) test(`reject ${key}`,()=>assert.ok(validateTask({...task(),[key]:true}).length));
+test('reject empty paths',()=>assert.ok(validateTask({...task(),paths:[]}).length));
+test('reject abbreviated sha',()=>assert.ok(validateTask({...task(),baseSha:'123abcd'}).length));

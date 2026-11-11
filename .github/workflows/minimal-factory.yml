@@ -1,0 +1,207 @@
+name: Minimal Claude Factory (activation required)
+on:
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Owner-approved issue number
+        required: true
+        type: string
+      issue_digest:
+        description: SHA256 of exact title + newline + body
+        required: true
+        type: string
+      base_sha:
+        description: Exact current main SHA, including reviewed factory
+        required: true
+        type: string
+      paths:
+        description: Comma-separated existing src JavaScript files, at most four
+        required: true
+        type: string
+permissions: {}
+concurrency:
+  group: minimal-factory-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  gate:
+    if: vars.FACTORY_ENABLED == 'true' && github.ref == 'refs/heads/main' && github.run_attempt == 1 && github.actor == github.repository_owner && github.triggering_actor == github.repository_owner
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      issues: read
+    outputs:
+      manifest: ${{ steps.gate.outputs.manifest }}
+      prompt: ${{ steps.gate.outputs.prompt }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /scripts/factory/minimal-factory.cjs
+      - id: gate
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        env:
+          ISSUE: ${{ inputs.issue }}
+          ISSUE_DIGEST: ${{ inputs.issue_digest }}
+          BASE_SHA: ${{ inputs.base_sha }}
+          PATHS: ${{ inputs.paths }}
+          TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+        with:
+          script: |
+            context.runAttempt=Number(process.env.GITHUB_RUN_ATTEMPT);
+            await require('./scripts/factory/minimal-factory.cjs').gate({github,context,core,input:{issue:process.env.ISSUE,issueDigest:process.env.ISSUE_DIGEST,base:process.env.BASE_SHA,paths:process.env.PATHS,triggeringActor:process.env.TRIGGERING_ACTOR}});
+  generate:
+    needs: gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: read
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      # Deliberately NO checkout: no repository hooks, CLAUDE.md, skills or MCP configuration.
+      - name: Recheck approved issue before credential use
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        env:
+          MANIFEST: ${{ needs.gate.outputs.manifest }}
+        with:
+          script: |
+            const m=JSON.parse(process.env.MANIFEST),{createHash}=require('node:crypto');
+            const {data:i}=await github.rest.issues.get({...context.repo,issue_number:m.issue});
+            const digest=createHash('sha256').update(i.title+'\n'+(i.body||'')).digest('hex');
+            const {data:r}=await github.rest.git.getRef({...context.repo,ref:'heads/main'});
+            if(i.state!=='open'||i.pull_request||digest!==m.issueDigest||!i.labels.some(x=>x.name==='factory:approved')||r.object.sha!==m.base)throw Error('Approval or main changed');
+      - name: Retrieve trusted launcher and verifier only
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        with:
+          script: |
+            const fs=require('node:fs');fs.mkdirSync(process.env.RUNNER_TEMP+'/factory-sdk');
+            for(const name of ['action-launcher.cjs','claude-launcher.cjs','action-result.cjs','action-cli-probe.cjs','sdk/package.json','sdk/package-lock.json']){
+              const {data:f}=await github.rest.repos.getContent({...context.repo,path:'scripts/factory/'+name,ref:context.sha});
+              const destination=name.startsWith('sdk/')?'/factory-sdk/'+name.slice(4):'/'+name;
+              fs.writeFileSync(process.env.RUNNER_TEMP+destination,Buffer.from(f.content,'base64'),{flag:'wx'});
+            }
+            fs.chmodSync(process.env.RUNNER_TEMP+'/claude-launcher.cjs',0o700);
+      - name: Install locked official CLI package without scripts
+        run: npm ci --prefix "$RUNNER_TEMP/factory-sdk" --ignore-scripts --no-audit --no-fund
+      - name: Verify real CLI zero-tool initialization without authentication
+        env:
+          FACTORY_SDK_ROOT: ${{ runner.temp }}/factory-sdk
+        run: node "$RUNNER_TEMP/action-cli-probe.cjs"
+      - name: Refuse debug output and API fallback
+        env:
+          API_KEY: ${{ env.ANTHROPIC_API_KEY }}
+        run: |
+          test "${ACTIONS_STEP_DEBUG:-false}" != true
+          test -z "$API_KEY"
+      - name: Generate source proposal with official Claude Code Action
+        id: claude
+        uses: anthropics/claude-code-action@4fa93a88de49bbef68b10eb15aabedf28ca0e1ed # reviewed v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          path_to_claude_code_executable: ${{ runner.temp }}/claude-launcher.cjs
+          prompt: ${{ needs.gate.outputs.prompt }}
+          claude_args: >-
+            --tools=""
+            --disallowedTools "*"
+            --setting-sources user
+            --strict-mcp-config
+            --mcp-config '{"mcpServers":{}}'
+            --disable-slash-commands
+            --settings '{"disableAllHooks":true}'
+            --max-turns 2
+            --model claude-fable-5-2
+          settings: '{"disableAllHooks":true}'
+          use_commit_signing: 'false'
+          classify_inline_comments: 'false'
+          display_report: 'false'
+          show_full_output: 'false'
+          plugins: ''
+          plugin_marketplaces: ''
+      - name: Verify actual model and zero-tool evidence, then admit plain JSON
+        env:
+          FACTORY_EXECUTION_FILE: ${{ steps.claude.outputs.execution_file }}
+          FACTORY_EXPECTED_MODEL: claude-fable-5-2
+        run: node "$RUNNER_TEMP/action-result.cjs"
+      - id: upload
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: proposal-${{ github.run_id }}-1
+          path: ${{ runner.temp }}/proposal.json
+          if-no-files-found: error
+          retention-days: 1
+  verify:
+    needs: [gate, generate]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      artifact_id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: ${{ needs.generate.outputs.artifact_id }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/proposal
+      - name: Normalize proposal using trusted control code
+        env:
+          MANIFEST: ${{ needs.gate.outputs.manifest }}
+        run: |
+          node - <<'JS'
+          const fs=require('node:fs'),m=JSON.parse(process.env.MANIFEST),dir=process.env.RUNNER_TEMP+'/proposal';
+          if(fs.readdirSync(dir).join()!=='proposal.json'||!fs.lstatSync(dir+'/proposal.json').isFile())throw Error('Unexpected artifact files');
+          const raw=fs.readFileSync(dir+'/proposal.json','utf8');
+          const normalized=require('./scripts/factory/minimal-factory.cjs').normalize(raw,m.paths);
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/validated.json',normalized,{flag:'wx'});
+          for(const f of JSON.parse(normalized).files){const s=fs.lstatSync(f.path);if(!s.isFile()||s.isSymbolicLink())throw Error('Unexpected target');fs.writeFileSync(f.path,f.content);}
+          JS
+      - name: Isolated regression signal, not independent acceptance
+        run: |
+          docker pull node:24-bookworm
+          image=$(docker image inspect node:24-bookworm --format '{{.Id}}')
+          timeout 180 docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --pids-limit 256 --memory 2g --cpus 2 --user 65534:65534 --tmpfs /tmp:rw,noexec,nosuid,nodev,size=256m --mount "type=bind,src=$GITHUB_WORKSPACE,dst=/source,readonly" -w /source "$image" bash -c 'node --test tests/*.test.mjs'
+      - id: upload
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: validated-${{ github.run_id }}-1
+          path: ${{ runner.temp }}/validated.json
+          if-no-files-found: error
+          retention-days: 1
+  publish:
+    needs: [gate, verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /scripts/factory/minimal-factory.cjs
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: ${{ needs.verify.outputs.artifact_id }}
+          merge-multiple: true
+          path: ${{ runner.temp }}/validated
+      - name: Publish normalized data only to a draft PR
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        env:
+          MANIFEST: ${{ needs.gate.outputs.manifest }}
+        with:
+          script: |
+            const fs=require('node:fs'),dir=process.env.RUNNER_TEMP+'/validated';
+            if(fs.readdirSync(dir).join()!=='validated.json'||!fs.lstatSync(dir+'/validated.json').isFile())throw Error('Unexpected validated artifact');
+            await require('./scripts/factory/minimal-factory.cjs').publish({github,context,manifest:JSON.parse(process.env.MANIFEST),raw:fs.readFileSync(dir+'/validated.json','utf8')});

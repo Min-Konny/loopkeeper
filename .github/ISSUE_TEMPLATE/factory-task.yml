@@ -1,0 +1,30 @@
+name: 自動開発タスク
+description: 成果物と検証条件を明示した一工程
+body:
+  - type: textarea
+    id: scope
+    attributes:
+      label: 目的と変更範囲
+      description: 既存依頼、対象ファイル、対象外、唯一の編集担当を記載
+    validations:
+      required: true
+  - type: input
+    id: base
+    attributes:
+      label: 基準commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 完了条件と検証方法
+      description: 修正前の再現、修正後、回帰、未実施のUI/実機確認を区別
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: 依存関係と競合確認
+      description: 先行PR・既存担当・未公開候補を確認。未確認なら記載
+    validations:
+      required: true

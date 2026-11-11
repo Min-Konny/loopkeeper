@@ -1,0 +1,29 @@
+name: Source tests (not independent acceptance)
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: source-tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Run repository tests without secrets
+        run: node --test tests/*.test.mjs
+      - name: Exercise secret-free isolated candidate boundary
+        run: bash scripts/factory/isolation-smoke.sh
+      - name: Check real official CLI initialization without authentication
+        run: |
+          npm ci --prefix scripts/factory/sdk --ignore-scripts --no-audit --no-fund
+          node scripts/factory/action-cli-probe.cjs

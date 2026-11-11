@@ -1,0 +1,8 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),{SnapshotPolicy}=require('../scripts/factory/policy.cjs'),{key}=require('../scripts/factory/queue.cjs');
+const plan={repository:'Min-Konny/loopkeeper',issue:1,baseSha:'a'.repeat(40),planDigest:'b'.repeat(64),policyDigest:'c'.repeat(64),approvalRef:'authenticated-message',dependencies:[]};
+const policy=permission=>new SnapshotPolicy({repository:plan.repository,catalogReader:async()=>({revision:'d'.repeat(40),approvedPlans:[{id:key(plan),plan,approver:'owner'}]}),permissionReader:async()=>permission});
+test('trusted exact snapshot and current approver permission required',async()=>{assert.equal((await policy('write').check(plan)).allowed,true);assert.equal((await policy('read').check(plan)).allowed,false);});
+for(const field of ['approvalRef','policyDigest','baseSha','repository','planDigest'])test(`Issue-supplied ${field} cannot replace approved snapshot`,async()=>{assert.equal((await policy('admin').check({...plan,[field]:'attacker'})).allowed,false);});
+test('missing trusted catalog entry is not approval',async()=>{const p=new SnapshotPolicy({repository:plan.repository,catalogReader:async()=>({revision:'d'.repeat(40),approvedPlans:[]}),permissionReader:async()=> 'admin'});assert.equal((await p.check(plan)).allowed,false);});
+test('approval catalog is reloaded so later revocation takes effect',async()=>{const p=policy('write');assert.equal((await p.check(plan)).allowed,true);p.catalogReader=async()=>({revision:'e'.repeat(40),approvedPlans:[]});assert.equal((await p.check(plan)).allowed,false);});

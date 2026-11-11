@@ -10,7 +10,7 @@ const variables=value=>[...String(value).matchAll(/\{(\w+)\}/g)].map(x=>x[1]).so
 test('English batch has identical stable keys and interpolation contracts',()=>{
  assert.deepEqual(Object.keys(EN).sort(),Object.keys(JA).sort());
  for(const key of Object.keys(JA)){const source=JA[key],target=EN[key];for(const value of typeof target==='object'?Object.values(target):[target])assert.deepEqual(variables(value),variables(typeof source==='object'?source.other:source),key);assert.doesNotMatch(JSON.stringify(target),/undefined-tier/);}
- assert.deepEqual(SUPPORTED_LOCALES,['ja','en']);
+ assert.deepEqual(SUPPORTED_LOCALES,['ja','en','zh-CN','ko']);
 });
 test('locale preference only writes its own key; failed writes do not switch or notify',()=>{
  const s=storage();let calls=0;const unsubscribe=subscribeLocale(()=>calls++);
@@ -19,7 +19,7 @@ test('locale preference only writes its own key; failed writes do not switch or 
  assert.equal(setUILocale('zh-Hans',s),false);assert.equal(calls,1);unsubscribe();setUILocale('ja',s);
 });
 test('missing translations fall back to Japanese, unknown locales to Japanese, missing keys remain visible',()=>{
- const d={ja:{greeting:'こんにちは {name}'},en:{}};assert.equal(resolveText(d,'greeting',{name:'A'},'en'),'こんにちは A');assert.equal(resolveText(d,'greeting',{name:'B'},'ko'),'こんにちは B');assert.equal(resolveText(d,'missing',{},'en'),'[missing]');assert.equal(resolveText(d,'greeting',{},'en'),'こんにちは {name}');
+ const d={ja:{greeting:'こんにちは {name}'},en:{}};assert.equal(resolveText(d,'greeting',{name:'A'},'en'),'こんにちは A');assert.equal(resolveText(d,'greeting',{name:'B'},'fr'),'こんにちは B');assert.equal(resolveText(d,'missing',{},'en'),'[missing]');assert.equal(resolveText(d,'greeting',{},'en'),'こんにちは {name}');
 });
 test('English quantities pluralize and formatting does not change numeric values',()=>{
  assert.equal(text('queue.count',{count:1},'en'),'1 queued action');assert.equal(text('queue.count',{count:2},'en'),'2 queued actions');assert.equal(text('queue.count',{count:2},'ja'),'予約 2件');
@@ -30,4 +30,12 @@ test('achievement translation does not mutate game records or conditions',()=>{
 });
 test('invalid historical date metadata has a readable localized fallback',()=>{
  assert.equal(formatDate(new Date(1e100),{},'en'),'Unknown date');assert.equal(formatDate(NaN,{},'ja'),JA['common.unknownDate']);
+});
+
+test('Chinese and Korean missing entries use English, not Japanese, and missing English remains visible',()=>{
+ const d={ja:{greeting:'こんにちは {name}',onlyJapanese:'日本語'},en:{greeting:'Hello {name}'}};
+ for(const language of ['zh-CN','ko']) {
+  assert.equal(resolveText(d,'greeting',{name:'A'},language),'Hello A');
+  assert.equal(resolveText(d,'onlyJapanese',{},language),'[onlyJapanese]');
+ }
 });

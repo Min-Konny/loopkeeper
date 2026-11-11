@@ -1,0 +1,9 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
+const {inspect}=createRequire(import.meta.url)('../scripts/factory/preflight.cjs');
+const sha='a'.repeat(40),repo='Min-Konny/loopkeeper';
+const valid=()=>({repository:repo,ref:'refs/heads/main',actorPermission:'write',expectedHead:sha,pr:{state:'open',head:{sha,repo:{full_name:repo}},base:{ref:'main',repo:{full_name:repo}},changed_files:1},files:[{filename:'src/game.js',status:'modified',patch:'@@'}],tree:{truncated:false,tree:[{path:'src/game.js',type:'blob',mode:'100644'}]}});
+test('read-only preflight accepts exact trusted metadata, not execution',()=>assert.equal(inspect(valid()).admitted,true));
+const mutations={branch:x=>x.ref='refs/heads/feature',readActor:x=>x.actorPermission='read',staleSha:x=>x.pr.head.sha='b'.repeat(40),shortSha:x=>x.expectedHead='abc',fork:x=>x.pr.head.repo.full_name='other/repo',closed:x=>x.pr.state='closed',wrongBase:x=>x.pr.base.ref='dev',truncatedFiles:x=>x.pr.changed_files=2,truncatedTree:x=>x.tree.truncated=true,workflow:x=>x.files[0].filename='.github/workflows/pwn.yml',traversal:x=>x.files[0].filename='src/../.env',hidden:x=>x.files[0].filename='src/.secret',renameBypass:x=>x.files[0].previous_filename='.github/workflows/pwn.yml',binary:x=>delete x.files[0].patch,symlink:x=>x.tree.tree[0].mode='120000',submodule:x=>x.tree.tree[0].type='commit',executable:x=>x.tree.tree[0].mode='100755',missingTreeEntry:x=>x.tree.tree=[],unknownStatus:x=>x.files[0].status='copied'};
+for(const [name,mutate]of Object.entries(mutations))test(`fail closed: ${name}`,()=>{const x=valid();mutate(x);assert.equal(inspect(x).admitted,false);});
+
+test('reject comparison beyond API file cap',()=>{const x=valid();x.files=Array(301).fill(x.files[0]);x.pr.changed_files=301;assert.equal(inspect(x).admitted,false);});
