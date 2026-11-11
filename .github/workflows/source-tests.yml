@@ -23,7 +23,7 @@ jobs:
         run: node --test tests/*.test.mjs
       - name: Exercise secret-free isolated candidate boundary
         run: bash scripts/factory/isolation-smoke.sh
-      - name: Check official SDK serialization without authentication
+      - name: Check real official CLI initialization without authentication
         run: |
           npm ci --prefix scripts/factory/sdk --ignore-scripts --no-audit --no-fund
-          FACTORY_SDK_MODULE="$GITHUB_WORKSPACE/scripts/factory/sdk/node_modules/@anthropic-ai/claude-agent-sdk/sdk.mjs" node scripts/factory/sdk-probe.cjs
+          node scripts/factory/action-cli-probe.cjs
