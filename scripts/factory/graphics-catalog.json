@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "issue": 4,
-  "issueDigest": "",
+  "issueDigest": "1471a1971e58be5bf385c95fa60a4f87ff6e784219223c26d61d0ab8e5fc9add",
   "reviewer": "chatgpt-codex-connector[bot]",
   "paths": [
     "src/title-screen.js",
