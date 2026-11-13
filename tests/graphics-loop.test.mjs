@@ -97,3 +97,15 @@ test('failure classification emits only fixed categories, never raw content',()=
  assert.equal(category([{type:'result',result:'model not found SECRET'}]),'model-unavailable');
  assert.equal(category([{type:'result',result:'SECRET arbitrary failure'}]),'unclassified');
 });
+
+test('proposal recovery requires official run and matching immutable checkpoint',()=>{
+ const {recoveryArtifact}=require('../scripts/factory/graphics-loop.cjs');
+ const m={phase:'retry',head,catalogDigest:'digest',recovery:{run:'123',head,catalogDigest:'digest',controlBase:'c'.repeat(40)}};
+ const r={id:123,head_sha:'c'.repeat(40),path:'.github/workflows/graphics-loop.yml',event:'workflow_dispatch',run_attempt:1,status:'completed',conclusion:'failure'};
+ const j=[{name:'generate',conclusion:'success'},{name:'publish',conclusion:'skipped'}],a=[{id:456,name:'proposal-123-1',expired:false}];
+ assert.equal(recoveryArtifact(m,'123',r,j,a),456);
+ for(const bad of [{...r,head_sha:head},{...r,run_attempt:2},{...r,event:'pull_request'},{...r,conclusion:'success'}])assert.throws(()=>recoveryArtifact(m,'123',bad,j,a));
+ assert.throws(()=>recoveryArtifact(m,'123',r,[{name:'generate',conclusion:'failure'}],a));
+ assert.throws(()=>recoveryArtifact(m,'123',r,j,[{...a[0],expired:true}]));
+ assert.throws(()=>recoveryArtifact({...m,head:'b'.repeat(40)},'123',r,j,a));
+});

@@ -6,6 +6,10 @@ on:
         description: Create the state branch once after reviewed activation
         type: boolean
         default: false
+      proposal_run:
+        description: Explicit reconciled successful-generation run to reverify without calling Claude
+        type: string
+        default: ''
   schedule:
     - cron: '17,47 * * * *'
 permissions: {}
@@ -19,9 +23,12 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: write
+      actions: read
       issues: read
       pull-requests: read
     outputs:
+      artifact_id: ${{ steps.gate.outputs.artifact_id }}
+      artifact_run: ${{ steps.gate.outputs.artifact_run }}
       run: ${{ steps.gate.outputs.run }}
       manifest: ${{ steps.gate.outputs.manifest }}
       prompt: ${{ steps.gate.outputs.prompt }}
@@ -38,12 +45,13 @@ jobs:
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
         env:
           BOOTSTRAP: ${{ inputs.bootstrap }}
+          PROPOSAL_RUN: ${{ inputs.proposal_run }}
         with:
           script: |
             await require('./scripts/factory/graphics-loop.cjs').gate({github,context,core,catalog:require('./scripts/factory/graphics-catalog.json')});
   generate:
     needs: gate
-    if: needs.gate.outputs.run == 'true'
+    if: needs.gate.outputs.run == 'true' && needs.gate.outputs.artifact_id == ''
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -130,10 +138,12 @@ jobs:
           retention-days: 1
   verify:
     needs: [gate, generate]
+    if: always() && needs.gate.result == 'success' && needs.gate.outputs.run == 'true' && (needs.generate.result == 'success' || (needs.generate.result == 'skipped' && needs.gate.outputs.artifact_id != ''))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
+      actions: read
     outputs:
       artifact_id: ${{ steps.upload.outputs.artifact-id }}
     steps:
@@ -149,7 +159,9 @@ jobs:
           persist-credentials: false
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
-          artifact-ids: ${{ needs.generate.outputs.artifact_id }}
+          artifact-ids: ${{ needs.gate.outputs.artifact_id || needs.generate.outputs.artifact_id }}
+          run-id: ${{ needs.gate.outputs.artifact_run || github.run_id }}
+          github-token: ${{ github.token }}
           merge-multiple: true
           path: ${{ runner.temp }}/proposal
       - name: Normalize proposal using trusted control code
@@ -164,11 +176,12 @@ jobs:
           fs.writeFileSync(process.env.RUNNER_TEMP+'/validated.json',normalized,{flag:'wx'});
           for(const f of [...m.sources,...JSON.parse(normalized).files]){const target='candidate/'+f.path,s=fs.lstatSync(target);if(!s.isFile()||s.isSymbolicLink())throw Error('Unexpected target');fs.writeFileSync(target,f.content);}
           JS
+      # The one executable-fixture test runs in ordinary source CI; /tmp is deliberately noexec here.
       - name: Isolated regression signal, not independent acceptance
         run: |
           docker pull node:24-bookworm
           image=$(docker image inspect node:24-bookworm --format '{{.Id}}')
-          timeout 180 docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --pids-limit 256 --memory 2g --cpus 2 --user 65534:65534 --tmpfs /tmp:rw,noexec,nosuid,nodev,size=256m --mount "type=bind,src=$GITHUB_WORKSPACE,dst=/source,readonly" -w /source/candidate "$image" bash -c 'node --test tests/*.test.mjs tests/*.test.js'
+          timeout 180 docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --pids-limit 256 --memory 2g --cpus 2 --user 65534:65534 --tmpfs /tmp:rw,noexec,nosuid,nodev,size=256m --mount "type=bind,src=$GITHUB_WORKSPACE,dst=/source,readonly" -w /source/candidate "$image" bash -c 'node --test --test-skip-pattern="^spawn uses fresh dirs, clean env and removes them; no real CLI/model$" tests/*.test.mjs tests/*.test.js'
       - id: upload
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
@@ -178,6 +191,7 @@ jobs:
           retention-days: 1
   publish:
     needs: [gate, verify]
+    if: always() && needs.gate.result == 'success' && needs.verify.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

@@ -53,6 +53,14 @@ async function read(github,context,path,ref){
 async function save(g,c,s,oldSha){
  return g.rest.repos.createOrUpdateFileContents({...c.repo,branch:stateBranch,path:'graphics-loop.json',message:'Graphics loop checkpoint',content:Buffer.from(JSON.stringify(s)).toString('base64'),...(oldSha?{sha:oldSha}:{})});
 }
+function recoveryArtifact(m,requested,run,jobs,artifacts){
+ const r=m.recovery;
+ if(m.phase!=='retry'||!r||requested!==String(r.run)||r.head!==m.head||r.catalogDigest!==m.catalogDigest||run.id!==Number(requested)||run.head_sha!==r.controlBase||run.path!=='.github/workflows/graphics-loop.yml'||run.event!=='workflow_dispatch'||run.run_attempt!==1||run.status!=='completed'||run.conclusion!=='failure')throw Error('Recovery provenance mismatch');
+ if(jobs.filter(j=>j.name==='generate'&&j.conclusion==='success').length!==1||jobs.some(j=>j.name==='publish'&&j.conclusion!=='skipped'))throw Error('Recovery job evidence mismatch');
+ const matches=artifacts.filter(a=>a.name==='proposal-'+requested+'-1');
+ if(matches.length!==1||matches[0].expired||!Number.isSafeInteger(matches[0].id))throw Error('Recovery artifact unavailable');
+ return matches[0].id;
+}
 async function approved(g,c,m){
  const {data:i}=await g.rest.issues.get({...c.repo,issue_number:m.issue});
  if(i.state!=='open'||i.pull_request||!i.labels.some(l=>l.name==='factory:approved')||hash(i.title+'\n'+(i.body||''))!==m.issueDigest)throw Error('Issue changed or approval revoked');
@@ -106,6 +114,15 @@ async function gate({github:g,context:c,core,catalog}){
   if(next.action!=='repair'){m.phase=next.action;await save(g,c,m,entry.sha);core.info('Stopped for visual/human acceptance: '+next.action);return;}
   m.round++;feedback=next.feedback;
  }else if(!['new','retry'].includes(m.phase)){core.info('Held state: '+m.phase);return;}
+ const requested=process.env.PROPOSAL_RUN||'';
+ if(requested){
+  if(c.eventName!=='workflow_dispatch'||!/^\d+$/.test(requested))throw Error('Owner-only explicit recovery');
+  const {data:run}=await g.rest.actions.getWorkflowRun({...c.repo,run_id:Number(requested)});
+  const jobs=await g.paginate(g.rest.actions.listJobsForWorkflowRunAttempt,{...c.repo,run_id:Number(requested),attempt_number:1,per_page:100});
+  const artifacts=await g.paginate(g.rest.actions.listWorkflowRunArtifacts,{...c.repo,run_id:Number(requested),per_page:100});
+  core.setOutput('artifact_id',String(recoveryArtifact(m,requested,run,jobs,artifacts)));
+  core.setOutput('artifact_run',requested);
+ }else if(m.recovery){throw Error('Explicit proposal recovery required; do not regenerate');}
  // Durable intent before any chargeable work or candidate branch creation.
  const createBranch=m.phase==='new';
  m.phase='running';m.run=String(c.runId);await save(g,c,m,entry.sha);
@@ -138,6 +155,6 @@ async function publish({github:g,context:c,manifest:m,raw}){
  await g.rest.issues.createComment({...c.repo,issue_number:m.pr,body:'@codex review\n\nReview commit '+commit.sha+'. Check the linked Issue acceptance criteria. Report visual checks as unverified unless screenshots for this SHA are available.'});
  const e=await read(g,c,'graphics-loop.json',stateBranch),s=JSON.parse(e.text);
  if(s.run!==String(c.runId)||s.phase!=='running')throw Error('Checkpoint moved');
- delete m.sources;m.head=commit.sha;m.phase='review';await save(g,c,m,e.sha);
+ delete m.sources;delete m.recovery;m.head=commit.sha;m.phase='review';await save(g,c,m,e.sha);
 }
-module.exports={paths,normalize,decision,gate,recheck,publish};
+module.exports={paths,normalize,decision,recoveryArtifact,gate,recheck,publish};
