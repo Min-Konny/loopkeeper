@@ -115,7 +115,7 @@ async function publish({github:g,context:c,manifest:m,raw}){
  await recheck({github:g,context:c,manifest:m});
  await g.rest.git.updateRef({...c.repo,ref:'heads/'+m.branch,sha:commit.sha,force:false});
  if(!m.pr){const {data:p}=await g.rest.pulls.create({...c.repo,head:m.branch,base:'main',draft:true,title:'[Graphics] #'+m.issue+' implementation',body:'Refs #'+m.issue+'. Claude implementation / Codex review. Regression signal is not visual acceptance. No automatic merge or release.'});m.pr=p.number;}
- // Explicit request also works when GITHUB_TOKEN suppresses PR-created events.
+ // Request explicitly rather than relying on suppressed PR-created events; live bot response must be verified.
  await g.rest.issues.createComment({...c.repo,issue_number:m.pr,body:'@codex review\n\nReview commit '+commit.sha+'. Check the linked Issue acceptance criteria. Report visual checks as unverified unless screenshots for this SHA are available.'});
  const e=await read(g,c,'graphics-loop.json',stateBranch),s=JSON.parse(e.text);
  if(s.run!==String(c.runId)||s.phase!=='running')throw Error('Checkpoint moved');

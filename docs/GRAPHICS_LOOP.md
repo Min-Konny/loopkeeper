@@ -30,4 +30,12 @@ The publisher explicitly requests `@codex review` on the resulting SHA, avoiding
 
 Current missing setup: repository secret, Codex repo review connection, reviewed main integration/activation and first live pilot. No chargeable invocation or deployment has been made by this change.
 
+Read-only setup audit on 2026-11-13 found no repository Actions secrets or variables. Actions default token permission is read and `can_approve_pull_request_reviews` is false, so draft PR creation must be enabled in this repo's Actions settings before activation. The workflow declares job-specific scopes; there is no need to broaden every workflow's default token permission.
+
+- [Repository Actions secrets](https://github.com/Min-Konny/loopkeeper/settings/secrets/actions)
+- [Repository Actions permissions](https://github.com/Min-Konny/loopkeeper/settings/actions)
+- [Codex review connection](https://chatgpt.com/codex/settings/code-review)
+
+Validation: 490 tests passed, zero failed, one Windows-inapplicable test skipped. Includes a mocked implementation/review/repair round trip and rejection of stale reviews, duplicate running jobs, unauthorized reviewers, scope escapes and revoked approval. YAML parsing and all embedded GitHub JavaScript syntax checks passed. These are local tests, not evidence of authenticated model execution.
+
 Official reference: https://learn.chatgpt.com/docs/third-party/github

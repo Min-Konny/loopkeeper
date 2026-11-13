@@ -17,3 +17,7 @@ Review fixes include cleared-run result reopening, four-language copy, focus-pre
 Update one screen per Issue. Use deep green surfaces, thin brass/gold borders, cream icons, turquoise progress and readable pixel artwork. Preserve the title's achievements/settings actions even if a reference omits them. Compare 1280x720, 1920x1080 and mobile 390px. Record screenshots against the exact PR SHA; source tests alone do not prove visual acceptance.
 
 The approved development loop is Claude implementation and repair followed by Codex review, with three repair rounds maximum. Queue shared-file work serially. Reference assets and the current integrated baseline must be available before an Issue is activated.
+
+
+## 2026-11-13 Graphics development loop
+Claude implements and repairs; Codex reviews the exact PR head. Twelve screen Issues (#4–#15) use shared widescreen references in PR #3 and the integrated baseline in PR #16. At most three repair rounds, serial scope ownership, no automatic merge/deployment or API fallback. The prepared workflow is disabled pending repo-scoped OAuth, Codex review connection, reviewed main activation and a real end-to-end pilot. The bounded zero-tool generator handles scoped JS/CSS edits, not image generation or screenshot acceptance. See docs/GRAPHICS_LOOP.md for limits and activation.
