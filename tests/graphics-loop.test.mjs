@@ -90,3 +90,10 @@ test('newer findings or running summaries supersede old clean summaries',()=>{
   assert.equal(decision(state,[],[],bot,[latest,clean]).action,'wait');
  }
 });
+
+test('failure classification emits only fixed categories, never raw content',()=>{
+ const {category}=require('../scripts/factory/failure-category.cjs');
+ assert.equal(category([{type:'result',result:'401 invalid token SECRET'}]),'authentication');
+ assert.equal(category([{type:'result',result:'model not found SECRET'}]),'model-unavailable');
+ assert.equal(category([{type:'result',result:'SECRET arbitrary failure'}]),'unclassified');
+});

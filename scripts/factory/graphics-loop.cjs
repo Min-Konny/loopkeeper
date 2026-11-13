@@ -105,10 +105,11 @@ async function gate({github:g,context:c,core,catalog}){
   if(next.action==='wait')return;
   if(next.action!=='repair'){m.phase=next.action;await save(g,c,m,entry.sha);core.info('Stopped for visual/human acceptance: '+next.action);return;}
   m.round++;feedback=next.feedback;
- }else if(m.phase!=='new'){core.info('Held state: '+m.phase);return;}
+ }else if(!['new','retry'].includes(m.phase)){core.info('Held state: '+m.phase);return;}
  // Durable intent before any chargeable work or candidate branch creation.
+ const createBranch=m.phase==='new';
  m.phase='running';m.run=String(c.runId);await save(g,c,m,entry.sha);
- if(m.round===0)await g.rest.git.createRef({...c.repo,ref:'refs/heads/'+m.branch,sha:m.base});
+ if(createBranch)await g.rest.git.createRef({...c.repo,ref:'refs/heads/'+m.branch,sha:m.base});
  await candidate(g,c,m);
  const sources=[];for(const p of m.paths)sources.push({path:p,content:(await read(g,c,p,m.head)).text});
  normalize(JSON.stringify({files:sources}),m.paths);
