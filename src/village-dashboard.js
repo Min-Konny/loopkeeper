@@ -42,7 +42,7 @@ export function mountVillageDashboard(root) {
       if(locale!==getUILocale()){locale=getUILocale();applyLocaleCopy(root);root.setAttribute('aria-label',t('village.dashboard'));queueSignature='';workerSignature='';}
       el('results').hidden=!view.finished;el('equip').hidden=view.finished;el('enemy-art').hidden=view.finished;
       root.classList.toggle('village-finished',view.finished);
-      scene.setActive(view.animate);
+      scene.setState(view.village);scene.setActive(view.animate);
       const enemyKey=JSON.stringify([view.enemyData.id,view.enemyData.wave,view.enemyData.trait,view.enemyData.isBoss,view.routeId]);
       if(enemyKey!==enemySignature){
         enemySignature=enemyKey;const art=villageEnemyArt(view.enemyData,view.routeId),img=el('enemy-image');

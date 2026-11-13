@@ -25,3 +25,25 @@ export function alongPath(points, fraction) {
 
 // The river base is dark saturated blue. Grey/violet rock, grass and timber must stay dry.
 export function isRiverPixel(r,g,b) {return r<22 && g>24 && g<76 && b>g*1.25 && b-r>30;}
+
+const unit=n=>Math.max(0,Math.min(1,Number.isFinite(n)?n:0));
+const SMOKE_SOURCES=['workshop','kitchen','smokehouse','laboratory'];
+const DEFENCES=['watchtower','barricade','guardhouse','archery_tower','signal_post'];
+/**
+ * Life around the village follows the run. The buildings themselves belong to the approved plate,
+ * so growth is shown by people, crops, livestock, hearth smoke and wall torches. Outposts stand elsewhere.
+ * Pure presentation: reads the given numbers and never touches game state.
+ */
+export function villageLife({facilities={},constructing=false,threat=0}={}) {
+  const level=id=>Math.max(0,Number(facilities[id])||0);
+  const built=Object.keys(facilities).filter(id=>!id.startsWith('outpost_')&&level(id)>0).length;
+  return {
+    residents:Math.min(3,1+Math.floor(built/2)),
+    carrier:Boolean(constructing),
+    fields:[unit(built/4),unit((built-4)/4)],
+    sheep:Math.min(3,Math.floor(built/2)),
+    smoke:Math.min(2,SMOKE_SOURCES.filter(id=>level(id)>0).length),
+    torches:DEFENCES.some(id=>level(id)>0),
+    threat:unit(threat),
+  };
+}
