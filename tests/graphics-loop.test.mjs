@@ -81,3 +81,12 @@ test('mocked implementation -> review -> repair preserves branch and rejects dup
   output={};await gate({github:g,context:c,core,catalog});assert.equal(output.run,'false'); // old review cannot trigger a third generation
  }finally{for(const [k,v] of Object.entries(old))if(v===undefined)delete process.env[k];else process.env[k]=v;}
 });
+
+test('newer findings or running summaries supersede old clean summaries',()=>{
+ const make=(id,status,findings,updated_at)=>({id,user,updated_at,body:'<!-- codex-review-state:v1 '+JSON.stringify({code_review:{commit_sha:head,status,has_any_findings:findings,has_unresolved_findings:findings}})+' -->'});
+ const clean=make(1,'completed',false,'2026-11-13T10:00:00Z');
+ for(const latest of [make(2,'completed',true,'2026-11-13T10:01:00Z'),make(2,'running',null,'2026-11-13T10:01:00Z'),make(0,'running',null,'2026-11-13T10:02:00Z')]){
+  assert.equal(decision(state,[],[],bot,[clean,latest]).action,'wait');
+  assert.equal(decision(state,[],[],bot,[latest,clean]).action,'wait');
+ }
+});

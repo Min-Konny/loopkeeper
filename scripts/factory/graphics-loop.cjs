@@ -25,12 +25,15 @@ function decision(state,reviews,comments,bot,summaries=[]){
  const matches=reviews.filter(r=>r.user?.login===bot&&r.user?.type==='Bot'&&r.commit_id===state.head&&['APPROVED','CHANGES_REQUESTED','COMMENTED'].includes(r.state)).sort((a,b)=>b.id-a.id);
  const r=matches[0];if(!r){
   // Observed Codex summary format. Unknown formats wait; never infer approval from prose or reactions.
-  for(const s of summaries){
+  const ordered=[...summaries].sort((a,b)=>(Date.parse(b.updated_at||b.created_at)||0)-(Date.parse(a.updated_at||a.created_at)||0)||b.id-a.id);
+  for(const s of ordered){
    if(s.user?.login!==bot||s.user?.type!=='Bot'||typeof s.body!=='string')continue;
    const marker=s.body.match(/<!-- codex-review-state:v1 (\{[^\n]+\}) -->/);
    if(!marker)continue;
    try{const result=JSON.parse(marker[1]).code_review;
-    if(result?.commit_sha===state.head&&result.status==='completed'&&result.has_any_findings===false&&result.has_unresolved_findings===false)return {action:'human',summary:s.id};
+    if(result?.commit_sha!==state.head)continue;
+    if(result.status==='completed'&&result.has_any_findings===false&&result.has_unresolved_findings===false)return {action:'human',summary:s.id};
+    return {action:'wait'}; // The newest matching summary supersedes every older clean result.
    }catch{/* Unknown or malformed summaries cannot advance state. */}
   }
   return {action:'wait'};
