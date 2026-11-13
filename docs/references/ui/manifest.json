@@ -1,0 +1,98 @@
+{
+  "provided_on": "2026-11-13",
+  "source": "User-provided visual references",
+  "original_file_count": 13,
+  "unique_image_count": 7,
+  "images": [
+    {
+      "file": "01-title-dashboard.png",
+      "screens": "01–02",
+      "description": "タイトル・拠点ダッシュボード",
+      "source_filenames": [
+        "LoopKeeper 森の拠点防衛UI.png",
+        "LoopKeeper 森の拠点防衛UI (1).png"
+      ],
+      "sha256": "67f24f3ee26bc615beadc4e68b702c863053600e1a70282884d4a5ed333137fc",
+      "bytes": 2589818,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "file": "02-work-village.png",
+      "screens": "03–04",
+      "description": "作業・行動予約／村・建築",
+      "source_filenames": [
+        "LoopKeeper 作業予約と村づくり.png",
+        "LoopKeeper 作業予約と村づくり (1).png"
+      ],
+      "sha256": "8d5573a77af4c73f852284000c59ea399a633641d25166d98867e49493137a07",
+      "bytes": 2453258,
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "file": "03-equipment-party.png",
+      "screens": "05–06",
+      "description": "装備・持ち物／仲間・育成",
+      "source_filenames": [
+        "装備と仲間を育てる拠点UI.png",
+        "装備と仲間を育てる拠点UI (1).png"
+      ],
+      "sha256": "7ab627fa3f155880e99c728f070f7a54c25872b1244211eb5dad30d0326d321c",
+      "bytes": 2504145,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "file": "04-exploration-battle.png",
+      "screens": "07–08",
+      "description": "探索・ルート選択／襲撃・戦闘",
+      "source_filenames": [
+        "探索と襲撃の拠点防衛UI.png",
+        "探索と襲撃の拠点防衛UI (1).png"
+      ],
+      "sha256": "7f7650e6f09becfd94b77c0acc765f3bfaedf35f425ddde5640956684c8353ef",
+      "bytes": 2709275,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "file": "05-augments-inheritance.png",
+      "screens": "09–10",
+      "description": "オーグメント／継承・転生準備",
+      "source_filenames": [
+        "ループキーパー：オーグメント選択と継承準備.png",
+        "ループキーパー：オーグメント選択と継承準備 (1).png"
+      ],
+      "sha256": "999eda33079b7388b14881a62afb109bada994a0160df586f6f7eeba6befd404",
+      "bytes": 2287152,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "file": "06-results-records.png",
+      "screens": "11–12",
+      "description": "世代リザルト／記録・実績",
+      "source_filenames": [
+        "世代継承と記録の管理画面.png",
+        "世代継承と記録の管理画面 (1).png"
+      ],
+      "sha256": "0a69c63d325060bf1152813e2ccbfe2c9d79d38aab507b75c9a4ef8246418ac8",
+      "bytes": 2196923,
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "file": "07-title-background.png",
+      "screens": "背景",
+      "description": "夕暮れの村を見守る冒険者・タイトル背景参考",
+      "source_filenames": [
+        "夕暮れの森村を見守る冒険者.png"
+      ],
+      "sha256": "d237629169bce966d7f0763fbce8619e86d324bf418947568bdfd098b1ac36db",
+      "bytes": 3148599,
+      "width": 1672,
+      "height": 941
+    }
+  ]
+}
