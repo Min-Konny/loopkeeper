@@ -6,6 +6,10 @@ on:
         description: Create the state branch once after reviewed activation
         type: boolean
         default: false
+      request_review:
+        description: Mark the pending draft ready again without calling Claude
+        type: boolean
+        default: false
       proposal_run:
         description: Explicit reconciled successful-generation run to reverify without calling Claude
         type: string
@@ -27,6 +31,7 @@ jobs:
       issues: read
       pull-requests: read
     outputs:
+      review_node: ${{ steps.gate.outputs.review_node }}
       artifact_id: ${{ steps.gate.outputs.artifact_id }}
       artifact_run: ${{ steps.gate.outputs.artifact_run }}
       run: ${{ steps.gate.outputs.run }}
@@ -44,11 +49,36 @@ jobs:
       - id: gate
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
         env:
+          REQUEST_REVIEW: ${{ inputs.request_review }}
           BOOTSTRAP: ${{ inputs.bootstrap }}
           PROPOSAL_RUN: ${{ inputs.proposal_run }}
         with:
           script: |
             await require('./scripts/factory/graphics-loop.cjs').gate({github,context,core,catalog:require('./scripts/factory/graphics-catalog.json')});
+  request-review:
+    needs: gate
+    if: needs.gate.outputs.review_node != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /scripts/factory/graphics-loop.cjs
+      - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        env:
+          REVIEW_NODE: ${{ needs.gate.outputs.review_node }}
+        with:
+          script: |
+            const id = process.env.REVIEW_NODE;
+            const result = await github.graphql('query($id:ID!){node(id:$id){... on PullRequest{isDraft}}}', {id});
+            if (result.node?.isDraft !== true) throw Error('Convert the pending PR to draft before retrying');
+            await require('./scripts/factory/graphics-loop.cjs').markReady(github,id);
   generate:
     needs: gate
     if: needs.gate.outputs.run == 'true' && needs.gate.outputs.artifact_id == ''

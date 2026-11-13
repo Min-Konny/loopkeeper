@@ -104,8 +104,11 @@ async function gate({github:g,context:c,core,catalog}){
  const issue=await approved(g,c,m);let feedback='';
  if(m.phase==='review'){
   await candidate(g,c,m);
-  const {data:pr}=await g.rest.pulls.get({...c.repo,pull_number:m.pr});
-  if(pr.state!=='open'||pr.head.repo.full_name!==c.repo.owner+'/'+c.repo.repo||pr.head.ref!==m.branch||pr.head.sha!==m.head||pr.base.ref!==m.baseRef)throw Error('PR changed');
+  const pr=await matchingPr(g,c,m);
+  if(process.env.REQUEST_REVIEW==='true'){
+   if(c.eventName!=='workflow_dispatch')throw Error('Owner dispatch only');
+   core.setOutput('review_node',pr.node_id);return;
+  }
   const reviews=await g.paginate(g.rest.pulls.listReviews,{...c.repo,pull_number:m.pr,per_page:100});
   const comments=await g.paginate(g.rest.pulls.listReviewComments,{...c.repo,pull_number:m.pr,per_page:100});
   const summaries=await g.paginate(g.rest.issues.listComments,{...c.repo,issue_number:m.pr,per_page:100});
@@ -113,7 +116,8 @@ async function gate({github:g,context:c,core,catalog}){
   if(next.action==='wait')return;
   if(next.action!=='repair'){m.phase=next.action;await save(g,c,m,entry.sha);core.info('Stopped for visual/human acceptance: '+next.action);return;}
   m.round++;feedback=next.feedback;
- }else if(!['new','retry'].includes(m.phase)){core.info('Held state: '+m.phase);return;}
+ }else if(process.env.REQUEST_REVIEW==='true'){throw Error('Review retry requires a pending review checkpoint');}
+ else if(!['new','retry'].includes(m.phase)){core.info('Held state: '+m.phase);return;}
  const requested=process.env.PROPOSAL_RUN||'';
  if(requested){
   if(c.eventName!=='workflow_dispatch'||!/^\d+$/.test(requested))throw Error('Owner-only explicit recovery');
@@ -140,6 +144,11 @@ async function recheck({github:g,context:c,manifest:m}){
  if(s.phase!=='running'||s.run!==String(c.runId)||s.head!==m.head||s.round!==m.round||s.catalogDigest!==m.catalogDigest)throw Error('Checkpoint mismatch');
  return entry;
 }
+async function matchingPr(g,c,m){
+ const {data:pr}=await g.rest.pulls.get({...c.repo,pull_number:m.pr});
+ if(pr.state!=='open'||pr.head.repo.full_name!==c.repo.owner+'/'+c.repo.repo||pr.head.ref!==m.branch||pr.head.sha!==m.head||pr.base.ref!==m.baseRef)throw Error('PR changed');
+ return pr;
+}
 async function publish({github:g,context:c,manifest:m,raw}){
  await recheck({github:g,context:c,manifest:m});
  const files=JSON.parse(normalize(raw,m.paths)).files,tree=[];
@@ -151,8 +160,7 @@ async function publish({github:g,context:c,manifest:m,raw}){
  await recheck({github:g,context:c,manifest:m});
  let prNode;
  if(m.pr){
-  const {data:pr}=await g.rest.pulls.get({...c.repo,pull_number:m.pr});
-  if(pr.state!=='open'||pr.head.repo.full_name!==c.repo.owner+'/'+c.repo.repo||pr.head.ref!==m.branch||pr.head.sha!==m.head||pr.base.ref!==m.baseRef)throw Error('PR changed before publishing');
+  const pr=await matchingPr(g,c,m);
   prNode=pr.node_id;
   if(!pr.draft)await g.graphql('mutation($id:ID!){convertPullRequestToDraft(input:{pullRequestId:$id}){pullRequest{isDraft}}}',{id:prNode});
  }
@@ -164,7 +172,10 @@ async function publish({github:g,context:c,manifest:m,raw}){
  const e=await read(g,c,'graphics-loop.json',stateBranch),s=JSON.parse(e.text);
  if(s.run!==String(c.runId)||s.phase!=='running')throw Error('Checkpoint moved');
  delete m.sources;delete m.recovery;m.head=commit.sha;m.phase='review';await save(g,c,m,e.sha);
+ await markReady(g,prNode);
+}
+async function markReady(g,prNode){
  const ready=await g.graphql('mutation($id:ID!){markPullRequestReadyForReview(input:{pullRequestId:$id}){pullRequest{isDraft}}}',{id:prNode});
  if(ready.markPullRequestReadyForReview?.pullRequest?.isDraft!==false)throw Error('PR was not marked ready for Codex review');
 }
-module.exports={paths,normalize,decision,recoveryArtifact,gate,recheck,publish};
+module.exports={paths,normalize,decision,recoveryArtifact,gate,recheck,publish,markReady};
