@@ -50,20 +50,26 @@ test('mocked implementation -> review -> repair preserves branch and rejects dup
  const {createHash}=await import('node:crypto'),{publish}=require('../scripts/factory/graphics-loop.cjs');
  const issue={state:'open',title:'Title focus',body:'Preserve controls',labels:[{name:'factory:approved'}]};
  const catalog={enabled:true,issue:4,baseRef:'codex/graphics-baseline',baseSha:head,issueDigest:createHash('sha256').update(issue.title+'\n'+issue.body).digest('hex'),reviewer:bot,paths:['src/title-screen.css']};
- const controlHead='c'.repeat(40),refs=new Map([['main',controlHead],['codex/graphics-baseline',head]]);let checkpoint,revision=0,comments=0,commits=0,reviewList=[];
+ const controlHead='c'.repeat(40),refs=new Map([['main',controlHead],['codex/graphics-baseline',head]]);let checkpoint,revision=0,commits=0,reviewList=[],draft=false;const transitions=[];
  const g={rest:{repos:{
   getContent:async({path})=>{if(path==='graphics-loop.json'&&!checkpoint)throw Object.assign(Error('missing'),{status:404});const text=path==='graphics-loop.json'?checkpoint:'body {}';return {data:{type:'file',encoding:'base64',size:Buffer.byteLength(text),content:Buffer.from(text).toString('base64'),sha:String(revision)}};},
   createOrUpdateFileContents:async({content,sha})=>{assert.equal(sha,checkpoint?String(revision):undefined);checkpoint=Buffer.from(content,'base64').toString();revision++;return {data:{}};},
   getCollaboratorPermissionLevel:async()=>({data:{permission:'admin'}}),
   compareCommitsWithBasehead:async()=>({data:{status:'ahead',files:[{filename:'src/title-screen.css',status:'modified',patch:'diff'}]}})
- },issues:{get:async()=>({data:issue}),createComment:async()=>{comments++;return {data:{}};}},git:{
+ },issues:{get:async()=>({data:issue})},git:{
   getRef:async({ref})=>({data:{object:{sha:refs.get(ref.slice(6))}}}),
   createRef:async({ref,sha})=>{assert.equal(refs.has(ref.slice(11)),false);refs.set(ref.slice(11),sha);return {data:{}};},
   getTree:async()=>({data:{truncated:false,tree:[{path:'src/title-screen.css',mode:'100644',type:'blob'}]}}),
   createBlob:async()=>({data:{sha:'blob'}}),getCommit:async()=>({data:{tree:{sha:'old-tree'}}}),
   createTree:async()=>({data:{sha:'new-tree'}}),createCommit:async()=>({data:{sha:String(++commits).repeat(40)}}),
-  updateRef:async({ref,sha,force})=>{assert.equal(force,false);refs.set(ref.slice(6),sha);return {data:{}};}
- },pulls:{create:async({base})=>{assert.equal(base,'codex/graphics-baseline');return {data:{number:20}};},get:async()=>({data:{state:'open',head:{repo:{full_name:'owner/repo'},ref:'factory/graphics-4',sha:refs.get('factory/graphics-4')},base:{ref:'codex/graphics-baseline'}}}),listReviews:'reviews',listReviewComments:'comments'}},paginate:async fn=>fn==='reviews'?reviewList:[]};
+  updateRef:async({ref,sha,force})=>{assert.equal(force,false);if(commits>1)assert.equal(draft,true);refs.set(ref.slice(6),sha);return {data:{}};}
+ },pulls:{create:async({base,draft:requestedDraft})=>{assert.equal(base,'codex/graphics-baseline');assert.equal(requestedDraft,true);draft=true;return {data:{number:20,node_id:'PR_node'}};},get:async()=>({data:{state:'open',node_id:'PR_node',draft,head:{repo:{full_name:'owner/repo'},ref:'factory/graphics-4',sha:refs.get('factory/graphics-4')},base:{ref:'codex/graphics-baseline'}}}),listReviews:'reviews',listReviewComments:'comments'}},paginate:async fn=>fn==='reviews'?reviewList:[],graphql:async(query,{id})=>{
+  assert.equal(id,'PR_node');
+  if(query.includes('convertPullRequestToDraft')){draft=true;transitions.push('draft');return {};}
+  assert.match(query,/markPullRequestReadyForReview/);assert.equal(draft,true);
+  assert.equal(JSON.parse(checkpoint).head,refs.get('factory/graphics-4'));
+  draft=false;transitions.push('ready');return {markPullRequestReadyForReview:{pullRequest:{isDraft:false}}};
+ }};
  const c={eventName:'workflow_dispatch',ref:'refs/heads/main',sha:controlHead,actor:'owner',repo:{owner:'owner',repo:'repo'},runId:1};
  let output={};const core={setOutput(k,v){output[k]=v;},info(){}};
  const old={GITHUB_RUN_ATTEMPT:process.env.GITHUB_RUN_ATTEMPT,GITHUB_TRIGGERING_ACTOR:process.env.GITHUB_TRIGGERING_ACTOR,BOOTSTRAP:process.env.BOOTSTRAP};
@@ -72,12 +78,12 @@ test('mocked implementation -> review -> repair preserves branch and rejects dup
   await gate({github:g,context:c,core,catalog});assert.equal(output.run,'true');const manifest=JSON.parse(output.manifest);
   output={};await gate({github:g,context:c,core,catalog});assert.equal(output.run,'false');
   await publish({github:g,context:c,manifest,raw:JSON.stringify({files:[{path:'src/title-screen.css',content:'body {color:red}'}]})});
-  assert.equal(JSON.parse(checkpoint).phase,'review');assert.equal(comments,1);
+  assert.equal(JSON.parse(checkpoint).phase,'review');assert.deepEqual(transitions,['ready']);
   output={};await gate({github:g,context:c,core,catalog});assert.equal(output.run,'false');
   reviewList=[{...review,commit_id:refs.get('factory/graphics-4')}];c.runId=2;
   await gate({github:g,context:c,core,catalog});const repair=JSON.parse(output.manifest);assert.equal(repair.round,1);assert.equal(repair.branch,manifest.branch);
   await publish({github:g,context:c,manifest:repair,raw:JSON.stringify({files:[{path:'src/title-screen.css',content:'body {color:blue}'}]})});
-  assert.equal(comments,2);assert.equal(commits,2);assert.equal(JSON.parse(checkpoint).phase,'review');
+  assert.deepEqual(transitions,['ready','draft','ready']);assert.equal(commits,2);assert.equal(JSON.parse(checkpoint).phase,'review');
   output={};await gate({github:g,context:c,core,catalog});assert.equal(output.run,'false'); // old review cannot trigger a third generation
  }finally{for(const [k,v] of Object.entries(old))if(v===undefined)delete process.env[k];else process.env[k]=v;}
 });

@@ -197,7 +197,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      issues: write
+      issues: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -212,7 +212,7 @@ jobs:
           artifact-ids: ${{ needs.verify.outputs.artifact_id }}
           merge-multiple: true
           path: ${{ runner.temp }}/validated
-      - name: Publish normalized data only to a draft PR
+      - name: Publish normalized data and mark the PR ready for review
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
         env:
           MANIFEST: ${{ needs.gate.outputs.manifest }}
