@@ -1,0 +1,7 @@
+{
+  "enabled": false,
+  "issue": 4,
+  "issueDigest": "",
+  "reviewer": "chatgpt-codex-connector[bot]",
+  "paths": ["src/title-screen.js", "src/title-screen.css", "src/title-artwork.js", "src/title-nature.js"]
+}
