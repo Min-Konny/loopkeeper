@@ -1,0 +1,14 @@
+{
+  "enabled": false,
+  "issue": 4,
+  "issueDigest": "",
+  "reviewer": "chatgpt-codex-connector[bot]",
+  "paths": [
+    "src/title-screen.js",
+    "src/title-screen.css",
+    "src/title-artwork.js",
+    "src/title-nature.js"
+  ],
+  "baseRef": "codex/graphics-baseline",
+  "baseSha": "0189a98e4b00ccfa1705035d4d6c969e2fa755eb"
+}
