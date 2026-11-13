@@ -20,10 +20,21 @@ function normalize(raw,allowed){
  }
  if(size>65536)throw Error('Proposal source limit');return JSON.stringify(p);
 }
-function decision(state,reviews,comments,bot){
+function decision(state,reviews,comments,bot,summaries=[]){
  if(state.phase!=='review')return {action:'hold'};
  const matches=reviews.filter(r=>r.user?.login===bot&&r.user?.type==='Bot'&&r.commit_id===state.head&&['APPROVED','CHANGES_REQUESTED','COMMENTED'].includes(r.state)).sort((a,b)=>b.id-a.id);
- const r=matches[0];if(!r)return {action:'wait'};
+ const r=matches[0];if(!r){
+  // Observed Codex summary format. Unknown formats wait; never infer approval from prose or reactions.
+  for(const s of summaries){
+   if(s.user?.login!==bot||s.user?.type!=='Bot'||typeof s.body!=='string')continue;
+   const marker=s.body.match(/<!-- codex-review-state:v1 (\{[^\n]+\}) -->/);
+   if(!marker)continue;
+   try{const result=JSON.parse(marker[1]).code_review;
+    if(result?.commit_sha===state.head&&result.status==='completed'&&result.has_any_findings===false&&result.has_unresolved_findings===false)return {action:'human',summary:s.id};
+   }catch{/* Unknown or malformed summaries cannot advance state. */}
+  }
+  return {action:'wait'};
+ }
  const notes=comments.filter(c=>c.pull_request_review_id===r.id&&c.user?.login===bot&&c.user?.type==='Bot'&&c.commit_id===state.head);
  if(r.state==='APPROVED'&&!notes.length)return {action:'human',review:r.id};
  // Free prose/no findings is not a machine-verifiable approval.
@@ -83,7 +94,8 @@ async function gate({github:g,context:c,core,catalog}){
   if(pr.state!=='open'||pr.head.repo.full_name!==c.repo.owner+'/'+c.repo.repo||pr.head.ref!==m.branch||pr.head.sha!==m.head||pr.base.ref!=='main')throw Error('PR changed');
   const reviews=await g.paginate(g.rest.pulls.listReviews,{...c.repo,pull_number:m.pr,per_page:100});
   const comments=await g.paginate(g.rest.pulls.listReviewComments,{...c.repo,pull_number:m.pr,per_page:100});
-  const next=decision(m,reviews,comments,catalog.reviewer);
+  const summaries=await g.paginate(g.rest.issues.listComments,{...c.repo,issue_number:m.pr,per_page:100});
+  const next=decision(m,reviews,comments,catalog.reviewer,summaries);
   if(next.action==='wait')return;
   if(next.action!=='repair'){m.phase=next.action;await save(g,c,m,entry.sha);core.info('Stopped for visual/human acceptance: '+next.action);return;}
   m.round++;feedback=next.feedback;

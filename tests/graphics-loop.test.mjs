@@ -30,6 +30,14 @@ test('inline feedback belongs to the actual latest review and head',()=>{
  assert.equal(decision(state,[r],[{...note,commit_id:'b'.repeat(40)}],bot).action,'human');
  assert.equal(decision(state,[r],[{...note,pull_request_review_id:9}],bot).action,'human');
 });
+test('observed Codex no-findings summary stops for human checks only at exact SHA',()=>{
+ const summary=(commit_sha=head)=>({id:5,user,body:'<!-- codex-review-state:v1 '+JSON.stringify({code_review:{commit_sha,status:'completed',has_any_findings:false,has_unresolved_findings:false}})+' -->'});
+ assert.equal(decision(state,[],[],bot,[summary()]).action,'human');
+ assert.equal(decision(state,[],[],bot,[summary('b'.repeat(40))]).action,'wait');
+ assert.equal(decision(state,[],[],bot,[{...summary(),user:{login:'outsider',type:'Bot'}}]).action,'wait');
+ assert.equal(decision(state,[],[],bot,[{...summary(),body:'Looks good 👍'}]).action,'wait');
+ assert.equal(decision(state,[],[],bot,[{...summary(),body:'<!-- codex-review-state:v1 {bad} -->'}]).action,'wait');
+});
 test('disabled catalog makes no GitHub call',async()=>{
  const previous=process.env.GITHUB_RUN_ATTEMPT;process.env.GITHUB_RUN_ATTEMPT='1';
  try{await gate({github:new Proxy({},{get(){throw Error('Network must not run');}}),context:{eventName:'schedule',ref:'refs/heads/main'},core:{setOutput(){},info(){}},catalog:{enabled:false}});}finally{if(previous===undefined)delete process.env.GITHUB_RUN_ATTEMPT;else process.env.GITHUB_RUN_ATTEMPT=previous;}

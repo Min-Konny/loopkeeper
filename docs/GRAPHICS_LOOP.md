@@ -36,6 +36,8 @@ Read-only setup audit on 2026-11-13 found no repository Actions secrets or varia
 - [Repository Actions permissions](https://github.com/Min-Konny/loopkeeper/settings/actions)
 - [Codex review connection](https://chatgpt.com/codex/settings/code-review)
 
-Validation: 490 tests passed, zero failed, one Windows-inapplicable test skipped. Includes a mocked implementation/review/repair round trip and rejection of stale reviews, duplicate running jobs, unauthorized reviewers, scope escapes and revoked approval. YAML parsing and all embedded GitHub JavaScript syntax checks passed. These are local tests, not evidence of authenticated model execution.
+Validation: 491 tests passed, zero failed, one Windows-inapplicable test skipped. Includes a mocked implementation/review/repair round trip and rejection of stale reviews, duplicate running jobs, unauthorized reviewers, scope escapes and revoked approval. YAML parsing and all embedded GitHub JavaScript syntax checks passed. These are local tests, not evidence of authenticated model execution.
 
 Official reference: https://learn.chatgpt.com/docs/third-party/github
+
+Observed Minsai PR #6: Codex can report a clean result through a bot-authored summary comment rather than a formal review. The coordinator accepts only the observed structured v1 summary with exact full HEAD SHA, completed status and both findings flags false, and stops for human checks. Unknown formats or ordinary prose wait; this is not a guaranteed public schema.
