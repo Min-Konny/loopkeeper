@@ -1,4 +1,5 @@
 import {encounterName} from './encounter-copy.js?v=0.6.140';
+import {VERSION} from './version.js?v=0.6.140';
 import {mountVillageDashboard,villageDashboardMarkup} from './village-dashboard.js?v=0.6.140';
 let villageDashboard=null;
 import {legacyDiplomacyMarkup,legacyDiplomacyNotice,legacyFacilitySummary} from './legacy-progress-copy.js?v=0.6.140';
@@ -435,7 +436,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>${copySpan('chrome.note1')}<br />${copySpan('chrome.note2')}</p></div>
     <div id="generation" class="generation"></div>
-    <button class="prototype-label updates-link" data-command="updates-menu">${copySpan('menu.updates')} <b>v0.6.140</b></button>
+    <button class="prototype-label updates-link" data-command="updates-menu">${copySpan('menu.updates')} <b>v${VERSION}</b></button>
   </aside>
   <div class="workspace">
          <header class="topbar"><span class="mobile-header-title">LoopKeeper</span><button title="${uiText('chrome.menuHint')}" data-ui-title="chrome.menuHint" class="mobile-menu-toggle" data-command="header-menu" data-focus="header-menu" aria-label="${uiText('chrome.menu')}" data-ui-aria="chrome.menu" aria-haspopup="dialog" aria-controls="header-menu-dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="breadcrumb">${copySpan('chrome.frontier')}</div><nav class="quick-actions" aria-label="${uiText('chrome.quick')}" data-ui-aria="chrome.quick"><button class="dashboard-button" data-info="bag" data-focus="bag-open" aria-label="${uiText('chrome.bagAria')}" data-ui-aria="chrome.bagAria" title="${uiText('chrome.bag')}" data-ui-title="chrome.bag">${icon("bag")}</button><button class="dashboard-button" data-info="quests" data-focus="quests-open" aria-label="${uiText('menu.quests')}" data-ui-aria="menu.quests" title="${uiText('menu.quests')}" data-ui-title="menu.quests">${icon("book")}<span data-quest-badge></span></button><button class="dashboard-button" data-info="strategy" data-camp-strategy data-focus="strategy-open" aria-label="${uiText('chrome.strategy')}" data-ui-aria="chrome.strategy" title="${uiText('chrome.strategy')}" data-ui-title="chrome.strategy">${icon("flag")}<span data-strategy-badge></span></button><button class="dashboard-button" data-info="queue" data-camp-queue data-focus="queue-open" aria-label="${uiText('queueUi.heading')}" data-ui-aria="queueUi.heading" title="${uiText('queueUi.heading')}" data-ui-title="queueUi.heading">${icon("queue")}<span data-queue-badge></span></button><button class="dashboard-button" data-command="settings-menu" data-focus="settings-open" aria-label="${uiText('settings.heading')}" data-ui-aria="settings.heading" title="${uiText('settings.heading')}" data-ui-title="settings.heading">${icon("settings")}</button></nav><div class="topbar-actions"><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="${uiText('chrome.save')}" data-ui-title="chrome.save" aria-label="${uiText('chrome.save')}" data-ui-aria="chrome.save">${icon("save")}</button></div></header>
@@ -806,6 +807,11 @@ function renderVillageDashboard() {
     goal: milestone?entityText('quest',milestone):uiText('village.defend'),
     'goal-detail': milestone ? uiText('village.reward',{points:milestone.reward}) : uiText('village.prepare'),
     facilities: uiText('village.facilities',{count:Object.values(state.run.facilities).filter(n=>n>0).length}),
+    village: {
+      facilities: Object.fromEntries(Object.entries(state.run.facilities).map(([id,n])=>[id,n+(state.run.endless?.levels[id]||0)])),
+      constructing: RECIPES.some(d=>d.id===action?.id&&(d.facility||d.endlessFacility)),
+      threat: preparing ? 1-(state.run.nextWaveAt-state.run.elapsed)/45 : state.run.status==='combat' ? 1 : 0,
+    },
     enemyData: enemy, routeId: state.run.routes?.active?.id || null,
     worker: definition ? {id:definition.id,skill:definition.skill,equipment:state.run.equipment} : null,
     displayState: state, partyEquipment: state.run.party?.equipment,
@@ -1302,7 +1308,7 @@ function renderScreen() {
   syncCampSpace();
 }
 
-function helpMarkup() { return getUILocale()!=='ja'?englishHelp(FIRST_RAID_DELAY/60,icon):`<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v0.6.126</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる" data-ui-aria="common.close">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。回復ポーションを工房で製作すると、戦闘中の回復に使えます。食料は救護所で戦闘外に使います。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`; }
+function helpMarkup() { return getUILocale()!=='ja'?englishHelp(FIRST_RAID_DELAY/60,icon):`<div class="dialog-heading"><div class="eyebrow">HOW TO SURVIVE · v${VERSION}</div><button class="icon-button" data-close="help-dialog" aria-label="閉じる" data-ui-aria="common.close">${icon("close")}</button></div><h2 id="help-title">ひとつ先の夜を、目指して。</h2><p class="dialog-lead">最初は短い命でも、その経験は無駄になりません。</p><ol class="guide-steps"><li><span>01</span><div><h3>資源を集める</h3><p>伐採・採掘・採集を選ぶと時間が動き、繰り返し作業します。一時停止後も、作業を選べば再開できます。最初の襲撃は${FIRST_RAID_DELAY / 60}分後です。</p></div></li><li><span>02</span><div><h3>工房で備える</h3><p>まずは木材4・石材2で石の槍を製作。装備は完成時に自動装着されます。回復ポーションを工房で製作すると、戦闘中の回復に使えます。食料は救護所で戦闘外に使います。</p></div></li><li><span>03</span><div><h3>襲撃を生き延びる</h3><p>敵が野営地へ攻めてきます。大きな戦闘画面で自動防衛を見守ります。一時停止も可能です。撃退後は元の作業へ戻ります。</p></div></li><li><span>04</span><div><h3>経験を次の命へ</h3><p>死亡すると資源・装備・進行レベルは失われます。使った技能の永続経験は残り、次の命の成長を速めます。</p></div></li></ol><p class="fine-print">初めて襲撃を防ぐと村の施設が解放されます。初達成のクエストで継承ポイントを得て、自動化などを解放できます。最初のボスを倒すと外交とオーグメントの3択が登場します。まずは資源・装備・食料の準備に集中しましょう。</p><div class="guide-tip">${icon("pause")}いつでも一時停止して計画できます。<br />裏画面でも進みます。設定で自動停止を選べます。ゲームを閉じている間は進みません。</div><button class="button gold full-width" data-close="help-dialog">野営地に戻る${icon("arrow")}</button>`; }
 function showHelp(opener) {
   document.querySelector('#help-dialog').innerHTML=helpMarkup();
   showCampDialog(document.querySelector('#help-dialog'),opener);

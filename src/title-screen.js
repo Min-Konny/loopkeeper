@@ -5,7 +5,7 @@ import {titleText as t,readUILocale} from './title-copy.js?v=0.6.140';
 import {inspectTitleSave,titlePreferences,saveTitlePreferences,startTitleChallenge,withTitleWriter} from './title-state.js?v=0.6.140';
 import {createGame} from './engine.js?v=0.6.140';
 import {replayAchievementsMarkup} from './replay-achievements-ui.js?v=0.6.140';
-const VERSION='0.6.140';
+import {VERSION} from './version.js?v=0.6.140';
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let storage;try{storage=localStorage;}catch{storage={getItem(){throw Error('Storage unavailable');}};}
 const locale=readUILocale(storage);
