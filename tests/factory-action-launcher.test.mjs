@@ -9,9 +9,9 @@ for(const [old,v] of [['--tools=','--tools=Read'],['--setting-sources=user','--s
 test('missing tools fails (empty string trap)',()=>assert.throws(()=>validate(args.filter(a=>a!=='--tools='))));
 test('missing Loop model fails',()=>assert.throws(()=>validate(args,'claude-fable-5-2')));
 test('positional prompt forbidden',()=>assert.throws(()=>validate([...args,'injected'])));
-test('credential env strict allowlist',()=>assert.deepEqual(environment('/fresh','fake-test-token'),{PATH:'/usr/bin:/bin',HOME:'/fresh',CLAUDE_CONFIG_DIR:'/fresh/.claude',CLAUDE_CODE_OAUTH_TOKEN:'fake-test-token'}));
+test('credential env strict allowlist',()=>assert.deepEqual(environment('/fresh','fake-test-token'),{PATH:'/usr/bin:/bin',HOME:'/fresh',CLAUDE_CONFIG_DIR:require('node:path').join('/fresh','.claude'),CLAUDE_CODE_OAUTH_TOKEN:'fake-test-token'}));
 test('version env no credential',()=>assert.equal(Object.keys(environment('/fresh')).length,3));
-test('spawn uses fresh dirs, clean env and removes them; no real CLI/model',async()=>{
+test('spawn uses fresh dirs, clean env and removes them; no real CLI/model',{skip:process.platform==='win32'?'POSIX executable/shebang and 0700 permission fixture requires Linux':false},async()=>{
  const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),crypto=require('node:crypto');const {run}=require('../scripts/factory/action-launcher.cjs');
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'launcher-test-')),bin=path.join(dir,'fixture');
  const src='#!'+process.execPath+'\n'+`if(process.argv.includes('--version')){console.log('2.1.322 (Claude Code)');process.exit(0);}const fs=require('node:fs'),assert=require('node:assert/strict');assert.deepEqual(Object.keys(process.env).sort(),['PATH','HOME','CLAUDE_CONFIG_DIR','CLAUDE_CODE_OAUTH_TOKEN'].sort());assert.equal(process.env.CLAUDE_CODE_OAUTH_TOKEN,'fake-test-token');assert.notEqual(process.cwd(),${JSON.stringify(process.cwd())});assert.equal(fs.statSync(process.env.HOME).mode&511,448);assert.equal(fs.readdirSync(process.cwd()).length,0);`;

@@ -1,3 +1,6 @@
+import {encounterName} from './encounter-copy.js?v=0.6.140';
+import {mountVillageDashboard,villageDashboardMarkup} from './village-dashboard.js?v=0.6.140';
+let villageDashboard=null;
 import {legacyDiplomacyMarkup,legacyDiplomacyNotice,legacyFacilitySummary} from './legacy-progress-copy.js?v=0.6.140';
 import {legacyQueueUnlockMarkup} from './legacy-ui-copy.js?v=0.6.140';
 import {reasonText} from './reason-copy.js?v=0.6.140';import {logText} from './log-copy.js?v=0.6.140';
@@ -228,7 +231,7 @@ function refreshCatalog() {
   } = getCatalog(state));
 }
 state.settings.paused = true;
-let tab = readUiPreference(localStorage,"loopkeeper-work-tab-v1",["gather","craft","village","diplomacy","trade","legacy","workers"],"gather");
+let tab = 'home';
 let selectedSkill = null;
 let gatherView=readGatherView(localStorage);
 let gatherTried=readGatherPreference(localStorage).tried;
@@ -269,7 +272,7 @@ const slotIcons = {
   shield: "shield",
   tool: "tool",
 };
-const tabNames = {};
+const tabNames = {};Object.defineProperty(tabNames,'home',{get:()=>[uiText('village.home'),uiText('village.description')]});
 for(const key of ['gather','craft','village','trade','diplomacy','legacy','workers'])Object.defineProperty(tabNames,key,{get:()=>[uiText('pane.'+key+'.title'),uiText('pane.'+key+'.description')]});
 const format = number=>formatNumber(Math.floor(Number(number)||0));
 const escape = (text) =>
@@ -432,7 +435,7 @@ document.querySelector("#app").innerHTML = `
     <div id="skill-list"></div>
     <div class="sidebar-note">${icon("flame")}<p>${copySpan('chrome.note1')}<br />${copySpan('chrome.note2')}</p></div>
     <div id="generation" class="generation"></div>
-    <button class="prototype-label updates-link" data-command="updates-menu">${copySpan('menu.updates')} <b>v0.6.126</b></button>
+    <button class="prototype-label updates-link" data-command="updates-menu">${copySpan('menu.updates')} <b>v0.6.140</b></button>
   </aside>
   <div class="workspace">
          <header class="topbar"><span class="mobile-header-title">LoopKeeper</span><button title="${uiText('chrome.menuHint')}" data-ui-title="chrome.menuHint" class="mobile-menu-toggle" data-command="header-menu" data-focus="header-menu" aria-label="${uiText('chrome.menu')}" data-ui-aria="chrome.menu" aria-haspopup="dialog" aria-controls="header-menu-dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="breadcrumb">${copySpan('chrome.frontier')}</div><nav class="quick-actions" aria-label="${uiText('chrome.quick')}" data-ui-aria="chrome.quick"><button class="dashboard-button" data-info="bag" data-focus="bag-open" aria-label="${uiText('chrome.bagAria')}" data-ui-aria="chrome.bagAria" title="${uiText('chrome.bag')}" data-ui-title="chrome.bag">${icon("bag")}</button><button class="dashboard-button" data-info="quests" data-focus="quests-open" aria-label="${uiText('menu.quests')}" data-ui-aria="menu.quests" title="${uiText('menu.quests')}" data-ui-title="menu.quests">${icon("book")}<span data-quest-badge></span></button><button class="dashboard-button" data-info="strategy" data-camp-strategy data-focus="strategy-open" aria-label="${uiText('chrome.strategy')}" data-ui-aria="chrome.strategy" title="${uiText('chrome.strategy')}" data-ui-title="chrome.strategy">${icon("flag")}<span data-strategy-badge></span></button><button class="dashboard-button" data-info="queue" data-camp-queue data-focus="queue-open" aria-label="${uiText('queueUi.heading')}" data-ui-aria="queueUi.heading" title="${uiText('queueUi.heading')}" data-ui-title="queueUi.heading">${icon("queue")}<span data-queue-badge></span></button><button class="dashboard-button" data-command="settings-menu" data-focus="settings-open" aria-label="${uiText('settings.heading')}" data-ui-aria="settings.heading" title="${uiText('settings.heading')}" data-ui-title="settings.heading">${icon("settings")}</button></nav><div class="topbar-actions"><span id="save-status"></span><button class="icon-button" data-command="save-menu" title="${uiText('chrome.save')}" data-ui-title="chrome.save" aria-label="${uiText('chrome.save')}" data-ui-aria="chrome.save">${icon("save")}</button></div></header>
@@ -545,12 +548,13 @@ function selectWorkMenu(id,{expand=false}={}){
  if(queueStopDialog.open)queueStopDialog.close();
  if(infoDialog.open)infoDialog.close();
  if(window.innerWidth<=690)document.querySelector('.workspace main').scrollTop=0;
- tab=id;selectedSkill=null;saveUiPreference(localStorage,'loopkeeper-work-tab-v1',tab);document.querySelector('#content').scrollTop=0;render();
+ if(id==='home'&&expandedPane.dialog.open)expandedPane.close();
+ tab=id;selectedSkill=null;document.querySelector('#content').scrollTop=0;render();
  expandedPane.dialog.scrollTop=0;
  const opener=document.querySelector('#navigation [data-tab="'+tab+'"]');
  if(wideWorkLayout.matches&&expandedPane.dialog.open)expandedPane.close({preserveCurrentScroll:true});
  if(expandedPane.dialog.open)expandedPane.setOpener(opener);
- if(expand&&window.innerWidth>690&&!wideWorkLayout.matches&&state.run.status!=='legacy_setup')expandedPane.open(opener);
+ if(id!=='home'&&expand&&window.innerWidth>690&&!wideWorkLayout.matches&&state.run.status!=='legacy_setup')expandedPane.open(opener);
 }
 function openInformation(name,opener){
  if(name==='bag'){bagCategory='all';bagResetScroll=true;}
@@ -601,6 +605,7 @@ function renderNavigation() {
   setHTML(
     "#navigation",
     [
+      ["home", "camp", uiText('village.home')],
       ["gather", "leaf", uiText('nav.gatherFull')],
       ["craft", "hammer", uiText('nav.craftFull')],
       ["village", "camp", uiText('nav.villageFull')],
@@ -618,7 +623,7 @@ function renderNavigation() {
       )
       .map(
         ([id, symbol, name]) =>
-          `<button class="nav-item ${tab === id ? "selected" : ""}" data-tab="${id}" data-short-label="${NAV_SHORT[id]}" data-nav-expand="1" data-focus="nav-${id}" aria-label="${name}" aria-current="${tab === id ? "page" : "false"}">${icon(symbol)}<span>${name}</span>${id === "legacy" && hasLegacyOptions() ? `<small>${state.meta.points} pt</small>` : icon("chevron")}</button>`,
+          `<button class="nav-item ${tab === id ? "selected" : ""}" data-tab="${id}" data-short-label="${id==='home'?uiText('village.home'):NAV_SHORT[id]}" data-nav-expand="1" data-focus="nav-${id}" aria-label="${name}" aria-current="${tab === id ? "page" : "false"}">${icon(symbol)}<span>${name}</span>${id === "legacy" && hasLegacyOptions() ? `<small>${state.meta.points} pt</small>` : icon("chevron")}</button>`,
       )
       .join(""),
   );
@@ -711,6 +716,10 @@ function renderWorld() {
 }
 
 function renderWork() {
+  const dashboardOpen=tab==='home'&&state.run.status!=='legacy_setup';
+  document.body.classList.toggle('on-village-dashboard',dashboardOpen);
+  if(!dashboardOpen&&villageDashboard){villageDashboard.destroy();villageDashboard=null;}
+
   setHTML('#merchant-notice',merchantNotice(state));
   document.querySelector("#gather-view-controls").hidden=tab!=="gather" || state.run.status==="legacy_setup";
   for(const node of document.querySelectorAll("[data-gather-view]"))node.setAttribute("aria-pressed",String(node.dataset.gatherView===gatherView));
@@ -755,6 +764,7 @@ function renderWork() {
   );
   setHTML("#useful-goals",["gather","craft","village"].includes(tab)?usefulGoalsMarkup(state):"");
   setHTML("#early-raid-control",["gather","craft","village"].includes(tab)?earlyRaidControl(state):"");
+  if (tab === "home") renderVillageDashboard();
   if (tab === "gather") renderGather();
   if (tab === "craft" || tab === "village") renderCraft();
   if (tab === "legacy") renderLegacy();
@@ -763,6 +773,47 @@ function renderWork() {
   if (tab === "trade") setHTML("#content",commerceTabs()+marketMarkup(state,marketSide,marketCount));
   renderQueue();
   // The compact header owns the reservation count and stop indicator.
+}
+
+function renderVillageDashboard() {
+  if (!villageDashboard) {
+    setHTML('#content', villageDashboardMarkup);
+    villageDashboard = mountVillageDashboard(document.querySelector('.village-dashboard'));
+  }
+  const stats = getStats(state), enemy = state.run.enemy || getNextEnemy(state);
+  const action = state.run.activeAction;
+  const definition = [...ACTIONS,...RECIPES].find(item => item.id === action?.id);
+  const milestone = getMilestoneStatus(state).next;
+  const paused = state.settings.paused;
+  const preparing = state.run.status === 'preparing';
+  const finished=isFrontierFinish(state);
+  villageDashboard.update({
+    finished,
+    animate: state.settings.effectsEnabled && preparing && !document.querySelector('dialog[open]'),
+    generation: uiText('village.generation',{count:state.meta.generation}),
+    speed: state.settings.gameSpeed,
+    control: finished ? uiText('village.results') : uiText(getAugmentStatus(state).offer.length?'controls.choose':paused?'controls.resume':'controls.pause'),
+    controlCommand: finished ? 'show-clear-results' : getAugmentStatus(state).offer.length ? 'show-augments' : 'pause',
+    controlDisabled: !finished && ['dead','cleared','legacy_setup'].includes(state.run.status),
+    hp: Math.max(0,state.run.hp), maxHp: stats.maxHp,
+    health: `${Math.ceil(Math.max(0,state.run.hp))} / ${stats.maxHp}`,
+    wave: finished ? uiText('village.complete') : `WAVE ${enemy.wave||state.run.wave+1}`, enemy: finished?uiText('village.dawn'):encounterName(state,enemy),
+    'enemy-stats': finished?'':uiText('village.stats',{attack:format(enemy.attack),defense:format(enemy.defense),hp:format(enemy.maxHp||enemy.hp)}),
+    countdown: finished?'':preparing ? time(Math.max(0,Math.ceil(state.run.nextWaveAt-state.run.elapsed))) : state.run.status === 'combat' ? uiText('village.raiding') : '—',
+    work: (definition ? definitionName(definition) : null) || uiText('village.chooseHint'),
+    'work-detail': action ? (paused ? uiText('work.paused') : uiText('village.remaining',{seconds:Math.max(0,action.duration-action.progress).toFixed(1)})) : uiText('village.workHint'),
+    progress: action ? Math.max(0,Math.min(1,action.progress/action.duration)) : 0,
+    goal: milestone?entityText('quest',milestone):uiText('village.defend'),
+    'goal-detail': milestone ? uiText('village.reward',{points:milestone.reward}) : uiText('village.prepare'),
+    facilities: uiText('village.facilities',{count:Object.values(state.run.facilities).filter(n=>n>0).length}),
+    enemyData: enemy, routeId: state.run.routes?.active?.id || null,
+    worker: definition ? {id:definition.id,skill:definition.skill,equipment:state.run.equipment} : null,
+    displayState: state, partyEquipment: state.run.party?.equipment,
+    workerAction: action, workerAnimate: state.settings.effectsEnabled && !paused && preparing,
+    reserves: ['wood','stone','food'].map(id=>({icon:id,label:resourceName(id),amount:formatNumber(state.run.resources[id],{notation:'compact',maximumFractionDigits:1}),fullAmount:format(state.run.resources[id])})),
+    queueMore: Math.max(0,state.run.queue.length-5),
+    queue: state.run.queue.slice(0,5).map(item=>{const d=[...ACTIONS,...RECIPES].find(d=>d.id===item.id);return {label:d?definitionName(d):item.id,icon:skillIcons[d?.skill]||'hammer'};}),
+  });
 }
 
 function renderGather() {
@@ -1450,7 +1501,7 @@ document.addEventListener("click", (event) => {
   }
   if (button.classList.contains("brand")) {
     event.preventDefault();
-    tab = "gather";
+    selectWorkMenu('home');return;
   }
   if(button.dataset.tab){selectWorkMenu(button.dataset.tab,{expand:button.dataset.navExpand==='1'});return;}
   if (button.dataset.skill) {
@@ -2311,6 +2362,7 @@ window.addEventListener("blur", () => {
   }
 });
 function updateLiveWork() {
+  if(villageDashboard){villageDashboard.updateWork(state.run.activeAction,state.settings.effectsEnabled&&!state.settings.paused&&state.run.status==='preparing'&&!document.querySelector('dialog[open]'));return;}
   for(const portrait of document.querySelectorAll?.('[data-work-portrait]')||[])syncWorkAnimation(portrait,null,{animate:false});
   const action = state.run.activeAction;
   const bar = document.querySelector("[data-live-work]");

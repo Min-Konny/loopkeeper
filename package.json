@@ -1,0 +1,19 @@
+{
+  "name": "king-of-incremental-prototype",
+  "version": "0.6.140",
+  "private": true,
+  "type": "module",
+  "description": "資源管理と自動襲撃、二層の技能成長を試すローカルゲームプロトタイプ",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.js tests/*.test.mjs",
+    "build": "node scripts/build.mjs",
+    "simulate": "node scripts/simulate-mvp.mjs",
+    "campaign": "node scripts/campaign.mjs",
+    "campaign:matrix": "node scripts/campaign.mjs --matrix",
+    "preview": "node scripts/preview.mjs"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
