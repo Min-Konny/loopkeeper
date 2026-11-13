@@ -59,7 +59,7 @@ jobs:
         with:
           script: |
             const fs=require('node:fs');fs.mkdirSync(process.env.RUNNER_TEMP+'/factory-sdk');
-            for(const name of ['graphics-loop.cjs','action-launcher.cjs','claude-launcher.cjs','action-result.cjs','action-cli-probe.cjs','sdk/package.json','sdk/package-lock.json']){
+            for(const name of ['failure-category.cjs','graphics-loop.cjs','action-launcher.cjs','claude-launcher.cjs','action-result.cjs','action-cli-probe.cjs','sdk/package.json','sdk/package-lock.json']){
               const {data:f}=await github.rest.repos.getContent({...context.repo,path:'scripts/factory/'+name,ref:context.sha});
               const destination=name.startsWith('sdk/')?'/factory-sdk/'+name.slice(4):'/'+name;
               fs.writeFileSync(process.env.RUNNER_TEMP+destination,Buffer.from(f.content,'base64'),{flag:'wx'});
@@ -84,6 +84,8 @@ jobs:
         run: |
           test "${ACTIONS_STEP_DEBUG:-false}" != true
           test -z "$API_KEY"
+      - name: Initialize empty Action bookkeeping repository (no candidate checkout)
+        run: git init
       - name: Generate source proposal with official Claude Code Action
         id: claude
         uses: anthropics/claude-code-action@4fa93a88de49bbef68b10eb15aabedf28ca0e1ed # reviewed v1
@@ -109,6 +111,11 @@ jobs:
           show_full_output: 'false'
           plugins: ''
           plugin_marketplaces: ''
+      - name: Classify failure without exposing response or credentials
+        if: failure() && steps.claude.outcome == 'failure'
+        env:
+          FACTORY_EXECUTION_FILE: ${{ steps.claude.outputs.execution_file }}
+        run: node "$RUNNER_TEMP/failure-category.cjs"
       - name: Verify actual model and zero-tool evidence, then admit plain JSON
         env:
           FACTORY_EXECUTION_FILE: ${{ steps.claude.outputs.execution_file }}
