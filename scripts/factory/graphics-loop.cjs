@@ -155,6 +155,6 @@ async function publish({github:g,context:c,manifest:m,raw}){
  await g.rest.issues.createComment({...c.repo,issue_number:m.pr,body:'@codex review\n\nReview commit '+commit.sha+'. Check the linked Issue acceptance criteria. Report visual checks as unverified unless screenshots for this SHA are available.'});
  const e=await read(g,c,'graphics-loop.json',stateBranch),s=JSON.parse(e.text);
  if(s.run!==String(c.runId)||s.phase!=='running')throw Error('Checkpoint moved');
- delete m.sources;m.head=commit.sha;m.phase='review';await save(g,c,m,e.sha);
+ delete m.sources;delete m.recovery;m.head=commit.sha;m.phase='review';await save(g,c,m,e.sha);
 }
 module.exports={paths,normalize,decision,recoveryArtifact,gate,recheck,publish};
