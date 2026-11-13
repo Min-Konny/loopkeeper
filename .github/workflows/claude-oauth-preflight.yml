@@ -1,0 +1,23 @@
+name: Claude OAuth format check (no model call)
+on:
+  workflow_dispatch:
+permissions: {}
+jobs:
+  check:
+    if: github.ref == 'refs/heads/main' && github.actor == github.repository_owner && github.triggering_actor == github.repository_owner && github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Classify secret format without disclosing its value
+        env:
+          TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          node - <<'JS'
+          const s=process.env.TOKEN||'';
+          let category='unexpected-format';
+          if(!s)category='missing';
+          else if(/^sk-ant-oat01-[A-Za-z0-9_-]+$/.test(s))category='expected-format';
+          else if(/^sk-ant-oat01-[A-Za-z0-9_-]+$/.test(s.replace(/\s/g,'')))category='contains-whitespace';
+          console.log('OAuth secret format: '+category);
+          if(category!=='expected-format')process.exitCode=1;
+          JS
