@@ -14,17 +14,22 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 0189a98e4b00ccfa1705035d4d6c969e2fa755eb
+          ref: d451a3bfe1b24d7e80d3fa24e4655a2b0f4651bc
           path: before
           persist-credentials: false
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 3f24f8a7a7614e7885aa16aa5352f6d1052f01e0
+          ref: 4a38299f65b4ae9aae29f2893005466655b8f25e
           path: after
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Test and build reconciled dashboard
+        working-directory: after
+        run: |
+          npm test
+          npm run build
       - name: Verify layout in fresh browser contexts
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
@@ -37,5 +42,5 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: dashboard-3f24f8a7a7614e7885aa16aa5352f6d1052f01e0
+          name: dashboard-4a38299f65b4ae9aae29f2893005466655b8f25e
           path: dashboard-evidence/

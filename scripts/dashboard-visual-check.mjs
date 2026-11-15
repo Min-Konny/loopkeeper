@@ -31,7 +31,7 @@ try {
       const prefix = stage + '-' + width + 'x' + height;
       await page.screenshot({ path: 'dashboard-evidence/' + prefix + '.png', fullPage: width < 960 });
       const result = await page.evaluate(() => {
-        const selectors = ['.village-landscape', '[data-village-enemy-image]', '[data-village-enemy]', '.village-queue-heading', '[data-village-queue] li:first-child', '[data-village-queue] li:nth-child(5)', '[data-village-queue] ~ button'];
+        const selectors = ['.village-landscape', '[data-village-enemy-image]', '[data-village-enemy]', '[data-village-equip]', '.village-queue-heading', '.village-queue-heading button', '[data-village-queue] li:first-child', '[data-village-queue] li:nth-child(5)', '[data-village-queue] ~ button'];
         const boxes = Object.fromEntries(selectors.map(selector => {
           const target = document.querySelector(selector);
           if (!target) return [selector, null];
@@ -48,6 +48,13 @@ try {
         const documentElement = document.documentElement;
         return { boxes, horizontalOverflow: documentElement.scrollWidth - innerWidth, pageOverflow: documentElement.scrollHeight - innerHeight };
       });
+      if (width >= 960) {
+        const edit = page.locator('.village-queue-heading button');
+        await edit.focus();
+        await edit.press('Enter');
+        await page.locator('#info-dialog[open] [data-info-panel="queue"]').waitFor({ state:'visible', timeout:5000 });
+        result.queueKeyboard = true;
+      }
       results.push({ prefix, ...result });
       await page.close();
     }
