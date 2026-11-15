@@ -1,0 +1,37 @@
+name: Work queue screenshots
+on:
+  push:
+    branches: [codex/work-queue-visual-check]
+permissions:
+  contents: read
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 62986372cbaba2f9be4babc539881bd6f50bea55
+          path: before
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c774e397c12b02343a89aee0efb71eac07c51170
+          path: after
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install --no-save --ignore-scripts --no-audit --no-fund playwright@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          node scripts/work-queue-visual-check.mjs before
+          node scripts/work-queue-visual-check.mjs after
+      - uses: actions/upload-artifact@v4
+        with:
+          name: work-queue-c774e397c12b02343a89aee0efb71eac07c51170
+          path: evidence/
+          if-no-files-found: error
