@@ -4,63 +4,78 @@
  "sheets": [
   {
    "file": "gather-busy-1280x720.jpg",
-   "same": false
+   "same": false,
+   "target": true
   },
   {
    "file": "gather-busy-1920x1080.jpg",
-   "same": false
+   "same": false,
+   "target": true
   },
   {
    "file": "gather-busy-390x844.jpg",
-   "same": false
+   "same": false,
+   "target": true
   },
   {
    "file": "gather-fresh-1280x720.jpg",
-   "same": false
+   "same": false,
+   "target": true
   },
   {
    "file": "gather-fresh-1920x1080.jpg",
-   "same": false
+   "same": false,
+   "target": true
   },
   {
    "file": "gather-fresh-390x844.jpg",
-   "same": false
+   "same": false,
+   "target": true
   },
   {
    "file": "home-busy-1280x720.jpg",
-   "same": true
+   "same": true,
+   "target": true
   },
   {
    "file": "home-busy-1920x1080.jpg",
-   "same": false
+   "same": false,
+   "target": true
   },
   {
    "file": "home-busy-390x844.jpg",
-   "same": true
+   "same": true,
+   "target": true
   },
   {
    "file": "home-fresh-1280x720.jpg",
-   "same": true
+   "same": true,
+   "target": true
   },
   {
    "file": "home-fresh-1920x1080.jpg",
-   "same": true
+   "same": true,
+   "target": true
   },
   {
    "file": "home-fresh-390x844.jpg",
-   "same": true
+   "same": true,
+   "target": true
   },
   {
    "file": "title-fresh-1280x720.jpg",
-   "same": true
+   "same": true,
+   "target": true
   },
   {
    "file": "title-fresh-1920x1080.jpg",
-   "same": true
+   "same": true,
+   "target": true
   },
   {
    "file": "title-fresh-390x844.jpg",
-   "same": true
+   "same": true,
+   "target": true
   }
  ]
 }
