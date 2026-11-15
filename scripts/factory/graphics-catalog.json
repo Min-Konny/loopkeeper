@@ -1,12 +1,12 @@
 {
   "enabled": true,
-  "issue": 5,
-  "issueDigest": "028dd7574cd79f8306fb926625729faeb44f343e362934a31919b1a04b93303e",
+  "issue": 6,
+  "issueDigest": "06ea6714272c228d43e33c0d9a0d458eb398cfc3ee4ac74320221fc67460ea0b",
   "reviewer": "chatgpt-codex-connector[bot]",
   "paths": [
-    "src/village-dashboard.js",
-    "src/village-dashboard.css"
+    "src/camp-space.css",
+    "src/pixel-camp.css"
   ],
   "baseRef": "codex/graphics-baseline",
-  "baseSha": "d451a3bfe1b24d7e80d3fa24e4655a2b0f4651bc"
+  "baseSha": "62986372cbaba2f9be4babc539881bd6f50bea55"
 }
