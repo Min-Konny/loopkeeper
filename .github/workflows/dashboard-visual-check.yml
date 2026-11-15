@@ -1,0 +1,41 @@
+name: Dashboard screenshots
+on:
+  push:
+    branches: [codex/dashboard-visual-check]
+permissions:
+  contents: read
+jobs:
+  viewport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 0189a98e4b00ccfa1705035d4d6c969e2fa755eb
+          path: before
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 3f24f8a7a7614e7885aa16aa5352f6d1052f01e0
+          path: after
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify layout in fresh browser contexts
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: |
+          npm install --ignore-scripts --no-save playwright@1.52.0
+          mkdir -p dashboard-evidence
+          PORT=4173 node before/server.mjs &
+          PORT=4174 node after/server.mjs &
+          node scripts/dashboard-visual-check.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: dashboard-3f24f8a7a7614e7885aa16aa5352f6d1052f01e0
+          path: dashboard-evidence/
