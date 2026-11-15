@@ -1,6 +1,6 @@
 import {text as sceneText,subscribeLocale} from './i18n.js?v=0.6.140';
 // Independent transparent sprites over a clean plate; no pixels sampled from the landscape.
-import { residentRoutes, riverRoute, backTrees, alongPath, isRiverPixel } from './village-layout.js?v=0.6.140';
+import { residentRoutes, riverRoute, backTrees, alongPath, isRiverPixel, villageLife } from './village-layout.js?v=0.6.140';
 const W = 1672, H = 941;
 const backgroundURL = new URL('../assets/village/background-v1.png', import.meta.url).href;
 const spritesURL = new URL('../assets/village/sprites-v1.png', import.meta.url).href;
@@ -23,6 +23,7 @@ export function mountVillageScene(host) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let ready = false, destroyed = false, active = false, visible = false, raf = 0, last = 0, t = 0;
   const bounds = [];
+  let life = villageLife(), lifeKey = '';
   function prepareWaterMask() {
     const m=waterMask.getContext('2d',{willReadFrequently:true});
     m.drawImage(background,0,0,W,H);
@@ -95,7 +96,8 @@ export function mountVillageScene(host) {
     // Waterwheel: rotate in its own plane, then project to the mill's side wall.
     ctx.save();ctx.translate(314,525);ctx.scale(.66,1);ctx.rotate(t*.45);
     ctx.drawImage(atlas,...bounds[8],-68,-68,136,136);ctx.restore();
-    for(const [x,y,phase] of [[1110,282,0],[1430,300,2]]) sprite(10,x,y,20+Math.sin(t*9+phase)*2,31+Math.sin(t*7+phase)*4);
+    // Wall torches burn once a defence stands, and flare as the raid closes in.
+    if(life.torches) for(const [x,y,phase] of [[1110,282,0],[1430,300,2]]) {const k=1+life.threat*.6;sprite(10,x,y,(20+Math.sin(t*9+phase)*2)*k,(31+Math.sin(t*7+phase)*4)*k);}
     // Banner's pole remains fixed, cloth is displaced in narrow strips.
     for(const [x,y] of [[1035,390],[1549,290]]) {
       const [sx,sy,sw,sh]=bounds[9],w=33,h=73;
@@ -103,17 +105,21 @@ export function mountVillageScene(host) {
       for(let j=0;j<8;j++) {const u=.2+j*.1;ctx.drawImage(atlas,sx+sw*u,sy,sw*.1,sh,x-w/2+w*u,y-h+Math.sin(t*3-j*.5)*u*4,w*.1+.5,h);}
     }
     // Two populated plots, one meadow for sheep; fences remain visible.
+    // Tilled soil is part of the plate; crops fill each plot as the settlement grows.
     for(let row=0;row<4;row++) for(let col=0;col<10;col++) {
+      if(row*10+col>=Math.round(life.fields[0]*40))continue;
       const x=1240+col*20+row*18, y=505+row*12-col*2.3;
       sprite(6,x,y,28,32,{angle:Math.sin(t*2+row*.6+col*.3)*.045});
     }
-    for(let row=0;row<3;row++) for(let col=0;col<9;col++) sprite(6,1408+col*21+row*16,559+row*13-col*2,27,30,{angle:Math.sin(t*1.8+col*.4)*.04});
-    for(const [i,x,y] of [[0,1190,609],[1,1250,628],[2,1302,609]]) {
+    for(let row=0;row<3;row++) for(let col=0;col<9;col++) if(row*9+col<Math.round(life.fields[1]*27)) sprite(6,1408+col*21+row*16,559+row*13-col*2,27,30,{angle:Math.sin(t*1.8+col*.4)*.04});
+    for(const [i,x,y] of [[0,1190,609],[1,1250,628],[2,1302,609]].slice(0,life.sheep)) {
       const phase=(t+i*2)%12, walk=phase<4;
       sprite(walk? (Math.floor(t*3+i)%2?13:2):3,x+Math.sin(t*.25+i)*12,y,43,33,{flip:i===1});
     }
     // Path-following residents. Feet alternate while walking, rest at each end.
     residentRoutes.forEach((route,i)=>{
+      // The timber carrier walks only while something is being built.
+      if(i===3?!life.carrier:i>=life.residents)return;
       const p=(t/(22+i*3)+i*.23)%1, f=p<.5?p*2:2-p*2;
       const moving=Math.max(0,Math.min(1,(f-.08)/.84));
       const [x,y]=alongPath(route,moving);
@@ -121,7 +127,7 @@ export function mountVillageScene(host) {
       const faceLeft=p<.5?nextX<x:nextX>=x;
       sprite(i===3?14:(moving>0&&moving<1?Math.floor(t*5)%2:0),x,y,29,48,{flip:faceLeft});
     });
-    for(const [x,y] of [[386,345],[671,438]]) for(let j=0;j<4;j++) {
+    for(const [x,y] of [[386,345],[671,438]].slice(0,life.smoke)) for(let j=0;j<4;j++) {
       const life=(t*.18+j*.25)%1;
       sprite(11,x+life*20+Math.sin(life*5)*7,y-life*98,20+life*35,28+life*40,{alpha:(1-life)*.28});
     }
@@ -135,6 +141,14 @@ export function mountVillageScene(host) {
     for(const [i,x,y,w,h] of [[0,67,730,190,235],[1,1519,862,220,260],[2,1205,850,140,170],[3,365,902,180,220]]) sprite(4,x,y,w,h,{angle:Math.sin(t*1.1+i)*.014});
     for(const [i,x,y] of [[0,440,660],[1,1020,708],[2,1410,742],[3,580,910],[4,183,823],[5,1163,423]]) sprite(5,x,y,65,40,{angle:Math.sin(t*1.4+i)*.025});
     [[100,790],[230,800],[300,850],[430,902],[543,895],[675,925],[1120,770],[1260,794],[1370,843],[1510,925],[1600,780],[1010,724],[458,632],[1090,455]].forEach(([x,y],i)=>sprite(7,x,y,27,20,{angle:Math.sin(t*2+i)*.06}));
+    // The approaching raid reddens the dusk from the horizon down; no camera shake or flashing.
+    if(life.threat>0) {
+      const dusk=ctx.createLinearGradient(0,0,0,H);
+      dusk.addColorStop(0,`rgba(205,52,34,${(.36*life.threat).toFixed(3)})`);
+      dusk.addColorStop(.42,`rgba(128,34,44,${(.17*life.threat).toFixed(3)})`);
+      dusk.addColorStop(1,`rgba(44,12,30,${(.1*life.threat).toFixed(3)})`);
+      ctx.fillStyle=dusk;ctx.fillRect(0,0,W,H);
+    }
     host.dataset.frame=String(Math.round(t*30));
   }
   function running(){return ready&&!destroyed&&active&&visible&&!document.hidden&&!reduced.matches&&host.isConnected;}
@@ -145,5 +159,7 @@ export function mountVillageScene(host) {
   Promise.all([new Promise((resolve,reject)=>{background.onload=resolve;background.onerror=reject;background.src=backgroundURL;}),new Promise((resolve,reject)=>{atlas.onload=resolve;atlas.onerror=reject;atlas.src=spritesURL;})]).then(()=>{
     if(destroyed)return;prepareAtlas();prepareWaterMask();ready=true;host.dataset.loaded='true';draw();sync();
   }).catch(()=>{if(!destroyed){host.dataset.loaded='error';if(background.complete&&background.naturalWidth)ctx.drawImage(background,0,0,W,H);}});
-  return {setActive(value){active=Boolean(value);sync();},destroy(){unsubscribeLocale();destroyed=true;cancelAnimationFrame(raf);observer.disconnect();document.removeEventListener('visibilitychange',sync);reduced.removeEventListener('change',sync);background.onload=background.onerror=atlas.onload=atlas.onerror=null;canvas.remove();}};
+  // Presentation input only. A still scene (paused effects, reduced motion) is repainted once per change.
+  function setState(value){const next=villageLife(value),key=JSON.stringify({...next,threat:Math.round(next.threat*40)});if(key===lifeKey)return;life=next;lifeKey=key;host.dataset.threat=next.threat.toFixed(2);if(ready&&!destroyed&&!running())draw();}
+  return {setState,setActive(value){active=Boolean(value);sync();},destroy(){unsubscribeLocale();destroyed=true;cancelAnimationFrame(raf);observer.disconnect();document.removeEventListener('visibilitychange',sync);reduced.removeEventListener('change',sync);background.onload=background.onerror=atlas.onload=atlas.onerror=null;canvas.remove();}};
 }

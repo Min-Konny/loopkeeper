@@ -22,6 +22,17 @@ export const REGION_ART=Object.freeze({
  forge:{file:'forge-sentinel-v1.png',kind:'knight'},observatory:{file:'winged-v1.png',kind:'winged'},
  ice:{file:'ice-giant-v3.png',kind:'giant'},
 });
+// The illustration follows what an enemy is, not the wave it arrives on. Regular encounters are named
+// here, later ones are read from their trait, and anything unknown keeps the original wave order.
+const ENCOUNTER_KIND=Object.freeze({chapter_1_scout:'wolf',chapter_1_vanguard:'raider',chapter_2_scout:'knight',chapter_3_scout:'knight',chapter_4_scout:'raider',chapter_5_scout:'knight'});
+const TRAIT_KIND=Object.freeze({armor:'knight',heavy:'giant',combo:'raider'});
+export function enemyPortraitKind(enemy={}){
+  if(enemy.trait==='flying')return 'winged';
+  if(enemy.isBoss)return 'boss';
+  if(Object.hasOwn(ENCOUNTER_KIND,enemy.id))return ENCOUNTER_KIND[enemy.id];
+  if(Object.hasOwn(TRAIT_KIND,enemy.trait))return TRAIT_KIND[enemy.trait];
+  return ['wolf','raider','boss','knight','giant'][Math.max(0,Math.min((Number(enemy.wave)||1)-1,4))];
+}
 export function generatedEnemySource(kind,{regional=false,forestChief=false,routeId=null,enemyId=null,isBoss=false}={}){
   if(forestChief&&!regional)return forestChiefSprite;
   if(regional){const region=Object.hasOwn(REGION_ART,routeId)?REGION_ART[routeId]:null;return region?new URL('../assets/pixel-v2/'+region.file,import.meta.url).href:null;}

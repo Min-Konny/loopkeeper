@@ -8,7 +8,7 @@ import {mountBattleParty,updateBattleParty}from './party-ui.js?v=0.6.140';
 import{frameStaticPortrait}from './portrait-frame.js?v=0.6.140';
 import {pixelFacilityProduct} from './pixel-product-art.js?v=0.6.140';
 import {getCatalog} from './engine.js?v=0.6.140';
-import{generatedEnemySource,enemyVisualKind}from './enemy-art.js?v=0.6.140';
+import{generatedEnemySource,enemyVisualKind,enemyPortraitKind}from './enemy-art.js?v=0.6.140';
 import{generatedHeroSource,playerVisualKind}from './hero-art.js?v=0.6.140';
 import{mountPhaserDuel}from './phaser-duel-scene.js?v=0.6.140';
 import{duelSnapshot}from './duel-motion.js?v=0.6.140';
@@ -402,11 +402,7 @@ export function renderBattle(dialog, state) {
     el["enemy-name"],
     encounterName(state,enemy) + (enemy.trait || enemy.pressure ? " · " + (getUILocale()==='ja'?getCombatPreview(state).trait:enemyTraitText(enemy)) : ""),
   );
-  const portraitId = enemy.trait === "flying" ? "winged" : enemy.isBoss
-    ? "boss"
-    : ["wolf", "raider", "boss", "knight", "giant"][
-        Math.min(enemy.wave - 1, 4)
-      ];
+  const portraitId = enemyPortraitKind(enemy);
   const regionArt=routeById(run.routes?.active?.id)?.image;
   const forestChief = enemy.id === "forest_chief" && enemy.isBoss && !run.routes?.active;
   const fallbackSrc = forestChief
