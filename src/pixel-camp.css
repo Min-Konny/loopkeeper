@@ -128,6 +128,7 @@
 :is(.play-layout,.expanded-body):has(#content .gather-card) .gather-card .action-name h3{overflow-wrap:anywhere}
 :is(.play-layout,.expanded-body):has(#content .gather-card) #active-work .work-vignette>svg{width:100%;height:100%;display:block}
 @media(min-width:1000px){
- :is(.play-layout,.expanded-body):has(#content .gather-card) #content .action-grid:not(.is-simple){grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+ /* The track minimum is capped at the column width, so a narrow card column (e.g. 1024px with sidebar, current work and queue) gets one full-width track instead of overflowing. */
+ :is(.play-layout,.expanded-body):has(#content .gather-card) #content .action-grid:not(.is-simple){grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:8px}
  :is(.play-layout,.expanded-body):has(#content .gather-card) #content .action-grid:not(.is-simple) .action-portrait{height:clamp(88px,6.5vw,124px)}
 }
