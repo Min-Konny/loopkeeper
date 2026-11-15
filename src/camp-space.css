@@ -141,7 +141,8 @@
  :is(.play-layout,.expanded-body):has(#content .gather-card) .work-area>*{grid-column:1;min-width:0}
  :is(.play-layout,.expanded-body):has(#content .gather-card) .work-area>.section-heading{grid-row:1}
  :is(.play-layout,.expanded-body):has(#content .gather-card) .work-area>#content{grid-row:7}
- :is(.play-layout,.expanded-body):has(#content .gather-card) .work-area>.useful-goals{max-height:min(34vh,240px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;box-sizing:border-box}
+ /* The goals <details> is nested in the #useful-goals host, which is the actual grid item: cap and scroll the host so an expanded list cannot starve the card scroller. */
+ :is(.play-layout,.expanded-body):has(#content .gather-card) .work-area>:is(#useful-goals,.useful-goals){max-height:min(34vh,240px);min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;box-sizing:border-box}
  :is(.play-layout,.expanded-body):has(#content .gather-card) .work-area>#active-work{grid-column:2;grid-row:1/-1;width:clamp(240px,26vw,520px);margin-left:12px;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
  :is(.play-layout,.expanded-body):has(#content .gather-card) #active-work .active-work{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;align-content:start;gap:10px;min-height:100%;margin:0;padding:12px}
  :is(.play-layout,.expanded-body):has(#content .gather-card) #active-work .work-vignette{grid-column:1/-1;justify-self:center;flex:none;width:min(100%,calc(42vh * 17 / 9));height:auto;aspect-ratio:17/9;border:1px solid var(--line);border-radius:5px;overflow:hidden;box-sizing:border-box}
