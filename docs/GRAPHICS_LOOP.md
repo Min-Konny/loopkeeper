@@ -6,7 +6,7 @@ The user approved this role split on 2026-11-13. One screen corresponds to one g
 
 ## Implemented path
 
-`graphics-loop.yml` runs on trusted main, manually for the first bootstrap and twice hourly thereafter. Both `GRAPHICS_LOOP_ENABLED=true` and an enabled reviewed catalog are required. It shares repository-wide concurrency with the existing minimal pilot.
+`graphics-loop.yml` runs on trusted main, manually for the first bootstrap, when Codex updates its review summary or posts a receipt on the active PR, and on a fallback schedule. Both `GRAPHICS_LOOP_ENABLED=true` and an enabled reviewed catalog are required. It shares repository-wide concurrency with the existing minimal pilot.
 
 The catalog binds one approved Issue's exact title/body digest and 1–4 existing UI JS/CSS files. An atomic GitHub file update on `factory/graphics-state` reserves a running round before invoking Claude. The generator reuses the existing pinned official Claude Action/CLI launcher, subscription OAuth only, no tools, no candidate checkout, no GitHub credential in the model subprocess. Candidate files are JSON data. A separate runner overlays the scoped files on trusted base and runs regression in a secret-free, non-root, no-network Docker container. The data-only publisher advances a dedicated branch and creates a draft PR.
 

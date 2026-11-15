@@ -86,7 +86,7 @@ async function candidate(g,c,m){
 }
 async function gate({github:g,context:c,core,catalog}){
  core.setOutput('run','false');
- if(!['schedule','workflow_dispatch'].includes(c.eventName)||c.ref!=='refs/heads/main'||Number(process.env.GITHUB_RUN_ATTEMPT)!==1)throw Error('First-attempt trusted main only');
+ if(!['schedule','workflow_dispatch','issue_comment'].includes(c.eventName)||c.ref!=='refs/heads/main'||Number(process.env.GITHUB_RUN_ATTEMPT)!==1)throw Error('First-attempt trusted main only');
  if(c.eventName==='workflow_dispatch'&&(c.actor!==c.repo.owner||process.env.GITHUB_TRIGGERING_ACTOR!==c.repo.owner))throw Error('Owner dispatch only');
  if(!catalog.enabled){core.info('Graphics catalog disabled');return;}
  if(catalog.reviewer!=='chatgpt-codex-connector[bot]'||!Number.isSafeInteger(catalog.issue)||catalog.issue<1||!/^[a-f0-9]{64}$/.test(catalog.issueDigest))throw Error('Invalid catalog');
@@ -101,6 +101,11 @@ async function gate({github:g,context:c,core,catalog}){
  }
  let m=JSON.parse(entry.text);
  if(m.catalogDigest!==hash(JSON.stringify(catalog))||!sha(m.base)||!sha(m.head)||!Number.isInteger(m.round)||m.round<0||m.round>3)throw Error('State/catalog mismatch');
+ if(c.eventName==='issue_comment'){
+  const {issue,comment}=c.payload;
+  if(m.phase!=='review'||issue?.number!==m.pr||!issue.pull_request||
+    comment?.user?.login!==catalog.reviewer||comment.user.type!=='Bot')return;
+ }
  const issue=await approved(g,c,m);let feedback='';
  if(m.phase==='review'){
   await candidate(g,c,m);
