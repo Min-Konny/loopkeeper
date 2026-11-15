@@ -6,7 +6,7 @@ import { chromium } from 'playwright';
 const stage = process.argv[2];
 const root = resolve(stage);
 const origin = 'http://127.0.0.1:' + (stage === 'before' ? 43961 : 43962);
-const browser = await chromium.launch();
+const browser = await chromium.launch({ channel: 'chrome' });
 const results = [];
 const contentTypes = {
   '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
