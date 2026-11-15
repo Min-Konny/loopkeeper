@@ -1,0 +1,66 @@
+{
+ "before": "base 6298637",
+ "after": "PR #47 6e1fc3c",
+ "sheets": [
+  {
+   "file": "gather-busy-1280x720.jpg",
+   "same": false
+  },
+  {
+   "file": "gather-busy-1920x1080.jpg",
+   "same": false
+  },
+  {
+   "file": "gather-busy-390x844.jpg",
+   "same": false
+  },
+  {
+   "file": "gather-fresh-1280x720.jpg",
+   "same": false
+  },
+  {
+   "file": "gather-fresh-1920x1080.jpg",
+   "same": false
+  },
+  {
+   "file": "gather-fresh-390x844.jpg",
+   "same": false
+  },
+  {
+   "file": "home-busy-1280x720.jpg",
+   "same": true
+  },
+  {
+   "file": "home-busy-1920x1080.jpg",
+   "same": false
+  },
+  {
+   "file": "home-busy-390x844.jpg",
+   "same": true
+  },
+  {
+   "file": "home-fresh-1280x720.jpg",
+   "same": true
+  },
+  {
+   "file": "home-fresh-1920x1080.jpg",
+   "same": true
+  },
+  {
+   "file": "home-fresh-390x844.jpg",
+   "same": true
+  },
+  {
+   "file": "title-fresh-1280x720.jpg",
+   "same": true
+  },
+  {
+   "file": "title-fresh-1920x1080.jpg",
+   "same": true
+  },
+  {
+   "file": "title-fresh-390x844.jpg",
+   "same": true
+  }
+ ]
+}

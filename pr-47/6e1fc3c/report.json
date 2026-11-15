@@ -1,0 +1,164 @@
+{
+ "label": "head",
+ "root": "/home/claude/wt/head",
+ "screens": [
+  "title",
+  "home",
+  "gather"
+ ],
+ "states": [
+  "fresh",
+  "busy"
+ ],
+ "sizes": [
+  [
+   1280,
+   720
+  ],
+  [
+   1920,
+   1080
+  ],
+  [
+   390,
+   844
+  ]
+ ],
+ "shots": [
+  {
+   "file": "title-fresh-1280x720.png",
+   "screen": "title",
+   "state": "fresh",
+   "width": 1280,
+   "height": 720,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "home-fresh-1280x720.png",
+   "screen": "home",
+   "state": "fresh",
+   "width": 1280,
+   "height": 720,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "gather-fresh-1280x720.png",
+   "screen": "gather",
+   "state": "fresh",
+   "width": 1280,
+   "height": 720,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "title-fresh-1920x1080.png",
+   "screen": "title",
+   "state": "fresh",
+   "width": 1920,
+   "height": 1080,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "home-fresh-1920x1080.png",
+   "screen": "home",
+   "state": "fresh",
+   "width": 1920,
+   "height": 1080,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "gather-fresh-1920x1080.png",
+   "screen": "gather",
+   "state": "fresh",
+   "width": 1920,
+   "height": 1080,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "title-fresh-390x844.png",
+   "screen": "title",
+   "state": "fresh",
+   "width": 390,
+   "height": 844,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "home-fresh-390x844.png",
+   "screen": "home",
+   "state": "fresh",
+   "width": 390,
+   "height": 844,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "gather-fresh-390x844.png",
+   "screen": "gather",
+   "state": "fresh",
+   "width": 390,
+   "height": 844,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "home-busy-1280x720.png",
+   "screen": "home",
+   "state": "busy",
+   "width": 1280,
+   "height": 720,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "gather-busy-1280x720.png",
+   "screen": "gather",
+   "state": "busy",
+   "width": 1280,
+   "height": 720,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "home-busy-1920x1080.png",
+   "screen": "home",
+   "state": "busy",
+   "width": 1920,
+   "height": 1080,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "gather-busy-1920x1080.png",
+   "screen": "gather",
+   "state": "busy",
+   "width": 1920,
+   "height": 1080,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "home-busy-390x844.png",
+   "screen": "home",
+   "state": "busy",
+   "width": 390,
+   "height": 844,
+   "horizontalOverflow": 0,
+   "errors": []
+  },
+  {
+   "file": "gather-busy-390x844.png",
+   "screen": "gather",
+   "state": "busy",
+   "width": 390,
+   "height": 844,
+   "horizontalOverflow": 0,
+   "errors": []
+  }
+ ]
+}
