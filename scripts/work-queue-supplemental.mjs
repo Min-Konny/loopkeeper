@@ -96,6 +96,18 @@ try {
     if (stage !== 'before') assert.equal(layout.bar, 'rgb(86, 214, 198)');
     assert(layout.goalsBeforeCards && layout.earlyBeforeCards, 'Supplemental controls should precede cards');
     await page.locator('.useful-goals summary').click();
+    const goalsScroll = await page.locator('#useful-goals').evaluate(host => {
+      const candidates = [host, host.querySelector('.useful-goals')];
+      return candidates.map(el => ({
+        maxHeight: getComputedStyle(el).maxHeight,
+        overflow: getComputedStyle(el).overflowY,
+        height: el.clientHeight,
+        contentHeight: el.scrollHeight
+      }));
+    });
+    console.log('expanded goals sizing', goalsScroll);
+    if (stage !== 'before') assert(goalsScroll.some(el => el.maxHeight !== 'none' && ['auto','scroll'].includes(el.overflow)), 'Expanded goals require a capped scroller');
+    await page.screenshot({ path: 'evidence/' + prefix + '-goals-open.png' });
     await page.locator('.useful-goal [data-tab]').first().click({ trial: true, timeout: 5000 });
     await page.locator('[data-command="early-raid-menu"]').click({ trial: true, timeout: 5000 });
     await page.locator('.gather-card button[data-action]').first().click({ trial: true, timeout: 5000 });
