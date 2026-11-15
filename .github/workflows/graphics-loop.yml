@@ -130,8 +130,11 @@ jobs:
         run: |
           test "${ACTIONS_STEP_DEBUG:-false}" != true
           test -z "$API_KEY"
-      - name: Initialize empty Action bookkeeping repository (no candidate checkout)
-        run: git init
+      - name: Initialize Action bookkeeping repository without candidate source
+        run: |
+          git init
+          git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git"
+          git -c user.name=graphics-coordinator -c user.email=graphics-coordinator@users.noreply.github.com commit --allow-empty -m "Initialize action bookkeeping"
       - name: Generate source proposal with official Claude Code Action
         id: claude
         uses: anthropics/claude-code-action@4fa93a88de49bbef68b10eb15aabedf28ca0e1ed # reviewed v1
