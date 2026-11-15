@@ -19,7 +19,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@v4
         with:
-          ref: 09e587b00ad169d8c42c3594c16a82026f0dbbff
+          ref: 6e1fc3c51e410d8829536d10ce40e94e5393017e
           path: after
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -32,6 +32,6 @@ jobs:
           node scripts/work-queue-supplemental.mjs after
       - uses: actions/upload-artifact@v4
         with:
-          name: work-queue-09e587b00ad169d8c42c3594c16a82026f0dbbff
+          name: work-queue-6e1fc3c51e410d8829536d10ce40e94e5393017e
           path: evidence/
           if-no-files-found: error

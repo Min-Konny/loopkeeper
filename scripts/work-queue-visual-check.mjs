@@ -15,7 +15,7 @@ const contentTypes = {
 };
 await mkdir('evidence', { recursive: true });
 try {
-  for (const [width, height] of [[1280,720], [1920,1080], [390,844]]) {
+  for (const [width, height] of [[1024,720], [1280,720], [1920,1080], [390,844]]) {
     const page = await browser.newPage({ viewport: { width, height }, locale: 'ja-JP', reducedMotion: 'reduce' });
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -60,8 +60,9 @@ try {
         const box = el?.getBoundingClientRect();
         return [selector, box?.toJSON() ?? null];
       }));
-      return { boxes, horizontalOverflow: document.documentElement.scrollWidth - innerWidth };
+      const panel = document.querySelector('#content'); return { boxes, cardOverflow: panel.scrollWidth - panel.clientWidth, horizontalOverflow: document.documentElement.scrollWidth - innerWidth };
     });
+    if (width === 1024) assert(result.cardOverflow <= 1, 'Gathering panel overflow');
     assert(result.horizontalOverflow <= 1, 'Horizontal overflow at ' + width);
     const edit = width >= 1000 ? page.locator('[data-focus="rail-editor"]') : page.locator('[data-camp-queue]:visible').first();
     await edit.focus();
