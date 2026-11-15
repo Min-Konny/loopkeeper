@@ -1,6 +1,6 @@
 {
  "label": "head",
- "root": "/home/claude/wt/head",
+ "root": "<checkout>",
  "screens": [
   "title",
   "home",
