@@ -1,12 +1,12 @@
 # Claude implementation / Codex review loop
 
-Status: implementation prepared; disabled; authenticated end-to-end run NOT demonstrated.
+Status: the title pilot created PR #22, received Codex feedback, applied a Claude repair, then passed re-review. The next active task is the dashboard (#5).
 
 The user approved this role split on 2026-11-13. One screen corresponds to one graphics Issue. Original and widescreen visual references live in PR #3. The integrated baseline is pinned at codex/graphics-baseline (PR #16); do not merge it into main merely to activate automation. GitHub Pages serves main directly. The old local 0.6.81 checkout must not be used.
 
 ## Implemented path
 
-`graphics-loop.yml` runs on trusted main, manually for the first bootstrap and twice hourly thereafter. Both `GRAPHICS_LOOP_ENABLED=true` and an enabled reviewed catalog are required. It shares repository-wide concurrency with the existing minimal pilot.
+`graphics-loop.yml` runs on trusted main, manually for the first bootstrap, when Codex updates its review summary or posts a receipt on the active PR, and on a fallback schedule. Both `GRAPHICS_LOOP_ENABLED=true` and an enabled reviewed catalog are required. It shares repository-wide concurrency with the existing minimal pilot.
 
 The catalog binds one approved Issue's exact title/body digest and 1–4 existing UI JS/CSS files. An atomic GitHub file update on `factory/graphics-state` reserves a running round before invoking Claude. The generator reuses the existing pinned official Claude Action/CLI launcher, subscription OAuth only, no tools, no candidate checkout, no GitHub credential in the model subprocess. Candidate files are JSON data. A separate runner overlays the scoped files on trusted base and runs regression in a secret-free, non-root, no-network Docker container. The data-only publisher advances a dedicated branch and creates a draft PR.
 
@@ -28,7 +28,7 @@ The publisher saves the new PR head and marks the draft ready for Codex. During 
 5. Set `GRAPHICS_LOOP_ENABLED=true`; dispatch `Graphics Claude Codex Loop` once with bootstrap=true. Later runs use bootstrap=false. Missing state after bootstrap is an incident, not a fresh start.
 6. Confirm actual Claude model evidence, isolated regression, one draft PR and exact-head Codex review. A real finding and repair/re-review is needed to demonstrate the return path. Only after this evidence call the loop operational.
 
-Current missing setup: repository secret, reviewed control-only main integration/activation and first live pilot. Codex responded to a real manual request on PR #17 on 2026-11-13; automatic bot-to-bot requests remain unproven. No chargeable invocation or deployment has been made by this change.
+The pilot authenticated Claude, published a title repair and verified Codex review triggered by an Actions-authored ready event (run 43423734927). Scheduled runs have read the resulting human acceptance checkpoint.
 
 Read-only setup audit on 2026-11-13 found no repository Actions secrets or variables. Actions default token permission is read and `can_approve_pull_request_reviews` is false, this setting was subsequently enabled for this repository on 2026-11-13. Default token permission remains read. The workflow declares job-specific scopes; there is no need to broaden every workflow's default token permission.
 
@@ -44,3 +44,27 @@ Observed Minsai PR #6: Codex can report a clean result through a bot-authored su
 
 ## Publication separation (2026-11-13)
 The control workflow is installed on main, but the source and PR target are fixed to codex/graphics-baseline at an approved immutable SHA. Both control-main and integration-base changes stop the current task. This supersedes the earlier instruction to merge the graphics baseline before activation. The control-only PR replaces stacked PR #17. Main/game content, Pages source settings and the live game remain unchanged by activation preparation.
+
+
+## Screen rollout (2026-11-15)
+
+All twelve screens are in scope, in issue order. The coordinator operates on one Issue at a time. Confirm the scope and activate the next catalog entry after the current candidate reaches its review checkpoint. Candidates continue to target the graphics integration branch.
+
+| Issue | Screen |
+| --- | --- |
+| #4 | Title (visual review pending) |
+| #5 | Base dashboard (active) |
+| #6 | Work and action queue |
+| #7 | Village and construction |
+| #8 | Equipment and inventory |
+| #9 | Party and training |
+| #10 | Exploration |
+| #11 | Raids and battle |
+| #12 | Augments |
+| #13 | Inheritance |
+| #14 | Generation results |
+| #15 | Records and achievements |
+
+The dashboard pilot owns only the dashboard markup and stylesheet. Keep the enemy-art call compatible with PR #28. At 1280x720 and 1920x1080 the village, enemy preview and usual queue must be visible together without page scrolling. Longer queues or translations can scroll inside the corresponding panel. Review the layout against 02-dashboard.png before integrating.
+
+For a future village ambience pass, see [SpriteCook's tree wind guide](https://www.spritecook.ai/blog/pixel-art-trees-wind-animation). Anchor the trunk, move canopy clumps by whole pixels and stagger gusts with pauses. Keep this work separate from the dashboard layout pilot.
