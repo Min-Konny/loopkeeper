@@ -1,0 +1,74 @@
+[
+  {
+    "file": "01-title.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "b9e52ec4c1d909522499db1aa36813df9191c2853054df3f993d6889bcec15e6"
+  },
+  {
+    "file": "02-dashboard.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "b214aa90c2cc7c86088f353e7ba4899717cbc1f7928c32c34547ed3d84660969"
+  },
+  {
+    "file": "03-work-queue.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "d9f688f670a45b8193e41a734c256e0c5c2a6ee473f3181b884f2245aaf0968c"
+  },
+  {
+    "file": "04-village-building.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "1e75e1aaa4f36042bf5aa081313e044c9532bba8c2a5fb02dbaf83f1797b2561"
+  },
+  {
+    "file": "05-equipment.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "91105f2d2832ff9e4c9bdd5e4b9b6046eaabbec55da8640eb94d414483bcae86"
+  },
+  {
+    "file": "06-party.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "6c88ccfd35e5a014b7ace0a87cf6b72dc74263061655f9b9bea821fb5fe0528d"
+  },
+  {
+    "file": "07-exploration.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "68e1090589873ab904c4cfaa68964bdd66946d4f78643d190d3eb10fbcbf5109"
+  },
+  {
+    "file": "08-battle.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "a4b54f9f77100bef7b18874c5f456241175d78963bb270e63f9eb4efb3ba96db"
+  },
+  {
+    "file": "09-augments.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "7d3de8e15682b6f51b1e33dc7049447ed1bec2cd19f6e931a8142e8387b435ca"
+  },
+  {
+    "file": "10-inheritance.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "8d8360894bc635a7c92d0b7b3ca0c88f6038691581a3b0898ccdaa3b73b38ea0"
+  },
+  {
+    "file": "11-generation-results.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "c068aa23ea019f46703b86c6fbacb123b3902d75c510e436a1b7af797e762660"
+  },
+  {
+    "file": "12-records.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "840219d5c457e8ec7a3d7726de9d95afd0fe7cb4beb39b32987995875f8e02dd"
+  }
+]
