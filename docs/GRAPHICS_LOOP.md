@@ -1,6 +1,6 @@
 # Claude implementation / Codex review loop
 
-Status: the title pilot created PR #22, received Codex feedback, applied a Claude repair, then passed re-review. The next active task is the dashboard (#5).
+Status: the title pilot created PR #22, received Codex feedback, applied a Claude repair, then passed re-review. Dashboard PR #39 passed visual acceptance and was merged into the integration branch. The active issue, source paths and baseline SHA come from `scripts/factory/graphics-catalog.json` on main.
 
 The user approved this role split on 2026-11-13. One screen corresponds to one graphics Issue. Original and widescreen visual references live in PR #3. The integrated baseline is pinned at codex/graphics-baseline (PR #16); do not merge it into main merely to activate automation. GitHub Pages serves main directly. The old local 0.6.81 checkout must not be used.
 
@@ -53,7 +53,7 @@ All twelve screens are in scope, in issue order. The coordinator operates on one
 | Issue | Screen |
 | --- | --- |
 | #4 | Title (visual review pending) |
-| #5 | Base dashboard (active) |
+| #5 | Base dashboard |
 | #6 | Work and action queue |
 | #7 | Village and construction |
 | #8 | Equipment and inventory |
