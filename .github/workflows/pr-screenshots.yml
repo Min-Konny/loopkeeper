@@ -1,0 +1,122 @@
+name: PR screenshots (visual acceptance aid, not a test)
+# Captures base and PR screens with generated test saves and posts "before | after" sheets on the PR.
+# Runs only from trusted main. The capture job executes candidate code with a read-only token and
+# no secrets; the publish job never executes candidate code and accepts only validated JPEG files.
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number in this repository
+        required: true
+        type: string
+      screens:
+        description: Screens to capture (title and navigation tab ids)
+        required: false
+        default: title,home,gather
+        type: string
+permissions: {}
+concurrency:
+  group: pr-screenshots-${{ inputs.pr }}
+  cancel-in-progress: true
+jobs:
+  capture:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      head: ${{ steps.pr.outputs.head }}
+      base: ${{ steps.pr.outputs.base }}
+    steps:
+      - id: pr
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        env:
+          PR: ${{ inputs.pr }}
+          SCREENS: ${{ inputs.screens }}
+        with:
+          script: |
+            if(!/^[1-9][0-9]{0,5}$/.test(process.env.PR))throw Error('Invalid PR number');
+            if(!/^[a-z]{1,12}(,[a-z]{1,12}){0,7}$/.test(process.env.SCREENS))throw Error('Invalid screen list');
+            const {data:pr}=await github.rest.pulls.get({...context.repo,pull_number:Number(process.env.PR)});
+            if(pr.state!=='open'||pr.head.repo.full_name!==context.repo.owner+'/'+context.repo.repo)throw Error('Open same-repository PR required');
+            core.setOutput('head',pr.head.sha);core.setOutput('base',pr.base.sha);
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {path: tool, persist-credentials: false, sparse-checkout: scripts/screenshots}
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {ref: '${{ steps.pr.outputs.base }}', path: base, persist-credentials: false}
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {ref: '${{ steps.pr.outputs.head }}', path: candidate, persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - name: Install the browser outside every checkout
+        run: |
+          npm install --no-save --ignore-scripts --prefix "$RUNNER_TEMP/pw" playwright@1.63.0
+          "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Capture base and candidate
+        env:
+          SCREENS: ${{ inputs.screens }}
+          HEAD: ${{ steps.pr.outputs.head }}
+          BASE: ${{ steps.pr.outputs.base }}
+        run: |
+          export PLAYWRIGHT_MODULE="$RUNNER_TEMP/pw/node_modules/playwright/index.mjs"
+          node tool/scripts/screenshots/capture.mjs --root "$GITHUB_WORKSPACE/base" --out "$RUNNER_TEMP/before" --screens "$SCREENS" || true
+          node tool/scripts/screenshots/capture.mjs --root "$GITHUB_WORKSPACE/candidate" --out "$RUNNER_TEMP/after" --screens "$SCREENS"
+          node tool/scripts/screenshots/compare.mjs --before "$RUNNER_TEMP/before" --after "$RUNNER_TEMP/after" --out "$RUNNER_TEMP/sheets" --before-label "base ${BASE:0:7}" --after-label "PR ${HEAD:0:7}"
+          cp "$RUNNER_TEMP/after/report.json" "$RUNNER_TEMP/sheets/report.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: screenshots-${{ steps.pr.outputs.head }}
+          path: ${{ runner.temp }}/sheets
+          retention-days: 3
+          if-no-files-found: error
+  publish:
+    needs: capture
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with: {path: tool, persist-credentials: false, sparse-checkout: scripts/screenshots}
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: screenshots-${{ needs.capture.outputs.head }}
+          path: ${{ runner.temp }}/sheets
+      - name: Accept validated images only
+        run: node tool/scripts/screenshots/validate-artifact.cjs "$RUNNER_TEMP/sheets"
+      - name: Store the sheets on the screenshots branch
+        id: store
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ inputs.pr }}
+          HEAD: ${{ needs.capture.outputs.head }}
+        run: |
+          set -euo pipefail
+          repo="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          mkdir "$RUNNER_TEMP/branch" && cd "$RUNNER_TEMP/branch" && git init -q
+          if git fetch -q --depth=1 "$repo" refs/heads/screenshots; then git checkout -q -b screenshots FETCH_HEAD; else git checkout -q --orphan screenshots; fi
+          target="pr-${PR}/${HEAD:0:7}"; rm -rf "$target"; mkdir -p "$target"; cp "$RUNNER_TEMP"/sheets/* "$target/"
+          git add -A && git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -q -m "Screenshots for PR #${PR} at ${HEAD:0:7}"
+          git push -q "$repo" screenshots
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Post the sheets on the PR
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b
+        env:
+          PR: ${{ inputs.pr }}
+          HEAD: ${{ needs.capture.outputs.head }}
+          BASE: ${{ needs.capture.outputs.base }}
+          COMMIT: ${{ steps.store.outputs.commit }}
+        with:
+          script: |
+            const {validate,summary}=require(process.env.GITHUB_WORKSPACE+'/tool/scripts/screenshots/validate-artifact.cjs');
+            const dir=process.env.RUNNER_TEMP+'/sheets',images=validate(dir),s=summary(dir);
+            const {data:pr}=await github.rest.pulls.get({...context.repo,pull_number:Number(process.env.PR)});
+            const head=process.env.HEAD.slice(0,7),folder=`pr-${process.env.PR}/${head}`;
+            const raw=`https://raw.githubusercontent.com/${context.repo.owner}/${context.repo.repo}/${process.env.COMMIT}/${folder}/`;
+            const stale=pr.head.sha!==process.env.HEAD?'\n\n> The PR has moved on since these were taken; run the workflow again for the current commit.':'';
+            const body=`## Screenshots for \`${head}\` (left: base \`${process.env.BASE.slice(0,7)}\`, right: this PR)\n\nGenerated test saves, reduced motion, paused. ${s.shots} shots: ${s.failed} failed, ${s.skipped} skipped, ${s.overflow} with horizontal overflow, ${s.errors} with page errors. This is an aid for human visual acceptance, not a verdict.${stale}\n\n`+images.map(name=>`**${name.replace(/\.jpg$/,'')}**\n![${name}](${raw}${name})`).join('\n\n')+`\n\n[All files](https://github.com/${context.repo.owner}/${context.repo.repo}/tree/${process.env.COMMIT}/${folder})`;
+            await github.rest.issues.createComment({...context.repo,issue_number:Number(process.env.PR),body:body.slice(0,60000)});
