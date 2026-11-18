@@ -1,7 +1,7 @@
 name: Source tests (not independent acceptance)
 on:
   pull_request:
-    branches: [main]
+    branches: [main, codex/graphics-baseline]
   workflow_dispatch:
 permissions:
   contents: read
@@ -20,7 +20,12 @@ jobs:
         with:
           node-version: 24
       - name: Run repository tests without secrets
-        run: node --test tests/*.test.mjs
+        run: |
+          if [[ -f package.json ]]; then
+            npm test
+          else
+            node --test tests/*.test.mjs
+          fi
       - name: Exercise secret-free isolated candidate boundary
         run: bash scripts/factory/isolation-smoke.sh
       - name: Check real official CLI initialization without authentication
