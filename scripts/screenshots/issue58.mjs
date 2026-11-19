@@ -128,20 +128,26 @@ try{
       const visible=await page.evaluate(()=>document.querySelector('dialog[open]:not(#expanded-work-dialog)')?.innerText||document.body.innerText);
       let target, identical;
       if(preview){
-        const audit=()=>page.evaluate(()=>({
+        const differences=await page.evaluate(css=>{
+          const audit=()=>({
           text:document.body.innerText,
           controls:[...document.querySelectorAll('button,input,select,summary,a,progress,meter')].map(n=>[
             n.tagName,n.textContent,n.getAttribute('aria-label'),n.getAttribute('title'),n.value,n.disabled,n.getClientRects().length
           ]),
           images:[...document.images].map(n=>[n.getAttribute('src'),n.alt]),
           scroll:[document.documentElement.scrollWidth,document.documentElement.scrollHeight],
-        }));
-        const before=await audit();
-        await page.addStyleTag({content:preview});
+          });
+          const before=audit();
+          const style=document.createElement('style');
+          style.textContent=css;
+          document.head.append(style);
+          const after=audit();
+          return Object.keys(before).filter(key=>JSON.stringify(before[key])!==JSON.stringify(after[key]));
+        },preview);
+        identical=differences.length===0;
+        if(!identical)throw Error('Preview difference: '+differences.join(', '));
         target='target/'+file;
         await page.screenshot({path:path.join(out,target)});
-        identical=JSON.stringify(before)===JSON.stringify(await audit());
-        if(!identical)throw Error('The preview changed content, controls or page size');
       }
       report.push({mode,width,height,file,target,identical,visible,errors});
     }catch(e){report.push({mode,width,height,error:String(e.message),errors});}
