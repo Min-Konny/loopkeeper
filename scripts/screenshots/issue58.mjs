@@ -64,6 +64,10 @@ function fixture(mode) {
   if(mode==='inheritance'||mode==='results'){
     E.abandonRun(g);
     if(mode==='inheritance'&&g.run.status!=='legacy_setup')E.restartRun(g);
+    if(mode==='results'){
+      g.run.status='dead';
+      delete g.run.legacyDraft;
+    }
   }
   const saved=E.parseSave(E.serializeGame(g));
   if(!saved)throw Error('Invalid fixture: '+mode);
@@ -80,6 +84,7 @@ try{
   for(const mode of modes)for(const [width,height] of sizes){
     const context=await browser.newContext({viewport:{width,height},locale:'ja-JP',reducedMotion:'reduce'});
     const page=await context.newPage(), errors=[];
+    page.setDefaultTimeout(8000);
     page.on('pageerror',e=>errors.push(e.message));
     await page.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());
     try {
@@ -95,16 +100,17 @@ try{
           const info=mode==='records'?'journal':'status';
           await page.locator('[data-info="'+info+'"]').filter({visible:true}).first().click();
           await page.locator('#info-dialog[open]').waitFor();
-          if(mode==='party')await page.locator('.party-panel').scrollIntoViewIfNeeded({timeout:6000});
+          if(mode==='party')await page.locator('.party-panel').evaluate(n=>n.scrollIntoView({block:'start'}));
           if(mode==='equipment'){
             const gear=page.locator('.gear-panel > summary').first();
             await gear.click({timeout:6000});
             await gear.scrollIntoViewIfNeeded();
           }
         }
-        if(mode==='routes')await page.locator('.routes-panel').scrollIntoViewIfNeeded({timeout:6000});
+        if(mode==='routes')await page.locator('.routes-panel').evaluate(n=>n.scrollIntoView({block:'start'}));
         const dialog={battle:'#battle-dialog',augments:'#augment-dialog',results:'#death-dialog',inheritance:'#death-dialog'}[mode];
         if(dialog)await page.locator(dialog+'[open]').waitFor({timeout:6000});
+        if(mode==='results')await page.locator('#death-dialog:not(.legacy-setup)').waitFor();
       }
       await page.evaluate(()=>document.fonts.ready);
       await page.waitForTimeout(350);
