@@ -1,0 +1,25 @@
+name: Issue 58 current graphics
+on:
+  push:
+    branches: [codex/visual-reset-58]
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: |
+          npm install --ignore-scripts --no-save playwright@1.52.0
+          node scripts/screenshots/issue58.mjs --root . --out current --sizes 1280x720,1920x1080 --label 62986372cbaba2f9be4babc539881bd6f50bea55
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: current-6298637
+          path: current/
