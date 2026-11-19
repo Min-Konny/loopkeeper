@@ -83,8 +83,7 @@ const report=[];
 const previewRoot=path.resolve('docs/references/ui/issue-58');
 const textureFile=path.join(previewRoot,'panel-texture.png');
 const preview=fs.existsSync(textureFile)
-  ? ':root{--reference-texture:url(data:image/png;base64,'+fs.readFileSync(textureFile).toString('base64')+')}
-'+fs.readFileSync(path.join(previewRoot,'preview.css'),'utf-8')
+  ? ':root{--reference-texture:url(data:image/png;base64,'+fs.readFileSync(textureFile).toString('base64')+')}' + fs.readFileSync(path.join(previewRoot,'preview.css'),'utf-8')
   : '';
 if(preview)fs.mkdirSync(path.join(out,'target'),{recursive:true});
 try{
