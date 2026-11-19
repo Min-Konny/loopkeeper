@@ -35,7 +35,7 @@ function serve() {
 
 const load=name=>import(pathToFileURL(path.join(root,'src',name)).href);
 const E=await load('engine.js'), S=await load('save-storage.js');
-const modes=['title','home','gather','village','equipment','party','routes','battle','augments','inheritance','results','records'];
+const modes=list(args.screens,'title,home,gather,village,equipment,party,routes,battle,augments,inheritance,results,records');
 
 function fixture(mode) {
   const g=E.createGame();
@@ -98,7 +98,10 @@ try{
         if(tab)await page.locator('#navigation [data-tab="'+tab+'"]').evaluate(n=>n.click());
         if(['equipment','party','records'].includes(mode)){
           const info=mode==='records'?'journal':'status';
-          await page.locator('[data-info="'+info+'"]').filter({visible:true}).first().click();
+          if(mode==='records'){
+            await page.locator('.mobile-menu-toggle').click();
+            await page.locator('#header-menu-dialog [data-info="journal"]').click();
+          }else await page.locator('[data-info="'+info+'"]').filter({visible:true}).first().click();
           await page.locator('#info-dialog[open]').waitFor();
           if(mode==='party')await page.locator('.party-panel').evaluate(n=>n.scrollIntoView({block:'start'}));
           if(mode==='equipment'){
