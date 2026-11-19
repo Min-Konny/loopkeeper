@@ -80,6 +80,13 @@ const server=await serve(),origin='http://127.0.0.1:'+server.address().port;
 const browser=await chromium.launch({channel:'chrome'});
 fs.mkdirSync(out,{recursive:true});
 const report=[];
+const previewRoot=path.resolve('docs/references/ui/issue-58');
+const textureFile=path.join(previewRoot,'panel-texture.png');
+const preview=fs.existsSync(textureFile)
+  ? ':root{--reference-texture:url(data:image/png;base64,'+fs.readFileSync(textureFile).toString('base64')+')}
+'+fs.readFileSync(path.join(previewRoot,'preview.css'),'utf-8')
+  : '';
+if(preview)fs.mkdirSync(path.join(out,'target'),{recursive:true});
 try{
   for(const mode of modes)for(const [width,height] of sizes){
     const context=await browser.newContext({viewport:{width,height},locale:'ja-JP',reducedMotion:'reduce'});
@@ -120,7 +127,24 @@ try{
       const file=mode+'-'+width+'x'+height+'.png';
       await page.screenshot({path:path.join(out,file)});
       const visible=await page.evaluate(()=>document.querySelector('dialog[open]:not(#expanded-work-dialog)')?.innerText||document.body.innerText);
-      report.push({mode,width,height,file,visible,errors});
+      let target, identical;
+      if(preview){
+        const audit=()=>page.evaluate(()=>({
+          text:document.body.innerText,
+          controls:[...document.querySelectorAll('button,input,select,summary,a,progress,meter')].map(n=>[
+            n.tagName,n.textContent,n.getAttribute('aria-label'),n.getAttribute('title'),n.value,n.disabled,n.getClientRects().length
+          ]),
+          images:[...document.images].map(n=>[n.getAttribute('src'),n.alt]),
+          scroll:[document.documentElement.scrollWidth,document.documentElement.scrollHeight],
+        }));
+        const before=await audit();
+        await page.addStyleTag({content:preview});
+        target='target/'+file;
+        await page.screenshot({path:path.join(out,target)});
+        identical=JSON.stringify(before)===JSON.stringify(await audit());
+        if(!identical)throw Error('The preview changed content, controls or page size');
+      }
+      report.push({mode,width,height,file,target,identical,visible,errors});
     }catch(e){report.push({mode,width,height,error:String(e.message),errors});}
     await context.close();
   }

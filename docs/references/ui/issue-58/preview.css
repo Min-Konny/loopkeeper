@@ -1,0 +1,46 @@
+/* Preview only. The game renders all labels, controls, sprites and numbers. */
+:root {
+  --reference-gold: #c4a66d;
+  --reference-edge: #9b865e;
+  --reference-cream: #f4ead4;
+  --reference-mint: #5ce1c4;
+  --reference-depth: #0d2322;
+}
+body .sidebar, body .topbar,
+body .village-panel, body .gather-card, body .queue-box, body #queue-preview,
+body .facility-card, body .party-member, body .route-card, body .augment-choice,
+body .run-result, body .journal, body .gear-panel {
+  background-image: linear-gradient(145deg, #29454146, #081918ad), var(--reference-texture) !important;
+  background-size: auto, 480px auto !important;
+  background-color: var(--reference-depth) !important;
+  border-color: var(--reference-edge) !important;
+  box-shadow: inset 0 0 0 1px #e5c27a16, 0 3px 10px #020a0955;
+}
+body #info-dialog, body #battle-dialog, body #augment-dialog, body #death-dialog {
+  background-color: var(--reference-depth);
+  border-color: var(--reference-gold);
+  box-shadow: inset 0 0 0 1px #e5c27a38, 0 18px 60px #010907b9;
+}
+body .title-stage .title-menu {
+  background-image: linear-gradient(160deg,#1b3b36dc,#091c1be8), var(--reference-texture);
+  background-size: auto, 450px auto;
+  border-color: var(--reference-gold);
+  box-shadow: inset 0 0 0 1px #f2ca7b24, 0 15px 45px #020809ab;
+}
+body .topbar, body .sidebar, body .village-panel-heading, body .queue-preview-heading,
+body .dialog-heading, body .route-heading, body .journal-title {
+  color: var(--reference-cream);
+  border-color: var(--reference-edge);
+}
+body .nav-item.selected, body .title-menu button.title-primary, body .button.gold-outline:not([disabled]) {
+  border-color: #e7c47f !important;
+  box-shadow: inset 0 0 0 1px #ebca8433, 0 0 12px #b575292e;
+}
+body progress { accent-color: var(--reference-mint); }
+body progress::-webkit-progress-value, body meter::-webkit-meter-optimum-value {
+  background: linear-gradient(90deg,#1a9f89,var(--reference-mint));
+}
+body .village-raid li, body .queue-list li, body .queue-preview li {
+  border-color: #b59c676b;
+  background-color: #06201b66;
+}
