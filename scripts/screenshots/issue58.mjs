@@ -84,7 +84,7 @@ try{
     await page.route('**/*',r=>new URL(r.request().url()).origin===origin?r.continue():r.abort());
     try {
       if(mode!=='title')await page.addInitScript(data=>{for(const [k,v] of Object.entries(data))localStorage.setItem(k,v);},fixture(mode));
-      await page.goto(origin);
+      await page.goto(origin+'/index.html');
       await page.locator('#title-screen nav button').first().waitFor();
       if(mode!=='title'){
         await page.locator('[data-title-action="continue"]').click();
@@ -95,9 +95,14 @@ try{
           const info=mode==='records'?'journal':'status';
           await page.locator('[data-info="'+info+'"]').filter({visible:true}).first().click();
           await page.locator('#info-dialog[open]').waitFor();
-          if(mode==='party')await page.locator('.party-member').first().scrollIntoViewIfNeeded();
+          if(mode==='party')await page.locator('.party-panel').scrollIntoViewIfNeeded({timeout:6000});
+          if(mode==='equipment'){
+            const gear=page.locator('.gear-panel > summary').first();
+            await gear.click({timeout:6000});
+            await gear.scrollIntoViewIfNeeded();
+          }
         }
-        if(mode==='routes')await page.locator('[data-route], .routes-panel, .route-card').first().scrollIntoViewIfNeeded({timeout:3000}).catch(()=>{});
+        if(mode==='routes')await page.locator('.routes-panel').scrollIntoViewIfNeeded({timeout:6000});
         const dialog={battle:'#battle-dialog',augments:'#augment-dialog',results:'#death-dialog',inheritance:'#death-dialog'}[mode];
         if(dialog)await page.locator(dialog+'[open]').waitFor({timeout:6000});
       }
