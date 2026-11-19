@@ -2,6 +2,11 @@ name: Issue 58 current graphics
 on:
   push:
     branches: [codex/visual-reset-58]
+    paths:
+      - .github/workflows/issue58-capture.yml
+      - scripts/screenshots/issue58.mjs
+      - docs/references/ui/issue-58/preview.css
+      - docs/references/ui/issue-58/panel-texture.png
 permissions:
   contents: read
 jobs:

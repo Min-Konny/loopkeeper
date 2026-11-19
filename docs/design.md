@@ -23,3 +23,8 @@ The approved development loop is Claude implementation and repair followed by Co
 `villageLife()` in `src/village-layout.js` turns facility levels (endless levels included, outposts excluded), "a facility recipe is active" and a 0–1 threat into what the scene draws: 1–3 residents, the timber carrier, the planted share of two plots, 0–3 sheep, 0–2 smoke plumes, wall torches and the dusk tint. `mountVillageScene().setState()` accepts that input; a still scene (effects off, reduced motion, dialog open) repaints once per change and otherwise keeps to the existing 30fps loop and its suspension rules. Thresholds are presentation tuning and may change without affecting balance or saves.
 
 `enemyPortraitKind()` in `src/enemy-art.js` is the single choice of regular enemy artwork for the battle screen and the dashboard forecast: flying → winged, boss → boss (named boss art still resolved by id), then encounter id, then trait (armor → knight, heavy → giant, combo → raider), then the original wave order as the fallback.
+
+
+## 2026-11-20 ビジュアル更新の目標画像（Issue #58）
+
+今後の目標画像は、統合ブランチの実装と実画面を先に確認し、現行の情報・操作・数値・状態だけで作る。2026-11-13の旧目標は履歴資料に位置づけ、新案の採用は画面ごとにオーナーが判断する。新機能を含む変更は別提案とする。実装に進むのは新案の採用後。今回の現状確認と比較画像は docs/references/ui/issue-58 に記録した。

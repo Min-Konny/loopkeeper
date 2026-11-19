@@ -14,3 +14,8 @@ Village ambient animation continues while paused, but simulation, resources, wor
 - Village life follows the run (#24). The buildings are part of the approved plate and are not hidden; growth is shown by residents, crops, sheep, hearth smoke and wall torches, a timber carrier walks only during construction, and the dusk reddens over the last 45 seconds before a raid and during combat. Presentation only: it reads facility levels, the active recipe and the raid clock, and writes nothing. Not implemented: empty lots for unbuilt facilities and scaffolding, which need a plate without buildings and separate building sprites.
 - Regular enemy illustration follows the encounter id or trait instead of the wave number (#25). Flying and boss selection is unchanged, and unknown encounters keep the original wave order. Not implemented: new per-chapter artwork; the ten flying encounters still share one sprite.
 - The displayed release number comes from `src/version.js` only (#26), and a test keeps every stylesheet and local module import versioned (#27).
+
+
+## 2026-11-20 ビジュアル更新の目標画像（Issue #58）
+
+今後の目標画像は、統合ブランチの実装と実画面を先に確認し、現行の情報・操作・数値・状態だけで作る。2026-11-13の旧目標は履歴資料に位置づけ、新案の採用は画面ごとにオーナーが判断する。新機能を含む変更は別提案とする。実装に進むのは新案の採用後。今回の現状確認と比較画像は docs/references/ui/issue-58 に記録した。
