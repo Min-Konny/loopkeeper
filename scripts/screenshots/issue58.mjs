@@ -112,8 +112,8 @@ try{
           if(mode==='party')await page.locator('.party-panel').evaluate(n=>n.scrollIntoView({block:'start'}));
           if(mode==='equipment'){
             const gear=page.locator('.gear-panel > summary').first();
-            await gear.click({timeout:6000});
-            await gear.scrollIntoViewIfNeeded();
+            await gear.evaluate(n=>n.click());
+            await page.locator('.gear-panel[open] > summary').first().evaluate(n=>n.scrollIntoView({block:'start'}));
           }
         }
         if(mode==='routes')await page.locator('.routes-panel').evaluate(n=>n.scrollIntoView({block:'start'}));
