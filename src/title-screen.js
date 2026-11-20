@@ -1,3 +1,4 @@
+import {mountTitleArtwork} from './title-artwork.js?v=0.6.140';
 import {getUILocale,subscribeLocale} from './i18n.js?v=0.6.140';
 import {copySpan,languageControlMarkup,mountLocaleControls} from './locale-controls.js?v=0.6.140';
 import {titleText as t,readUILocale} from './title-copy.js?v=0.6.140';
@@ -5,11 +6,20 @@ import {inspectTitleSave,titlePreferences,saveTitlePreferences,startTitleChallen
 import {createGame} from './engine.js?v=0.6.140';
 import {replayAchievementsMarkup} from './replay-achievements-ui.js?v=0.6.140';
 const VERSION='0.6.140';
+// Decorative vectors keep a consistent silhouette across the four locales.
+const icon=path=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">${path}</svg>`;
+const ICONS={
+  continue:icon('<path d="M6 3h12M6 21h12M8 3v4c0 3 4 4 4 5s-4 2-4 5v4M16 3v4c0 3-4 4-4 5s4 2 4 5v4M10 19l2-2 2 2"/>'),
+  new:icon('<path d="M4 3l5 1 6 8m-3 4 4-4m-1 3 5 5m0-17-5 1-6 8m3 4-4-4m1 3-5 5M3 18l3 3m12-3 3 3"/>'),
+  settings:icon('<path d="m10 3-.7 2.2-2 .9-2-.9-1.5 2.5 1.5 1.6v2.4l-1.5 1.6 1.5 2.5 2-.9 2 .9.7 2.2h3l.7-2.2 2-.9 2 .9 1.5-2.5-1.5-1.6V9.3l1.5-1.6-1.5-2.5-2 .9-2-.9L13 3z" transform="translate(.5 1)"/><circle cx="12" cy="11.5" r="2.6"/>'),
+  achievements:icon('<path d="M8 3h8v5a4 4 0 0 1-8 0zm0 2H4v2a4 4 0 0 0 4 4m8-6h4v2a4 4 0 0 1-4 4m-4 1v5m-4 3h8m-9 0v-2h10v2"/>'),
+};
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let storage;try{storage=localStorage;}catch{storage={getItem(){throw Error('Storage unavailable');}};}
 const locale=readUILocale(storage);
 mountLocaleControls(document,storage);
-let slot=inspectTitleSave(storage),busy=false,opener;
+let slot=inspectTitleSave(storage),busy=false,opener,artwork;
+const pressTimers=new WeakMap();
 const root=document.createElement('section');root.id='title-screen';root.setAttribute('role','main');root.lang=locale;
 const dialog=document.createElement('dialog');dialog.id='title-dialog';dialog.setAttribute('aria-labelledby','title-dialog-heading');
 document.body.classList.add('title-mode');document.getElementById('app').hidden=true;
@@ -19,7 +29,9 @@ function render(){
   slot=inspectTitleSave(storage);
   const valid=!!slot.game,unavailable=slot.kind==='unavailable';
   const hint=t(slot.kind==='backup'?'title.backupHint':slot.kind==='corrupt'?'title.corruptHint':unavailable?'title.storageError':valid?'title.resumeHint':'title.emptyHint');
-  root.innerHTML=`<div class="title-landscape" aria-hidden="true"><img src="./assets/pixel-v2/forest-clearing-v1.png" alt=""></div><div class="title-layout"><header class="title-brand"><img src="./assets/mark.svg" width="46" height="46" alt=""><p class="title-eyebrow">IDLE DEFENSE · REBIRTH</p><h1>LOOP<span>KEEPER</span></h1><p class="title-tagline">${t('title.tagline')}</p><p class="title-description">${t('title.description')}</p></header><section class="title-menu" aria-label="${t('title.menu')}"><div class="title-record">${valid?escape(t('title.record',{generation:slot.game.meta.generation,wave:slot.game.meta.bestWave})):t('title.new')}</div><nav>${['continue','new','settings','achievements'].map(action=>`<button type="button" data-title-action="${action}" ${action==='continue'&&!valid||action==='new'&&unavailable?'disabled':''} class="${(valid?action==='continue':action==='new')?'title-primary':''}"><span>${t('title.'+action)}</span><span aria-hidden="true">${action==='continue'||action==='new'?'→':'＋'}</span></button>`).join('')}</nav><p class="title-hint">${escape(hint)}</p><p id="title-status" role="status" aria-live="polite"></p></section><footer>LoopKeeper: Idle Defense <span>v${VERSION}</span></footer></div>`;
+  artwork?.destroy();
+  root.innerHTML=`<div class="title-stage"><img class="title-background" src="./assets/title/forest-title.png" alt="" fetchpriority="high"><canvas class="title-motion" aria-hidden="true"></canvas><div class="title-shade"></div><section class="title-menu" aria-label="${t('title.menu')}"><div class="title-emblem" aria-hidden="true">${ICONS.continue}</div><h1>LoopKeeper</h1><p class="title-subtitle">IDLE DEFENSE</p><div class="title-rule"></div><nav>${['continue','new','settings','achievements'].map(action=>`<button type="button" data-title-action="${action}" ${action==='continue'&&!valid||action==='new'&&unavailable?'disabled':''} class="${(valid?action==='continue':action==='new')?'title-primary':''}"><span class="title-icon" aria-hidden="true">${ICONS[action]}</span><span class="title-label">${t('title.'+action)}</span></button>`).join('')}</nav><div class="title-save"><span class="title-save-mark" aria-hidden="true"></span><div><strong>${valid?escape(t('title.record',{generation:slot.game.meta.generation,wave:slot.game.meta.bestWave})):t('title.new')}</strong><p>${escape(hint)}</p></div></div><p id="title-status" role="status" aria-live="polite"></p></section><footer class="title-footer"><span>${t('title.tagline')}</span><span>v${VERSION}</span></footer></div>`;
+  artwork=mountTitleArtwork(root,()=>titlePreferences(storage,slot));
 }
 function message(text){root.querySelector('#title-status').textContent=text;}
 function showDialog(heading,body){opener=document.activeElement;dialog.innerHTML=`<div class="title-dialog-header"><h2 id="title-dialog-heading">${copySpan(heading)}</h2><button type="button" data-title-close aria-label="${t('title.close')}" data-ui-aria="title.close">×</button></div>${body}`;dialog.showModal();}
@@ -31,7 +43,7 @@ async function openGame(){
   try{
     const loading=document.createElement('section');loading.className='boot-screen';loading.setAttribute('role','status');loading.textContent=t('title.loading');document.getElementById('app').replaceChildren(loading);
     document.getElementById('app').hidden=false;root.hidden=true;document.body.classList.remove('title-mode');
-    await import('./main.js?v=0.6.140-ux226');dialog.close();
+    await import('./main.js?v=0.6.140-ux226');artwork?.destroy();dialog.close();
   }catch(error){console.error('Game startup failed',error);document.getElementById('app').hidden=true;root.hidden=false;document.body.classList.add('title-mode');render();message(t('title.loadError'));const retry=document.createElement('button');retry.textContent=t('title.retry');retry.onclick=()=>location.reload();root.querySelector('.title-menu').append(retry);}
   // A partially imported game must be reloaded, rather than initialized twice.
 }
@@ -41,7 +53,12 @@ async function newChallenge(){
   catch(error){busy=false;console.error('New challenge failed',error);message(t(error.message==='Writer busy'?'title.busy':'title.error'));dialog.close();render();message(t(error.message==='Writer busy'?'title.busy':'title.error'));}
 }
 root.addEventListener('click',e=>{
-  const action=e.target.closest('[data-title-action]')?.dataset.titleAction;if(!action||busy)return;
+  const button=e.target.closest('[data-title-action]');
+  const action=button?.dataset.titleAction;if(!action||busy||button.disabled)return;
+  // Native button activation covers mouse, touch, Enter and Space; leave navigation synchronous.
+  button.classList.add('title-pressed');
+  clearTimeout(pressTimers.get(button));
+  pressTimers.set(button,setTimeout(()=>button.classList.remove('title-pressed'),180));
   // Refresh without replacing focused controls, so a changed save cannot be reset
   // under an obsolete confirmation. The mutation itself compares the raw record.
   slot=inspectTitleSave(storage);

@@ -1,0 +1,96 @@
+body.title-mode { overflow:hidden; background:#070f12; }
+#title-screen {position:fixed;inset:0;z-index:80;display:grid;place-items:center;overflow:hidden;background:#070f12;color:#f4e7c8;}
+.title-stage {position:relative;width:min(100vw,177.7778vh);max-width:100%;aspect-ratio:16/9;overflow:hidden;isolation:isolate;container-type:inline-size;background:#102324;}
+/* Layers: static artwork (img), dynamic effects (canvas, cleared when motion is off), shade, then UI. */
+.title-background,.title-motion,.title-shade {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;}
+.title-motion {image-rendering:pixelated;}
+.title-shade {background:linear-gradient(90deg,rgba(3,15,18,.78),rgba(3,15,18,.34) 29%,transparent 54%),linear-gradient(0deg,rgba(3,12,17,.64),transparent 19%);}
+
+/* Frameless title and a short, forged plate only for the current action. */
+.title-stage .title-menu {position:absolute;box-sizing:border-box;left:5.1%;top:10%;width:33%;max-width:640px;max-height:84%;overflow-x:hidden;overflow-y:auto;padding:4px clamp(6px,1.1cqw,22px) 7px;border:0;border-radius:0;background:none;box-shadow:none;scrollbar-width:thin;scrollbar-color:#ba8a4a #101b1b;}
+.title-emblem {width:clamp(64px,7.5cqw,144px);height:clamp(26px,3.1cqw,60px);margin:0 auto -4px;display:grid;place-items:center;border:1px solid #bb95555e;border-bottom:0;border-radius:55% 55% 0 0;color:#dcbe7f;filter:drop-shadow(0 2px 3px #0b1416);}
+.title-emblem svg {width:clamp(19px,2cqw,38px);height:auto;}
+.title-stage .title-menu h1 {font-family:Georgia,'Times New Roman',serif;font-size:clamp(32px,5.05cqw,97px);font-weight:700;line-height:1.04;letter-spacing:-.055em;margin:0;text-align:center;color:#ffedc4;text-shadow:0 2px #654824,0 3px #20170d,0 6px 15px #030c0d;text-wrap:nowrap;}
+.title-subtitle {margin:7px 0 0;text-align:center;font:clamp(10px,1.04cqw,20px) Georgia,serif;letter-spacing:.34em;color:#ead7ad;}
+.title-stage .title-rule {height:1px;background:linear-gradient(90deg,transparent,#caa260,transparent);margin:clamp(13px,1.6cqw,30px) 9% clamp(12px,1.4cqw,28px);}
+.title-stage .title-menu nav {display:grid;gap:clamp(4px,.6cqw,12px);width:93%;margin:0 auto;}
+#title-screen button {font-family:inherit;cursor:pointer;}
+.title-stage .title-menu nav button {
+  --plate:polygon(8% 0,92% 0,100% 50%,92% 100%,8% 100%,0 50%);
+  position:relative;isolation:isolate;box-sizing:border-box;width:100%;min-width:0;
+  min-height:clamp(44px,3.9cqw,76px);display:flex;justify-content:flex-start;align-items:center;gap:clamp(9px,1.15cqw,22px);
+  padding:clamp(7px,.72cqw,14px) 12%;border:0;border-radius:0;background:transparent;color:#f2e4c6;
+  box-shadow:none;text-align:left;text-shadow:0 2px 3px #040a0a,0 0 7px #040a0a;
+  font-size:clamp(16px,1.56cqw,30px);font-weight:700;transition:filter .12s ease;
+}
+.title-stage .title-menu nav button[hidden] {display:none;}
+.title-icon {flex:none;width:1.18em;height:1.18em;display:grid;place-items:center;color:#efcf91;}
+.title-icon svg {width:100%;height:100%;filter:drop-shadow(0 2px 1px #090b08);}
+.title-stage .title-menu nav button .title-label {flex:1;min-width:0;overflow-wrap:anywhere;color:inherit;}
+.title-stage .title-menu nav button.title-primary {color:#fff5dd;filter:drop-shadow(0 0 6px #bd66128c);}
+.title-stage .title-menu nav button.title-primary::before,.title-stage .title-menu nav button:hover:not(:disabled)::before,.title-stage .title-menu nav button:focus-visible::before,.title-stage .title-menu nav button:is(:active,.title-pressed):not(:disabled)::before {
+  content:"";position:absolute;inset:1px 0;z-index:-2;clip-path:var(--plate);
+  background:linear-gradient(#eac78a,#6f3d1b 23%,#b47b40 48%,#6a3b1c 72%,#ebb96c);
+}
+.title-stage .title-menu nav button.title-primary::after,.title-stage .title-menu nav button:hover:not(:disabled)::after,.title-stage .title-menu nav button:focus-visible::after,.title-stage .title-menu nav button:is(:active,.title-pressed):not(:disabled)::after {
+  content:"";position:absolute;inset:4px 3px;z-index:-1;clip-path:var(--plate);
+  background:repeating-linear-gradient(178deg,#ecd7b211 0 1px,transparent 2px 4px,#0f070748 5px 6px,transparent 7px 9px),linear-gradient(95deg,#251a15,#41301e 49%,#211711);
+}
+.title-stage .title-menu nav button.title-primary .title-icon::before {
+  content:"";position:absolute;top:50%;left:3.7%;width:.34em;height:.34em;transform:translateY(-50%) rotate(45deg);
+  background:#ffdf9e;box-shadow:0 0 8px #ffad44,0 0 14px #ca631a;
+}
+.title-stage .title-menu nav button:hover:not(:disabled) {filter:brightness(1.19);}
+.title-stage .title-menu nav button:is(:active,.title-pressed):not(:disabled) {transform:translateY(2px);filter:drop-shadow(0 0 8px #ca702799);}
+.title-stage .title-menu nav button:is(:active,.title-pressed):not(:disabled)::before {
+  background:linear-gradient(#fff1bf,#f3b86c 30%,#9c4619 68%,#f3be77);
+}
+.title-stage .title-menu nav button:disabled {opacity:1;color:#b5ac97;cursor:not-allowed;}
+.title-stage .title-menu nav button:disabled .title-icon {color:#a99b7b;}
+.title-stage .title-menu nav button:disabled::before,.title-stage .title-menu nav button:disabled::after,.title-stage .title-menu nav button:disabled .title-icon::before {display:none;}
+#title-screen button:focus-visible {outline:2px dashed #ffdf9a;outline-offset:1px;}
+.title-stage .title-menu > button {margin-top:8px;min-height:44px;padding:8px 14px;border:1px solid #b99a5b;border-radius:2px;color:#f5eedc;background:#12302a;font-size:clamp(13px,1.2cqw,20px);}
+
+/* Save summary: values come from the current save slot; turquoise marks the progress record. */
+.title-stage .title-save {display:flex;gap:clamp(8px,.9cqw,14px);align-items:flex-start;margin-top:4%;padding:0;color:#e1d8bd;}
+.title-save > div {min-width:0;overflow-wrap:anywhere;}
+.title-save-mark {flex:none;width:clamp(8px,.7cqw,12px);height:clamp(8px,.7cqw,12px);margin-top:.3em;background:#47d6c3;box-shadow:0 0 0 1px #0a1d1b,0 0 0 2px rgba(71,214,195,.4);}
+.title-save strong {font-size:clamp(12px,1.1cqw,20px);font-weight:500;}
+.title-stage .title-save p {font-size:clamp(10px,.9cqw,17px);line-height:1.5;margin:5px 0 0;color:#aebfb4;}
+.title-stage #title-status {margin:6px 0 0;min-height:1.3em;font-size:clamp(11px,.95cqw,17px);color:#8fe6d8;overflow-wrap:anywhere;}
+.title-notice {font-size:13px;color:#ffc97c;}
+.title-footer {position:absolute;bottom:3.6%;left:5.1%;right:3.5%;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#d9d2b4;font-size:clamp(10px,.85cqw,16px);letter-spacing:.13em;}
+.title-footer span {min-width:0;overflow-wrap:anywhere;}
+.title-footer span:last-child {flex:none;color:#e2c47c;}
+.title-footer button {color:#dce2cf;background:#102320b8;border:1px solid #637367;border-radius:4px;padding:8px 13px;min-height:36px;font-size:12px;letter-spacing:.05em;}
+
+@media(max-width:700px) and (orientation:portrait) {
+ .title-stage {width:100vw;height:100dvh;aspect-ratio:auto;}
+ .title-background,.title-motion {width:177.7778dvh;max-width:none;left:calc(50% - 88.8889dvh);}
+ .title-shade {background:linear-gradient(0deg,#061518f2, #061518b8 48%,#06151820 85%);}
+ .title-stage .title-menu {left:6%;top:auto;bottom:8%;width:88%;max-width:none;max-height:83%;padding:5px 10px 8px;}
+ .title-stage .title-menu h1 {font-size:clamp(35px,11.5vw,76px);}
+ .title-emblem {height:28px;}.title-subtitle{font-size:13px;}
+ .title-stage .title-rule {margin:5% 0;}
+ .title-stage .title-menu nav {gap:8px;}
+ .title-stage .title-menu nav button {font-size:17px;min-height:45px;padding:8px 12%;gap:12px;}
+ .title-stage .title-save {margin-top:14px;}.title-save strong{font-size:14px;}.title-stage .title-save p{font-size:12px;}
+ .title-stage #title-status {font-size:12px;}
+ .title-footer {left:6%;right:6%;bottom:3%;letter-spacing:0;font-size:10px;}
+}
+@media(max-height:540px) and (orientation:landscape) {
+ .title-stage .title-menu {top:4%;max-height:88%;padding:10px;}
+ .title-emblem {display:none;}
+ .title-stage .title-menu h1 {margin-top:0;font-size:clamp(26px,4.3cqw,55px);}
+ .title-subtitle {margin-top:4px;}
+ .title-stage .title-rule {margin:4% 0;}
+ .title-stage .title-menu nav {gap:6px;}
+ .title-stage .title-menu nav button {min-height:38px;padding:4px 10%;font-size:14px;gap:8px;}
+ .title-stage .title-save {margin-top:3%;}
+ .title-stage #title-status {margin-top:3px;}
+ .title-footer {bottom:2%;}
+}
+@media(prefers-reduced-motion:reduce){
+ .title-stage .title-menu nav button {transition:none;}
+ .title-stage .title-menu nav button:is(:active,.title-pressed):not(:disabled) {transform:none;}
+}
