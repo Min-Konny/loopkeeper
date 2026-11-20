@@ -29,7 +29,7 @@
     </style>
   <link rel="stylesheet" href="./src/zh-cn.css?v=0.6.140" />
 <link rel="stylesheet" href="./src/ko.css?v=0.6.140" />
-<link rel="stylesheet" href="./src/title-screen.css?v=0.6.140-title1" />
+<link rel="stylesheet" href="./src/title-screen.css?v=0.6.140-title2" />
   </head>
   <body>
 
@@ -51,7 +51,7 @@
       const bootText=key=>bootCatalog[key]?.[bootLocale==='ko'?3:bootLocale==='zh-CN'?2:bootLocale==='en'?1:0]??key;
       document.documentElement.lang=bootLocale;
       for(const node of document.querySelectorAll('[data-boot-copy]')){const value=bootText(node.dataset.bootCopy);if(node.tagName==='META')node.content=value;else node.textContent=value;}
-      const entry = "./src/title-screen.js?v=0.6.140-title1-ux226";
+      const entry = "./src/title-screen.js?v=0.6.140-title2-ux226";
       const version = new URL(entry, location.href).searchParams.get("v");
       const url = new URL(location.href);
       if (url.searchParams.has("v") && url.searchParams.get("v") !== version) {

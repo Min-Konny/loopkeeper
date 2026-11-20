@@ -6,8 +6,14 @@ import {inspectTitleSave,titlePreferences,saveTitlePreferences,startTitleChallen
 import {createGame} from './engine.js?v=0.6.140';
 import {replayAchievementsMarkup} from './replay-achievements-ui.js?v=0.6.140';
 const VERSION='0.6.140';
-// Decorative cream glyphs only; the text variation selector keeps them from rendering as emoji.
-const ICONS={continue:'▶\uFE0E',new:'✦',settings:'⚙\uFE0E',achievements:'♛'};
+// Decorative vectors keep a consistent silhouette across the four locales.
+const icon=path=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">${path}</svg>`;
+const ICONS={
+  continue:icon('<path d="M6 3h12M6 21h12M8 3v4c0 3 4 4 4 5s-4 2-4 5v4M16 3v4c0 3-4 4-4 5s4 2 4 5v4M10 19l2-2 2 2"/>'),
+  new:icon('<path d="M4 3l5 1 6 8m-3 4 4-4m-1 3 5 5m0-17-5 1-6 8m3 4-4-4m1 3-5 5M3 18l3 3m12-3 3 3"/>'),
+  settings:icon('<path d="m10 3-.7 2.2-2 .9-2-.9-1.5 2.5 1.5 1.6v2.4l-1.5 1.6 1.5 2.5 2-.9 2 .9.7 2.2h3l.7-2.2 2-.9 2 .9 1.5-2.5-1.5-1.6V9.3l1.5-1.6-1.5-2.5-2 .9-2-.9L13 3z" transform="translate(.5 1)"/><circle cx="12" cy="11.5" r="2.6"/>'),
+  achievements:icon('<path d="M8 3h8v5a4 4 0 0 1-8 0zm0 2H4v2a4 4 0 0 0 4 4m8-6h4v2a4 4 0 0 1-4 4m-4 1v5m-4 3h8m-9 0v-2h10v2"/>'),
+};
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let storage;try{storage=localStorage;}catch{storage={getItem(){throw Error('Storage unavailable');}};}
 const locale=readUILocale(storage);
@@ -23,7 +29,7 @@ function render(){
   const valid=!!slot.game,unavailable=slot.kind==='unavailable';
   const hint=t(slot.kind==='backup'?'title.backupHint':slot.kind==='corrupt'?'title.corruptHint':unavailable?'title.storageError':valid?'title.resumeHint':'title.emptyHint');
   artwork?.destroy();
-  root.innerHTML=`<div class="title-stage"><img class="title-background" src="./assets/title/forest-title.png" alt="" fetchpriority="high"><canvas class="title-motion" aria-hidden="true"></canvas><div class="title-shade"></div><section class="title-menu" aria-label="${t('title.menu')}"><div class="title-emblem" aria-hidden="true">♜ ── ❧ ── ♜</div><h1>LoopKeeper</h1><p class="title-subtitle">IDLE DEFENSE</p><div class="title-rule"></div><nav>${['continue','new','settings','achievements'].map(action=>`<button type="button" data-title-action="${action}" ${action==='continue'&&!valid||action==='new'&&unavailable?'disabled':''} class="${(valid?action==='continue':action==='new')?'title-primary':''}"><span class="title-icon" aria-hidden="true">${ICONS[action]}</span><span class="title-label">${t('title.'+action)}</span><span class="title-arrow" aria-hidden="true">›</span></button>`).join('')}</nav><div class="title-save"><span class="title-save-mark" aria-hidden="true"></span><div><strong>${valid?escape(t('title.record',{generation:slot.game.meta.generation,wave:slot.game.meta.bestWave})):t('title.new')}</strong><p>${escape(hint)}</p></div></div><p id="title-status" role="status" aria-live="polite"></p></section><footer class="title-footer"><span>${t('title.tagline')}</span><span>v${VERSION}</span></footer></div>`;
+  root.innerHTML=`<div class="title-stage"><img class="title-background" src="./assets/title/forest-title.png" alt="" fetchpriority="high"><canvas class="title-motion" aria-hidden="true"></canvas><div class="title-shade"></div><section class="title-menu" aria-label="${t('title.menu')}"><div class="title-emblem" aria-hidden="true">${ICONS.continue}</div><h1>LoopKeeper</h1><p class="title-subtitle">IDLE DEFENSE</p><div class="title-rule"></div><nav>${['continue','new','settings','achievements'].map(action=>`<button type="button" data-title-action="${action}" ${action==='continue'&&!valid||action==='new'&&unavailable?'disabled':''} class="${(valid?action==='continue':action==='new')?'title-primary':''}"><span class="title-icon" aria-hidden="true">${ICONS[action]}</span><span class="title-label">${t('title.'+action)}</span></button>`).join('')}</nav><div class="title-save"><span class="title-save-mark" aria-hidden="true"></span><div><strong>${valid?escape(t('title.record',{generation:slot.game.meta.generation,wave:slot.game.meta.bestWave})):t('title.new')}</strong><p>${escape(hint)}</p></div></div><p id="title-status" role="status" aria-live="polite"></p></section><footer class="title-footer"><span>${t('title.tagline')}</span><span>v${VERSION}</span></footer></div>`;
   artwork=mountTitleArtwork(root,()=>titlePreferences(storage,slot));
 }
 function message(text){root.querySelector('#title-status').textContent=text;}
