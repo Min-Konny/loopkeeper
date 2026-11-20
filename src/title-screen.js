@@ -19,6 +19,7 @@ let storage;try{storage=localStorage;}catch{storage={getItem(){throw Error('Stor
 const locale=readUILocale(storage);
 mountLocaleControls(document,storage);
 let slot=inspectTitleSave(storage),busy=false,opener,artwork;
+const pressTimers=new WeakMap();
 const root=document.createElement('section');root.id='title-screen';root.setAttribute('role','main');root.lang=locale;
 const dialog=document.createElement('dialog');dialog.id='title-dialog';dialog.setAttribute('aria-labelledby','title-dialog-heading');
 document.body.classList.add('title-mode');document.getElementById('app').hidden=true;
@@ -52,7 +53,12 @@ async function newChallenge(){
   catch(error){busy=false;console.error('New challenge failed',error);message(t(error.message==='Writer busy'?'title.busy':'title.error'));dialog.close();render();message(t(error.message==='Writer busy'?'title.busy':'title.error'));}
 }
 root.addEventListener('click',e=>{
-  const action=e.target.closest('[data-title-action]')?.dataset.titleAction;if(!action||busy)return;
+  const button=e.target.closest('[data-title-action]');
+  const action=button?.dataset.titleAction;if(!action||busy||button.disabled)return;
+  // Native button activation covers mouse, touch, Enter and Space; leave navigation synchronous.
+  button.classList.add('title-pressed');
+  clearTimeout(pressTimers.get(button));
+  pressTimers.set(button,setTimeout(()=>button.classList.remove('title-pressed'),180));
   // Refresh without replacing focused controls, so a changed save cannot be reset
   // under an obsolete confirmation. The mutation itself compares the raw record.
   slot=inspectTitleSave(storage);
